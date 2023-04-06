@@ -2,7 +2,6 @@ import {
   Modal,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
   Tab,
   TabList,
   TabPanel,
@@ -37,7 +36,7 @@ export default function ResponsivelySizedModal({
 
   const tabData = [
     {
-      label: 'nft info',
+      label: 'detail',
       content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
       isDisabled: actionType,
     },
@@ -58,10 +57,10 @@ export default function ResponsivelySizedModal({
       scrollBehavior="inside"
       closeOnOverlayClick={false}
     >
-      <ModalOverlay
+      {/* <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
-      />
+      /> */}
 
       <ModalContent
         p={0}

@@ -2,7 +2,11 @@ import {
   Box,
   Flex,
   Heading,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
   useMediaQuery,
@@ -10,12 +14,9 @@ import {
 } from "@chakra-ui/react";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
-import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
 import { useSubstrateState } from "@utils/substrate";
 import { motion, useAnimation } from "framer-motion";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import { useHistory, useLocation } from "react-router-dom";
 import { setTxStatus } from "@store/actions/txStatus";
@@ -34,7 +35,7 @@ import { delay } from "@utils";
 import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
-import { getMetaDataOffChain, readOnlyGasLimit } from "../../utils";
+import InActiveIcon from "@theme/assets/icon/InActive.js";
 
 function MyNFTGroupCard({
   name,
@@ -46,20 +47,21 @@ function MyNFTGroupCard({
   nftContractAddress,
   hasBottomBorder = false,
   isStakingContractLocked,
+  type,
   ...rest
 }) {
-  const { currentAccount, api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
 
-  const [listNFTFormatted, setListNFTFormatted] = useState(null);
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   const history = useHistory();
   const location = useLocation();
 
   function onClickHandler(item) {
+    if (type === "public") return;
+
     if (isBigScreen) {
       setSelectedNFT(item);
       item?.stakeStatus === 0 && onOpen();
@@ -70,75 +72,17 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
-
-  useEffect(() => {
-    let isSubscribed = true;
-
-    const getAttributesData = async () => {
-      if (showOnChainMetadata) {
-        //On-Chain Data
-        const data = listNFT?.map((item) => {
-          const itemData = createObjAttrsNFT(
-            item.attributes,
-            item.attributesValue
-          );
-
-          return { ...item, ...itemData };
-        });
-
-        setListNFTFormatted(data);
-      } else {
-        //Off-chain Data
-
-        if (nftContractAddress) {
-          const nft_contract = new ContractPromise(
-            api,
-            nft721_psp34_standard.CONTRACT_ABI,
-            nftContractAddress
-          );
-
-          const gasLimit = readOnlyGasLimit(nft_contract);
-          const azero_value = 0;
-
-          const { result, output } = await nft_contract.query[
-            "psp34Traits::tokenUri"
-          ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
-
-          if (!result.isOk) {
-            toast.error("There is an error when loading token_uri!");
-            return;
-          }
-
-          const tokenUri = output.toHuman().Ok?.replace("1.json", "");
-
-          Promise.all(
-            listNFT.map(async (item) => {
-              const res = await getMetaDataOffChain(item.tokenID, tokenUri);
-
-              return { ...item, ...res };
-            })
-          ).then((result) => {
-            isSubscribed && setListNFTFormatted(result);
-          });
-        }
-      }
-    };
-
-    getAttributesData();
-    return () => (isSubscribed = false);
-  }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
-
   return (
     <Box my={10} position="relative">
       <ResponsivelySizedModal
         contractType={contractType}
-        {...selectedNFT}
         isOpen={isOpen}
         onClose={onClose}
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
         {...rest}
+        {...selectedNFT}
       />
 
       <motion.div
@@ -156,23 +100,44 @@ function MyNFTGroupCard({
             border="2px solid white"
           />
           <VStack w="full" align="start" ml={3} justifyContent="center">
-            <Heading
-              size="h6"
-              cursor="pointer"
-              _hover={{ color: "#7ae7ff" }}
-              onClick={() => history.push(`/collection/${nftContractAddress}`)}
-            >
-              {name}
-            </Heading>
+            <Flex justifyContent="start" alignItems="center">
+              <Heading
+                size="h6"
+                cursor="pointer"
+                _hover={{ color: "#7ae7ff" }}
+                onClick={() =>
+                  history.push(`/collection/${nftContractAddress}`)
+                }
+              >
+                {name}
+              </Heading>
+              {/* Keep use rest?.isActive - no change */}
+              {!rest?.isActive && (
+                <Tooltip
+                  placeContent="start"
+                  hasArrow
+                  bg="#333"
+                  color="#fff"
+                  borderRadius="0"
+                  label="This collection is not enabled on the Marketplace yet."
+                >
+                  <Tag variant="inActive" fontSize={["14px", "16px"]}>
+                    <TagLeftIcon as={InActiveIcon} />
+                    <TagLabel textTransform="capitalize">Inactive</TagLabel>
+                  </Tag>
+                </Tooltip>
+              )}
+            </Flex>
+
             <Text textAlign="left" color="brand.grayLight" size="2xs">
-              {listNFTFormatted?.length} item
-              {listNFTFormatted?.length > 1 ? "s" : ""}
+              {listNFT?.length} item
+              {listNFT?.length > 1 ? "s" : ""}
             </Text>
           </VStack>
         </Flex>
       </motion.div>
 
-      {!listNFTFormatted?.length ? (
+      {!listNFT?.length ? (
         <VStack
           py={10}
           ml={3}
@@ -188,7 +153,7 @@ function MyNFTGroupCard({
         <Box borderBottomWidth={hasBottomBorder ? "1px" : "0px"}>
           <GridNftA
             isStakingContractLocked={isStakingContractLocked}
-            listNFTFormatted={listNFTFormatted}
+            listNFTFormatted={listNFT}
             onClickHandler={onClickHandler}
           />
         </Box>

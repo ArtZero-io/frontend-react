@@ -28,7 +28,7 @@ function SocialShare({
   width = '50px',
   height = '50px',
   shareUrl = 'https://artzero.io/',
-  title = 'ArtZero.io - NFT Marketplace for Astar Network Blockchain',
+  title = 'ArtZero.io - NFT Marketplace for Aleph Zero Blockchain',
 }) {
   return (
     <>

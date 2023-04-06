@@ -21,7 +21,7 @@ import { BsGrid3X3 } from "react-icons/bs";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -59,12 +59,21 @@ const CollectionItems = ({
   priceQuery,
   setPriceQuery,
   setSortData,
+  name,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(0);
+
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state?.selectedItem) {
+      setSelectedItem(state?.selectedItem);
+    }
+  }, [state?.selectedItem]);
 
   const options = [
     // "Price: Newest",
@@ -108,8 +117,8 @@ const CollectionItems = ({
             listBidder?.length &&
               listBidder.sort((a, b) => {
                 return (
-                  b.bidValue.replaceAll(",", "") * 1 -
-                  a.bidValue.replaceAll(",", "") * 1
+                  b.bidValue?.replaceAll(",", "") * 1 -
+                  a.bidValue?.replaceAll(",", "") * 1
                 );
               });
 
@@ -123,24 +132,6 @@ const CollectionItems = ({
     };
     abc();
   }, [currentAccount, result, result?.NFTList]);
-
-  // const getSortedNFT = () => {
-  //   if (!result?.totalResults) return [];
-
-  //   let ret = result?.NFTList;
-
-  //   // if (selectedItem === 0) {
-  //   //   ret = ret.sort((a, b) => a.price - b.price);
-  //   // }
-
-  //   // if (selectedItem === 1) {
-  //   //   ret = ret.sort((a, b) => b.price - a.price);
-  //   // }
-
-  //   return ret;
-  // };
-
-  // const sortedNFT = getSortedNFT();
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -357,6 +348,7 @@ const CollectionItems = ({
             <AnimationLoader loadingTime={loadingTime} />
           ) : (
             <CollectionGridNew
+              selectedItem={selectedItem}
               columns={columns}
               gap={stackSpacing}
               cardWidth={nftCardWidthNew}
@@ -366,6 +358,8 @@ const CollectionItems = ({
               rarityTable={rarityTable}
               totalNftCount={nft_count}
               bigCardNew={bigCardNew}
+              name={name}
+              {...rest}
             />
           )}
         </Box>
@@ -392,9 +386,13 @@ const CollectionGridNew = ({
   rarityTable,
   totalNftCount,
   bigCardNew,
+  name,
+  selectedItem,
+  ...rest
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
+  const location = useLocation();
 
   const history = useHistory();
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
@@ -404,7 +402,10 @@ const CollectionGridNew = ({
       setSelectedNft(item);
       onOpen();
     } else {
-      history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+      history.push({
+        state: { selectedItem, ...location },
+        pathname: `/nft/${item.nftContractAddress}/${item.tokenID}`,
+      });
     }
   }
 
@@ -412,11 +413,13 @@ const CollectionGridNew = ({
     <>
       {isBigScreen && (
         <NFTDetailModal
+          {...rest}
           {...selectedNft}
           rarityTable={rarityTable}
           totalNftCount={totalNftCount}
           isOpen={isOpen}
           onClose={onClose}
+          name={name}
           collectionOwner={collectionOwner}
           showOnChainMetadata={showOnChainMetadata}
         />

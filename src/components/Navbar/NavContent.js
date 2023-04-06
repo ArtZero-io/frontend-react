@@ -147,7 +147,7 @@ const DesktopNavContent = (props) => {
         justifyContent={{
           base: "flex-start",
           md: "space-between",
-          xl: "flex-start",
+          xl: "center",
         }}
         spacing={{ xl: "35px", "2xl": "55px" }}
         pl={{ base: "8px", md: "32px", xl: "50px" }}
@@ -628,7 +628,7 @@ const NAV_ITEMS = [
   },
   // {
   //   label: "stake2earn",
-  //   href: ROUTES.DOCS,
+  //   href: ROUTES.STAKE2EARN,
   //   isExternal: true,
   // },
   {

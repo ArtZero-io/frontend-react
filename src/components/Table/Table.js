@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
-import { truncateStr } from "@utils";
 import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { Fragment } from "react";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 function CommonTable({
   tableHeaders,
@@ -72,7 +72,7 @@ function CommonTable({
                       py={{ base: "1rem", "2xl": "1.75rem" }}
                       textAlign="left"
                     >
-                      {truncateStr(item.bidder, 6)}
+                      <AddressCopier address={item.bidder} />
                     </Td>
 
                     <Td

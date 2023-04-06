@@ -12,7 +12,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import { clientAPI } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import CommonButton from "@components/Button/CommonButton";
 import CommonContainer from "@components/Container/CommonContainer";
@@ -30,18 +29,32 @@ import {
   LOCK,
   TRANSFER,
   ACCEPT_BID,
+  EDIT_NFT,
 } from "@constants";
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
-import toast from "react-hot-toast";
+//  import toast from "react-hot-toast";
 import { readOnlyGasLimit } from "@utils";
+import { useCollectionList } from "../../../hooks/useCollectionList";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
+    [
+      REMOVE_BID,
+      ACCEPT_BID,
+      UNLIST_TOKEN,
+      LIST_TOKEN,
+      LOCK,
+      TRANSFER,
+      EDIT_NFT,
+    ],
     () => handleForceUpdate()
   );
 
@@ -68,6 +81,11 @@ const MyNFTsPage = () => {
       return setFilterSelected("COLLECTED");
     }
 
+    if (actionType === EDIT_NFT) {
+      fetchMyCollections();
+      return;
+    }
+
     setFilterSelected("COLLECTED");
   };
 
@@ -78,51 +96,48 @@ const MyNFTsPage = () => {
     }
   }
 
+  const { collectionList } = useCollectionList();
+
   const fetchMyCollections = useCallback(async () => {
     try {
       setLoading(true);
 
-      const allCollectionsOwned = await clientAPI("post", "/getCollections", {
-        limit: 10000,
-        offset: 0,
-        sort: -1,
-        isActive: true,
-      });
+      let data =
+        collectionList &&
+        (await Promise.all(
+          collectionList?.map(async (collection) => {
+            const options = {
+              collection_address: collection.nftContractAddress,
+              owner: currentAccount?.address,
+              limit: 10000,
+              offset: 0,
+              sort: -1,
+            };
 
-      let data = await Promise.all(
-        allCollectionsOwned?.map(async (collection) => {
-          const options = {
-            collection_address: collection.nftContractAddress,
-            owner: currentAccount?.address,
-            limit: 10000,
-            offset: 0,
-            sort: -1,
-          };
+            let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
+              options
+            );
 
-          let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
-            options
-          );
+            if (filterSelected === "COLLECTED") {
+              dataList = dataList?.filter((item) => item.is_for_sale !== true);
+            }
 
-          if (filterSelected === "COLLECTED") {
-            dataList = dataList.filter((item) => item.is_for_sale !== true);
-          }
+            if (filterSelected === "LISTING") {
+              dataList = dataList?.filter((item) => item.is_for_sale === true);
+            }
 
-          if (filterSelected === "LISTING") {
-            dataList = dataList.filter((item) => item.is_for_sale === true);
-          }
+            const data = dataList?.map((item) => {
+              return { ...item, stakeStatus: 0 };
+            });
 
-          const data = dataList?.map((item) => {
-            return { ...item, stakeStatus: 0 };
-          });
+            collection.listNFT = data;
 
-          collection.listNFT = data;
-
-          return collection;
-        })
-      );
+            return collection;
+          })
+        ));
 
       //Don't Display Collection with no NFT
-      data = data.filter((item) => item.listNFT?.length > 0);
+      data = data?.filter((item) => item.listNFT?.length > 0);
 
       if (data?.length) {
         setMyCollections(data);
@@ -139,7 +154,7 @@ const MyNFTsPage = () => {
 
       setLoading(false);
     }
-  }, [currentAccount?.address, filterSelected]);
+  }, [collectionList, currentAccount?.address, filterSelected]);
 
   const fetchMyBids = useCallback(
     async (isMounted) => {
@@ -227,10 +242,8 @@ const MyNFTsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAccount?.address, filterSelected]
   );
-
   useEffect(() => {
     let isMounted = true;
-
     filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
 
     return () => (isMounted = false);
@@ -329,6 +342,7 @@ const MyNFTsPage = () => {
               </Text>
             </HStack>
           )}
+
           {myCollections &&
             myCollections?.map((item, idx) => {
               return (
@@ -374,7 +388,7 @@ export async function execContractQuery(
     console.log("Api invalid");
     // return toast.error("Api invalid");
   }
-  // console.log("@_@ ", queryName, " callerAddress ", callerAddress);
+  //  console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 
@@ -395,7 +409,7 @@ export async function execContractQuery(
   }
 }
 
-export const formatQueryResultToNumber = (result, chainDecimals = 18) => {
+export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
   const ret = result?.toHuman().Ok?.replaceAll(",", "");
 
   const formattedStrBal = formatBalance(ret, {
@@ -409,6 +423,8 @@ export const formatQueryResultToNumber = (result, chainDecimals = 18) => {
 
 export async function execContractTx(
   caller, // -> currentAccount Object
+  dispatch,
+  txType,
   api,
   contractAbi,
   contractAddress,
@@ -418,13 +434,12 @@ export async function execContractTx(
 ) {
   // NOTE: amount need to convert before passing in
   // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  console.log("execContractTx ", queryName);
+  // console.log("execContractTx ", queryName);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 
   let unsubscribe;
   let gasLimit;
-  // 6946816000 * 5;
 
   const { signer } = await web3FromSource(caller?.meta?.source);
 
@@ -439,24 +454,23 @@ export async function execContractTx(
   const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
 
   await txNotSign
-    .signAndSend(caller.address, { signer }, ({ events = [], status }) => {
-      if (Object.keys(status.toHuman())[0] === "0") {
-        toast.success(`Processing ...`);
+    .signAndSend(
+      caller.address,
+      { signer },
+      async ({ events = [], status, dispatchError }) => {
+        // console.log("txResponseErrorHandler...1");
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller,
+        });
       }
-
-      events.forEach(({ event: { method } }) => {
-        if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
-          toast.success("Successful!");
-        } else if (method === "ExtrinsicFailed") {
-          toast.error(`Error: ${method}.`);
-        }
-      });
-    })
+    )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((error) => {
-      console.log("error", error);
-      toast.error(`Error ${error}.`);
-    });
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }

@@ -61,15 +61,15 @@ export default function UpdateWithdrawModal({
         collection_address
       );
 
-      const balFree = balance.toHuman().free.replaceAll(",", "") / 10 ** 12;
+      const balFree = balance.toHuman().free?.replaceAll(",", "") / 10 ** 12;
       const balMiscFrozen =
-        balance.toHuman().miscFrozen.replaceAll(",", "") / 10 ** 12;
+        balance.toHuman().miscFrozen?.replaceAll(",", "") / 10 ** 12;
 
       const tempBal = balFree - balMiscFrozen;
 
       const tempBalFloorRound = Math.floor(tempBal);
 
-      setContractBalance(tempBalFloorRound / 10 ** 6);
+      setContractBalance(tempBalFloorRound);
     };
 
     fetch();
@@ -106,7 +106,7 @@ export default function UpdateWithdrawModal({
     setWithdrawBalance(contractBalance);
   }
 
-  if (rest.step === FINALIZED) {
+  if (actionType === WITHDRAW_LAUNCHPAD && rest.step === FINALIZED) {
     dispatch(clearTxStatus());
     setWithdrawBalance(0);
     onClose();
@@ -165,7 +165,10 @@ export default function UpdateWithdrawModal({
                 isDisabled={actionType}
                 max={contractBalance}
                 value={withdrawBalance}
-                onChange={(valueString) => setWithdrawBalance(valueString)}
+                onChange={(valueString) => {
+                  if (/[eE+-]/.test(valueString)) return;
+                  setWithdrawBalance(valueString);
+                }}
               >
                 <NumberInputField
                   h="3.125rem"

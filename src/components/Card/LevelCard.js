@@ -46,7 +46,7 @@ export default function LevelCard({
             <Spacer />
 
             <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
-              {((100 * traitCount) / totalNftCount).toFixed(0)}%
+              {((100 * traitCount) / totalNftCount).toFixed(2)}%
             </Text>
           </Flex>
         )}

@@ -21,12 +21,13 @@ import { shortenNumber } from "@utils";
 import { memo, useRef } from "react";
 import { useState } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
 function CollectionHeader(props) {
-  console.log("props", props?.name);
+  // console.log("props", props?.name);
   const {
     avatarImage,
     name,
@@ -42,6 +43,7 @@ function CollectionHeader(props) {
     royaltyFee,
     isDoxxed,
     isDuplicationChecked,
+    nftContractAddress,
   } = props;
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -106,7 +108,7 @@ function CollectionHeader(props) {
             {isDuplicationChecked && (
               <Tooltip label="Artwork is verified by third-party for its uniqueness">
                 <Box p="1">
-                  <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
+                  <Tag border="1px solid #7ae7ff">AUTHENTIC</Tag>
                 </Box>
               </Tooltip>
             )}
@@ -135,12 +137,11 @@ function CollectionHeader(props) {
             </VStack>
           </HStack>
 
-          {/* <Skeleton
-            display="flex"
-            justifyContent="center"
-            w="full"
-            maxW="680px"
-          > */}
+          <HStack>
+            <Text>Contract Address:</Text>{" "}
+            <AddressCopier address={nftContractAddress} hasIcon={true} />
+          </HStack>
+
           <Flex
             paddingBottom="24px"
             w="full"
@@ -173,7 +174,6 @@ function CollectionHeader(props) {
               {isSeeMore ? "See less" : "Show more"}
             </Flex>
           </Flex>
-          {/* </Skeleton> */}
 
           <HStack>
             <Flex
@@ -256,7 +256,7 @@ function CollectionHeader(props) {
                 />
                 <Flex alignItems="center" justifyContent="center">
                   <Text fontSize={["34px", "40px"]}>
-                    {shortenNumber(floorPrice / 10 ** 18) || 0}
+                    {shortenNumber(floorPrice / 10 ** 12) || 0}
                   </Text>
 
                   <AzeroIcon ml="6px" w="20px" />
@@ -280,7 +280,7 @@ function CollectionHeader(props) {
               >
                 <Flex alignItems="center" justifyContent="center">
                   <Text fontSize={["34px", "40px"]}>
-                    {shortenNumber(volume/10**6) || 0}
+                    {shortenNumber(volume) || 0}
                   </Text>
                   <AzeroIcon ml="6px" w="20px" />
                 </Flex>

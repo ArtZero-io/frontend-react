@@ -5,6 +5,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  IconButton,
   InputRightElement,
   Link,
   NumberInput,
@@ -18,6 +19,9 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
+  useDisclosure,
+  // eslint-disable-next-line no-unused-vars
+  VStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
@@ -27,6 +31,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { BsFlag } from "react-icons/bs";
 
 import {
   convertStringToPrice,
@@ -46,9 +51,17 @@ import LockNFTModal from "@components/Modal/LockNFTModal";
 import AddNewNFTModal from "../Modal/AddNewNFT";
 import { SCROLLBAR } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
-import { BUY, BID, REMOVE_BID } from "@constants";
+import { BUY, BID, REMOVE_BID, LIST_TOKEN, UNLIST_TOKEN } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
-import { buyToken, placeBid, removeBid } from "../../../token";
+import {
+  buyToken,
+  calculateFee,
+  FeeCalculatedBar,
+  listToken,
+  placeBid,
+  removeBid,
+  unlistToken,
+} from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
@@ -59,6 +72,17 @@ import { Fragment } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import { MAX_BID_COUNT } from "../../../../constants";
+import NFTReportModal from "../Modal/NFTReport";
+import marketplace from "@utils/blockchain/marketplace";
+
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import staking_calls from "@utils/blockchain/staking_calls";
+
+import {
+  fetchMyPMPStakedCount,
+  fetchMyTradingFee,
+} from "@pages/account/stakes";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -73,10 +97,15 @@ const NFTTabCollectible = (props) => {
     is_locked,
     showOnChainMetadata,
     rarityTable,
+    collectionOwner,
     traits = {},
     totalNftCount,
+    name,
+    isActive,
+    royaltyFee,
   } = props;
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
@@ -118,7 +147,7 @@ const NFTTabCollectible = (props) => {
         );
 
         setBidderCount(listBidder?.length || 0);
-        
+
         accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
 
         if (listBidder) {
@@ -130,7 +159,7 @@ const NFTTabCollectible = (props) => {
           }
         }
       }
-      console.log(accountAddress, currentAccount?.address, 'currentAccount?.addresscurrentAccount?.address');
+
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }
@@ -148,15 +177,19 @@ const NFTTabCollectible = (props) => {
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
-  const attrsList = Object.entries(traits).map(([k, v]) => {
-    return { [k]: v };
-  });
+  const attrsList = !traits
+    ? {}
+    : Object.entries(traits).map(([k, v]) => {
+        return { [k]: v };
+      });
 
   useEffect(() => {
     fetchSaleInfo();
   }, [fetchSaleInfo]);
 
   const handleBuyAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await buyToken(
         api,
@@ -176,6 +209,8 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleRemoveBidAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await removeBid(
         api,
@@ -193,6 +228,8 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleBidAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     if (bidderCount > MAX_BID_COUNT) {
       toast.error(`This NFT had reached max ${MAX_BID_COUNT} bids!`);
       return;
@@ -224,6 +261,104 @@ const NFTTabCollectible = (props) => {
     "#/nft/"
   )}/${tokenID}`;
 
+  const [askPrice, setAskPrice] = useState(1);
+
+  const handleListTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
+    try {
+      await listToken(
+        api,
+        currentAccount,
+        isOwner,
+        askPrice,
+        nftContractAddress,
+        nft721_psp34_standard.CONTRACT_ABI,
+        nft721_psp34_standard_calls,
+        marketplace.CONTRACT_ADDRESS,
+        tokenID,
+        dispatch
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
+
+  const handleUnlistTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
+    try {
+      await unlistToken(
+        api,
+        currentAccount,
+        isOwner,
+        nftContractAddress,
+        tokenID,
+        dispatch
+      );
+      setAskPrice(1);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
+
+  const [myTradingFee, setMyTradingFee] = useState(null);
+
+  const fetchData = useCallback(
+    async function () {
+      try {
+        setLoading(true);
+        if (currentAccount) {
+          const stakedCount = await fetchMyPMPStakedCount(
+            currentAccount,
+            staking_calls
+          );
+          const myTradingFeeData = await fetchMyTradingFee(
+            stakedCount,
+            currentAccount,
+            marketplace_contract_calls
+          );
+
+          setMyTradingFee(myTradingFeeData);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message);
+
+        setLoading(false);
+      }
+    },
+    [currentAccount]
+  );
+
+  useEffect(() => {
+    if (!currentAccount) {
+      toast.error("Please connect wallet for full-function using!");
+    }
+
+    fetchData();
+  }, [currentAccount, fetchData]);
+
+  const [feeCalculated, setFeeCalculated] = useState(null);
+
+  useEffect(() => {
+    let p = askPrice;
+
+    if (is_for_sale) {
+      p = price / 1000000000000;
+    }
+
+    const info = calculateFee(p, royaltyFee, myTradingFee);
+
+    setFeeCalculated(info);
+  }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
+
   return (
     <>
       <Stack
@@ -245,9 +380,10 @@ const NFTTabCollectible = (props) => {
               to={`/nft/${nftContractAddress}/${tokenID}`}
             >
               <Heading
+                isTruncated
                 color="#fff"
                 size="h4"
-                fontSize={{ base: "28px", "2xl": "32px" }}
+                fontSize={{ base: "26px" }}
               >
                 {nftName}
               </Heading>
@@ -256,18 +392,20 @@ const NFTTabCollectible = (props) => {
             <Spacer />
 
             <HStack>
-              {!is_locked && showOnChainMetadata && isOwner && (
-                <AddNewNFTModal
-                  {...props}
-                  mode={formMode.EDIT}
-                  isDisabled={is_for_sale || actionType}
-                />
-              )}
+              {!is_locked &&
+                showOnChainMetadata &&
+                collectionOwner === currentAccount?.address && (
+                  <AddNewNFTModal
+                    {...props}
+                    mode={formMode.EDIT}
+                    isDisabled={!isActive || is_for_sale || actionType}
+                  />
+                )}
 
               {!is_locked && isOwner && (
                 <LockNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
 
@@ -350,19 +488,55 @@ const NFTTabCollectible = (props) => {
                 </Tooltip>
               )}
               <SocialShare title={nftName} shareUrl={path} />
+              <Tooltip
+                hasArrow
+                bg="#333"
+                color="#fff"
+                borderRadius="0"
+                label="Report this item"
+              >
+                <span
+                  style={{
+                    width: iconWidth,
+                    height: iconWidth,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid #333333",
+                  }}
+                >
+                  <IconButton
+                    aria-label="Report this item"
+                    icon={<BsFlag />}
+                    variant="solid"
+                    width={iconWidth}
+                    height={iconWidth}
+                    onClick={() => onOpen()}
+                  />
+                </span>
+              </Tooltip>
             </HStack>
           </HStack>
 
           <Stack>
-            <Text
-              isTruncated
-              fontSize="lg"
-              color="brand.grayLight"
-              lineHeight="1.35"
-              maxW={{ base: "500px", "2xl": "610px" }}
+            <Tooltip
+              cursor="pointer"
+              hasArrow
+              bg="#333"
+              color="#fff"
+              borderRadius="0"
+              label={description}
             >
-              {description}
-            </Text>
+              <Text
+                isTruncated
+                fontSize="lg"
+                color="brand.grayLight"
+                lineHeight="1.35"
+                maxW={{ base: "500px", "2xl": "610px" }}
+              >
+                {description}
+              </Text>
+            </Tooltip>
           </Stack>
 
           <Stack w="full">
@@ -371,8 +545,7 @@ const NFTTabCollectible = (props) => {
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
-                  // to="/user/xxx"
-                  to="#"
+                  to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
                   textTransform="capitalize"
                   textDecoration="underline"
@@ -384,7 +557,10 @@ const NFTTabCollectible = (props) => {
           </Stack>
 
           <Skeleton h="full" w="full" isLoaded={!loading}>
-            <Stack mt="20px" spacing="30px">
+            <Stack
+              mt={isOwner ? "4px" : "20px"}
+              spacing={isOwner ? "10px" : "30px"}
+            >
               <Stack w="full">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -396,9 +572,8 @@ const NFTTabCollectible = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  {/* is_for_sale true no sale always show no matter is owner or nor*/}
-
-                  {!is_for_sale ? (
+                  {/* Not for sale NOT owner  */}
+                  {!is_for_sale && !isOwner ? (
                     <Flex
                       w="full"
                       border="1px solid #343333"
@@ -409,6 +584,103 @@ const NFTTabCollectible = (props) => {
                       <Heading size="h6">Not for sale</Heading>
                     </Flex>
                   ) : null}
+
+                  {/* Not for sale & owner  */}
+                  {!is_for_sale && isOwner && (
+                    <>
+                      <>
+                        <Stack>
+                          <HStack spacing="20px" mb="12px">
+                            <NumberInput
+                              w="50%"
+                              minW={"85px"}
+                              isDisabled={!isActive || actionType}
+                              bg="black"
+                              max={999000000}
+                              min={1}
+                              onChange={(v) => {
+                                if (/[eE+-]/.test(v)) return;
+
+                                setAskPrice(v);
+                              }}
+                              value={format(askPrice)}
+                              h="40px"
+                            >
+                              <NumberInputField
+                                textAlign="end"
+                                h="40px"
+                                borderRadius={0}
+                                borderWidth={0}
+                                color="#fff"
+                              />
+                              <InputRightElement
+                                bg="transparent"
+                                h={"40px"}
+                                w={8}
+                              >
+                                <AzeroIcon w="14px" h="14px" />
+                              </InputRightElement>
+                            </NumberInput>
+
+                            <CommonButton
+                              minW="200px"
+                              w="50%"
+                              h="40px"
+                              {...rest}
+                              text="push for sale"
+                              onClick={handleListTokenAction}
+                              isDisabled={
+                                !isActive ||
+                                (actionType && actionType !== LIST_TOKEN)
+                              }
+                            />
+                          </HStack>
+                        </Stack>
+                      </>
+
+                      {/* <Stack w="full" pl="8px" bg="green">
+                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                      </Stack> */}
+                    </>
+                  )}
+                  {/* 3 For sale & owner  */}
+                  {is_for_sale && isOwner && (
+                    <>
+                      <>
+                        <>
+                          <HStack spacing="20px" mb="12px">
+                            <CommonButton
+                              minW="200px"
+                              w="50%"
+                              h="40px"
+                              {...rest}
+                              text="cancel sale"
+                              onClick={handleUnlistTokenAction}
+                              isDisabled={
+                                actionType && actionType !== UNLIST_TOKEN
+                              }
+                            />{" "}
+                            <HStack w="50%" alignItems="end">
+                              <Text color="#888" w="100px">
+                                Current price
+                              </Text>
+
+                              <Tag minH="20px" pr={0} bg="transparent">
+                                <TagLabel bg="transparent">
+                                  {formatNumDynamicDecimal(price / 10 ** 12)}
+                                </TagLabel>
+                                <TagRightIcon as={AzeroIcon} w="14px" />
+                              </Tag>
+                            </HStack>
+                          </HStack>
+                        </>
+                      </>
+
+                      {/* <Stack w="full" pl="8px">
+                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                      </Stack> */}
+                    </>
+                  )}
 
                   <Stack
                     display={
@@ -461,12 +733,12 @@ const NFTTabCollectible = (props) => {
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
                                       label={formatNumDynamicDecimal(
-                                        price / 10 ** 18
+                                        price / 10 ** 12
                                       )}
                                       aria-label="A tooltip"
                                     >
                                       {formatNumDynamicDecimal(
-                                        price / 10 ** 18
+                                        price / 10 ** 12
                                       )}
                                     </Tooltip>
                                   </TagLabel>
@@ -502,7 +774,7 @@ const NFTTabCollectible = (props) => {
                                 />
 
                                 <NumberInput
-                                  min={0}
+                                  min={0.01}
                                   ml={3}
                                   h="50px"
                                   bg="black"
@@ -639,12 +911,33 @@ const NFTTabCollectible = (props) => {
                   </>
                 )}
               </Stack>
+
+              {isActive && isOwner && (
+                <>
+                  <Stack w="full" pl="8px">
+                    <FeeCalculatedBar feeCalculated={feeCalculated} />
+                  </Stack>
+                </>
+              )}
             </Stack>
           </Skeleton>
         </Stack>
       </Stack>
+      <NFTReportModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        name={name}
+        nftName={nftName}
+        onClose={onClose}
+      />
     </>
   );
 };
 
 export default NFTTabCollectible;
+
+const format = (val) => {
+  if (val?.toString().slice(-1) === ".") return val;
+
+  return formatNumDynamicDecimal(val, 6);
+};

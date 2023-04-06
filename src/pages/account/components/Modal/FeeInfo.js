@@ -152,7 +152,7 @@ const FeeInfoModal = ({ platformFee }) => {
                             minW={"5rem"}
                             fontSize={{ base: "sm", md: "24px" }}
                           >
-                            {Math.round(((100 - item.percent) * platformFee)) / 100} %
+                            {((100 - item.percent) * platformFee) / 100} %
                           </Heading>
                         </Flex>
                       </Flex>

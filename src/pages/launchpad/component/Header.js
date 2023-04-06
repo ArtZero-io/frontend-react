@@ -30,7 +30,6 @@ import { memo, useState } from "react";
 import useInterval from "use-interval";
 import { useHistory } from "react-router-dom";
 
-import { truncateStr } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -46,6 +45,11 @@ import { useEffect } from "react";
 import { execContractQuery } from "../../account/nfts/nfts";
 import { useMemo } from "react";
 import { APICall } from "../../../api/client";
+import LaunchpadEventModal from "./Modal/LaunchpadEventModal";
+import WithdrawHistoryModal from "./Modal/WithdrawHistoryModal";
+import OwnerMintModal from "../../account/projects/components/OwnerMintModal";
+import WhitelistManagerModal from "../../account/projects/components/WhitelistManagerModal";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 function LaunchpadDetailHeader({
   loading,
@@ -102,6 +106,18 @@ function LaunchpadDetailHeader({
     isOpen: isOpenWithdrawModal,
     onOpen: onOpenWithdrawModal,
     onClose: onCloseWithdrawModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenHistoryModal,
+    onOpen: onOpenHistoryModal,
+    onClose: onCloseHistoryModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenWithdrawHistoryModal,
+    onOpen: onOpenWithdrawHistoryModal,
+    onClose: onCloseWithdrawHistoryModal,
   } = useDisclosure();
 
   const nextPhaseWhenNoCurrPhaseId = useMemo(() => {
@@ -172,7 +188,7 @@ function LaunchpadDetailHeader({
     if (countDownTimer < 0) {
       countDownTimer = 0;
     }
-    
+
     const seconds = Math.floor((countDownTimer / 1000) % 60);
     const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
     const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
@@ -279,7 +295,7 @@ function LaunchpadDetailHeader({
             {isDuplicationChecked && (
               <Tooltip label="Artwork is verified by third-party for its uniqueness">
                 <Box p="1">
-                  <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
+                  <Tag border="1px solid #7ae7ff">AUTHENTIC</Tag>
                 </Box>
               </Tooltip>
             )}
@@ -307,33 +323,35 @@ function LaunchpadDetailHeader({
                   {name}
                 </Heading>
 
-                <VStack
-                  minW={["auto", "870px"]}
-                  w="full"
-                  borderBottom="#282828 solid"
-                  borderBottomWidth={["0px", "1px"]}
-                  pt={["12px", "12px"]}
-                  pb={["20px", "30px"]}
-                >
+                <VStack pt={["12px", "12px"]}>
                   <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
-                    project creator:{" "}
-                    <Text as="span" color="#7ae7ff">
-                      {truncateStr(projectOwner)}{" "}
-                    </Text>
+                    <Flex as="span">
+                      project creator: <AddressCopier address={projectOwner} />
+                    </Flex>
                   </Heading>
 
                   <Skeleton isLoaded={!loading}>
                     {isAdmin && (
                       <Heading fontSize={["sm", "md"]}>
-                        project admin:{" "}
-                        <Text as="span" color="#7ae7ff">
-                          {truncateStr(currentAccount?.address)}
-                        </Text>
+                        <Flex as="span">
+                          project admin:{" "}
+                          <AddressCopier address={currentAccount?.address} />
+                        </Flex>
                       </Heading>
                     )}
                   </Skeleton>
                 </VStack>
-
+                <HStack
+                  pb={["20px", "30px"]}
+                  justifyContent="center"
+                  minW={["auto", "870px"]}
+                  w="full"
+                  borderBottom="#282828 solid"
+                  borderBottomWidth={["0px", "1px"]}
+                >
+                  <Text>Contract Address:</Text>{" "}
+                  <AddressCopier address={nftContractAddress} hasIcon={true} />
+                </HStack>
                 <Flex
                   color="#888"
                   pt={["2px", "22px"]}
@@ -365,11 +383,13 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee / 10 ** 18 || nextPhaseWhenNoCurrPhaseId?.phase
+                          {currentPhase?.publicMintingFee / 10 ** 12 ||
+                            nextPhaseWhenNoCurrPhaseId?.phase
                               ?.publicMintingFee /
-                              10 ** 18 ||
-                             0}{" "}
+                              10 ** 12 ||
+                            0}{" "}
                           <AzeroIcon
+                            mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
@@ -394,12 +414,13 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 18 ||
+                              {currentPhase?.publicMintingFee / 10 ** 12 ||
                                 nextPhaseWhenNoCurrPhaseId?.phase
                                   ?.publicMintingFee /
-                                  10 ** 18 ||
+                                  10 ** 12 ||
                                 0}{" "}
                               <AzeroIcon
+                                mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
                               />
@@ -419,8 +440,9 @@ function LaunchpadDetailHeader({
                           color="#fff"
                         >
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
-                            10 ** 18}{" "}
+                            10 ** 12}{" "}
                           <AzeroIcon
+                            mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
@@ -431,6 +453,7 @@ function LaunchpadDetailHeader({
                   <Text textAlign="left" mx={["25px", "42px"]}>
                     Phase:{" "}
                     <Text
+                      isTruncated
                       as="span"
                       minW="60px"
                       display={["block", "inline"]}
@@ -500,164 +523,246 @@ function LaunchpadDetailHeader({
           </Skeleton>
 
           {isProjOwner || isAdmin ? (
-            <Stack
-              py="30px"
-              spacing={["20px", "10px"]}
-              minW={["fit-content", "870px"]}
-              justifyContent="space-between"
-              alignItems="center"
-              direction={["column", "row"]}
-            >
-              <HStack
-                minW="fit-content"
-                cursor="pointer"
-                onClick={() =>
-                  isProjOwner
-                    ? onOpenURI()
-                    : toast.error(
-                        "You must be the project owner to update art location!"
-                      )
-                }
+            <>
+              <Stack
+                py="10px"
+                spacing={["20px", "10px"]}
+                minW={["fit-content", "870px"]}
+                justifyContent="space-between"
+                alignItems="center"
+                direction={["column", "row"]}
               >
-                <BaseURIIcon color={isProjOwner ? "#fff" : "#888"} />
-
-                <Heading
-                  fontSize={["md", "sm"]}
-                  color={isProjOwner ? "brand.blue" : "#888"}
-                  textDecoration="underline"
-                  fontFamily="Evogria, sans-serif"
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner
+                      ? onOpenURI()
+                      : toast.error(
+                          "You must be the project owner to update art location!"
+                        )
+                  }
                 >
-                  update art location
-                </Heading>
-              </HStack>
+                  <BaseURIIcon color={isProjOwner ? "#fff" : "#888"} />
 
-              <Divider
-                width="2px"
-                height="30px"
-                bg="#232323"
-                display={["none", "inline"]}
-              />
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color={isProjOwner ? "brand.blue" : "#888"}
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update art location
+                  </Heading>
+                </HStack>
 
-              <HStack
-                minW="fit-content"
-                cursor="pointer"
-                onClick={() =>
-                  isProjOwner
-                    ? onOpenUpdateAdminAddressModal()
-                    : toast.error(
-                        "You must be the project owner to grant admin role!"
-                      )
-                }
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner
+                      ? onOpenUpdateAdminAddressModal()
+                      : toast.error(
+                          "You must be the project owner to grant admin role!"
+                        )
+                  }
+                >
+                  <AdminAddressIcon color={isProjOwner ? "#fff" : "#888"} />
+
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color={isProjOwner ? "brand.blue" : "#888"}
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    grant admin role
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner
+                      ? onOpenWithdrawModal()
+                      : toast.error(
+                          "You must be the project owner to withdraw balance!"
+                        )
+                  }
+                >
+                  <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
+
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color={isProjOwner ? "brand.blue" : "#888"}
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    withdraw balance
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner || isAdmin
+                      ? history.push({
+                          state: {
+                            formMode: "EDIT",
+                            collection_address,
+                            projectInfo: project,
+                          },
+                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                        })
+                      : toast.error(
+                          "You must be the project owner/admin to update project info!"
+                        )
+                  }
+                >
+                  <ProjectInfoIcon color="#fff" />
+
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color="#7ae7ff"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update project info
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner || isAdmin
+                      ? onOpenPhase()
+                      : toast.error(
+                          "You must be the project owner/admin to update phases!"
+                        )
+                  }
+                >
+                  <PhasesIcon color="#fff" />
+
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color="#7ae7ff"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update phases
+                  </Heading>
+                </HStack>
+              </Stack>
+
+              <Stack
+                py="10px"
+                spacing={["20px", "10px"]}
+                minW={["fit-content", "870px"]}
+                alignItems="center"
+                justifyContent="center"
+                direction={["column", "row"]}
               >
-                <AdminAddressIcon color={isProjOwner ? "#fff" : "#888"} />
-
-                <Heading
-                  fontSize={["md", "sm"]}
-                  color={isProjOwner ? "brand.blue" : "#888"}
-                  textDecoration="underline"
-                  fontFamily="Evogria, sans-serif"
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner
+                      ? onOpenHistoryModal()
+                      : toast.error(
+                          "You must be the project owner to update art location!"
+                        )
+                  }
                 >
-                  grant admin role
-                </Heading>
-              </HStack>
-
-              <Divider
-                width="2px"
-                height="30px"
-                bg="#232323"
-                display={["none", "inline"]}
-              />
-
-              <HStack
-                minW="fit-content"
-                cursor="pointer"
-                onClick={() =>
-                  isProjOwner
-                    ? onOpenWithdrawModal()
-                    : toast.error(
-                        "You must be the project owner to withdraw balance!"
-                      )
-                }
-              >
-                <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
-
-                <Heading
-                  fontSize={["md", "sm"]}
-                  color={isProjOwner ? "brand.blue" : "#888"}
-                  textDecoration="underline"
-                  fontFamily="Evogria, sans-serif"
+                  <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color={isProjOwner ? "brand.blue" : "#888"}
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    Minting History
+                  </Heading>
+                </HStack>
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+                <HStack
+                  minW="fit-content"
+                  cursor="pointer"
+                  onClick={() =>
+                    isProjOwner
+                      ? onOpenWithdrawHistoryModal()
+                      : toast.error(
+                          "You must be the project owner to update art location!"
+                        )
+                  }
                 >
-                  withdraw balance
-                </Heading>
-              </HStack>
-
-              <Divider
-                width="2px"
-                height="30px"
-                bg="#232323"
-                display={["none", "inline"]}
-              />
-
-              <HStack
-                minW="fit-content"
-                cursor="pointer"
-                onClick={() =>
-                  isProjOwner || isAdmin
-                    ? history.push({
-                        state: {
-                          formMode: "EDIT",
-                          collection_address,
-                          projectInfo: project,
-                        },
-                        pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                      })
-                    : toast.error(
-                        "You must be the project owner/admin to update project info!"
-                      )
-                }
-              >
-                <ProjectInfoIcon color="#fff" />
-
-                <Heading
-                  fontSize={["md", "sm"]}
-                  color="#7ae7ff"
-                  textDecoration="underline"
-                  fontFamily="Evogria, sans-serif"
-                >
-                  update project info
-                </Heading>
-              </HStack>
-
-              <Divider
-                width="2px"
-                height="30px"
-                bg="#232323"
-                display={["none", "inline"]}
-              />
-
-              <HStack
-                minW="fit-content"
-                cursor="pointer"
-                onClick={() =>
-                  isProjOwner || isAdmin
-                    ? onOpenPhase()
-                    : toast.error(
-                        "You must be the project owner/admin to update phases!"
-                      )
-                }
-              >
-                <PhasesIcon color="#fff" />
-
-                <Heading
-                  fontSize={["md", "sm"]}
-                  color="#7ae7ff"
-                  textDecoration="underline"
-                  fontFamily="Evogria, sans-serif"
-                >
-                  update phases
-                </Heading>
-              </HStack>
-            </Stack>
+                  <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
+                  <Heading
+                    fontSize={["md", "sm"]}
+                    color={isProjOwner ? "brand.blue" : "#888"}
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    Withdraw History
+                  </Heading>
+                </HStack>
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+                <OwnerMintModal
+                  isDisabled={!isProjOwner}
+                  selectedProjectAddress={collection_address}
+                  projectInfo={project}
+                />
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />{" "}
+                <WhitelistManagerModal
+                  isDisabled={!(isProjOwner || isAdmin)}
+                  selectedProjectAddress={collection_address}
+                  projectInfo={project}
+                />
+              </Stack>
+            </>
           ) : null}
         </VStack>
       </Box>
@@ -671,11 +776,6 @@ function LaunchpadDetailHeader({
         display={["none", "flex"]}
         left={{ base: "30px", xl: "100px" }}
         position={{ base: "unset", md: "absolute" }}
-        // _hover={{
-        //   bg: "brand.blue",
-        //   // color: "black",
-        //   borderWidth: "0",
-        // }}
       >
         <IconButton
           mr="8px"
@@ -707,6 +807,7 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
           />
           <UpdateAdminAddressModal
+            collectionOwner={project?.collectionOwner}
             isOpen={isOpenUpdateAdminAddressModal}
             collection_address={collection_address}
             onClose={onCloseUpdateAdminAddressModal}
@@ -716,6 +817,20 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
             onClose={onCloseWithdrawModal}
           />
+          {
+            <LaunchpadEventModal
+              isOpen={isOpenHistoryModal}
+              collection_address={collection_address}
+              onClose={onCloseHistoryModal}
+            />
+          }
+          {
+            <WithdrawHistoryModal
+              isOpen={isOpenWithdrawHistoryModal}
+              collection_address={collection_address}
+              onClose={onCloseWithdrawHistoryModal}
+            />
+          }
           <UpdatePhasesModal
             {...project}
             isOpen={isOpenPhase}

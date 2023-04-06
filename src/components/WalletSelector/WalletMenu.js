@@ -28,16 +28,16 @@ function WalletMenu() {
       activeAddress &&
       api.query.system
         .account(activeAddress, (balance) => {
-          let oneSZERO = new BN(10).pow(new BN(18));
+          let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, 'le');
           let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, 'le');
-          console.log(balance?.data.toHuman());
+          // console.log(balance?.data.toHuman());
           if (balSZERO.gt(oneSZERO)) {
             balSZERO =
-              balSZERO.div(oneSZERO).toNumber() -
-              miscFrozenBalSZERO.div(oneSZERO).toNumber();
+              balSZERO.div(new BN(10 ** 12)).toNumber() -
+              miscFrozenBalSZERO.div(new BN(10 ** 12)).toNumber();
           } else {
-            balSZERO = balSZERO.toNumber() / 10 ** 18;
+            balSZERO = balSZERO.toNumber() / 10 ** 12;
           }
           // console.log('balSZERO - freeze', balSZERO);
           if (balSZERO >= 1) {

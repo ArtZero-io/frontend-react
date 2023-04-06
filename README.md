@@ -8,10 +8,16 @@ The ArtZero platform aims to be a decentralized NFT marketplace on the AlephZero
 
 ### Backend API config
 
+After cloning the frontend repository, please run the command below to set up the automation .env file
+```shell
+cd frontend-react
+chmod +x setup_env_fe.sh.x
+./setup_env_fe.sh.x
+```
 URL feed data for client use.
 
 ```
-REACT_APP_API_BASE_URL=https://api.artzero.io
+REACT_APP_API_BASE_URL=https://127.0.0.1:3410
 ```
 
 ### IPFS config
@@ -39,7 +45,7 @@ REACT_APP_EMAILJS_PUBLIC_KEY=DEt23644Rzabcabc
 Install dependencies
 
 ```bash
-yarn
+yarn install
 ```
 
 Run dev server

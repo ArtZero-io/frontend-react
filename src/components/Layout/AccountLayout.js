@@ -15,14 +15,24 @@ import * as ROUTES from '@constants/routes';
 import Layout from '@components/Layout/Layout';
 import ProfileHeader from '@pages/account/components/Header';
 import { SCROLLBAR } from '@constants';
+import { CREATE_NFT } from '../../constants';
+import useForceUpdate from "@hooks/useForceUpdate";
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
   const { pathname } = useLocation();
-
   // TODO refactor tab nav
   // eslint-disable-next-line no-unused-vars
   const [tabsData, setTabsData] = useState(tabsList);
+
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [CREATE_NFT],
+    () => handleForceUpdate()
+  );
+
+  const handleForceUpdate = async () => {
+    history.push(ROUTES.ACCOUNT_MY_NFTS);
+  };
 
   const handleTabsChange = (index) => {
     history.push(tabsData[index].route);

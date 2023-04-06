@@ -1,12 +1,11 @@
 import { Box, Center, Flex, Heading, Spacer } from "@chakra-ui/react";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
 
-import Dropdown from "@components/Dropdown/Dropdown";
 import PaginationMP from "@components/Pagination/Pagination";
 
 import { NUMBER_PER_PAGE } from "@constants/index";
@@ -18,12 +17,7 @@ const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
   const [featuredCollections, setFeaturedCollections] = useState([]);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
-  const [selectedItem, setSelectedItem] = useState(0);
-
   const history = useHistory();
-
-  const options = ["All collections", "Trending"];
-  // 0 All, 1 Vol
 
   const {
     pagesCount,
@@ -56,20 +50,11 @@ const CollectionsPage = () => {
 
         setTotalCollectionsCount(totalCollections);
 
-        if (selectedItem === 0) {
-          const { ret: collectionsList } = await APICall.getAllCollections(
-            options
-          );
+        const { ret: collectionsList } = await APICall.getAllCollections(
+          options
+        );
 
-          setCollections(collectionsList);
-        }
-
-        if (selectedItem === 1) {
-          const { ret: totalCollectionsFilterByVolume } =
-            await APICall.getCollectionsByVolume(options);
-
-          setCollections(totalCollectionsFilterByVolume);
-        }
+        setCollections(collectionsList);
       } catch (error) {
         console.log(error);
 
@@ -83,7 +68,6 @@ const CollectionsPage = () => {
           await APICall.getFeaturedCollections();
 
         if (status !== "OK" || featCollectionsAddrList?.length === 0) {
-          console.log('status...',)
           return setFeaturedCollections([]);
         }
 
@@ -113,7 +97,7 @@ const CollectionsPage = () => {
     fetchFeaturedCollections();
     fetchCollections();
     return () => (isSubscribed = false);
-  }, [offset, pageSize, selectedItem]);
+  }, [offset, pageSize]);
 
   const scrollToCollectionAddress = useMemo(() => {
     if (history.action !== "POP") {
@@ -138,6 +122,57 @@ const CollectionsPage = () => {
     }
     return persistedId ? persistedId : null;
   }, [history.action, setCurrentPage]);
+
+  const [randomCollections, setRandomCollections] = useState([]);
+  const fetchRandomCollections = useCallback(async () => {
+    try {
+      const { status, ret } = await APICall.getAllCollections({
+        limit: 9999,
+      });
+      if (status === "OK") {
+        const randNum = Math.random();
+        const rand1 = Math.floor(
+          (randNum < 0.3 ? randNum * 2 : randNum) * ret?.length
+        );
+        const rand2 = Math.floor(rand1 * 0.8);
+        const rand3 = Math.floor(rand2 * 0.5);
+
+        const randomList = ret.filter(
+          (i, index) => index === rand1 || index === rand2 || index === rand3
+        );
+
+        return setRandomCollections(randomList);
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error("There was an error while fetching the Random collections.");
+    }
+  }, []);
+
+  const [trendingCollections, setTrendingCollections] = useState([]);
+  const fetchTrendingCollections = useCallback(async () => {
+    try {
+      const { status, ret } = await APICall.getCollectionsByVolume({
+        limit: 6,
+        sort: -1,
+        isActive: true,
+      });
+
+      if (status === "OK") {
+        return setTrendingCollections(ret);
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error("There was an error while fetching the Random collections.");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRandomCollections();
+    fetchTrendingCollections();
+  }, [fetchRandomCollections, fetchTrendingCollections]);
 
   return (
     <Layout variant="marketplace">
@@ -173,78 +208,97 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box
-            as="section"
-            // maxW="container.3xl"
-            w="full"
-          >
-            <Box
-              mx="auto"
-              maxW="1240px"
-              px={{ base: "22px", "2xl": "0" }}
-              pt={{ base: "12", "2xl": "20" }}
-            >
-              <Heading
-                my="5rem"
-                textAlign="center"
-                fontSize={["3xl-mid", "5xl", "5xl"]}
-              >
-                featured collections
-              </Heading>
-              <>
-                {featuredCollections?.length ? (
+          {featuredCollections?.length ? (
+            <>
+              <Box as="section" w="full">
+                <Box
+                  mx="auto"
+                  maxW="1240px"
+                  px={{ base: "22px", "2xl": "0" }}
+                  pt={{ base: "12", "2xl": "20" }}
+                >
+                  <Heading
+                    my="5rem"
+                    textAlign="center"
+                    fontSize={["3xl-mid", "5xl", "5xl"]}
+                  >
+                    featured collections
+                  </Heading>{" "}
                   <GridA
                     collections={featuredCollections}
                     variant="marketplace-collection"
                   />
-                ) : null}
-              </>
-            </Box>
-          </Box>
+                </Box>
+              </Box>
+            </>
+          ) : null}
 
-          <Box
-            as="section"
-            // maxW="container.3xl"
-            w="full"
-          >
+          {randomCollections?.length ? (
+            <>
+              <Box as="section" w="full">
+                <Box
+                  mx="auto"
+                  maxW="1240px"
+                  px={{ base: "22px", "2xl": "0" }}
+                  pt={{ base: "12", "2xl": "20" }}
+                >
+                  <Heading
+                    my="5rem"
+                    textAlign="center"
+                    fontSize={["3xl-mid", "5xl", "5xl"]}
+                  >
+                    random collections
+                  </Heading>{" "}
+                  <GridA
+                    collections={randomCollections}
+                    variant="marketplace-collection"
+                  />
+                </Box>
+              </Box>
+            </>
+          ) : null}
+          {trendingCollections?.length ? (
+            <>
+              <Box as="section" w="full">
+                <Box
+                  mx="auto"
+                  maxW="1240px"
+                  px={{ base: "22px", "2xl": "0" }}
+                  pt={{ base: "12", "2xl": "20" }}
+                >
+                  <Heading
+                    my="5rem"
+                    textAlign="center"
+                    fontSize={["3xl-mid", "5xl", "5xl"]}
+                  >
+                    trending collections
+                  </Heading>{" "}
+                  <GridA
+                    collections={trendingCollections}
+                    variant="marketplace-collection"
+                  />
+                </Box>
+              </Box>
+            </>
+          ) : null}
+
+          <Box as="section" w="full">
             <Box
               mx="auto"
               maxW="1240px"
               px={{ base: "22px", "2xl": "0" }}
               pt="80px"
               pb="100px"
-              // py={{ base: "12", "2xl": "20" }}
             >
               <Heading
                 my="5rem"
                 textAlign="center"
                 fontSize={["3xl-mid", "5xl", "5xl"]}
               >
-                All collections
+                New collections
               </Heading>
               {collections?.length ? (
                 <>
-                  <Flex
-                    w="full"
-                    pb="16px"
-                    alignItems={{ base: "start", md: "end" }}
-                    direction={{ base: "column", md: "row" }}
-                  >
-                    <PaginationMP
-                      pagesCount={pagesCount}
-                      isDisabled={isDisabled}
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                    />
-                    <Spacer my={{ base: "3", "2xl": "auto" }} />
-                    <Dropdown
-                      minW="195px"
-                      options={options}
-                      selectedItem={selectedItem}
-                      setSelectedItem={setSelectedItem}
-                    />
-                  </Flex>
-
                   {collections?.length ? (
                     <GridA
                       collections={collections}

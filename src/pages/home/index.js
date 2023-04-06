@@ -327,7 +327,7 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                welcome to artzero - the first nft marketplace on astar
+                welcome to artzero - the first nft marketplace on aleph zero
                 network!
               </Text>
             </Center>
@@ -410,15 +410,15 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                you will need some testnet Astar (SBY) to start. get free
-                Astar from{" "}
+                you will need some testnet azero (tzero) to start. get free
+                tzero from{" "}
                 <Link
                   isExternal
                   color="#7ae7ff"
                   textDecoration="underline"
-                  href="https://portal.astar.network/#/shibuya-testnet/assets"
+                  href="https://faucet.test.azero.dev/"
                 >
-                  https://portal.astar.network/#/shibuya-testnet/assets
+                  https://faucet.test.azero.dev/
                 </Link>
               </Text>
             </Center>

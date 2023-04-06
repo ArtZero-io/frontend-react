@@ -14,6 +14,7 @@ function Dropdown({
   setSelectedItem,
   width,
   minW,
+  bg,
   ...rest
 }) {
   const onClickHandler = (item) => setSelectedItem(item);
@@ -31,7 +32,7 @@ function Dropdown({
           minW={minW}
           textAlign="left"
           variant="outline"
-          bg="brand.grayDark"
+          bg={bg||"brand.grayDark"}
           fontFamily="Oswald"
           fontSize={["md", "lg"]}
           borderColor="transparent"
@@ -45,7 +46,7 @@ function Dropdown({
 
         <MenuList
           // minW="325px"
-          bg="brand.grayDark"
+          bg={bg||"brand.grayDark"}
           borderRadius="0"
           minW={minW}
         >

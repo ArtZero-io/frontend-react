@@ -1,5 +1,4 @@
 import {
-  Button,
   Heading,
   IconButton,
   Modal,
@@ -7,8 +6,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
-  Text,
   Tooltip,
   useBreakpointValue,
   useDisclosure,
@@ -22,6 +19,8 @@ import AdvancedModeForm from "../Form/AdvancedMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
+import { CreateButton } from "./CreateButton";
+import NFTAdvanIcon from "@theme/assets/icon/NFTAdvanIcon";
 
 function AdvancedModeModal({
   mode = "add",
@@ -49,38 +48,21 @@ function AdvancedModeModal({
   return (
     <>
       {mode === formMode.ADD && (
-        <Tooltip
-          hasArrow
-          bg="#333"
-          color="#fff"
-          label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
-        >
-          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-            Advanced Mode
-          </Button>
-        </Tooltip>
+        // <Tooltip
+        //   hasArrow
+        //   bg="#333"
+        //   color="#fff"
+        //   label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+        // >
+        //   <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+        //     Advanced Mode
+        //   </Button>
+        // </Tooltip>
+        <CreateButton icon={<NFTAdvanIcon />} onClick={() => onOpen()} title={'Advanced mode'} data={["Designed for tech-savvy creators", "Ability to customize the NFT smart contract to handle large NFT collections"]}/>
       )}
 
       {mode === formMode.EDIT && (
         <>
-          <Text
-            h="40px"
-            px="8px"
-            bg="black"
-            top="2px"
-            zIndex="1"
-            minW="40px"
-            right="40px"
-            pos="absolute"
-            lineHeight="36px"
-            color="#7ae7ff"
-          >
-            {contractType === "Psp34Auto"
-              ? "Simple"
-              : contractType === "Psp34Manual"
-              ? "Adv"
-              : ""}
-          </Text>
           <IconButton
             h="40px"
             top="2px"
@@ -115,10 +97,10 @@ function AdvancedModeModal({
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           position="relative"
@@ -133,6 +115,8 @@ function AdvancedModeModal({
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
+            _hover="none"
+            bg="#171717"
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>

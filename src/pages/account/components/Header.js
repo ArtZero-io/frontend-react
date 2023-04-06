@@ -38,6 +38,7 @@ import {
   formatQueryResultToNumber,
 } from "../nfts/nfts";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -111,7 +112,7 @@ function ProfileHeader() {
       api,
       marketplace.CONTRACT_ABI,
       marketplace.CONTRACT_ADDRESS,
-      "getHoldAmountOfBidder",
+      "artZeroMarketplaceTrait::getHoldAmountOfBidder",
       currentAccount?.address
     );
 
@@ -127,16 +128,20 @@ function ProfileHeader() {
   const onClaimHandler = async () => {
     await execContractTx(
       currentAccount,
+      dispatch,
+      "receiveHoldAmount",
       api,
       marketplace.CONTRACT_ABI,
       marketplace.CONTRACT_ADDRESS,
       0, //=>value
-      "receiveHoldAmount",
+      "artZeroMarketplaceTrait::receiveHoldAmount",
       currentAccount?.address
     );
+    // TODO: update to remote dispatch(clearTxStatus());
 
     await delay(2000).then(() => {
-      toast.success("You have unsuccessful Bids to claim!");
+      toast.success("You have successfully claim your unsuccessful bid!");
+      dispatch(clearTxStatus());
       fetchMyBidHoldInfo();
     });
   };
@@ -226,7 +231,7 @@ function ProfileHeader() {
               justifyContent="center"
             >
               <CommonButton
-                text={`Claim unsuccessful Bids: ${claimAmount} SBY`}
+                text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
                 onClick={() => onClaimHandler()}
               />{" "}
               <Tooltip

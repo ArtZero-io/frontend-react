@@ -39,6 +39,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import PropCard from "@components/Card/PropCard";
 import isNotEmptyStr from "@utils";
 import LevelCard from "@components/Card/LevelCard";
+import { ipfsClient } from "@api/client";
 
 const AddNewNFTForm = ({
   mode = "add",
@@ -133,18 +134,24 @@ const AddNewNFTForm = ({
                             "Test Prop",
                             "Duplicated Props Type!",
                             (value, schema) => {
+                              const levelsArr = schema?.from[1].value?.levels;
+                              const keyLevelsArr = levelsArr.map((p) =>
+                                p.name?.trim()
+                              );
+
                               const propsArr =
                                 schema?.from[1].value?.properties;
-
                               const keyPropsArr = propsArr.map((p) =>
                                 p.type?.trim()
                               );
 
-                              const [isDup] = keyPropsArr.filter(
-                                (v, i) => i !== keyPropsArr.indexOf(v)
+                              return (
+                                keyPropsArr.filter((val) => val === value)
+                                  .length +
+                                  keyLevelsArr.filter((val) => val === value)
+                                    .length <=
+                                1
                               );
-
-                              return !(isDup && isDup.trim() === value.trim());
                             }
                           )
                           .required("Must have type value.")
@@ -166,8 +173,8 @@ const AddNewNFTForm = ({
                   [["type", "name"]]
                 )
               )
-              .min(0)
-              .max(10, "Property must have less than or equal to 10 items!"),
+              .min(0),
+            // .max(10, "Property must have less than or equal to 10 items!"),
             levels: Yup.array(
               Yup.object().shape(
                 {
@@ -181,16 +188,22 @@ const AddNewNFTForm = ({
                           "Duplicated Levels Name!",
                           (value, schema) => {
                             const levelsArr = schema?.from[1].value?.levels;
-
                             const keyLevelsArr = levelsArr.map((p) =>
                               p.name?.trim()
                             );
 
-                            const [isDup] = keyLevelsArr.filter(
-                              (v, i) => i !== keyLevelsArr.indexOf(v)
+                            const propsArr = schema?.from[1].value?.properties;
+                            const keyPropsArr = propsArr.map((p) =>
+                              p.type?.trim()
                             );
 
-                            return !(isDup && isDup.trim() === value.trim());
+                            return (
+                              keyPropsArr.filter((val) => val === value)
+                                .length +
+                                keyLevelsArr.filter((val) => val === value)
+                                  .length <=
+                              1
+                            );
                           }
                         )
                         .required("Must have level name.")
@@ -216,9 +229,8 @@ const AddNewNFTForm = ({
                 },
                 [["name", "level", "levelMax"]]
               )
-            )
-              .min(0)
-              .max(10, "Level must have less than or equal to 10 items!"),
+            ).min(0),
+            // .max(10, "Level must have less than or equal to 10 items!"),
           })}
           onSubmit={async (values) => {
             !avatarIPFSUrl && toast.error("Upload images first");
@@ -233,20 +245,13 @@ const AddNewNFTForm = ({
                 return toast.error("You aren't the owner of this collection!");
               }
 
-              let attributes = [
-                {
-                  name: "nft_name",
-                  value: values.NFTName,
-                },
-                {
-                  name: "description",
-                  value: values.description,
-                },
-                {
-                  name: "avatar",
-                  value: values.avatarIPFSUrl,
-                },
-              ];
+              const metadata = {
+                name: values.NFTName,
+                description: values.description,
+                image: values.avatarIPFSUrl,
+              };
+
+              let attributes = [];
 
               if (values?.properties[0]?.name) {
                 for (const property of values.properties) {
@@ -276,40 +281,92 @@ const AddNewNFTForm = ({
               );
 
               if (mode === formMode.ADD) {
-                dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
-                await nft721_psp34_standard_calls.mintWithAttributes(
-                  currentAccount,
-                  collection_address || rest?.nftContractAddress,
-                  attributes,
-                  dispatch,
-                  CREATE_NFT,
-                  api
-                );
+                metadata.attributes = attributes;
+                try {
+                  const { path: metadataHash } = await ipfsClient.add(
+                    JSON.stringify(metadata)
+                  );
+
+                  // inputCacheImages only use for cache only no Contract use
+
+                  if (!metadataHash) {
+                    toast.error("There is an error with metadata hash!");
+                    return;
+                  }
+                  dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
+                  await nft721_psp34_standard_calls.mintWithAttributes(
+                    currentAccount,
+                    collection_address || rest?.nftContractAddress,
+                    [
+                      {
+                        name: "metadata",
+                        value: metadataHash,
+                      },
+                    ],
+                    dispatch,
+                    CREATE_NFT,
+                    api,
+                    values.avatarIPFSUrl
+                  );
+                } catch (error) {
+                  console.log("error", error);
+                }
               } else {
                 // add deleted properties
-                const oldAttrsKeysList = Object.keys(traits);
+                let oldAttrsKeysList = {};
+                try {
+                  oldAttrsKeysList = Object.keys(traits);
+                } catch (error) {
+                  console.log("error", error);
+                }
 
                 const newAttrsKeysList = attributes.map((item) => item.name);
 
-                for (let oldAttr of oldAttrsKeysList) {
-                  if (newAttrsKeysList.indexOf(oldAttr) === -1) {
-                    attributes.push({
-                      name: oldAttr,
-                      value: "",
-                    });
+                try {
+                  for (let oldAttr of oldAttrsKeysList) {
+                    if (newAttrsKeysList.indexOf(oldAttr) === -1) {
+                      attributes.push({
+                        name: oldAttr,
+                        value: "",
+                      });
+                    }
                   }
+                } catch (error) {
+                  console.log("error", error);
                 }
-                dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
-                // rest.nftContractAddress due to Edit mode on My NFT has no params
-                await nft721_psp34_standard_calls.setMultipleAttributesNFT(
-                  currentAccount,
-                  collection_address || rest.nftContractAddress,
-                  tokenID,
-                  attributes,
-                  dispatch,
-                  EDIT_NFT,
-                  api
-                );
+
+                try {
+                  dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
+                  // rest.nftContractAddress due to Edit mode on My NFT has no params
+
+                  const metadata = transformFormValuesToNewMetadata(values);
+
+                  const { path: metadataHash } = await ipfsClient.add(
+                    JSON.stringify(metadata)
+                  );
+
+                  if (!metadataHash) {
+                    toast.error("There is an error with metadata hash!");
+                    return;
+                  }
+                  await nft721_psp34_standard_calls.setMultipleAttributesNFT(
+                    currentAccount,
+                    collection_address || rest.nftContractAddress,
+                    tokenID,
+                    [
+                      {
+                        name: "metadata",
+                        value: metadataHash,
+                      },
+                    ],
+                    dispatch,
+                    EDIT_NFT,
+                    api,
+                    values.avatarIPFSUrl
+                  );
+                } catch (error) {
+                  console.log("error", error);
+                }
               }
             }
           }}
@@ -501,3 +558,34 @@ const AddNewNFTForm = ({
 };
 
 export default AddNewNFTForm;
+
+const transformFormValuesToNewMetadata = (values) => {
+  const metadata = {
+    name: values.NFTName,
+    description: values.description,
+    image: values.avatarIPFSUrl,
+  };
+
+  let attributes = [];
+
+  if (values?.properties[0]?.name) {
+    for (const property of values.properties) {
+      attributes.push({
+        name: property.type,
+        value: property.name,
+      });
+    }
+  }
+
+  if (values?.levels[0]?.name) {
+    for (const level of values.levels) {
+      attributes.push({
+        name: level.name,
+        value: level.level + "|" + level.levelMax,
+      });
+    }
+  }
+  metadata.attributes = attributes;
+
+  return metadata;
+};

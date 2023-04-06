@@ -6,14 +6,12 @@ import {
   Stack,
   Skeleton,
   Input,
-  Button,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { useEffect, useState } from "react";
-import { truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { SCROLLBAR } from "@constants";
@@ -29,6 +27,8 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { useCallback } from "react";
 import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { isEmptyObj } from "@utils";
+import { ipfsClient } from "@api/client";
 
 let collection_count = 0;
 
@@ -45,15 +45,15 @@ function CollectionAdmin() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-  console.log(actionType, 'actionTypeactionType');
+
   const getCollectionContractBalance = useCallback(async () => {
     const { data: balance } = await api.query.system.account(
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
         new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
-          10 ** 12
+          10 ** 6
     );
   }, [api.query.system]);
 
@@ -179,12 +179,11 @@ function CollectionAdmin() {
       );
 
       const templateParams = {
-        project_name: selectedCollection[0]?.name,
+        collection_name: selectedCollection[0]?.name,
         collection_address: collection_contract,
-        // email_owner:  selectedCollection[0]?.email?
-        // TODO: waiting for new api added email,
+        email_owner: selectedCollection[0]?.email,
       };
-
+      // console.log("templateParams", templateParams);
       await collection_manager_calls.updateIsActive(
         currentAccount,
         collection_contract,
@@ -202,21 +201,25 @@ function CollectionAdmin() {
   };
 
   const { loading: loadingForceUpdate } = useForceUpdate(
-    [UPDATE_COLLECTION_STATUS],
+    [UPDATE_COLLECTION_STATUS, "grantRole", "setDoxxed", "setDupChecked"],
     () => getAllCollections()
   );
   const [newAdminAddress, setNewAdminAddress] = useState("");
   const grantAdminAddress = async () => {
-    // if (!isOwner) {
-    //   return toast.error(`Only owner can grant admin role!`);
-    // }
+    if (!isOwner) {
+      return toast.error(`Only owner can grant admin role!`);
+    }
 
     if (!isValidAddressPolkadotAddress(newAdminAddress)) {
       return toast.error(`Invalid address! Please check again!`);
     }
     try {
+      dispatch(setTxStatus({ type: "grantRole", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "grantRole",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
@@ -239,19 +242,67 @@ function CollectionAdmin() {
       return;
     }
 
+    const selectedCollection = collections.find(
+      (item) => item.nftContractAddress === address
+    );
+
+    if (isEmptyObj(selectedCollection)) {
+      return toast.error("There is some wrong !");
+    }
     const statusBeSet = curDoxxedStatus ? "0" : "1";
 
+    const {
+      name,
+      description,
+      avatarImage,
+      headerImage,
+      squareImage,
+      website,
+      twitter,
+      discord,
+      telegram,
+      isDuplicationChecked,
+    } = selectedCollection;
+
+    // console.log("selectedCollection", selectedCollection);
+
+    let { path: metadataHash } = await ipfsClient.add(
+      JSON.stringify({
+        name,
+        description,
+        avatarImage,
+        headerImage,
+        squareImage,
+        website,
+        twitter,
+        discord,
+        telegram,
+        isDoxxed: statusBeSet,
+        isDuplicationChecked: isDuplicationChecked ? "1" : "0",
+      })
+    );
+
+    // console.log("setDoxxedHandler metadataHash", metadataHash);
+    if (!metadataHash) {
+      toast.error("There is an error with metadata hash!");
+      return;
+    }
+
     try {
+      dispatch(setTxStatus({ type: "setDoxxed", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "setDoxxed",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
         0, //=>value
-        "setMultipleAttributes",
+        "artZeroCollectionTrait::setMultipleAttributes",
         address,
-        ["is_doxxed"],
-        [statusBeSet]
+        ["metadata"],
+        [metadataHash]
       );
 
       await APICall.askBeUpdateCollectionData({
@@ -270,17 +321,66 @@ function CollectionAdmin() {
 
     const statusBeSet = currDupStatus ? "0" : "1";
 
+    const selectedCollection = collections.find(
+      (item) => item.nftContractAddress === address
+    );
+
+    if (isEmptyObj(selectedCollection)) {
+      return toast.error("There is some wrong !");
+    }
+
+    const {
+      name,
+      description,
+      avatarImage,
+      headerImage,
+      squareImage,
+      website,
+      twitter,
+      discord,
+      telegram,
+      isDoxxed,
+    } = selectedCollection;
+
+    // console.log("selectedCollection", selectedCollection);
+
+    let { path: metadataHash } = await ipfsClient.add(
+      JSON.stringify({
+        name,
+        description,
+        avatarImage,
+        headerImage,
+        squareImage,
+        website,
+        twitter,
+        discord,
+        telegram,
+        isDoxxed: isDoxxed ? "1" : "0",
+        isDuplicationChecked: statusBeSet,
+      })
+    );
+    // console.log("setDupCheckedHandler metadataHash", metadataHash);
+
+    if (!metadataHash) {
+      toast.error("There is an error with metadata hash!");
+      return;
+    }
+
     try {
+      dispatch(setTxStatus({ type: "setDupChecked", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "setDupChecked",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
         0, //=>value
-        "setMultipleAttributes",
+        "artZeroCollectionTrait::setMultipleAttributes",
         address,
-        ["is_duplication_checked"],
-        [statusBeSet]
+        ["metadata"],
+        [metadataHash]
       );
 
       await APICall.askBeUpdateCollectionData({
@@ -295,67 +395,76 @@ function CollectionAdmin() {
   return (
     <Box
       mx="auto"
-      px={{ base: "6", "2xl": "8" }}
+      // px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
-      <Box maxW="8xl" fontSize="lg" minH="50rem">
+      <Box
+        //  maxW="8xl"
+        fontSize="lg"
+        minH="50rem"
+      >
         <Stack
           direction={{ base: "column", xl: "row" }}
           pb={5}
           borderBottomWidth={1}
         >
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight">
-              Total Collection:{" "}
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="50px"
-              color="#fff"
-              isLoaded={collectionCount}
-            >
-              {collectionCount}{" "}
-            </Skeleton>
-          </Flex>
-          <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Collection Contract Balance:
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="60px"
-              color="#fff"
-              isLoaded={collectionContractBalance}
-            >
-              {collectionContractBalance}
-            </Skeleton>
-            ZERO
-          </Flex>
-
-          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Collection Contract Owner:{" "}
-            </Text>
-            <Skeleton
-              ml={2}
-              h="35px"
-              w="150px"
-              color="#fff"
-              isLoaded={collectionContractOwner}
-            >
-              {truncateStr(collectionContractOwner, 9)}
-            </Skeleton>
+          <Stack>
+            <Flex alignItems="start" pr={20}>
+              <Text ml={1} color="brand.grayLight">
+                Total Collection:{" "}
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="50px"
+                color="#fff"
+                isLoaded={collectionCount}
+              >
+                {collectionCount}{" "}
+              </Skeleton>
+            </Flex>
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Collection Contract Balance:
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="60px"
+                color="#fff"
+                isLoaded={collectionContractBalance}
+              >
+                {collectionContractBalance}
+              </Skeleton>
+              ZERO
+            </Flex>
           </Stack>
 
-          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Your role:{" "}
-            </Text>
-            <Text> {isCollectionAdmin ? "Admin" : "Not admin"}</Text>
+          <Stack>
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Collection Contract Owner:{" "}
+              </Text>
+              <Skeleton
+                ml={2}
+                h="35px"
+                w="150px"
+                color="#fff"
+                isLoaded={collectionContractOwner}
+              >
+                <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
+              </Skeleton>
+            </Flex>
+
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Your role:{" "}
+              </Text>{" "}
+              <Text> {isCollectionAdmin ? " Admin" : " Not admin"}</Text>
+            </Flex>
           </Stack>
-          <Flex>
+
+          <Flex maxW="500px" w="full">
             <Input
               bg="black"
               mb="15px"
@@ -365,7 +474,13 @@ function CollectionAdmin() {
               placeholder="Your new address here"
               onChange={({ target }) => setNewAdminAddress(target.value)}
             />
-            <Button onClick={grantAdminAddress}>Grant admin</Button>
+            <CommonButton
+              {...rest}
+              text="Grant admin"
+              ml="8px"
+              onClick={grantAdminAddress}
+              isDisabled={actionType && actionType !== "grantRole"}
+            />
           </Flex>
         </Stack>
 
@@ -374,15 +489,16 @@ function CollectionAdmin() {
           isLoaded={!(loading || loadingForceUpdate)}
         >
           <TableContainer
+            maxH="480px"
             h="full"
-            maxW="8xl"
+            // maxW="8xl"
             fontSize="lg"
-            overflow="auto"
+            overflowY="scroll"
             sx={SCROLLBAR}
           >
             <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
               <Thead>
-                <Tr>
+                <Tr position="sticky" top={0} zIndex={1} bg="#171717">
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
@@ -407,54 +523,7 @@ function CollectionAdmin() {
                   >
                     Name
                   </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Owner
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Type
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Status
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    NFT count
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Royalty Fee
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Metadata
-                  </Th>
+
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
@@ -479,6 +548,39 @@ function CollectionAdmin() {
                   >
                     Action
                   </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Status
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Owner
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Type
+                  </Th>
+
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    NFT count
+                  </Th>
                 </Tr>
               </Thead>
 
@@ -494,35 +596,23 @@ function CollectionAdmin() {
                           address={collection.nftContractAddress}
                         />
                       </Td>
-                      <Td py={7}>{collection.name}</Td>
-                      <Td py={7}>
-                        {truncateStr(collection.collectionOwner, 5)}
+                      <Td py={7} maxW="200px">
+                        <Text fontSize="15px">{collection.name}</Text>
+                        <Text>
+                          Royalty Fee:{" "}
+                          {collection.isCollectRoyaltyFee
+                            ? collection.royaltyFee / 100 + "%"
+                            : "N/A"}{" "}
+                        </Text>
                       </Td>
-                      <Td>
-                        {collection.contractType === "Psp34Auto"
-                          ? "Auto"
-                          : "Manual"}{" "}
-                      </Td>
-                      <Td py={7}>
-                        {collection.isActive ? "Active" : "Inactive"}{" "}
-                      </Td>
-                      <Td py={7}>{collection.nft_count}</Td>
-                      <Td py={7}>
-                        {collection.isCollectRoyaltyFee
-                          ? collection.royaltyFee / 100 + "%"
-                          : "N/A"}{" "}
-                      </Td>
-                      <Td py={7}>
-                        {collection.showOnChainMetadata
-                          ? "On-chain"
-                          : "Off-chain"}{" "}
-                      </Td>
+
                       <Td py={7}>
                         {collection.isDoxxed ? "YES" : "NO"}{" "}
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={collection.isDoxxed ? "outline" : ""}
                           text={!collection.isDoxxed ? "Set Yes" : "Set No"}
                           isDisabled={
@@ -539,12 +629,14 @@ function CollectionAdmin() {
                           }
                         />
                       </Td>
+
                       <Td py={7}>
                         {collection.isDuplicationChecked ? "YES" : "NO"}
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={
                             collection.isDuplicationChecked ? "outline" : ""
                           }
@@ -572,7 +664,8 @@ function CollectionAdmin() {
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={collection.isActive ? "outline" : ""}
                           text={!collection.isActive ? "Enable" : "Disable"}
                           isDisabled={
@@ -589,6 +682,33 @@ function CollectionAdmin() {
                           }
                         />
                       </Td>
+                      <Td py={7}>
+                        {collection.isActive ? "Active" : "Inactive"}{" "}
+                      </Td>
+                      <Td py={7}>
+                        <AddressCopier address={collection.collectionOwner} />
+                      </Td>
+                      <Td>
+                        <Stack>
+                          <Stack>
+                            <Text>
+                              {collection.contractType === "Psp34Auto"
+                                ? "Simple Mode"
+                                : "Advanced Mode"}
+                            </Text>
+                          </Stack>
+                          <Stack>
+                            <Text>
+                              {collection.showOnChainMetadata
+                                ? "On-chain"
+                                : "Off-chain"}{" "}
+                              Metadata
+                            </Text>
+                          </Stack>
+                        </Stack>
+                      </Td>
+
+                      <Td py={7}>{collection.nft_count}</Td>
                     </Tr>
                   ))
                 )}

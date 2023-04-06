@@ -9,6 +9,8 @@ import { Text } from "@chakra-ui/react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { acceptBid } from "@pages/token";
 
+import { getPublicCurrentAccount } from "@utils";
+
 function MyNFTOffer({ nftContractAddress, tokenID }) {
   const { currentAccount, api } = useSubstrateState();
   const dispatch = useDispatch();
@@ -37,13 +39,19 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
     }
   };
 
+  const publicCurrentAccount = getPublicCurrentAccount();
   useEffect(() => {
+    let isMounted = true;
+
     const fetchBidder = async () => {
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
-        currentAccount,
+        publicCurrentAccount,
         nftContractAddress,
         { u64: tokenID }
       );
+
+      if (!isMounted) return;
+
       setSaleInfo(sale_info);
 
       if (sale_info) {
@@ -56,7 +64,7 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
         }
 
         let listBidder = await marketplace_contract_calls.getAllBids(
-          currentAccount,
+          publicCurrentAccount,
           nftContractAddress,
           sale_info?.nftOwner,
           { u64: tokenID }
@@ -64,15 +72,15 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
 
         // map array index to bidId
         listBidder = listBidder?.map((i, idx) => {
-          return { ...i, bidId: idx };
+          return { ...i, bidId: idx, bidDate: i.bidDate?.replaceAll(",", "") };
         });
 
         //sort highest price first
         listBidder?.length &&
           listBidder.sort((a, b) => {
             return (
-              b.bidValue.replaceAll(",", "") * 1 -
-              a.bidValue.replaceAll(",", "") * 1
+              b.bidValue?.replaceAll(",", "") * 1 -
+              a.bidValue?.replaceAll(",", "") * 1
             );
           });
 
@@ -81,15 +89,9 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
     };
 
     fetchBidder();
-  }, [currentAccount, nftContractAddress, tokenID]);
-
-  if (!currentAccount) {
-    return (
-      <Text textAlign="center" py="2rem">
-        Please connect wallet first!{" "}
-      </Text>
-    );
-  }
+    return () => (isMounted = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nftContractAddress, tokenID, currentAccount?.address]);
 
   return (
     <>

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Flex, Spacer, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
@@ -13,7 +12,6 @@ import TabCollectionItems from "./component/TabItems";
 import CollectionHeader from "./component/Header/Header";
 
 import { APICall } from "@api/client";
-import useInterval from "@hooks/useInterval";
 
 import { AccountActionTypes } from "@store/types/account.types";
 import { getPublicCurrentAccount } from "@utils";
@@ -37,17 +35,19 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 
-const NUMBER_PER_PAGE = 12;
+const NUMBER_PER_PAGE = 24;
+
+const OFFSET_ACTIVITY = 6;
 
 function CollectionPage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { search } = useLocation();
+  const { search, state } = useLocation();
   const { collection_address } = useParams();
 
   const { actionType } = useTxStatus();
@@ -58,7 +58,19 @@ function CollectionPage() {
   const [activeTab, setActiveTab] = useState("LISTED");
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
 
-  const [sortData, setSortData] = useState(-1);
+  const [currentPageActivity, setCurrentPageActivity] = useState(1);
+
+  const [hasMorePage, setHasMorePage] = useState([true, true, true, true]);
+
+  const [sortData, setSortData] = useState(1);
+
+  useEffect(() => {
+    if (state?.selectedItem === 1) {
+      setSortData(-1);
+    } else {
+      setSortData(1);
+    }
+  }, [state?.selectedItem]);
 
   useEffect(() => {
     if (!search) return;
@@ -81,6 +93,7 @@ function CollectionPage() {
     if (query?.traits && Object.keys(query?.traits).length) {
       setTraitsQuery({ ...query.traits });
     }
+    initEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -121,7 +134,7 @@ function CollectionPage() {
 
     if (priceQuery.min && priceQuery.max) {
       const formatPriceQuery = ({ max, min }) => {
-        return { price: { $lte: max * 10 ** 18, $gte: min * 10 ** 18 } };
+        return { price: { $lte: max * 10 ** 12, $gte: min * 10 ** 12 } };
       };
 
       const priceQueryFormat = formatPriceQuery(queryFilter.price);
@@ -156,11 +169,7 @@ function CollectionPage() {
 
     ret.totalListed = totalListedCount || 0;
 
-    const {
-      status: floorStatus,
-      message,
-      ret: floorPrice,
-    } = await APICall.getCollectionFloorPrice({
+    const { message, ret: floorPrice } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
 
@@ -242,6 +251,11 @@ function CollectionPage() {
   }, [pagesCount]);
 
   useEffect(() => {
+    initEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPageActivity]);
+
+  useEffect(() => {
     const cleanQuery = { ...queryFilter };
 
     if (!cleanQuery?.price?.min || !cleanQuery?.price?.max) {
@@ -256,6 +270,13 @@ function CollectionPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection_address, traitsQuery, priceQuery, activeTab]);
+
+  const resetPage = () => {
+    if (currentPageActivity !== 1) {
+      setHasMorePage([true, true, true, true]);
+      setCurrentPageActivity(1);
+    }
+  };
 
   const tabsData = [
     {
@@ -283,7 +304,18 @@ function CollectionPage() {
       label: "activity",
       isDisabled: false,
       component: (
-        <TabActivity {...data} latestBlockNumber={latestBlockNumber} />
+        <TabActivity
+          {...data}
+          latestBlockNumber={latestBlockNumber}
+          fetchMore={() => setCurrentPageActivity(currentPageActivity + 1)}
+          fetchBack={() =>
+            currentPageActivity > 1 &&
+            setCurrentPageActivity(currentPageActivity - 1)
+          }
+          currentPage={currentPageActivity}
+          resetPage={resetPage}
+          hasMore={hasMorePage}
+        />
       ),
     },
   ];
@@ -294,35 +326,45 @@ function CollectionPage() {
 
   const fetchPlatformEvents = useCallback(async () => {
     try {
-      const getPurchaseEvents = await APICall.getPurchaseEvents({
+      const getPurchaseEvents = APICall.getPurchaseEvents({
         collection_address,
+        limit: OFFSET_ACTIVITY + 1,
+        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
       });
 
-      const getBidWinEvents = await APICall.getBidWinEvents({
+      const getBidWinEvents = APICall.getBidWinEvents({
         collection_address,
+        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
+        limit: OFFSET_ACTIVITY + 1,
       });
 
-      const getUnlistEvents = await APICall.getUnlistEvents({
+      const getUnlistEvents = APICall.getUnlistEvents({
         collection_address,
+        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
+        limit: OFFSET_ACTIVITY + 1,
       });
 
-      const getNewListEvents = await APICall.getNewListEvents({
+      const getNewListEvents = APICall.getNewListEvents({
         collection_address,
+        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
+        limit: OFFSET_ACTIVITY + 1,
       });
 
       let result;
 
       await Promise.all([
-        getPurchaseEvents,
-        getBidWinEvents,
-        getUnlistEvents,
-        getNewListEvents,
+        hasMorePage[0] ? getPurchaseEvents : [],
+        hasMorePage[1] ? getBidWinEvents : [],
+        hasMorePage[2] ? getUnlistEvents : [],
+        hasMorePage[3] ? getNewListEvents : [],
       ]).then(async (res) => {
-        result = res
+        const newMore = res.map((el) => el.length === OFFSET_ACTIVITY + 1);
+        setHasMorePage(newMore);
+        const newArray = res.map((el) => el.slice(0, 6));
+        result = newArray
           .reduce((a, b) => [...a, ...b])
           .sort((a, b) => b.blockNumber - a.blockNumber);
       });
-
       const latestBlockNumber = result?.length && result[0].blockNumber;
 
       return { events: result, latestBlockNumber };
@@ -331,23 +373,25 @@ function CollectionPage() {
 
       return error;
     }
-  }, [collection_address]);
+  }, [collection_address, currentPageActivity, hasMorePage]);
 
   const initEvents = async () => {
     const payload = await fetchPlatformEvents();
+    // console.log(
+    //   currentPageActivity,
+    //   payload,
+    //   "currentPageActivitycurrentPageActivity"
+    // );
 
     dispatch({
       type: AccountActionTypes.SET_EVENTS,
       payload,
     });
 
-    const latestBlockNum =
-      payload?.events?.length && payload?.events[0].blockNumber;
-
-    setLatestBlockNumber(latestBlockNum);
+    setLatestBlockNumber(payload?.latestBlockNumber);
   };
 
-  useInterval(() => initEvents(), 10000);
+  // useInterval(() => initEvents(), 10000);
 
   const [tabIndex, setTabIndex] = useState(0);
   const imageUrl = data?.avatarImage?.replace(

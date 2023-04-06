@@ -64,7 +64,7 @@ function MyNFTTabInfo(props) {
     avatar,
     nftName,
     description,
-    attrsList,
+    traits,
     is_for_sale,
     price,
     filterSelected,
@@ -77,8 +77,15 @@ function MyNFTTabInfo(props) {
     royaltyFee,
     nft_count,
     rarityTable,
-    // traits = {},
+    isActive,
   } = props;
+
+  const attrsList = !traits
+    ? {}
+    : Object.entries(traits).map(([k, v]) => {
+        return { [k]: v };
+      });
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -191,6 +198,8 @@ function MyNFTTabInfo(props) {
   ]);
 
   const handleListTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await listToken(
         api,
@@ -212,6 +221,8 @@ function MyNFTTabInfo(props) {
   };
 
   const handleUnlistTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await unlistToken(
         api,
@@ -245,8 +256,6 @@ function MyNFTTabInfo(props) {
       dispatch(clearTxStatus());
     }
   };
-
-  console.log(askPrice, price, myTradingFee, royaltyFee, 'feeeeeee');
 
   useEffect(() => {
     const ownerName = async () => {
@@ -301,7 +310,7 @@ function MyNFTTabInfo(props) {
             <Heading
               color="#fff"
               size="h4"
-              fontSize={{ base: "28px", "2xl": "32px" }}
+              fontSize={{ base: "28px", "2xl": "28px" }}
             >
               {nftName}
             </Heading>
@@ -390,7 +399,7 @@ function MyNFTTabInfo(props) {
               {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
               {!is_locked &&
@@ -400,9 +409,11 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={is_for_sale || actionType}
+                    isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
+              {console.log("isActive", isActive)}
+              {console.log("is_for_sale", is_for_sale)}
               {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
@@ -413,15 +424,24 @@ function MyNFTTabInfo(props) {
           </HStack>
 
           <Stack>
-            <Text
-              isTruncated
-              fontSize="lg"
-              color="brand.grayLight"
-              lineHeight="1.35"
-              maxW={{ base: "500px", "2xl": "610px" }}
+            <Tooltip
+              cursor="pointer"
+              hasArrow
+              bg="#333"
+              color="#fff"
+              borderRadius="0"
+              label={description}
             >
-              {description}
-            </Text>
+              <Text
+                isTruncated
+                fontSize="lg"
+                color="brand.grayLight"
+                lineHeight="1.35"
+                maxW={{ base: "500px", "2xl": "610px" }}
+              >
+                {description}
+              </Text>
+            </Tooltip>
           </Stack>
 
           <Stack>
@@ -430,8 +450,7 @@ function MyNFTTabInfo(props) {
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
-                  // to="/user/xxx"
-                  to="#"
+                  to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
                   textTransform="capitalize"
                   textDecoration="underline"
@@ -513,10 +532,10 @@ function MyNFTTabInfo(props) {
                 <Spacer />
                 <NumberInput
                   // maxW={32}
-                  isDisabled={actionType}
+                  isDisabled={!isActive || actionType}
                   bg="black"
                   max={999000000}
-                  min={0}
+                  min={1}
                   precision={6}
                   onChange={(v) => setAskPrice(v)}
                   value={askPrice}
@@ -538,7 +557,9 @@ function MyNFTTabInfo(props) {
                   {...rest}
                   text="push for sale"
                   onClick={handleListTokenAction}
-                  isDisabled={actionType && actionType !== LIST_TOKEN}
+                  isDisabled={
+                    !isActive || (actionType && actionType !== LIST_TOKEN)
+                  }
                 />
               </Flex>
             )}
@@ -562,7 +583,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {formatNumDynamicDecimal(price / 10 ** 18)}
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
                     </Text>
                     <AzeroIcon />
                   </Flex>
@@ -608,7 +629,7 @@ function MyNFTTabInfo(props) {
             )}
           </Stack>
 
-          {filterSelected === "COLLECTED" ? (
+          {isActive && filterSelected === "COLLECTED" ? (
             <HStack
               w="full"
               pt="10px"
@@ -644,7 +665,7 @@ function MyNFTTabInfo(props) {
             </HStack>
           ) : null}
 
-          {filterSelected === "LISTING" ? (
+          {isActive && filterSelected === "LISTING" ? (
             <HStack
               w="full"
               pt="10px"
@@ -655,7 +676,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 22) * royaltyFee)}{" "}
+                {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
@@ -663,7 +684,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 20) * myTradingFee)}{" "}
+                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
               </Text>
               <Text>
@@ -672,9 +693,9 @@ function MyNFTTabInfo(props) {
                 </Text>{" "}
                 {formatNumDynamicDecimal(
                   price *
-                    (1 / 10 ** 18 -
-                      myTradingFee / 10 ** 20 -
-                      royaltyFee / 10 ** 22)
+                    (1 / 10 ** 12 -
+                      myTradingFee / 10 ** 14 -
+                      royaltyFee / 10 ** 16)
                 )}{" "}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>

@@ -35,6 +35,7 @@ import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import toast from "react-hot-toast";
 
 const MyStakesPage = () => {
   const { currentAccount, api } = useSubstrateState();
@@ -247,7 +248,7 @@ const MyStakesPage = () => {
         </HStack>
       )}
       <Text textAlign="left" color="#fff">
-      Artzero NFT on Astar NFT Stats:
+        Praying Mantis Predators NFT Stats:
       </Text>
 
       <Stack
@@ -269,7 +270,7 @@ const MyStakesPage = () => {
                   {item === "totalCount"
                     ? "Total"
                     : item === "unstakedCount"
-                    ? "Total Not Staked"
+                    ? "Total Stakeable"
                     : item === "pendingCount"
                     ? "Total Pending Unstake"
                     : item === "stakedCount"
@@ -372,6 +373,11 @@ export const fetchPlatformStakingDiscountStep = async (
     currentAccount
   );
 
+  if (!response) {
+    toast.error("Error when fetch Platform Staking Discount Step");
+    return [];
+  }
+
   return Array.from(response);
 };
 
@@ -383,7 +389,7 @@ export const fetchPlatformStakingDiscountRate = async (
     currentAccount
   );
   const ret = response?.map((rate) => {
-    return rate.replaceAll(",", "") / 100;
+    return rate?.replaceAll(",", "") / 100;
   });
 
   return ret;
@@ -467,18 +473,19 @@ export const getMyPendingPMP = async ({
   try {
     ret = await Promise.all(
       [...Array(pendingCount)].map(async (_, index) => {
-        const token_id = await getTokenIdOfPendingPMP({
+        let token_id = await getTokenIdOfPendingPMP({
           currentAccount,
           index,
         });
 
+        token_id = token_id?.replaceAll(",", "");
         let token_info;
 
         const { ret, status } = await APICall.getNFTByID({
           collection_address: PMPContractAddress,
           token_id,
         });
-
+        console.log("token_id token_id", token_id);
         if (status === "OK") {
           token_info = ret[0];
         }
@@ -502,8 +509,9 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
 
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
-      const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
+      let token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
 
+      token_id = token_id?.replaceAll(",", "");
       let token_info;
 
       const { ret, status } = await APICall.getNFTByID({

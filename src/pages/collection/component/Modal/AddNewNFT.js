@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
+  // ModalOverlay,
   Text,
   Tooltip,
   useBreakpointValue,
@@ -59,7 +59,7 @@ const AddNewNFTModal = ({
             top="2px"
             zIndex="1"
             minW="40px"
-            right="100px"
+            right="44px"
             pos="absolute"
             lineHeight="36px"
             color="#7ae7ff"
@@ -91,7 +91,7 @@ const AddNewNFTModal = ({
             <span
               onClick={
                 isDisabled || actionType
-                  ? () => toast.error("This item is currently for sale!")
+                  ? () => toast.error("This item can not edit!")
                   : onOpen
               }
               style={{
@@ -122,10 +122,10 @@ const AddNewNFTModal = ({
         scrollBehavior="inside"
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           maxWidth={["340px", "940px"]}
           borderRadius="0"
@@ -140,6 +140,8 @@ const AddNewNFTModal = ({
             borderWidth={2}
             borderRadius="0"
             position="absolute"
+            _hover="none"
+            bg="#171717"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}

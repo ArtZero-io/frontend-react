@@ -10,6 +10,7 @@ import {
   Flex,
   Container,
   Link,
+  Button,
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
@@ -44,11 +45,12 @@ import useTxStatus from "@hooks/useTxStatus";
 import { setTxStatus } from "@store/actions/txStatus";
 import CommonButton from "@components/Button/CommonButton";
 import {
-  CREATE_PROJECT,
+  CREATE_PROJECT_STEP_1,
   EDIT_PROJECT,
   CREATE_COLLECTION,
   START,
   FINALIZED,
+  ArtZero_TOS,
 } from "@constants";
 import * as ROUTES from "@constants/routes";
 import { getPublicCurrentAccount } from "@utils";
@@ -76,6 +78,7 @@ import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "../../../../api/client";
+import { delay } from "../../../../utils";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -142,12 +145,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     setFieldValue("endTime", e[1]?.getTime());
   };
 
-  const handleOnRedirect = useCallback(() => {
-    if (mode === formMode.ADD) {
-      toast.success(
-        "Thank you for submitting. Our team member will get in touch with you in the next 48 hours."
-      );
+  const handleOnRedirect = useCallback(async () => {
+    await delay(2000);
 
+    if (mode === formMode.ADD) {
       dispatch(clearTxStatus());
 
       history.push(`/account/projects`);
@@ -173,10 +174,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       });
 
       if (maxRoyaltyFeeRate === 0) {
-        const maxRoyaltyFeeRateData =
-          await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
+        try {
+          const maxRoyaltyFeeRateData =
+            await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
 
-        setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
+          setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
+        } catch (error) {
+          console.log("error", error);
+        }
 
         if (addingFee === 0) {
           const addingFeeData =
@@ -184,7 +189,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 18);
+          setAddingFee(addingFeeData / 10 ** 12);
         }
       }
 
@@ -222,7 +227,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount || getPublicCurrentAccount()
         );
 
-      const totalFee = addProjFee / 10 ** 18 + addCollectionFee / 10 ** 18;
+      const totalFee = addProjFee / 10 ** 12 + addCollectionFee / 10 ** 12;
 
       setAddProjectTotalFee(totalFee);
     };
@@ -231,8 +236,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   }, [currentAccount]);
 
   useEffect(() => {
-    rest?.step === FINALIZED && handleOnRedirect();
+    if (rest?.step === FINALIZED) {
+      if (actionType === CREATE_PROJECT_STEP_1) return;
+      handleOnRedirect();
+    }
   }, [actionType, handleOnRedirect, rest?.step]);
+
+  const [formStep, setFormStep] = useState(null);
 
   return (
     <>
@@ -282,7 +292,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={async (values, { setSubmitting }) => {
+              onSubmit={async (values) => {
                 // check wallet connect?
                 if (!currentAccount) {
                   return toast.error("Please connect wallet first!");
@@ -326,7 +336,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   // check prj time-frame is picked?
                   const prjStartTime = values?.startTime;
                   const prjEndTime = values?.endTime;
-                  if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
+                  if (!values.isEditMode && (!prjStartTime || !prjEndTime)) {
                     return toast.error("Please pick time frame for project!");
                   }
 
@@ -354,23 +364,23 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
                   }
 
-                  if (phasesArray?.length) {
-                    const startFirstPhase = phasesArray[0]?.start;
-                    const endLastPhase = [...phasesArray].pop().end;
+                  // if (phasesArray?.length) {
+                  //   const startFirstPhase = phasesArray[0]?.start;
+                  //   const endLastPhase = [...phasesArray].pop().end;
 
-                    if (
-                      !(
-                        prjStartTime <= startFirstPhase &&
-                        startFirstPhase <= endLastPhase &&
-                        endLastPhase <= prjEndTime
-                      )
-                    ) {
-                      toast.error(
-                        "Sub phase time is not valid or overlap project phase time."
-                      );
-                      return;
-                    }
-                  }
+                  //   if (
+                  //     !(
+                  //       prjStartTime <= startFirstPhase &&
+                  //       startFirstPhase <= endLastPhase &&
+                  //       endLastPhase <= prjEndTime
+                  //     )
+                  //   ) {
+                  //     toast.error(
+                  //       "Sub phase time is not valid or overlap project phase time."
+                  //     );
+                  //     return;
+                  //   }
+                  // }
                 }
 
                 //check low balance?
@@ -411,7 +421,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     is_public_phases.push(phase.isPublic);
                     let public_minting_fee_phase_tmp = phase.isPublic
                       ? new BN(phase.publicMintingFee * 10 ** 6)
-                          .mul(new BN(10 ** 12))
+                          .mul(new BN(10 ** 6))
                           .toString()
                       : 0;
                     public_minting_fee_phases.push(
@@ -444,18 +454,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     code_phases: code_phases,
                     start_time_phases: start_time_phases,
                     end_time_phases: end_time_phases,
-                    collectionName: values.name.trim(),
-                    collectionDescription: values.description.trim(),
-                    avatarIPFSUrl: values.avatarIPFSUrl,
-                    headerIPFSUrl: values.headerIPFSUrl,
-                    headerSquareIPFSUrl: values.headerSquareIPFSUrl,
-                    website: values.website.trim(),
-                    twitter: values.twitter.trim(),
-                    discord: values.discord.trim(),
-                    telegram: values.telegram.trim(),
-                    collectRoyaltyFee: isSetRoyal,
-                    royaltyFee: values.royaltyFee,
-                    collectionAddingFee: addingFee,
                     is_public_phases: is_public_phases,
                     public_minting_fee_phases: public_minting_fee_phases,
                     public_minting_amout_phases: public_minting_amout_phases,
@@ -464,36 +462,36 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   };
 
                   const createNewCollection = async (nft_address) => {
+                    // New traits attribute
+
+                    const metadata = {
+                      name: values.name.trim(),
+                      description: values.description.trim(),
+                      avatarImage: values.avatarIPFSUrl,
+                      headerImage: values.headerIPFSUrl,
+                      squareImage: values.headerSquareIPFSUrl,
+                      website: values.website,
+                      twitter: values.twitter,
+                      discord: values.discord,
+                      telegram: values.telegram,
+                      isDoxxed: "0",
+                      isDuplicationChecked: "0",
+                    };
+
+                    let { path: metadataHash } = await ipfsClient.add(
+                      JSON.stringify(metadata)
+                    );
                     // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
+
+                    if (!metadataHash) {
+                      toast.error("There is an error with metadata hash!");
+                      return;
+                    }
+
                     const collectionData = {
                       nftContractAddress: nft_address,
-                      attributes: [
-                        "name",
-                        "description",
-                        "avatar_image",
-                        "header_image",
-                        "header_square_image",
-                        "website",
-                        "twitter",
-                        "discord",
-                        "telegram",
-                        "is_doxxed",
-                        "is_duplication_checked",
-                      ],
-
-                      attributeVals: [
-                        values.name,
-                        values.description,
-                        values.avatarIPFSUrl,
-                        values.headerIPFSUrl,
-                        values.headerSquareIPFSUrl,
-                        values.website,
-                        values.twitter,
-                        values.discord,
-                        values.telegram,
-                        "0",
-                        "0",
-                      ],
+                      attributes: ["metadata"],
+                      attributeVals: [metadataHash],
                       collectionAllowRoyaltyFee: isSetRoyal,
                       collectionRoyaltyFeeData: isSetRoyal
                         ? Math.round(values.royaltyFee * 100)
@@ -505,35 +503,48 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
 
                     toast.success("Step 2. Creating collection...");
-
+                    const templateParams = {
+                      email_owner: values.email_owner,
+                      collection_name: values.name,
+                      collection_telegram: values.telegram,
+                      template: "PROJECT",
+                    };
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
                       collectionData,
                       dispatch,
                       CREATE_COLLECTION,
-                      api
+                      api,
+                      templateParams
                     );
                   };
 
-                  dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
+                  if (formStep === "STEP1") {
+                    dispatch(
+                      setTxStatus({ type: CREATE_PROJECT_STEP_1, step: START })
+                    );
 
-                  toast.success("Step 1. Creating project...");
+                    toast.success("Step 1. Creating project...");
 
-                  const templateParams = {
-                    email_owner: values.email_owner,
-                    collection_name: values.name,
-                    collection_telegram: values.telegram,
-                  };
-                  console.log("PROJ templateParams", templateParams);
-                  await launchpad_contract_calls.addNewProject(
-                    currentAccount,
-                    data,
-                    dispatch,
-                    CREATE_PROJECT,
-                    api,
-                    createNewCollection,
-                    templateParams
-                  );
+                    await launchpad_contract_calls.addNewProject(
+                      currentAccount,
+                      data,
+                      dispatch,
+                      CREATE_PROJECT_STEP_1,
+                      api
+                    );
+                  }
+
+                  if (formStep === "STEP2") {
+                    if (!tokenIDArray[0]) {
+                      toast.error(
+                        "There is something wrong with your project!"
+                      );
+                      return;
+                    }
+
+                    await createNewCollection(tokenIDArray[0]);
+                  }
                 } else {
                   if (mode === formMode.EDIT) {
                     const project_info = {
@@ -555,6 +566,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     const project_info_ipfs = await ipfsClient.add(
                       JSON.stringify(project_info)
                     );
+
                     const launchpad_psp34_nft_standard_contract =
                       new ContractPromise(
                         api,
@@ -580,7 +592,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 }
               }}
             >
-              {({ values, dirty, isValid, setFieldValue }) => (
+              {({ values, dirty, isValid, setFieldValue, handleSubmit }) => (
                 <Form>
                   <Container maxW="1200px" px={["0px", "15px"]}>
                     <CommonStack stackTitle="1. project info">
@@ -717,7 +729,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               label="Start time & end time of launchpad project."
                             >
                               <Text w="fit-content" fontSize="lg" ml={1}>
-                                Start time - End time{" "}
+                                Pick time range Start & End time{" "}
                                 <Text as="span" fontSize="lg" color="#fc8181">
                                   *
                                 </Text>
@@ -725,6 +737,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             </Tooltip>
 
                             <DateTimeRangePicker
+                              showDoubleView={true}
                               disableClock
                               disabled={!!actionType || mode === formMode.EDIT}
                               onChange={(e) =>
@@ -1072,9 +1085,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       }}
                                       textTransform="none"
                                       isExternal
-                                      href={
-                                        "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
-                                      }
+                                      href={ArtZero_TOS}
                                     >
                                       Terms of Service
                                     </Link>
@@ -1086,20 +1097,60 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         </>
                       )}
 
-                      <Stack w="full">
-                        <CommonButton
-                          mx="0"
-                          onRedirect={handleOnRedirect}
-                          w="full"
-                          my="24px"
-                          {...rest}
-                          type="submit"
-                          text={`${
-                            mode === formMode.ADD ? "create" : "update"
-                          } project`}
-                          isDisabled={!(dirty && isValid) && noImagesChange}
-                        />
-                      </Stack>
+                      {mode === formMode.ADD && (
+                        <HStack justifyContent="center">
+                          <Button
+                            minW="180px"
+                            {...rest}
+                            isLoading={formStep === "STEP1" && rest.isLoading}
+                            isDisabled={tokenIDArray}
+                            value="STEP1"
+                            text="STEP1"
+                            type="button"
+                            onClick={({ target }) => {
+                              setFormStep(target.value);
+                              handleSubmit();
+                            }}
+                          >
+                            STEP 1
+                          </Button>
+                          <Button
+                            minW="180px"
+                            {...rest}
+                            isLoading={formStep === "STEP2" && rest.isLoading}
+                            isDisabled={!tokenIDArray || !tokenIDArray[0]}
+                            value="STEP2"
+                            text="STEP2"
+                            type="button"
+                            onClick={({ target }) => {
+                              setFormStep(target.value);
+                              handleSubmit();
+                            }}
+                          >
+                            STEP 2
+                          </Button>
+                        </HStack>
+                      )}
+
+                      {mode === formMode.EDIT && (
+                        <Stack w="full">
+                          <CommonButton
+                            mx="0"
+                            onRedirect={handleOnRedirect}
+                            w="full"
+                            my="24px"
+                            {...rest}
+                            type="submit"
+                            text={`${
+                              mode === formMode.ADD ? "create" : "update"
+                            } project`}
+                            isDisabled={
+                              (!(dirty && isValid) && noImagesChange) ||
+                              rest?.step === FINALIZED
+                            }
+                          />
+                        </Stack>
+                      )}
                     </Box>
                   </Container>
                 </Form>
@@ -1134,10 +1185,10 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
     });
 
     const formattedNumBal =
-      formattedStrBal.replaceAll(",", "") * 1 -
-      formattedStrBalMiscFrozen.replaceAll(",", "") * 1;
+      formattedStrBal?.replaceAll(",", "") * 1 -
+      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 18 };
+    return { balance: formattedNumBal / 10 ** 12 };
   }
 };
 
@@ -1177,6 +1228,8 @@ export const fetchInitialValuesProject = async ({
     agreeTosCheckbox: false,
     agreeProjectMintFeeCheckbox: false,
     agreeFeeCheckbox: false,
+    startTime: Date.now(),
+    endTime: Date.now(),
   };
 
   if (mode === formMode.ADD) {
@@ -1202,7 +1255,7 @@ export const fetchInitialValuesProject = async ({
       startTime,
       endTime,
     } = projectInfo;
-    console.log("projectInfo", projectInfo);
+    // console.log("projectInfo", projectInfo);
     initialValues.isEditMode = true;
     initialValues.nftName = nftName;
     initialValues.nftSymbol = nftSymbol;
@@ -1331,6 +1384,7 @@ const validationSchema = Yup.object().shape({
   nftSymbol: validationNftSymbol,
   phases: Yup.array()
     .min(1, "Phases must have at least 1 items")
+    .max(10, "Must be at most 10 phases")
     .of(
       Yup.object().shape({
         name: Yup.string()

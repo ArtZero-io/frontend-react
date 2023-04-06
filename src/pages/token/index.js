@@ -20,13 +20,14 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+import { TiArrowBackOutline } from "react-icons/ti";
 
 import toast from "react-hot-toast";
 import {
   Link as ReactRouterLink,
   useHistory,
   useParams,
+  useLocation,
 } from "react-router-dom";
 
 import { APICall } from "@api/client";
@@ -93,6 +94,7 @@ function TokenPage() {
   const { currentAccount, api } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
+  const { state } = useLocation();
 
   const [token, setToken] = useState(null);
   const [bidPrice, setBidPrice] = useState(1);
@@ -100,6 +102,7 @@ function TokenPage() {
   // const [bidsList, setBidsList] = useState(null);
   const [collection, setCollection] = useState(null);
   const [ownerName, setOwnerName] = useState(null);
+  const [ownerAddress, setOwnerAddress] = useState(null);
   const [myTradingFee, setMyTradingFee] = useState(null);
   const [feeCalculated, setFeeCalculated] = useState(null);
 
@@ -150,11 +153,15 @@ function TokenPage() {
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
           : tokenDetails?.owner;
-
+        tokenDetails.attrsList = !tokenDetails?.traits
+          ? {}
+          : Object.entries(tokenDetails?.traits).map(([k, v]) => {
+              return { [k]: v };
+            });
         // get username onchain if any
         const name = truncateStr(ownerAddress);
         setOwnerName(name);
-
+        setOwnerAddress(ownerAddress);
         if (ownerAddress === currentAccount?.address) {
           setIsOwner(true);
         } else {
@@ -171,13 +178,12 @@ function TokenPage() {
             { u64: token_id }
           );
           setBidderCount(listBidder?.length || 0);
-
           if (listBidder?.length) {
             //sort highest price first
             listBidder.sort((a, b) => {
               return (
-                b.bidValue.replaceAll(",", "") * 1 -
-                a.bidValue.replaceAll(",", "") * 1
+                b.bidValue?.replaceAll(",", "") * 1 -
+                a.bidValue?.replaceAll(",", "") * 1
               );
             });
 
@@ -192,10 +198,14 @@ function TokenPage() {
             const myBid = listBidder.filter((item) => item.isMyBid === true);
             if (myBid.length) {
               const bidValue =
-                (myBid[0].bidValue.replaceAll(",", "") * 1) / 10 ** 18;
+                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 12;
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
+            } else {
+              listBidder = [];
+              setBidPrice(1);
+              setIsAlreadyBid(false);
             }
           } else {
             listBidder = [];
@@ -431,9 +441,23 @@ function TokenPage() {
                     cursor="pointer"
                     display="flex"
                     alignItems="center"
-                    onClick={() => history.goBack()}
+                    onClick={() => {
+                      if (!state?.pathname) {
+                        history.push({
+                          state: { selectedItem: state?.selectedItem },
+                          pathname: `/collection/` + token?.nftContractAddress,
+                        });
+                        return;
+                      }
+
+                      history.push({
+                        state: { selectedItem: state?.selectedItem },
+                        pathname: state?.pathname,
+                        search: state?.search,
+                      });
+                    }}
                   >
-                    <MdOutlineArrowBackIos />
+                    <TiArrowBackOutline />
                     <Text size="h6" pl="4px">{`${collection?.name}`}</Text>
                   </HStack>
                 </BreadcrumbItem>
@@ -473,7 +497,7 @@ function TokenPage() {
                     Owned by{" "}
                     <Link
                       // to="/user/xxx"
-                      to="#"
+                      to={`/public-account/collections/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"
@@ -717,7 +741,7 @@ function TokenPage() {
                     />
                   </>
                 )}
-
+                {console.log("token", token)}
                 {isOwner && (
                   <TransferNFTModalMobile
                     {...token}
@@ -756,8 +780,7 @@ function TokenPage() {
                   <Text>
                     Owned by{" "}
                     <Link
-                      // to="/user/xxx"
-                      to="#"
+                      to={`/public-account/collections/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"
@@ -846,10 +869,10 @@ function TokenPage() {
                             <NumberInput
                               w="50%"
                               minW={"85px"}
-                              isDisabled={actionType}
+                              isDisabled={!collection?.isActive || actionType}
                               bg="black"
                               max={999000000}
-                              min={0}
+                              min={1}
                               precision={6}
                               onChange={(v) => setAskPrice(v)}
                               value={askPrice}
@@ -870,7 +893,6 @@ function TokenPage() {
                                 <AzeroIcon w="14px" h="14px" />
                               </InputRightElement>
                             </NumberInput>
-
                             <CommonButton
                               w="50%"
                               h="40px"
@@ -878,7 +900,8 @@ function TokenPage() {
                               text="push for sale"
                               onClick={handleListTokenAction}
                               isDisabled={
-                                actionType && actionType !== LIST_TOKEN
+                                !collection?.isActive ||
+                                (actionType && actionType !== LIST_TOKEN)
                               }
                             />
                           </HStack>
@@ -886,7 +909,9 @@ function TokenPage() {
                       </Stack>
 
                       <Stack w="full">
-                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        {collection?.isActive && (
+                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        )}
                       </Stack>
                     </>
                   )}
@@ -913,7 +938,7 @@ function TokenPage() {
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
                                   {formatNumDynamicDecimal(
-                                    token?.price / 10 ** 18
+                                    token?.price / 10 ** 12
                                   )}
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
@@ -924,7 +949,9 @@ function TokenPage() {
                       </Stack>
 
                       <Stack w="full">
-                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        {collection?.isActive && (
+                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        )}
                       </Stack>
                     </>
                   )}
@@ -949,7 +976,7 @@ function TokenPage() {
                             <Tag minH="20px" pr={0} bg="transparent">
                               <TagLabel bg="transparent">
                                 {formatNumDynamicDecimal(
-                                  token?.price / 10 ** 18
+                                  token?.price / 10 ** 12
                                 )}
                               </TagLabel>
                               <TagRightIcon as={AzeroIcon} w="14px" />
@@ -993,7 +1020,7 @@ function TokenPage() {
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
-                              min={0}
+                              min={0.01}
                               precision={6}
                               onChange={(v) => setBidPrice(v)}
                               value={bidPrice}
@@ -1084,7 +1111,7 @@ export const buyToken = async (
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
 
-  if (balance < askPrice / 10 ** 18) {
+  if (balance < askPrice / 10 ** 12) {
     toast.error(`Not enough balance!`);
     return;
   }
@@ -1092,7 +1119,7 @@ export const buyToken = async (
   dispatch(
     setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(tokenID) })
   );
-    console.log(tokenID, nftContractAddress, askPrice, 'tokenIDtokenID');
+
   await marketplace_contract_calls.buy(
     currentAccount,
     nftContractAddress,
@@ -1142,7 +1169,7 @@ export const placeBid = async (
     return;
   }
 
-  if (parseFloat(bidPrice) >= askPrice / 10 ** 18) {
+  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
     toast.error(`Bid amount must be less than current price!`);
     return;
   }
@@ -1204,7 +1231,6 @@ export const removeBid = async (
   );
 };
 
-
 export const listToken = async (
   api,
   currentAccount,
@@ -1260,7 +1286,7 @@ export const listToken = async (
   );
 
   let res;
-    console.log(isAllowance, 'isAllowanceisAllowance');
+
   if (!isAllowance) {
     toast.success("Step 1: Approving NFT transfer...");
 
@@ -1398,13 +1424,13 @@ export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
   return ret;
 };
 
-const FeeCalculatedBar = ({ feeCalculated }) => {
+export const FeeCalculatedBar = ({ feeCalculated }) => {
   return (
     <HStack
       w="full"
       justify="space-between"
       borderTop="1px solid #282828"
-      pt={["10px", "20px"]}
+      // pt={["10px", "20px"]}
     >
       <VStack alignItems="start">
         <Text fontSize={{ base: "13px", md: "16px" }}>

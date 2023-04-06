@@ -22,14 +22,18 @@ import {
   CREATE_COLLECTION,
   EDIT_COLLECTION,
   START,
+  ArtZero_TOS,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
-import { convertStringToPrice } from "@utils";
+import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { execContractQuery } from "../../../nfts/nfts";
+import { ipfsClient } from "@api/client";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -62,7 +66,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             currentAccount
           );
 
-        setAddingFee(addingFeeData / 10 ** 18);
+        setAddingFee(addingFeeData / 10 ** 12);
       }
     };
     fetchFee();
@@ -111,6 +115,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       discord: "",
       telegram: "",
       agreeTosCheckbox: false,
+      confirmInfoCheckbox: false,
+      isDoxxed: "0",
+      isDuplicationChecked: "0",
     };
 
     const fetchCollectionsByID = async () => {
@@ -132,6 +139,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           twitter,
           discord,
           telegram,
+          isDoxxed,
+          isDuplicationChecked,
         } = dataList;
 
         newInitialValues = {
@@ -142,10 +151,13 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           collectRoyaltyFee,
           royaltyFee: royaltyFee / 100,
           agreeTosCheckbox: false,
+          confirmInfoCheckbox: false,
           website,
           twitter,
           discord,
           telegram,
+          isDoxxed: isDoxxed ? "1" : "0",
+          isDuplicationChecked: isDuplicationChecked ? "1" : "0",
         };
 
         if (dataList) {
@@ -173,6 +185,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       : setInitialValues(newInitialValues);
   }, [id, mode]);
 
+  async function getContractInfo(api, address) {
+    if (isValidAddress(address)) {
+      const ret = await api.query.contracts.contractInfoOf(address);
+
+      return ret.unwrapOr(null);
+    }
+  }
+
   return (
     <>
       {initialValues && (
@@ -182,10 +202,85 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             isEditMode: Yup.boolean(),
 
             nftContractAddress: Yup.string()
-              .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(48, "Must be at most 48 characters")
+              .test(
+                "Test nftContractAddress",
+                "Validate NFT Contract Address failed!",
+                (value, { path, createError }) => {
+                  return new Promise((resolve, reject) => {
+                    if (!isValidAddress(value)) {
+                      reject(
+                        createError({
+                          path,
+                          message: "Address is not valid!",
+                        })
+                      );
+                      return false;
+                    }
+
+                    return getContractInfo(api, value).then(
+                      async (isOnChain) => {
+                        if (!isOnChain) {
+                          reject(
+                            createError({
+                              path,
+                              message: "Contract Address is not on-chain!",
+                            })
+                          );
+
+                          return false;
+                        }
+
+                        // OK onchain
+                        // validate call totalSupply
+
+                        await execContractQuery(
+                          currentAccount?.address,
+                          api,
+                          nft721_psp34_standard.CONTRACT_ABI,
+                          value,
+                          "psp34::totalSupply"
+                        ).then((queryResult) => {
+                          if (!queryResult.toHuman().Ok) {
+                            reject(
+                              createError({
+                                path,
+                                message:
+                                  "Contract Address can not get total Supply!",
+                              })
+                            );
+
+                            return false;
+                          }
+                        });
+
+                        // validate call getAttributeCount
+                        await execContractQuery(
+                          currentAccount?.address,
+                          api,
+                          nft721_psp34_standard.CONTRACT_ABI,
+                          value,
+                          "psp34Traits::getAttributeCount"
+                        ).then((queryResult) => {
+                          if (!queryResult.toHuman().Ok) {
+                            reject(
+                              createError({
+                                path,
+                                message:
+                                  "Contract Address can not get Attribute Count!",
+                              })
+                            );
+
+                            return false;
+                          }
+                        });
+                        resolve(true);
+                      }
+                    );
+                  });
+                }
+              )
               .required("This field is required"),
+
             collectionName: Yup.string()
               .trim()
               .min(3, "Must be at least 3 characters")
@@ -225,6 +320,12 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 .required("The terms of service must be accepted.")
                 .oneOf([true], "The TOS must be accepted."),
             }),
+            confirmInfoCheckbox: Yup.boolean().when("isEditMode", {
+              is: false,
+              then: Yup.boolean()
+                .required("This terms must be accepted.")
+                .oneOf([true], "This terms must be accepted."),
+            }),
             emailOwner: validationEmail,
           })}
           onSubmit={async (values, { setSubmitting }) => {
@@ -248,59 +349,57 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return toast.error("Low balance!");
             }
 
-            if (userBalance < addingFee) {
+            if (mode === formMode.ADD && userBalance < addingFee) {
               return toast.error(
-                `You need ${addingFee} SBY to create new collection!`
+                `You need ${addingFee} AZERO to create new collection!`
               );
             }
 
             if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
               toast.error(`The NFT contract address must be an address!`);
             } else {
+              // Update new traits attribute
+              const metadata = {
+                name: values.collectionName.trim(),
+                description: values.collectionDescription.trim(),
+                avatarImage: values.avatarIPFSUrl,
+                headerImage: values.headerIPFSUrl,
+                squareImage: values.headerSquareIPFSUrl,
+                website: values.website,
+                twitter: values.twitter,
+                discord: values.discord,
+                telegram: values.telegram,
+                isDoxxed: values.isDoxxed,
+                isDuplicationChecked: values.isDuplicationChecked,
+              };
+              // console.log("metadata ADV MODE", metadata);
+
+              let { path: metadataHash } = await ipfsClient.add(
+                JSON.stringify(metadata)
+              );
+
+              if (!metadataHash) {
+                toast.error("There is an error with metadata hash!");
+                return;
+              }
+
               const data = {
                 nftContractAddress: values.nftContractAddress,
-
-                attributes: [
-                  "name",
-                  "description",
-                  "avatar_image",
-                  "header_image",
-                  "header_square_image",
-                  "website",
-                  "twitter",
-                  "discord",
-                  "telegram",
-                  "is_doxxed",
-                  "is_duplication_checked",
-                ],
-
-                attributeVals: [
-                  values.collectionName.trim(),
-                  values.collectionDescription.trim(),
-                  values.avatarIPFSUrl,
-                  values.headerIPFSUrl,
-                  values.headerSquareIPFSUrl,
-                  values.website,
-                  values.twitter,
-                  values.discord,
-                  values.telegram,
-                  "0",
-                  "0",
-                ],
-
+                attributes: ["metadata"],
+                attributeVals: [metadataHash],
                 collectionAllowRoyaltyFee: values.collectRoyaltyFee,
-
                 collectionRoyaltyFeeData: values.collectRoyaltyFee
                   ? Math.round(values.royaltyFee * 100)
                   : 0,
               };
-              if (
-                !data?.attributeVals[2] ||
-                !data?.attributeVals[3] ||
-                !data?.attributeVals[4]
-              ) {
-                return toast.error("Some images is invalid!");
-              }
+              // if (
+              //   !data?.attributeVals[2] ||
+              //   !data?.attributeVals[3] ||
+              //   !data?.attributeVals[4]
+              // ) {
+              //   return toast.error("Some images is invalid!");
+              // }
+              // console.log("ADv Mode data", data);
 
               if (mode === formMode.ADD) {
                 const templateParams = {
@@ -347,7 +446,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 <AdvancedModeInput
                   type="text"
                   isRequired={true}
-                  isDisabled={actionType}
+                  isDisabled={actionType || mode === formMode.EDIT}
                   name="nftContractAddress"
                   label="NFT Contract Address"
                   placeholder="NFT Contract Address"
@@ -652,8 +751,23 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} SBY </strong> in fee to ArtZero.io
+                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
                     </Text>
+
+                    <HStack justifyContent="center">
+                      <CommonCheckbox
+                        isDisabled={actionType}
+                        name="confirmInfoCheckbox"
+                        content={
+                          <>
+                            <Text as="span" color="#888">
+                              {`I confirm all info is correct.`}
+                            </Text>
+                          </>
+                        }
+                      />
+                    </HStack>
+
                     <HStack justifyContent="center">
                       <CommonCheckbox
                         isDisabled={actionType}
@@ -671,9 +785,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                               }}
                               textTransform="none"
                               isExternal
-                              href={
-                                "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
-                              }
+                              href={ArtZero_TOS}
                             >
                               Terms of Service
                             </Link>

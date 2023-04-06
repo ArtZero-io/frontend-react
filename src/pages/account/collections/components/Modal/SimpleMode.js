@@ -1,17 +1,14 @@
 import {
-  Button,
   Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
   useDisclosure,
   IconButton,
   Tooltip,
   useBreakpointValue,
-  Text,
 } from "@chakra-ui/react";
 import { QuestionIcon } from "@chakra-ui/icons";
 import EditIcon from "@theme/assets/icon/Edit.js";
@@ -22,6 +19,8 @@ import SimpleModeForm from "../Form/SimpleMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import { useHistory } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
+import { CreateButton } from "./CreateButton";
+import NFTSimpleIcon from "@theme/assets/icon/NFTSimpleIcon";
 
 function SimpleModeModal({
   mode = formMode.ADD,
@@ -49,38 +48,21 @@ function SimpleModeModal({
   return (
     <>
       {mode === formMode.ADD && (
-        <Tooltip
-          hasArrow
-          bg="#333"
-          color="#fff"
-          label="Simple Mode is to create NFT one by one manually. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
-        >
-          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-            Simple Mode
-          </Button>
-        </Tooltip>
+        // <Tooltip
+        //   hasArrow
+        //   bg="#333"
+        //   color="#fff"
+        //   label="Simple Mode is to create NFT one by one manually. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+        // >
+        //   <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+        //     Simple Mode
+        //   </Button>
+        // </Tooltip>
+        <CreateButton icon={<NFTSimpleIcon />} onClick={() => onOpen()} title={'Simple mode'} data={["Suitable for non-technical creators", "On-chain creation of NFTs with our standard NFT smart contract", "Ability to manually add and list NFTs later"]}/>
       )}
 
       {mode === formMode.EDIT && (
         <>
-          <Text
-            h="40px"
-            px="8px"
-            bg="black"
-            top="2px"
-            zIndex="1"
-            minW="40px"
-            right="40px"
-            pos="absolute"
-            lineHeight="36px"
-            color="#7ae7ff"
-          >
-            {contractType === "Psp34Auto"
-              ? "Simple"
-              : contractType === "Psp34Manual"
-              ? "Adv"
-              : ""}
-          </Text>
           <IconButton
             h="40px"
             top="2px"
@@ -115,10 +97,10 @@ function SimpleModeModal({
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           textAlign="center"
@@ -130,6 +112,8 @@ function SimpleModeModal({
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
+            _hover="none"
+            bg="#171717"
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}

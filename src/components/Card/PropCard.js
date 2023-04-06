@@ -31,7 +31,7 @@ export default function PropCard({
             <Spacer />
 
             <Text fontSize={["sm", "sm"]} isTruncated pr={1}>
-              {((100 * traitCount) / totalNftCount).toFixed(0)}%
+              {((100 * traitCount) / totalNftCount).toFixed(2)}%
             </Text>
           </Flex>
         )}

@@ -1,6 +1,9 @@
 import toast from "react-hot-toast";
 import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
 import { READY, FINALIZED } from "@constants";
+import launchpad_manager from "../../utils/blockchain/launchpad-manager";
+import { Abi } from "@polkadot/api-contract";
+import { CREATE_PROJECT_STEP_1 } from "../../constants";
 
 export const setTxStatus = (props) => {
   return (dispatch) => {
@@ -148,28 +151,67 @@ export const txResponseErrorHandler = async ({
 
   if (!dispatchError && status) {
     if (Object.keys(status.toHuman())[0] === "0") {
-      dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
+      dispatch(
+        setTxStatus({
+          txType,
+          txStatus: READY,
+          step: READY,
+          type,
+        })
+      );
     } else {
       if (!isApprovalTx) {
         dispatch(
           setTxStatus({
-            type,
-            txType: txType,
+            type: txType,
+            // txType: txType,
+            // txStatus: statusToHuman[0][0],
             timeStamp: Date.now(),
             step: statusToHuman[0][0],
-            txStatus: statusToHuman[0][0],
           })
         );
       }
 
       if (isApprovalTx && statusToHuman[0][0] !== FINALIZED) {
-        setTxStatus({
-          type,
-          txType: txType,
-          timeStamp: Date.now(),
-          step: statusToHuman[0][0],
-          txStatus: statusToHuman[0][0],
-        });
+        dispatch(
+          setTxStatus({
+            type: txType,
+            // txType: txType,
+            timeStamp: Date.now(),
+            step: statusToHuman[0][0],
+            // txStatus: statusToHuman[0][0],
+          })
+        );
+      }
+
+
+      // Use for 2-steps process create new project
+      if (statusToHuman[0][0] === FINALIZED) {
+        const apiAt = await api.at(statusToHuman[0][1]);
+        const allEventsRecords = await apiAt.query.system.events();
+
+        if (txType === CREATE_PROJECT_STEP_1) {
+          allEventsRecords.forEach(({ event }) => {
+            if (api.events.contracts?.ContractEmitted.is(event)) {
+              const [, dataBytes] = event.data;
+
+              const abiPromise = new Abi(launchpad_manager.CONTRACT_ABI);
+
+              const { args } = abiPromise.decodeEvent(dataBytes);
+
+              const newCollectionAddress = args[1]?.toHuman();
+
+              dispatch(
+                setTxStatus({
+                  type: txType,
+                  step: statusToHuman[0][0],
+                  timeStamp: Date.now(),
+                  tokenIDArray: [newCollectionAddress],
+                })
+              );
+            }
+          });
+        }
       }
 
       // FOR DEV ONLY SUCCESS CASE

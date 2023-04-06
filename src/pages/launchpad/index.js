@@ -66,7 +66,7 @@ export const LaunchpadPage = () => {
             launchpad
           </Heading>
           <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
-            The premier destination to launch your NFT Collection on Astar
+            The premier destination to launch your NFT Collection on Aleph Zero
             Network.
           </Text>
         </VStack>

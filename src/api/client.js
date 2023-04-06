@@ -71,6 +71,33 @@ const client = async (
   return data;
 };
 
+// new API client call
+const clientWithGetParams = async (
+  method,
+  url,
+  options = {},
+  baseURL = process.env.REACT_APP_API_BASE_URL
+) => {
+  const headers = {
+    Accept: "*/*",
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  const { data } = await axios({
+    baseURL,
+    url,
+    method,
+    headers,
+    params: options,
+  });
+
+  if (data?.status === "FAILED") {
+    console.log("error FAILED @ xx>>", url, data?.message);
+  }
+
+  return data;
+};
+
 export const APICall = {
   // get list of Bidder by Address
   getBidsByBidderAddress: async ({
@@ -117,6 +144,14 @@ export const APICall = {
     });
   },
 
+  updateCollectionEmail: async ({ collection_address, email }) => {
+    const ret = await client("POST", "/updateCollectionEmail", {
+      collection_address,
+      email,
+    });
+
+    return ret;
+  },
   askBeUpdateProjectData: async ({ project_address }) => {
     const ret = await client("POST", "/updateProject", {
       project_address,
@@ -126,11 +161,16 @@ export const APICall = {
   },
 
   // Event API Calls
-  getPurchaseEvents: async ({ collection_address }) => {
+  getPurchaseEvents: async ({
+    collection_address,
+    limit = 6,
+    offset = 0,
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getPurchaseEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -141,11 +181,16 @@ export const APICall = {
     return result;
   },
 
-  getBidWinEvents: async ({ collection_address }) => {
+  getBidWinEvents: async ({
+    collection_address,
+    limit = 6,
+    offset = 0,
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getBidWinEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -156,11 +201,16 @@ export const APICall = {
     return result;
   },
 
-  getUnlistEvents: async ({ collection_address }) => {
+  getUnlistEvents: async ({
+    collection_address,
+    limit = 6,
+    offset = 0,
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getUnlistEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -171,11 +221,16 @@ export const APICall = {
     return result;
   },
 
-  getNewListEvents: async ({ collection_address }) => {
+  getNewListEvents: async ({
+    collection_address,
+    limit = 6,
+    offset = 0,
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getNewListEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -212,6 +267,30 @@ export const APICall = {
 
   getCollectionCount: async () => {
     return await client("GET", "/getCollectionCount", {});
+  },
+
+  getWithdrawEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
+    return clientWithGetParams("GET", "/api/withdraw-event-schemas", {
+      filter: {
+        limit,
+        offset,
+        where: {
+          nftContractAddress: nftContractAddress,
+        },
+      },
+    });
+  },
+
+  getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
+    return clientWithGetParams("GET", "/api/launchpad-minting-event-schemas", {
+      filter: {
+        limit,
+        offset,
+        where: {
+          nftContractAddress: nftContractAddress,
+        },
+      },
+    });
   },
 
   getCollectionByAddress: async ({ collection_address }) => {
@@ -370,6 +449,13 @@ export const APICall = {
   },
 
   getNFTByID: async ({ collection_address, token_id }) => {
+    try {
+      if (token_id?.includes(",")) {
+        token_id?.replaceAll(",", "");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
     return await client("POST", "/getNFTByID", {
       collection_address,
       token_id,
@@ -407,6 +493,15 @@ export const APICall = {
     return ret;
   },
 
+  getPhaseInfo: async ({ nftContractAddress, phaseId }) => {
+    const ret = await client("POST", "/getPhaseInfo", {
+      nftContractAddress,
+      phaseId,
+    });
+
+    return ret;
+  },
+
   // Rewards API Calls
   getAllRewardPayout: async ({ limit = 1000, offset = 0, sort = -1 }) => {
     const ret = await client("POST", "/getAddRewardHistory", {
@@ -414,6 +509,13 @@ export const APICall = {
       offset,
       sort,
     });
+
+    return ret;
+  },
+
+  // Rewards API Calls
+  reportNFT: async (data) => {
+    const ret = await client("POST", "/reportNFT", data);
 
     return ret;
   },
@@ -433,11 +535,68 @@ export const APICall = {
 
     return ret;
   },
+
+  // new API call from loopback have /api/ prefix
+  // get all My Collected Nft
+  // getMyCollectedNft: async () => {
+  //   const filter = {
+  //     offset: 0,
+  //     limit: 100,
+  //     skip: 0,
+  //     order: "string",
+  //     where: {
+  //       owner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
+  //     },
+  //   };
+
+  //   const filterEncoded = encodeURI(JSON.stringify(filter));
+
+  //   return await client("GET", `/api/nfts-schemas?filter=${filterEncoded}`, {});
+  // },
+
+  // get all My Collected Nft
+  getCollectionList: async () => {
+    const filter = {
+      offset: 0,
+      limit: 100,
+      skip: 0,
+      // order: "string",
+      where: { nft_count: { gt: 0 } },
+    };
+
+    const filterEncoded = encodeURI(JSON.stringify(filter));
+
+    return await client(
+      "GET",
+      `/api/collections-schemas?filter=${filterEncoded}`,
+      {}
+    );
+  },
+
+  // get Project By Address
+  getProjectByAddress: async ({ nftContractAddress }) => {
+    const filter = {
+      where: {
+        nftContractAddress,
+      },
+    };
+
+    const filterEncoded = encodeURI(JSON.stringify(filter));
+
+    const ret = await client(
+      "GET",
+      `/api/projects-schemas?filter=${filterEncoded}`,
+      {}
+    );
+    // TEMP format to match current return format
+    return { ret };
+  },
 };
 
 // IPFS API client call
 const authorization =
   "Basic " + Buffer.from(projectId + ":" + projectKey).toString("base64");
+
 export const ipfsClient = create({
   host: "ipfs.infura.io",
   port: 5001,

@@ -3,11 +3,11 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   getEstimatedGas,
-  handleContractCallAnimation,
+  // handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
-import { AccountActionTypes } from "@store/types/account.types";
+// import { AccountActionTypes } from "@store/types/account.types";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -15,9 +15,8 @@ import {
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
-import emailjs from "@emailjs/browser";
-import { reformatAddress } from "@utils/substrate/SubstrateContext";
-import { networkSS58 } from "@constants";
+// import emailjs from "@emailjs/browser";
+// import { delay } from "@utils";
 
 let contract;
 
@@ -28,7 +27,7 @@ export const setLaunchPadContract = (api, data) => {
     data?.CONTRACT_ADDRESS
   );
 };
-
+// no use???
 async function getAttributes(caller_account, collection_address, attributes) {
   if (!contract || !caller_account) {
     return null;
@@ -57,7 +56,9 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectsByOwner(
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectsByOwner"
+  ](
     address,
     {
       value: azero_value,
@@ -72,71 +73,71 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
 }
 
 // No use ?
-async function setMultipleAttributes(
-  account,
-  collection_address,
-  attributes,
-  values,
-  dispatch
-) {
-  let unsubscribe;
+// async function setMultipleAttributes(
+//   account,
+//   collection_address,
+//   attributes,
+//   values,
+//   dispatch
+// ) {
+//   let unsubscribe;
 
-  const address = account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const value = 0;
+//   const address = account?.address;
+//   const gasLimit = readOnlyGasLimit(contract);
+//   const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source);
+//   const injector = await web3FromSource(account?.meta?.source);
 
-  account &&
-    contract.tx
-      .setMultipleAttributes(
-        { gasLimit, value },
-        collection_address,
-        attributes,
-        values
-      )
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              toast.error(`There is some error with your request`);
-            } else {
-              console.log("dispatchError ", dispatchError.toString());
-            }
-          }
+//   account &&
+//     contract.tx
+//       .setMultipleAttributes(
+//         { gasLimit, value },
+//         collection_address,
+//         attributes,
+//         values
+//       )
+//       .signAndSend(
+//         address,
+//         { signer: injector.signer },
+//         async ({ status, dispatchError }) => {
+//           if (dispatchError) {
+//             if (dispatchError.isModule) {
+//               toast.error(`There is some error with your request`);
+//             } else {
+//               console.log("dispatchError ", dispatchError.toString());
+//             }
+//           }
 
-          if (status) {
-            handleContractCallAnimation(status, dispatchError, dispatch);
+//           if (status) {
+//             handleContractCallAnimation(status, dispatchError, dispatch);
 
-            if (status?.isFinalized) {
-              await APICall.askBeUpdateCollectionData({
-                collection_address: collection_address,
-              });
-            }
+//             if (status?.isFinalized) {
+//               await APICall.askBeUpdateCollectionData({
+//                 collection_address: collection_address,
+//               });
+//             }
 
-            // const statusText = Object.keys(status.toHuman().Ok)[0];
-            // toast.success(
-            //   `Update Collection Attributes ${
-            //     statusText === "0" ? "started" : statusText.toLowerCase()
-            //   }.`
-            // );
-          }
-        }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-        const mess = `Tnx is ${e.message}`;
+//             // const statusText = Object.keys(status.toHuman().Ok)[0];
+//             // toast.success(
+//             //   `Update Collection Attributes ${
+//             //     statusText === "0" ? "started" : statusText.toLowerCase()
+//             //   }.`
+//             // );
+//           }
+//         }
+//       )
+//       .then((unsub) => (unsubscribe = unsub))
+//       .catch((e) => {
+//         dispatch({
+//           type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+//         });
+//         const mess = `Tnx is ${e.message}`;
 
-        toast.error(mess);
-      });
+//         toast.error(mess);
+//       });
 
-  return unsubscribe;
-}
+//   return unsubscribe;
+// }
 
 async function owner(caller_account) {
   if (!contract || !caller_account) {
@@ -164,7 +165,9 @@ async function getProjectCount(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectCount(address, {
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectCount"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -181,11 +184,9 @@ async function getProjectById(caller_account, project_id) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getProjectById(
-    address,
-    { value: azero_value, gasLimit },
-    project_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectById"
+  ](address, { value: azero_value, gasLimit }, project_id);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -205,11 +206,9 @@ async function getProjectByNftAddress(caller_account, nft_address) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getProjectByNftAddress(
-    address,
-    { value: azero_value, gasLimit },
-    nft_address
-  );
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectByNftAddress"
+  ](address, { value: azero_value, gasLimit }, nft_address);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -222,8 +221,7 @@ async function addNewProject(
   dispatch,
   txType,
   api,
-  createNewCollection,
-  templateParams
+  createNewCollection
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -285,62 +283,42 @@ async function addNewProject(
         });
 
         if (status.isInBlock) {
-          events.forEach(({ event: { data, method, section }, phase }) => {
-            if (section === "contracts" && method === "ContractEmitted") {
-              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+          events.forEach(
+            async ({ event: { data, method, section }, phase }) => {
+              if (section === "contracts" && method === "ContractEmitted") {
+                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
 
-              const contract_address = accId.toString();
+                const contract_address = accId.toString();
 
-              if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
-                const abi_launchpad_contract = new Abi(
-                  launchpad_manager.CONTRACT_ABI
-                );
-
-                const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
-
-                let event_name = decodedEvent.event.identifier;
-
-                if (event_name === "AddNewProjectEvent") {
-                  const eventValues = [];
-
-                  for (let i = 0; i < decodedEvent.args.length; i++) {
-                    const value = decodedEvent.args[i];
-                    eventValues.push(value.toString());
-                  }
-
-                  const nft_address = eventValues[1];
-                  templateParams.collection_address = reformatAddress(eventValues[1], networkSS58);
-
-                  emailjs
-                    .send(
-                      process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                      process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                      templateParams,
-                      process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                    )
-                    .then(
-                      function (response) {
-                        console.log("SUCCESS!", response.status, response.text);
-                      },
-                      function (error) {
-                        console.log("error send email FAILED...", error);
-                      }
-                    );
-
-                  (async () =>
-                    await APICall.askBeUpdateProjectData({
-                      project_address: nft_address,
-                    }))();
-
-                  console.log(
-                    "APICall.askBeUpdateProjectData addNewProject nft_address,",
-                    nft_address
+                if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
+                  const abi_launchpad_contract = new Abi(
+                    launchpad_manager.CONTRACT_ABI
                   );
-                  createNewCollection(nft_address);
+
+                  const decodedEvent =
+                    abi_launchpad_contract.decodeEvent(bytes);
+
+                  let event_name = decodedEvent.event.identifier;
+
+                  if (event_name === "AddNewProjectEvent") {
+                    const eventValues = [];
+
+                    for (let i = 0; i < decodedEvent.args.length; i++) {
+                      const value = decodedEvent.args[i];
+                      eventValues.push(value.toString());
+                    }
+
+                    const nft_address = eventValues[1];
+
+                    const res = await APICall.askBeUpdateProjectData({
+                      project_address: nft_address,
+                    });
+                    console.log("askBeUpdateProjectData res", res);
+                  }
                 }
               }
             }
-          });
+          );
         }
       }
     )
@@ -408,7 +386,9 @@ async function getProjectAddingFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectAddingFee(address, {
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectAddingFee"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -447,13 +427,16 @@ async function updateIsActiveProject(
     address,
     contract,
     value,
-    "updateIsActiveProject",
+    "artZeroLaunchPadTrait::updateIsActiveProject",
     isActive,
     collection_address
   );
 
-  contract.tx
-    .updateIsActiveProject({ gasLimit, value }, isActive, collection_address)
+  contract.tx["artZeroLaunchPadTrait::updateIsActiveProject"](
+    { gasLimit, value },
+    isActive,
+    collection_address
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -481,7 +464,7 @@ async function updateIsActiveProject(
 const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
-  setMultipleAttributes,
+  // setMultipleAttributes,
   addNewProject,
   getProjectCount,
   getProjectByNftAddress,
@@ -540,7 +523,7 @@ export const withdrawLaunchpadContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(

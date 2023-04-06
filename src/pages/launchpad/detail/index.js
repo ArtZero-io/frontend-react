@@ -57,6 +57,7 @@ import {
   DELETE_PHASE,
   START,
   UPDATE_ADMIN_ADDRESS,
+  EDIT_PROJECT,
 } from "@constants";
 import { useDispatch } from "react-redux";
 import {
@@ -76,7 +77,8 @@ import { APICall } from "@api/client";
 import { getMetaDataOffChain, strToNumber } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
-import { ImageCloudFlareLaunchpad } from "../../../components/ImageWrapper/ImageCloudFlare";
+import { ImageCloudFlareLaunchpad } from "@components/ImageWrapper/ImageCloudFlare";
+import { convertStringToDateTime } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -108,6 +110,7 @@ const LaunchpadDetailPage = () => {
       ADD_PHASE,
       DELETE_PHASE,
       UPDATE_ADMIN_ADDRESS,
+      EDIT_PROJECT,
     ],
     () => {
       fetchPublicPhasesInfoData();
@@ -139,28 +142,15 @@ const LaunchpadDetailPage = () => {
 
         setLoading(true);
 
-        const { ret: projList1 } = await APICall.getAllProjects({
-          isActive: false,
+        const { ret } = await APICall.getProjectByAddress({
+          nftContractAddress: collection_address,
         });
-
-        const { ret: projList2 } = await APICall.getAllProjects({
-          isActive: true,
-        });
-
-        const projList = projList1.concat(projList2);
-
-        const data = projList
-          .map((item) => {
-            return {
-              ...item,
-              roadmaps: JSON.parse(item.roadmaps),
-              teamMembers: JSON.parse(item.teamMembers),
-            };
-          })
-          .find(
-            ({ nftContractAddress }) =>
-              collection_address === nftContractAddress
-          );
+        // console.log("ret", ret);
+        const data = {
+          ...ret[0],
+          roadmaps: JSON.parse(ret[0]?.roadmaps),
+          teamMembers: JSON.parse(ret[0]?.teamMembers),
+        };
 
         if (isUnmounted) return;
         setProjectInfo(data);
@@ -352,7 +342,6 @@ const LaunchpadDetailPage = () => {
               );
 
             let userWhitelist = null;
-
             if (data) {
               userWhitelist = {
                 ...data,
@@ -370,7 +359,6 @@ const LaunchpadDetailPage = () => {
         );
 
         if (isUnmounted) return;
-
         setUserWLInfo(allPhasesAddWL);
         setLoadingUserWLInfo(false);
       } catch (error) {
@@ -427,7 +415,7 @@ const LaunchpadDetailPage = () => {
   useEffect(() => {
     let isUnmounted = false;
 
-    if (currentAccount && activePhaseId) {
+    if (currentAccount) {
       fetchWhitelistData(isUnmounted);
       fetchUserPLClaimedData(isUnmounted);
     }
@@ -448,13 +436,13 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 12;
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
-      10 ** 18;
+      10 ** 12;
 
-    if (balance < 0.5) {
+    if (balance < 0.25) {
       toast.error("Low balance to mint");
       return;
     }
@@ -500,11 +488,11 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 12;
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
     const mintingFee =
-      (mintingAmount * currentPhase.publicMintingFee) / 10 ** 18;
+      (mintingAmount * currentPhase?.publicMintingFee) / 10 ** 12;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
@@ -558,6 +546,7 @@ const LaunchpadDetailPage = () => {
     });
 
   const [loadingUserNft, setLoadingUserNft] = useState(false);
+
   const fetchNFTs = useCallback(
     async (isUnmounted) => {
       setLoadingUserNft(true);
@@ -593,17 +582,28 @@ const LaunchpadDetailPage = () => {
           currentAccount,
           1
         );
+
         const baseUri = tokenUri?.replace("1.json", "");
 
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
-            const idOfNFT = await getIdOfPsp34NFT({
+            let idOfNFT = await getIdOfPsp34NFT({
               currentAccount,
               tokenID: index,
             });
+
+            try {
+              if (idOfNFT?.includes(",")) {
+                idOfNFT = idOfNFT?.replaceAll(",", "");
+              }
+            } catch (error) {
+              console.log("error", error);
+            }
+
             const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
             if (metaData?.status === "FAILED") {
+              console.log(projectInfo?.nftName, "not cache baseUri", baseUri);
               return {
                 nftName: `${projectInfo?.nftName} #${idOfNFT}`,
                 avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
@@ -627,7 +627,7 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               tokenID: index,
             });
-
+            console.log(projectInfo?.nftName, "has no baseUri");
             return {
               nftName: `${projectInfo?.nftName} #${idOfNFT}`,
               avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
@@ -684,7 +684,7 @@ const LaunchpadDetailPage = () => {
           >
             <Heading fontSize={["16px", "18px"]}>Mint ended</Heading>
           </Box>
-        ) : (
+        ) : activePhaseId ? (
           <Box
             w="full"
             mx="auto"
@@ -693,45 +693,47 @@ const LaunchpadDetailPage = () => {
             px={["15px", "30px"]}
             py={["17px", "26px"]}
           >
-            <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
-              <Heading fontSize={["16px", "18px"]}>
-                {!activePhaseId ? (
-                  `upcoming`
-                ) : (
-                  <>
-                    <Text as="span" color="#7ae7ff">
-                      {currentPhase?.title}
-                    </Text>{" "}
-                    in progress
-                  </>
+            {activePhaseId && (
+              <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
+                <Heading fontSize={["16px", "18px"]}>
+                  {!activePhaseId ? (
+                    `upcoming`
+                  ) : (
+                    <>
+                      <Text as="span" color="#7ae7ff">
+                        {currentPhase?.title}
+                      </Text>{" "}
+                      in progress
+                    </>
+                  )}
+                </Heading>
+
+                <Spacer />
+
+                {activePhaseId && (
+                  <Tooltip
+                    hasArrow
+                    bg="#333"
+                    color="#fff"
+                    borderRadius="0"
+                    label="Mint progress of this phase"
+                  >
+                    <span>
+                      <Skeleton isLoaded={!loadingForceUpdate}>
+                        <Text as="span" color="#888" fontSize={["sm", "md"]}>
+                          {Math.round(
+                            (currentPhase?.claimedAmount * 100) /
+                              currentPhase?.totalAmount
+                          ) || 0}
+                          % ({currentPhase?.claimedAmount}/
+                          {currentPhase?.totalAmount})
+                        </Text>
+                      </Skeleton>
+                    </span>
+                  </Tooltip>
                 )}
-              </Heading>
-
-              <Spacer />
-
-              {activePhaseId && (
-                <Tooltip
-                  hasArrow
-                  bg="#333"
-                  color="#fff"
-                  borderRadius="0"
-                  label="Mint progress of this phase"
-                >
-                  <span>
-                    <Skeleton isLoaded={!loadingForceUpdate}>
-                      <Text as="span" color="#888" fontSize={["sm", "md"]}>
-                        {Math.round(
-                          (currentPhase?.claimedAmount * 100) /
-                            currentPhase?.totalAmount
-                        ) || 0}
-                        % ({currentPhase?.claimedAmount}/
-                        {currentPhase?.totalAmount})
-                      </Text>
-                    </Skeleton>
-                  </span>
-                </Tooltip>
-              )}
-            </Skeleton>
+              </Skeleton>
+            )}
 
             {activePhaseId && (
               <Progress
@@ -744,198 +746,206 @@ const LaunchpadDetailPage = () => {
               />
             )}
 
-            <Skeleton isLoaded={userWLInfo} h="50px">
-              {!currentAccount ? (
-                <Flex w="full" justifyContent="center">
-                  <Text fontSize="lg" color="#888">
-                    Please connect your wallet to mint !
-                  </Text>
-                </Flex>
-              ) : null}
-              {/* //Public phases*/}
-              {currentAccount &&
-                activePhaseId &&
-                currentPhase?.isPublic &&
-                (!userWLInfo[currentPhase?.id - 1] ||
-                  userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
-                  <HStack
-                    w="full"
-                    justifyContent="start"
-                    alignItems="center"
-                    spacing="20px"
-                  >
-                    {currentPhase?.publicMintingAmount ? (
-                      <>
-                        <NumberInput
-                          bg="black"
-                          min={1}
-                          w="150px"
-                          mr={[0, 3]}
-                          h="3.125rem"
-                          // mb={["10px", 0]}
-                          isDisabled={
-                            actionType ||
-                            currentPhase?.publicClaimedAmount >=
-                              currentPhase?.publicMintingAmount
-                          }
-                          value={mintingAmount}
-                          max={Math.min(
-                            currentPhase?.publicRemainAmount,
-                            currentPhase?.publicMaxMintingAmount
+            {activePhaseId && (
+              <Skeleton isLoaded={userWLInfo} h="50px">
+                {!currentAccount ? (
+                  <Flex w="full" justifyContent="center">
+                    <Text fontSize="lg" color="#888">
+                      Please connect your wallet to mint !
+                    </Text>
+                  </Flex>
+                ) : null}
+                {/* //Public phases*/}
+                {currentAccount &&
+                  activePhaseId &&
+                  currentPhase?.isPublic &&
+                  (!userWLInfo[currentPhase?.id - 1] ||
+                    userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
+                    <HStack
+                      w="full"
+                      justifyContent="start"
+                      alignItems="center"
+                      spacing="20px"
+                    >
+                      {currentPhase?.publicMintingAmount ? (
+                        <>
+                          <NumberInput
+                            bg="black"
+                            min={1}
+                            w="150px"
+                            mr={[0, 3]}
+                            h="3.125rem"
+                            // mb={["10px", 0]}
+                            isDisabled={
+                              actionType ||
+                              currentPhase?.publicClaimedAmount >=
+                                currentPhase?.publicMintingAmount
+                            }
+                            value={mintingAmount}
+                            max={Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            )}
+                            onChange={(valueString) =>
+                              setMintingAmount(valueString)
+                            }
+                          >
+                            <NumberInputField
+                              h="3.125rem"
+                              borderRadius={0}
+                              borderWidth={0}
+                              color="#fff"
+                            />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                          <CommonButton
+                            w={["full", "auto"]}
+                            {...rest}
+                            variant="outline"
+                            text="public mint"
+                            onClick={onPublicMint}
+                            isDisabled={
+                              loading ||
+                              loadingForceUpdate ||
+                              currentPhase?.publicClaimedAmount >=
+                                currentPhase?.publicMintingAmount ||
+                              mintingAmount >
+                                currentPhase?.publicMaxMintingAmount
+                            }
+                          />
+
+                          {currentPhase?.publicClaimedAmount <
+                            currentPhase?.publicMintingAmount &&
+                          mintingAmount >
+                            Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            ) ? (
+                            <Text
+                              textAlign="left"
+                              color="#ff8c8c"
+                              ml={1}
+                              fontSize="sm"
+                            >
+                              You can only mint maximum{" "}
+                              {Math.min(
+                                currentPhase?.publicRemainAmount,
+                                currentPhase?.publicMaxMintingAmount
+                              )}{" "}
+                              NFT
+                              {Math.min(
+                                currentPhase?.publicRemainAmount,
+                                currentPhase?.publicMaxMintingAmount
+                              ) > 1
+                                ? "s"
+                                : ""}
+                              .
+                            </Text>
+                          ) : (
+                            ""
                           )}
-                          onChange={(valueString) =>
-                            setMintingAmount(valueString)
-                          }
-                        >
-                          <NumberInputField
+                        </>
+                      ) : (
+                        <Text fontSize="lg" color="#888">
+                          You are not in public mint list!
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+                {/* //WhiteList phases*/}
+                {currentAccount &&
+                  activePhaseId &&
+                  userWLInfo[currentPhase?.id - 1] &&
+                  userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
+                    <HStack
+                      w="full"
+                      justifyContent="start"
+                      alignItems="center"
+                      spacing="20px"
+                    >
+                      {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
+                        <>
+                          <NumberInput
+                            bg="black"
+                            min={1}
+                            w="150px"
+                            mr={[0, 3]}
                             h="3.125rem"
-                            borderRadius={0}
-                            borderWidth={0}
-                            color="#fff"
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <CommonButton
-                          w={["full", "auto"]}
-                          {...rest}
-                          variant="outline"
-                          text="public mint"
-                          onClick={onPublicMint}
-                          isDisabled={
-                            loading ||
-                            loadingForceUpdate ||
-                            currentPhase?.publicClaimedAmount >=
-                              currentPhase?.publicMintingAmount ||
-                            mintingAmount > currentPhase?.publicMaxMintingAmount
-                          }
-                        />
-
-                        {currentPhase?.publicClaimedAmount <
-                          currentPhase?.publicMintingAmount &&
-                        mintingAmount >
-                          Math.min(
-                            currentPhase?.publicRemainAmount,
-                            currentPhase?.publicMaxMintingAmount
-                          ) ? (
-                          <Text
-                            textAlign="left"
-                            color="#ff8c8c"
-                            ml={1}
-                            fontSize="sm"
+                            // mb={["10px", 0]}
+                            isDisabled={
+                              actionType ||
+                              userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                                0
+                            }
+                            value={whitelistMintingAmount}
+                            max={userWLInfo[currentPhase?.id - 1]?.remainAmount}
+                            onChange={(valueString) =>
+                              setWhitelistMintingAmount(valueString)
+                            }
                           >
-                            You can only mint maximum{" "}
-                            {Math.min(
-                              currentPhase?.publicRemainAmount,
-                              currentPhase?.publicMaxMintingAmount
-                            )}{" "}
-                            NFT
-                            {Math.min(
-                              currentPhase?.publicRemainAmount,
-                              currentPhase?.publicMaxMintingAmount
-                            ) > 1
-                              ? "s"
-                              : ""}
-                            .
-                          </Text>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    ) : (
-                      <Text fontSize="lg" color="#888">
-                        You are not in public mint list!
-                      </Text>
-                    )}
-                  </HStack>
-                )}
-              {/* //WhiteList phases*/}
-              {currentAccount &&
-                activePhaseId &&
-                userWLInfo[currentPhase?.id - 1] &&
-                userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
-                  <HStack
-                    w="full"
-                    justifyContent="start"
-                    alignItems="center"
-                    spacing="20px"
-                  >
-                    {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
-                      <>
-                        <NumberInput
-                          bg="black"
-                          min={1}
-                          w="150px"
-                          mr={[0, 3]}
-                          h="3.125rem"
-                          // mb={["10px", 0]}
-                          isDisabled={
-                            actionType ||
-                            userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0
-                          }
-                          value={whitelistMintingAmount}
-                          max={userWLInfo[currentPhase?.id - 1]?.remainAmount}
-                          onChange={(valueString) =>
-                            setWhitelistMintingAmount(valueString)
-                          }
-                        >
-                          <NumberInputField
-                            h="3.125rem"
-                            borderRadius={0}
-                            borderWidth={0}
-                            color="#fff"
+                            <NumberInputField
+                              h="3.125rem"
+                              borderRadius={0}
+                              borderWidth={0}
+                              color="#fff"
+                            />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          <CommonButton
+                            w={["full", "auto"]}
+                            mx="0"
+                            {...rest}
+                            isDisabled={
+                              loading ||
+                              loadingForceUpdate ||
+                              userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                                0 ||
+                              whitelistMintingAmount >
+                                userWLInfo[currentPhase?.id - 1]?.remainAmount
+                            }
+                            variant="outline"
+                            text="whitelist mint"
+                            onClick={onWhiteListMint}
                           />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
 
-                        <CommonButton
-                          w={["full", "auto"]}
-                          mx="0"
-                          {...rest}
-                          isDisabled={
-                            loading ||
-                            loadingForceUpdate ||
-                            userWLInfo[currentPhase?.id - 1]?.remainAmount <=
-                              0 ||
-                            whitelistMintingAmount >
-                              userWLInfo[currentPhase?.id - 1]?.remainAmount
-                          }
-                          variant="outline"
-                          text="whitelist mint"
-                          onClick={onWhiteListMint}
-                        />
-
-                        {whitelistMintingAmount >
-                        userWLInfo[currentPhase?.id - 1]?.remainAmount ? (
-                          <Text
-                            textAlign="left"
-                            color="#ff8c8c"
-                            ml={1}
-                            fontSize="sm"
-                          >
-                            You can only mint maximum{" "}
-                            {userWLInfo[currentPhase?.id - 1]?.remainAmount} NFT
-                            {userWLInfo[currentPhase?.id - 1]?.remainAmount > 1
-                              ? "s"
-                              : ""}
-                            .
-                          </Text>
-                        ) : null}
-                      </>
-                    ) : (
-                      <Text fontSize="lg" color="#888">
-                        You are not in whitelist mint list!
-                      </Text>
-                    )}
-                  </HStack>
-                )}
-            </Skeleton>
+                          {whitelistMintingAmount >
+                          userWLInfo[currentPhase?.id - 1]?.remainAmount ? (
+                            <Text
+                              textAlign="left"
+                              color="#ff8c8c"
+                              ml={1}
+                              fontSize="sm"
+                            >
+                              You can only mint maximum{" "}
+                              {userWLInfo[currentPhase?.id - 1]?.remainAmount}{" "}
+                              NFT
+                              {userWLInfo[currentPhase?.id - 1]?.remainAmount >
+                              1
+                                ? "s"
+                                : ""}
+                              .
+                            </Text>
+                          ) : null}
+                        </>
+                      ) : (
+                        <Text fontSize="lg" color="#888">
+                          You are not in whitelist mint list!
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+              </Skeleton>
+            )}
           </Box>
+        ) : (
+          ""
         )}
 
         {/* New phase section */}
@@ -973,7 +983,7 @@ const LaunchpadDetailPage = () => {
                         <Text color="brand.blue">
                           Start:{" "}
                           <Text as="span" color="#fff">
-                            {new Date(Number(item?.startTime)).toLocaleString()}{" "}
+                            {convertStringToDateTime(item?.startTime)}
                           </Text>
                         </Text>
 
@@ -984,7 +994,7 @@ const LaunchpadDetailPage = () => {
                         <Text color="brand.blue">
                           End:{" "}
                           <Text as="span" color="#fff">
-                            {new Date(Number(item?.endTime)).toLocaleString()}{" "}
+                            {convertStringToDateTime(item?.endTime)}
                           </Text>
                         </Text>
                       </Stack>
@@ -1009,7 +1019,7 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Public mint price:{" "}
                           <Text as="span" color="#fff">
-                            {item?.publicMintingFee / 10 ** 18}{" "}
+                            {item?.publicMintingFee / 10 ** 12}{" "}
                             <AzeroIcon
                               mb="5px"
                               w={["14px", "16px"]}
@@ -1048,25 +1058,29 @@ const LaunchpadDetailPage = () => {
                                 </Text>{" "}
                                 at price:{" "}
                                 <Text as="span" color="#fff">
-                                  {userWLInfo[index]?.mintingFee / 10 ** 18}{" "}
+                                  {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
                                   <AzeroIcon
                                     mb="5px"
                                     w={["14px", "16px"]}
                                     h={["14px", "16px"]}
                                   />
                                 </Text>
-                                . You have minted from whitelist{" "}
-                                <Skeleton
-                                  isLoaded={!loadingForceUpdate}
-                                  as="span"
-                                >
-                                  <Text as="span" color="#fff">
-                                    {userWLInfo[index]?.claimedAmount} NFT
-                                    {userWLInfo[index]?.claimedAmount > 1
-                                      ? "s"
-                                      : ""}
-                                  </Text>
-                                </Skeleton>
+                                {userWLInfo[index]?.claimedAmount > 0 && (
+                                  <>
+                                    . You have minted from whitelist{" "}
+                                    <Skeleton
+                                      isLoaded={!loadingForceUpdate}
+                                      as="span"
+                                    >
+                                      <Text as="span" color="#fff">
+                                        {userWLInfo[index]?.claimedAmount} NFT
+                                        {userWLInfo[index]?.claimedAmount > 1
+                                          ? "s"
+                                          : ""}
+                                      </Text>
+                                    </Skeleton>
+                                  </>
+                                )}
                               </Text>
                             </ListItem>
                           )}
@@ -1231,7 +1245,8 @@ const LaunchpadDetailPage = () => {
           ) : (
             <>
               <Text fontSize="lg" color="#888">
-                You minted {myNFTs?.length} NFTs.
+                You minted {myNFTs?.length} NFTs. (Excluding listed & staked
+                NFTs)
               </Text>
 
               <HStack

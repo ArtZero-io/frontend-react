@@ -9,6 +9,10 @@ import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit from "../utils/blockchain/dryRun";
+import { execContractQuery } from "../pages/account/nfts/nfts";
+import { ADMIN_ROLE_CODE } from "../constants";
+import moment from "moment/moment";
+import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -105,7 +109,7 @@ export function timestampWithoutCommas(input) {
 
 export function convertDateToTimeStamp(dateStr) {
   const date = new Date(dateStr);
-  return date.getTime();
+  return date?.getTime();
 }
 
 export function convertStringToPrice(stringPrice) {
@@ -113,7 +117,7 @@ export function convertStringToPrice(stringPrice) {
     /* eslint-disable no-useless-escape */
     const a = stringPrice.replace(/\,/g, "");
     // let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
-    return a / 10 ** 18;
+    return a / 10 ** 12;
   } catch (error) {
     console.log(error);
     return 0;
@@ -132,10 +136,7 @@ export function convertStringToDateTime(stringTimeStamp) {
     timeStamp = stringTimeStamp.replace(/\,/g, "");
   }
 
-  const dateObject = new Date(parseInt(timeStamp));
-
-  return dateObject.toLocaleString();
-  //2019-12-9 10:30:15
+  return moment(parseInt(timeStamp)).format("MMM D YYYY, H:mm");
 }
 
 export function isValidAddressPolkadotAddress(address) {
@@ -175,7 +176,10 @@ export const convertTimeStamp = (input) => {
 };
 
 export const secondsToTime = (secs) => {
-  let hours = Math.floor(secs / (60 * 60));
+  let days = Math.floor(secs / (60 * 60 * 24));
+
+  let divisor_for_hours = secs % (60 * 60 * 24);
+  let hours = Math.floor(divisor_for_hours / (60 * 60));
 
   let divisor_for_minutes = secs % (60 * 60);
   let minutes = Math.floor(divisor_for_minutes / 60);
@@ -184,6 +188,7 @@ export const secondsToTime = (secs) => {
   let seconds = Math.ceil(divisor_for_seconds);
 
   let obj = {
+    d: twoDigit(days),
     h: twoDigit(hours),
     m: twoDigit(minutes),
     s: twoDigit(seconds),
@@ -290,9 +295,9 @@ export const createLevelAttribute = (levelString) => {
 };
 
 export const getPublicCurrentAccount = () => {
-  const keyring = new Keyring({ ss58Format: 5 });
+  const keyring = new Keyring();
   const PHRASE =
-    "cake equal grab lounge leisure truck wink shuffle lesson tired wait sausage";
+    "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
 
   keyring.addFromUri(PHRASE, { name: "Nobody" });
 
@@ -389,7 +394,7 @@ export function onCloseButtonModal({ status, dispatch, type }) {
     });
 }
 
-export const formatNumDynamicDecimal = (num = 0, dec = 12) => {
+export const formatNumDynamicDecimal = (num = 0, dec = 2) => {
   const number = parseInt(num * 10 ** dec) / 10 ** dec;
   const numStr = number.toString();
   const dotIdx = numStr.indexOf(".");
@@ -408,7 +413,16 @@ export const isPhaseTimeOverlap = (phaseArr) => {
   phaseArr.sort((a, b) => a.start - b.start);
 
   for (let i = 1; i < phaseArr?.length; i++) {
-    if (phaseArr[i - 1].end > phaseArr[i].start) return true;
+    if (!canEditPhase(phaseArr[i].start) || !canEditPhase(phaseArr[i].end)) {
+      toast.error("Phase time can not in the past.");
+      return true;
+    }
+
+    if (phaseArr[i - 1].end > phaseArr[i].start) {
+      toast.error("Sub phase time is not valid or overlap.");
+
+      return true;
+    }
   }
 
   return false;
@@ -425,6 +439,8 @@ export default function isNotEmptyStr(data) {
 }
 
 export function isEmptyObj(value) {
+  if (!value) return true;
+
   return Object.keys(value).length === 0 && value.constructor === Object;
 }
 
@@ -464,6 +480,7 @@ export async function getEstimatedGas(
         console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
         return;
       }
+      console.log("gasLimit", gasLimitResult);
 
       ret = gasLimitResult?.value;
     } catch (error) {
@@ -543,3 +560,39 @@ export function formatNumberOutput(o) {
 
   return parseInt(frmtRet?.replaceAll(",", ""));
 }
+
+export function isValidAddress(address) {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+export const formatNumToBN = (number = 0, decimal = 12) => {
+  return new BN(number * 10 ** 6).mul(new BN(10 ** (decimal - 6))).toString();
+};
+
+export const checkHasRoleAdmin = async ({
+  api,
+  contractAbi,
+  contractAddress,
+  address,
+}) => {
+  if (!api) return;
+
+  const publicAccount = getPublicCurrentAccount();
+
+  const queryResult = await execContractQuery(
+    publicAccount?.address,
+    api,
+    contractAbi,
+    contractAddress,
+    "accessControl::hasRole",
+    ADMIN_ROLE_CODE,
+    address
+  );
+
+  return queryResult.toHuman().Ok;
+};

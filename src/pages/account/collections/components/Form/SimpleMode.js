@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Box, Link, Flex, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
@@ -20,6 +19,7 @@ import {
   CREATE_COLLECTION,
   EDIT_COLLECTION,
   START,
+  ArtZero_TOS,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
@@ -29,6 +29,7 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
+import { ipfsClient } from "@api/client";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -63,7 +64,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 18);
+          setAddingFee(addingFeeData / 10 ** 12);
         }
       } catch (error) {
         console.log("error fetchFee", error.message);
@@ -117,6 +118,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
       discord: "",
       telegram: "",
       agreeTosCheckbox: false,
+      isDoxxed: "0",
+      isDuplicationChecked: "0",
     };
     const fetchCollectionsByID = async () => {
       try {
@@ -134,6 +137,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           twitter: dataList[0].twitter,
           discord: dataList[0].discord,
           telegram: dataList[0].telegram,
+          isDoxxed: dataList[0].isDoxxed ? "1" : "0",
+          isDuplicationChecked: dataList[0].isDuplicationChecked ? "1" : "0",
         };
 
         if (dataList?.length) {
@@ -238,9 +243,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               return toast.error("Low balance!");
             }
 
-            if (userBalance <= addingFee) {
+            if (mode === formMode.ADD && userBalance <= addingFee) {
               return toast.error(
-                `You need ${addingFee} SBY to create new collection!`
+                `You need ${addingFee} AZERO to create new collection!`
               );
             }
             // if (
@@ -255,51 +260,53 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             values.headerIPFSUrl = headerIPFSUrl;
             values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
+            // Update new traits attribute
+            const metadata = {
+              name: values.collectionName.trim(),
+              description: values.collectionDescription.trim(),
+              avatarImage: values.avatarIPFSUrl,
+              headerImage: values.headerIPFSUrl,
+              squareImage: values.headerSquareIPFSUrl,
+              website: values.website,
+              twitter: values.twitter,
+              discord: values.discord,
+              telegram: values.telegram,
+              isDoxxed: values.isDoxxed,
+              isDuplicationChecked: values.isDuplicationChecked,
+            };
+            // console.log("metadata", metadata);
+
+            let { path: metadataHash } = await ipfsClient.add(
+              JSON.stringify(metadata)
+            );
+
+            // console.log("metadataHash", metadataHash);
+
+            if (!metadataHash) {
+              toast.error("There is an error with metadata hash!");
+              return;
+            }
+
             const data = {
               nftName: values.nftName,
               nftSymbol: values.nftSymbol,
-
-              attributes: [
-                "name",
-                "description",
-                "avatar_image",
-                "header_image",
-                "header_square_image",
-                "website",
-                "twitter",
-                "discord",
-                "telegram",
-                "is_doxxed",
-                "is_duplication_checked",
-              ],
-
-              attributeVals: [
-                values.collectionName.trim(),
-                values.collectionDescription.trim(),
-                values.avatarIPFSUrl,
-                values.headerIPFSUrl,
-                values.headerSquareIPFSUrl,
-                values.website,
-                values.twitter,
-                values.discord,
-                values.telegram,
-                "0",
-                "0",
-              ],
+              attributes: ["metadata"],
+              attributeVals: [metadataHash],
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,
               collectionRoyaltyFeeData: values.collectRoyaltyFee
                 ? Math.round(values.royaltyFee * 100)
                 : 0,
             };
+            // console.log("metadataHash1", metadataHash);
 
             // Double check 3 images is exits
-            if (
-              !data?.attributeVals[2] ||
-              !data?.attributeVals[3] ||
-              !data?.attributeVals[4]
-            ) {
-              return toast.error("Some images is invalid!");
-            }
+            // if (
+            //   !data?.attributeVals[2] ||
+            //   !data?.attributeVals[3] ||
+            //   !data?.attributeVals[4]
+            // ) {
+            //   return toast.error("Some images is invalid!");
+            // }
 
             try {
               if (mode === formMode.ADD) {
@@ -310,7 +317,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 };
 
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-
+                // console.log("SIMPLE data", data);
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,
@@ -665,7 +672,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} SBY </strong> in fee to ArtZero.io
+                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
                     </Text>
                     <HStack justifyContent="center">
                       <CommonCheckbox
@@ -684,9 +691,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                               }}
                               textTransform="none"
                               isExternal
-                              href={
-                                "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
-                              }
+                              href={ArtZero_TOS}
                             >
                               Terms of Service
                             </Link>

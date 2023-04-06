@@ -41,12 +41,10 @@ async function totalTokensForSale(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.totalTokensForSale(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address,
-    seller
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::totalTokensForSale"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address, seller);
+
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -65,15 +63,12 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getVolumeByCollection(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getVolumeByCollection"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address);
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 18;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return 0;
 }
@@ -86,14 +81,15 @@ async function getTotalVolume(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalVolume(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getTotalVolume"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 18;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -119,12 +115,10 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getNftSaleInfo(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address,
-    token_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getNftSaleInfo"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -149,13 +143,16 @@ async function getForSaleTokenId(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getForSaleTokenId(
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getForSaleTokenId"
+  ](
     address,
     { value: azero_value, gasLimit },
     nft_contract_address,
     seller,
     index
   );
+
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -188,7 +185,9 @@ async function getAllBids(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getAllBids(
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getAllBids"
+  ](
     address,
     { value: azero_value, gasLimit },
     nft_contract_address,
@@ -215,6 +214,7 @@ async function owner(caller_account) {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -229,10 +229,10 @@ async function getStakingDiscountCriteria(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakingDiscountCriteria(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getStakingDiscountCriteria"
+  ](address, { value: azero_value, gasLimit });
+
   if (result.isOk) {
     const ret = output.toHuman().Ok;
 
@@ -257,10 +257,10 @@ async function getStakingDiscountRate(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakingDiscountRate(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getStakingDiscountRate"
+  ](address, { value: azero_value, gasLimit });
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -275,12 +275,15 @@ async function getPlatformFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPlatformFee(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getPlatformFee"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-   return formatNumberOutput(output);
+    return formatNumberOutput(output);
   }
   return null;
 }
@@ -293,14 +296,15 @@ async function getCurrentProfit(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentProfit(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getCurrentProfit"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 18;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -313,14 +317,15 @@ async function getTotalProfit(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalProfit(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getTotalProfit"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 18;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -340,12 +345,10 @@ async function getListedTokenCountByCollectionAddress(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } =
-    await contract.query.getListedTokenCountByCollectionAddress(
-      address,
-      { value: azero_value, gasLimit },
-      nft_contract_address
-    );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getListedTokenCountByCollectionAddress"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address);
+
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -378,7 +381,7 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -508,7 +511,7 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -661,7 +664,7 @@ async function buy(
         api,
         caller_account,
       });
-      console.log(status, 'statusstatus');
+
       if (status?.isFinalized) {
         await APICall.askBeUpdateNftData({
           collection_address: nft_contract_address,
@@ -808,14 +811,14 @@ export const withdrawMarketplaceContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(
     address,
     contract,
     value,
-    "withdrawProfit",
+    "artZeroMarketplaceTrait::withdrawProfit",
     amountFormatted,
     receiver_address || address
   );
@@ -824,7 +827,7 @@ export const withdrawMarketplaceContract = async (
   // withdrawProfit for normal use case
   // address set fixed due to withdraw to admin address only
 
-  const txNotSign = contract.tx.withdrawProfit(
+  const txNotSign = contract.tx["artZeroMarketplaceTrait::withdrawProfit"](
     { gasLimit, value },
     amountFormatted,
     receiver_address || address

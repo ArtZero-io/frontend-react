@@ -32,7 +32,9 @@ async function getTotalSupply(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalSupply(address, {
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getTotalSupply"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -51,11 +53,9 @@ async function getPhaseScheduleById(caller_account, phaseId) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseScheduleById(
-    address,
-    { value: azero_value, gasLimit },
-    phaseId
-  );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPhaseScheduleById"
+  ](address, { value: azero_value, gasLimit }, phaseId);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -70,7 +70,8 @@ async function updateWhitelist(
   price,
   dispatch,
   txType,
-  api
+  api,
+  selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -94,7 +95,7 @@ async function updateWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -125,6 +126,14 @@ async function updateWhitelist(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -140,7 +149,8 @@ async function addWhitelist(
   price,
   dispatch,
   txType,
-  api
+  api,
+  selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -164,7 +174,7 @@ async function addWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -195,6 +205,140 @@ async function addWhitelist(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+
+async function addMultiWhitelists(
+  caller_account,
+  phaseId,
+  accountList,
+  amountList,
+  priceList,
+  dispatch,
+  txType,
+  api,
+  selectedProjectAddress
+) {
+  if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
+
+  let unsubscribe;
+  let gasLimit;
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "addMultiWhitelists",
+    phaseId,
+    accountList,
+    amountList,
+    priceList
+  );
+  // console.log("gasLimit", gasLimit);
+  // console.log("phaseId", phaseId);
+  // console.log("accountList", accountList);
+  // console.log("amountList", amountList);
+  // console.log("priceList", priceList);
+  const txNotSign = contract.tx.addMultiWhitelists(
+    { gasLimit, value },
+    phaseId,
+    accountList,
+    amountList,
+    priceList
+  );
+
+  await txNotSign
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+async function clearWhitelistPhase(
+  caller_account,
+  phaseId,
+  accountList,
+  dispatch,
+  txType,
+  api
+) {
+  if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
+
+  let unsubscribe;
+  let gasLimit;
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "clearWhitelistPhase",
+    phaseId,
+    accountList
+  );
+  // console.log("gasLimit", gasLimit);
+  // console.log("phaseId", phaseId);
+  // console.log("accountList", accountList);
+  // console.log("amountList", amountList);
+  // console.log("priceList", priceList);
+  const txNotSign = contract.tx.clearWhitelistPhase(
+    { gasLimit, value },
+    phaseId,
+    accountList
+  );
+
+  await txNotSign
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -211,7 +355,9 @@ async function getLastPhaseId(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getLastPhaseId(address, {
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getLastPhaseId"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -230,7 +376,9 @@ async function getCurrentPhase(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentPhase(address, {
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getCurrentPhase"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -249,7 +397,9 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseAccountLastIndex(
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPhaseAccountLastIndex"
+  ](
     address,
     {
       value: azero_value,
@@ -272,7 +422,9 @@ async function getPhaseAccountLink(caller_account, phaseId, index) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseAccountLink(
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPhaseAccountLink"
+  ](
     address,
     {
       value: azero_value,
@@ -299,7 +451,9 @@ async function getWhitelistByAccountId(
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getWhitelistByAccountId(
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getWhitelistByAccountId"
+  ](
     address,
     {
       value: azero_value,
@@ -323,7 +477,9 @@ async function getLastTokenId(caller_account) {
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getLastTokenId(address, {
+  const { result, output } = await contract.query[
+    "psp34Traits::getLastTokenId"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -357,12 +513,14 @@ async function editProjectInformation(
     address,
     contract,
     value,
-    "editProjectInformation",
+    "psp34LaunchPadTraits::editProjectInformation",
     projectInfo
   );
 
-  contract.tx
-    .editProjectInformation({ gasLimit, value }, projectInfo)
+  contract.tx["psp34LaunchPadTraits::editProjectInformation"](
+    { gasLimit, value },
+    projectInfo
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -373,7 +531,7 @@ async function editProjectInformation(
         caller_account,
       });
 
-      if (status.isFinalized) {
+      if (status.isInBlock) {
         const res = await APICall.askBeUpdateProjectData({
           project_address: nftContractAddress,
         });
@@ -447,7 +605,7 @@ async function publicMint(
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -476,27 +634,25 @@ async function publicMint(
       });
 
       if (status.isFinalized) {
-        contract.query
-          .getLastTokenId(address, {
-            value: 0,
-            gasLimit,
-          })
-          .then(async ({ result, output }) => {
-            if (result.isOk) {
-              const lastTokenId = formatOutput(output);
+        contract.query["psp34Traits::getLastTokenId"](address, {
+          value: 0,
+          gasLimit,
+        }).then(async ({ result, output }) => {
+          if (result.isOk) {
+            const lastTokenId = formatOutput(output);
 
-              for (
-                let token_id = lastTokenId - mintAmount + 1;
-                token_id <= lastTokenId;
-                token_id++
-              ) {
-                await APICall.askBeUpdateNftData({
-                  collection_address,
-                  token_id,
-                });
-              }
+            for (
+              let token_id = lastTokenId - mintAmount + 1;
+              token_id <= lastTokenId;
+              token_id++
+            ) {
+              await APICall.askBeUpdateNftData({
+                collection_address,
+                token_id,
+              });
             }
-          });
+          }
+        });
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -524,7 +680,7 @@ async function whitelistMint(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -548,27 +704,25 @@ async function whitelistMint(
       });
 
       if (status.isFinalized) {
-        contract.query
-          .getLastTokenId(address, {
-            value: 0,
-            gasLimit,
-          })
-          .then(async ({ result, output }) => {
-            if (result.isOk) {
-              const lastTokenId = formatOutput(output);
+        contract.query["psp34Traits::getLastTokenId"](address, {
+          value: 0,
+          gasLimit,
+        }).then(async ({ result, output }) => {
+          if (result.isOk) {
+            const lastTokenId = formatOutput(output);
 
-              for (
-                let token_id = lastTokenId - mintAmount + 1;
-                token_id <= lastTokenId;
-                token_id++
-              ) {
-                await APICall.askBeUpdateNftData({
-                  collection_address,
-                  token_id,
-                });
-              }
+            for (
+              let token_id = lastTokenId - mintAmount + 1;
+              token_id <= lastTokenId;
+              token_id++
+            ) {
+              await APICall.askBeUpdateNftData({
+                collection_address,
+                token_id,
+              });
             }
-          });
+          }
+        });
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -585,7 +739,9 @@ async function getProjectInfo(caller_account) {
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getProjectInfo(address, {
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getProjectInfo"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -693,13 +849,13 @@ async function grantAdminRoleToAddress(
         caller_account,
       });
 
-      if (status.isFinalized) {
-        const res = await APICall.askBeUpdateProjectData({
-          project_address: collection_address,
-        });
+      // if (status.isFinalized) {
+      //   const res = await APICall.askBeUpdateProjectData({
+      //     project_address: collection_address,
+      //   });
 
-        console.log("askBeUpdateProjectData res", res);
-      }
+      //   console.log("askBeUpdateProjectData res", res);
+      // }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -820,7 +976,7 @@ async function addNewPhase(
   const value = 0;
 
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(
@@ -892,14 +1048,14 @@ async function updateSchedulePhase(
   const value = 0;
 
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(
     address,
     contract,
     value,
-    "updateSchedulePhase",
+    "psp34LaunchPadTraits::updateSchedulePhase",
     phaseId,
     phaseCode,
     isPublic,
@@ -910,7 +1066,7 @@ async function updateSchedulePhase(
     endTime
   );
 
-  const txNotSign = contract.tx.updateSchedulePhase(
+  const txNotSign = contract.tx["psp34LaunchPadTraits::updateSchedulePhase"](
     { gasLimit, value },
     phaseId,
     phaseCode,
@@ -956,11 +1112,14 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
     address,
     contract,
     value,
-    "deactivePhase",
+    "psp34LaunchPadTraits::deactivePhase",
     phaseId
   );
 
-  const txNotSign = contract.tx.deactivePhase({ gasLimit, value }, phaseId);
+  const txNotSign = contract.tx["psp34LaunchPadTraits::deactivePhase"](
+    { gasLimit, value },
+    phaseId
+  );
 
   await txNotSign
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -987,13 +1146,12 @@ async function getPublicMintedCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getPublicMintedCount(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPublicMintedCount"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -1056,13 +1214,12 @@ async function getAvailableTokenAmount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getAvailableTokenAmount(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getAvailableTokenAmount"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -1077,13 +1234,12 @@ async function getOwnerClaimedAmount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  const { result, output } = await contract.query.getOwnerClaimedAmount(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getOwnerClaimedAmount"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -1107,7 +1263,7 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
 
   const value = 0;
   const withdrawAmount = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(
@@ -1161,16 +1317,17 @@ export const getPhaseAccountPublicClaimedAmount = async (
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } =
-    await contract.query.getPhaseAccountPublicClaimedAmount(
-      address,
-      {
-        value: azero_value,
-        gasLimit,
-      },
-      address,
-      phaseId
-    );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPhaseAccountPublicClaimedAmount"
+  ](
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    address,
+    phaseId
+  );
 
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -1184,6 +1341,8 @@ const launchpad_psp34_nft_standard_calls = {
   setContract,
   getPhaseScheduleById,
   addWhitelist,
+  addMultiWhitelists,
+  clearWhitelistPhase,
   getCurrentPhase,
   getWhitelistByAccountId,
   whitelistMint,
@@ -1289,7 +1448,9 @@ export const getCurrentPhaseByProjectAddress = async ({
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentPhase(address, {
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getCurrentPhase"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -1326,11 +1487,9 @@ export const getCurrentPhaseStatusOfProject = async ({
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseScheduleById(
-    address,
-    { value: azero_value, gasLimit },
-    phaseId
-  );
+  const { result, output } = await contract.query[
+    "psp34LaunchPadTraits::getPhaseScheduleById"
+  ](address, { value: azero_value, gasLimit }, phaseId);
 
   if (result.isOk) {
     return output.toHuman().Ok;

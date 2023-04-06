@@ -77,7 +77,7 @@ function MyNFTCard({
     if (target.checked && multiStakeData?.list?.length >= MAX_ITEM_STAKE) {
       !multiStakeData?.list?.includes(tokenID) && setIsTicked(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_STAKE}!`);
+      return toast.error(`You can stake up to ${MAX_ITEM_STAKE} PMPs per transaction!`);
     }
 
     target.checked ? setIsTicked(true) : setIsTicked(false);
@@ -105,7 +105,7 @@ function MyNFTCard({
         setCountdownTime(secondsToTime(valid_time - now));
       else {
         setIsUnstakeTime(true);
-        setCountdownTime({ h: 0, m: 0, s: 0 });
+        setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
       }
     }
   }, 1000);
@@ -137,7 +137,7 @@ function MyNFTCard({
           setCountdownTime(secondsToTime(valid_time - now));
         else {
           setIsUnstakeTime(true);
-          setCountdownTime({ h: 0, m: 0, s: 0 });
+          setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
         }
       }
 
@@ -241,8 +241,8 @@ function MyNFTCard({
                 color="brand.grayLight"
                 fontSize={["xs", "md"]}
               >
-                Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
-                {countdownTime?.s || 0}s
+                Unstake in {countdownTime?.d || 0}d: {countdownTime?.h || 0}h :{" "}
+                {countdownTime?.m || 0}m : {countdownTime?.s || 0}s
               </Text>
             </Flex>
           ) : null}
@@ -294,7 +294,7 @@ function MyNFTCard({
                   </Text>
                   <Tag minH={["30px", "40px"]}>
                     <TagLabel>
-                      {formatNumDynamicDecimal(price / 10 ** 18)}
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
                     </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
@@ -312,7 +312,7 @@ function MyNFTCard({
                   {isBid?.status ? (
                     <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
-                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 18)}
+                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </HStack>
@@ -333,7 +333,7 @@ function MyNFTCard({
                       {highest_bid ? (
                         <HStack ml={"6px"} bg="transparent" i>
                           <Text color="#fff" bg="transparent">
-                            {formatNumDynamicDecimal(highest_bid / 10 ** 18)}
+                            {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                           </Text>
                           <TagRightIcon as={AzeroIcon} />
                         </HStack>

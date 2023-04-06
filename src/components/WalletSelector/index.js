@@ -24,8 +24,6 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { reformatAddress } from "@utils/substrate/SubstrateContext";
-import { networkSS58 } from "@constants";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();
@@ -36,16 +34,17 @@ function WalletSelector({ display }) {
   const { keyring, currentAccount } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => ({
-    key: reformatAddress(account.address, networkSS58),
-    address: reformatAddress(account.address, networkSS58),
+    key: account.address,
+    address: account.address,
     name: account.meta.name,
   }));
 
   const initialAddress =
     keyringOptions?.length > 0 ? keyringOptions[0].address : "";
+
   useEffect(() => {
     if (!currentAccount && initialAddress?.length > 0) {
-      setCurrentAccount({...keyring.getPair(initialAddress), address: initialAddress});
+      setCurrentAccount(keyring.getPair(initialAddress));
       dispatch({
         type: AccountActionTypes.SET_ACTIVE_ADDRESS,
         payload: initialAddress,
@@ -63,7 +62,7 @@ function WalletSelector({ display }) {
   ]);
 
   function selectAccountHandler(address) {
-    setCurrentAccount({...keyring.getPair(address), address: address});
+    setCurrentAccount(keyring.getPair(address));
     dispatch({
       type: AccountActionTypes.SET_ACTIVE_ADDRESS,
       payload: address,

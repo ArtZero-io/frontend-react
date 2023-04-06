@@ -85,6 +85,8 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           borderWidth={2}
           borderRadius="0"
           position="absolute"
+          _hover="none"
+            bg="#171717"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
           onClick={onCloseModalHandler}

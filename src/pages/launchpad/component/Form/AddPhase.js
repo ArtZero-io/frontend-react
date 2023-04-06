@@ -32,8 +32,8 @@ function AddPhase({
           return { ...item, start: null, end: null };
         }
 
-        const startTime = idx !== index ? item?.start : e[0].getTime();
-        const endTime = idx !== index ? item?.end : e[1].getTime();
+        const startTime = idx !== index ? item?.start : e[0]?.getTime();
+        const endTime = idx !== index ? item?.end : e[1]?.getTime();
 
         return { ...item, start: startTime, end: endTime, new: true };
       });
@@ -51,21 +51,21 @@ function AddPhase({
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 
-    const lastPhase = allPhases[allPhases?.length - 1];
-    const firstPhase = allPhases[0];
+    // const lastPhase = allPhases[allPhases?.length - 1];
+    // const firstPhase = allPhases[0];
 
-    const prjEndTime = arrayHelpers?.form?.values?.endTime;
-    const prjStartTime = arrayHelpers?.form?.values?.startTime;
+    // const prjEndTime = arrayHelpers?.form?.values?.endTime;
+    // const prjStartTime = arrayHelpers?.form?.values?.startTime;
 
-    if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
-      const newValue = value.map((i, idx) => {
-        return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
-      });
+    // if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
+    //   const newValue = value.map((i, idx) => {
+    //     return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    //   });
 
-      helpers.setValue(newValue);
+    //   helpers.setValue(newValue);
 
-      return toast.error("Phase time can not overlaps project time.");
-    }
+    //   return toast.error("Phase time can not overlaps project time.");
+    // }
 
     arrayHelpers.push({
       name: "",
@@ -80,8 +80,6 @@ function AddPhase({
   };
 
   const handleOnChangeSwitch = (index) => {
-
-    
     if (value[index].isPublic) {
       value[index].publicAmount = "";
       value[index].publicMaxMintingAmount = "";
@@ -199,7 +197,7 @@ function AddPhase({
                     />
                     <NumberInput
                       isRequired={value[index].isPublic}
-                      max={50}
+                      max={100}
                       type="number"
                       height="50px"
                       precision={0}

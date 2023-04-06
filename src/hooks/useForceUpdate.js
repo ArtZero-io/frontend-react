@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 
-import { clearTxStatus } from '../store/actions/txStatus';
-import { FINALIZED } from '@constants/index';
-import { useEffect, useState } from 'react';
-import { delay } from '../utils';
+import { clearTxStatus } from "../store/actions/txStatus";
+import { FINALIZED } from "@constants/index";
+import { useEffect, useState } from "react";
+import { delay } from "../utils";
 
 function useForceUpdate(typeArray, cb, noDelay = false) {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ function useForceUpdate(typeArray, cb, noDelay = false) {
 
     // 8 giay
 
-    const delayTime = noDelay ? 500 : 8000;
+    const delayTime = noDelay ? 100 : 3000;
 
     const doDelay = async () => {
       try {
@@ -39,9 +39,8 @@ function useForceUpdate(typeArray, cb, noDelay = false) {
         setLoadingTime(delayTime / 1000);
 
         await delay(delayTime).then(() => {
-          dispatch(clearTxStatus());
-
           cb();
+          dispatch(clearTxStatus());
           setLoading(false);
         });
       } catch (error) {

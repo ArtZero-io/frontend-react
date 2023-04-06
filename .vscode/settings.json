@@ -9,10 +9,12 @@
     "isub",
     "itemprop",
     "staker",
+    "tanstack",
     "tsparticles",
     "unlist",
     "Unstaked",
     "wojtekmaj"
   ],
-  "editor.fontSize": 15.5
+  "editor.fontSize": 15.5,
+  "editor.fontFamily": "Consolas, Monaco, 'Haskplex Nerd' ,'Droid Sans Mono', 'monospace', monospace"
 }
