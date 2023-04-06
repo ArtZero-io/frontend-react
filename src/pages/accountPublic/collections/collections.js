@@ -19,6 +19,7 @@ import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { APICall } from "@api/client";
 import { useParams } from "react-router-dom";
+import { getPublicCurrentAccount } from "../../../utils";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -86,10 +87,9 @@ function MyCollectionsPage() {
           for (let item of dataList) {
             item.volume =
               await marketplace_contract_calls.getVolumeByCollection(
-                currentAccount,
+                getPublicCurrentAccount(),
                 item.nftContractAddress
               );
-
             listCollection.push(item);
           }
         }

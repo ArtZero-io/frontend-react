@@ -176,7 +176,6 @@ function TokenPage() {
             { u64: token_id }
           );
           setBidderCount(listBidder?.length || 0);
-
           if (listBidder?.length) {
             //sort highest price first
             listBidder.sort((a, b) => {
@@ -201,6 +200,10 @@ function TokenPage() {
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
+            } else {
+              listBidder = [];
+              setBidPrice(1);
+              setIsAlreadyBid(false);
             }
           } else {
             listBidder = [];
