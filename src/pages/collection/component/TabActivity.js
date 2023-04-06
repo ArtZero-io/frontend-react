@@ -10,11 +10,11 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 
-import { truncateStr } from "@utils";
 import { APICall } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import { truncateStr } from "@utils";
 
 function TabActivity({
   tokenUriType1,

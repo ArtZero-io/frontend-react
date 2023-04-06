@@ -90,7 +90,6 @@ function MyCollectionsPage() {
                 currentAccount || getPublicCurrentAccount(),
                 item.nftContractAddress
               );
-
             listCollection.push(item);
           }
         }

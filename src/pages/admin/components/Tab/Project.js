@@ -11,7 +11,7 @@ import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
+import { delay } from "@utils";
 import toast from "react-hot-toast";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 
@@ -187,7 +187,7 @@ function ProjectAdmin() {
               Collection Contract Owner:{" "}
             </Text>
             <Text color="#fff" ml={2}>
-              {truncateStr(collectionContractOwner, 9)}
+              <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
             </Text>
           </Stack>
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
