@@ -92,7 +92,6 @@ function MyWhiteListProjectPage(props) {
     selectedProjectAddress,
     selectedPhaseCode
   );
-
   const { pagesCount, currentPage, setCurrentPage, isDisabled, pageSize } =
     usePagination({
       total: (resultList || phaseInfo?.userData)?.length,
@@ -104,14 +103,18 @@ function MyWhiteListProjectPage(props) {
     });
 
   const getSearchResult = (keywords) => {
-    setCurrentPage(1)
-    const result = phaseInfo?.userData?.filter(el => el.address.toLowerCase().includes(keywords.trim().toLowerCase())) || []
-    if(!result?.length && !keywords) {
-      setResultList()
-      return
+    setCurrentPage(1);
+    const result =
+      phaseInfo?.userData?.filter((el) =>
+        el.address.toLowerCase().includes(keywords.trim().toLowerCase())
+      ) || [];
+
+    if (!result?.length && !keywords) {
+      setResultList();
+      return;
     }
     setResultList(result);
-  }
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceGetSearchResult = useCallback(
@@ -120,7 +123,6 @@ function MyWhiteListProjectPage(props) {
   );
 
   const handleInputOnchange = (value) => {
-
     setKeywords(value);
     debounceGetSearchResult(value);
   };
@@ -245,9 +247,11 @@ function MyWhiteListProjectPage(props) {
     (i) => i.nftContractAddress === selectedProjectAddress
   );
 
-  const phasesListWhitelist = currentProjectInfo?.whiteList?.map((item) => {
-    return { ...item.phaseData, id: item.phaseId };
-  });
+  const phasesListWhitelist = currentProjectInfo?.whiteList
+    ?.map((item) => {
+      return { ...item.phaseData, id: item.phaseId };
+    })
+    .filter((item) => !!item?.isActive);
 
   // TODO add fitler emplty WL length
   //     // whiteListDataTableTmp = whiteListDataTableTmp.filter((item) => {
@@ -264,7 +268,7 @@ function MyWhiteListProjectPage(props) {
       setWhitelistAmount(1);
       setIsUpdateMode(null);
       // fetchPhaseInfo();
-      toast.success("It can take a while to load all Whitelist addresses")
+      toast.success("It can take a while to load all Whitelist addresses");
       await refetch();
     }
   );
@@ -398,8 +402,6 @@ function MyWhiteListProjectPage(props) {
       const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
 
       for (let i = 0; i < value4Contract?.addressList?.length; i++) {
-         
-
         if (!isValidAddress(value4Contract?.addressList[i])) {
           return toast.error(
             `This address is invalid! ${truncateStr(
@@ -641,8 +643,12 @@ function MyWhiteListProjectPage(props) {
                           (i) => i.address === event.target.value.toString()
                         );
                         setWhiteListPrice(editAddr.mintingFee);
-                        setWhitelistAmount(Number(editAddr.whitelistAmount.replace(',','')));
-                        whitelistAmountRef.current = Number(editAddr.whitelistAmount.replace(',',''));
+                        setWhitelistAmount(
+                          Number(editAddr.whitelistAmount.replace(",", ""))
+                        );
+                        whitelistAmountRef.current = Number(
+                          editAddr.whitelistAmount.replace(",", "")
+                        );
                         setWhitelistAmountClaimed(editAddr.claimedAmount);
                         setIsUpdateMode("EDIT");
                       }
