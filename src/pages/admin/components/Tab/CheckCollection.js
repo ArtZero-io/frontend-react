@@ -75,10 +75,10 @@ function CheckCollection() {
     let token_uri = "";
 
     // if (total_supply > 0) {
-      token_uri = await nft721_psp34_standard_calls.tokenUri(
-        publicCurrentAccount,
-        1
-      );
+    token_uri = await nft721_psp34_standard_calls.tokenUri(
+      publicCurrentAccount,
+      1
+    );
     // }
     console.log("token_uri", token_uri);
 
@@ -149,14 +149,16 @@ function CheckCollection() {
                     value={collectionAddress}
                     mr={3}
                     h="3.125rem"
-                    w="full"
+                    w="50%"
+                    // w="full"
                     px={0}
                   ></Input>
 
                   <Button
+                    w="50%"
                     mt={7}
                     variant="solid"
-                    w="full"
+                    // w="full"
                     onClick={() => onCheck()}
                   >
                     Check

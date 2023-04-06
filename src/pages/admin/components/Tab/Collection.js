@@ -216,7 +216,7 @@ function CollectionAdmin() {
     }
     try {
       dispatch(setTxStatus({ type: "grantRole", step: START }));
-      
+
       await execContractTx(
         currentAccount,
         dispatch,
@@ -396,10 +396,14 @@ function CollectionAdmin() {
   return (
     <Box
       mx="auto"
-      px={{ base: "6", "2xl": "8" }}
+      // px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
-      <Box maxW="8xl" fontSize="lg" minH="50rem">
+      <Box
+        //  maxW="8xl"
+        fontSize="lg"
+        minH="50rem"
+      >
         <Stack
           direction={{ base: "column", xl: "row" }}
           pb={5}
@@ -486,15 +490,16 @@ function CollectionAdmin() {
           isLoaded={!(loading || loadingForceUpdate)}
         >
           <TableContainer
+            maxH="480px"
             h="full"
-            maxW="8xl"
+            // maxW="8xl"
             fontSize="lg"
-            overflow="auto"
+            overflowY="scroll"
             sx={SCROLLBAR}
           >
             <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
               <Thead>
-                <Tr>
+                <Tr position="sticky" top={0} zIndex={1} bg="#171717">
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
@@ -519,54 +524,7 @@ function CollectionAdmin() {
                   >
                     Name
                   </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Owner
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Type
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Status
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    NFT count
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Royalty Fee
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Metadata
-                  </Th>
+
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
@@ -591,6 +549,39 @@ function CollectionAdmin() {
                   >
                     Action
                   </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Status
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Owner
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Type
+                  </Th>
+
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    NFT count
+                  </Th>
                 </Tr>
               </Thead>
 
@@ -606,35 +597,23 @@ function CollectionAdmin() {
                           address={collection.nftContractAddress}
                         />
                       </Td>
-                      <Td py={7}>{collection.name}</Td>
-                      <Td py={7}>
-                        {truncateStr(collection.collectionOwner, 5)}
+                      <Td py={7} maxW="200px">
+                        <Text fontSize="15px">{collection.name}</Text>
+                        <Text>
+                          Royalty Fee:{" "}
+                          {collection.isCollectRoyaltyFee
+                            ? collection.royaltyFee / 100 + "%"
+                            : "N/A"}{" "}
+                        </Text>
                       </Td>
-                      <Td>
-                        {collection.contractType === "Psp34Auto"
-                          ? "Auto"
-                          : "Manual"}{" "}
-                      </Td>
-                      <Td py={7}>
-                        {collection.isActive ? "Active" : "Inactive"}{" "}
-                      </Td>
-                      <Td py={7}>{collection.nft_count}</Td>
-                      <Td py={7}>
-                        {collection.isCollectRoyaltyFee
-                          ? collection.royaltyFee / 100 + "%"
-                          : "N/A"}{" "}
-                      </Td>
-                      <Td py={7}>
-                        {collection.showOnChainMetadata
-                          ? "On-chain"
-                          : "Off-chain"}{" "}
-                      </Td>
+
                       <Td py={7}>
                         {collection.isDoxxed ? "YES" : "NO"}{" "}
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={collection.isDoxxed ? "outline" : ""}
                           text={!collection.isDoxxed ? "Set Yes" : "Set No"}
                           isDisabled={
@@ -651,12 +630,14 @@ function CollectionAdmin() {
                           }
                         />
                       </Td>
+
                       <Td py={7}>
                         {collection.isDuplicationChecked ? "YES" : "NO"}
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={
                             collection.isDuplicationChecked ? "outline" : ""
                           }
@@ -684,7 +665,8 @@ function CollectionAdmin() {
                         <CommonButton
                           {...rest}
                           size="sm"
-                          maxW="120px"
+                          px="2"
+                          minW="60px"
                           variant={collection.isActive ? "outline" : ""}
                           text={!collection.isActive ? "Enable" : "Disable"}
                           isDisabled={
@@ -701,6 +683,33 @@ function CollectionAdmin() {
                           }
                         />
                       </Td>
+                      <Td py={7}>
+                        {collection.isActive ? "Active" : "Inactive"}{" "}
+                      </Td>
+                      <Td py={7}>
+                        <AddressCopier address={collection.collectionOwner} />
+                      </Td>
+                      <Td>
+                        <Stack>
+                          <Stack>
+                            <Text>
+                              {collection.contractType === "Psp34Auto"
+                                ? "Simple Mode"
+                                : "Advanced Mode"}
+                            </Text>
+                          </Stack>
+                          <Stack>
+                            <Text>
+                              {collection.showOnChainMetadata
+                                ? "On-chain"
+                                : "Off-chain"}{" "}
+                              Metadata
+                            </Text>
+                          </Stack>
+                        </Stack>
+                      </Td>
+
+                      <Td py={7}>{collection.nft_count}</Td>
                     </Tr>
                   ))
                 )}

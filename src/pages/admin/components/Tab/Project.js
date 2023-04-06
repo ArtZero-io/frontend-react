@@ -29,6 +29,8 @@ import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import moment from "moment/moment";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { SCROLLBAR } from "@constants";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -215,31 +217,23 @@ function ProjectAdmin() {
         <TableContainer
           maxW="6xl-mid"
           // maxH={{ base: "20rem", "2xl": "30rem" }}
-
+          maxH="480px"
           fontSize="lg"
           h="full"
-          overflow="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-              borderRadius: "0px",
-              backgroundColor: `transparent`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: `transparent`,
-            },
-          }}
+          overflowY="scroll"
+          sx={SCROLLBAR}
         >
           <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
             <Thead>
-              <Tr>
+              <Tr position="sticky" top={0} zIndex={1} bg="#171717">
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  idx
+                </Th>
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
@@ -270,24 +264,27 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Phase count.(Id/wallet/nft)
+                  (WL) Id - wallet - nft
                 </Th>
+
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
                   fontWeight="normal"
                   py={7}
                 >
-                  Address
+                  Active ?
                 </Th>
+
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
                   fontWeight="normal"
                   py={7}
                 >
-                  Owner
+                  Action
                 </Th>
+
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
@@ -311,16 +308,15 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Active ?
+                  Address
                 </Th>
-
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
                   fontWeight="normal"
                   py={7}
                 >
-                  Action
+                  Owner
                 </Th>
               </Tr>
             </Thead>
@@ -332,33 +328,34 @@ function ProjectAdmin() {
               ) : (
                 projectList?.map((collection, index) => (
                   <Tr key={index}>
+                    <Td py={7}>{collection.index}</Td>
+
                     <Td py={7}>
                       <Link
                         cursor="pointer"
                         as={ReactRouterLink}
                         to={`${ROUTES.LAUNCHPAD_BASE}/${collection?.nftContractAddress}`}
                       >
-                        <Text _hover={{ color: "#7ae7ff" }}>
+                        <Text _hover={{ color: "#7ae7ff" }} fontSize="15px">
                           {collection?.name}
                         </Text>
                       </Link>
                     </Td>
 
-                    <Td>
-                      <Text>
-                        S:
+                    <Td fontSize="16px">
+                      <Text mb="4px">
+                        S:{" "}
                         {moment(collection.startTime).format("DD/MM/YY, H:mm")}
                       </Text>
                       <Text>
-                        E:
-                        {moment(collection.endTime).format("DD/MM/YY, H:mm")}
+                        E: {moment(collection.endTime).format("DD/MM/YY, H:mm")}
                       </Text>
                     </Td>
-                    <Td>
+                    <Td fontSize="16px">
                       {collection.whiteList.map((item) => {
                         return (
                           <Flex>
-                            <Text>
+                            <Text mb="4px">
                               Id:{item.phaseId}. S:{" "}
                               {moment(item.phaseData?.startTime).format(
                                 "DD/MM/YY, H:mm"
@@ -372,32 +369,19 @@ function ProjectAdmin() {
                         );
                       })}
                     </Td>
-                    <Td py={7}>
-                      {collection.whiteList?.length}
+                    <Td fontSize="16px">
                       {collection?.whiteList?.map(
                         ({
                           phaseId,
                           phaseData: { totalCountWLAddress, whitelistAmount },
                         }) => (
-                          <>
-                            .({phaseId}/{totalCountWLAddress}/{whitelistAmount})
-                          </>
+                          <Text mb="4px">
+                            ({phaseId} - {totalCountWLAddress} -{" "}
+                            {whitelistAmount})
+                          </Text>
                         )
                       )}
                     </Td>
-                    <Td py={7}>
-                      {truncateStr(collection.nftContractAddress, 5)}
-                    </Td>
-                    <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
-                    <Td>
-                      {!isPhaseEnd(collection.startTime)
-                        ? "Coming"
-                        : isPhaseEnd(collection.endTime)
-                        ? "End"
-                        : "Live"}
-                    </Td>
-
-                    <Td py={7}>{collection.nft_count}</Td>
 
                     <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
@@ -432,6 +416,23 @@ function ProjectAdmin() {
                           Disable
                         </Button>
                       )}
+                    </Td>
+
+                    <Td>
+                      {!isPhaseEnd(collection.startTime)
+                        ? "Coming"
+                        : isPhaseEnd(collection.endTime)
+                        ? "End"
+                        : "Live"}
+                    </Td>
+
+                    <Td py={7}>{collection.nft_count}</Td>
+
+                    <Td py={7}>
+                      <AddressCopier address={collection.nftContractAddress} />
+                    </Td>
+                    <Td py={7}>
+                      <AddressCopier address={collection.collectionOwner} />
                     </Td>
                   </Tr>
                 ))
