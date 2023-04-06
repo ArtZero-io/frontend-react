@@ -19,6 +19,7 @@ import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { APICall } from "@api/client";
 import { useParams } from "react-router-dom";
+import { getPublicCurrentAccount } from "@utils";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -32,7 +33,7 @@ function MyCollectionsPage() {
     () => fetchCollectionsOwned(true)
   );
 
-  const {address} = useParams()
+  const { address } = useParams();
 
   const {
     pagesCount,
@@ -86,7 +87,7 @@ function MyCollectionsPage() {
           for (let item of dataList) {
             item.volume =
               await marketplace_contract_calls.getVolumeByCollection(
-                currentAccount,
+                currentAccount || getPublicCurrentAccount(),
                 item.nftContractAddress
               );
 
@@ -110,7 +111,7 @@ function MyCollectionsPage() {
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [currentAccount, offset, pageSize]
+    [address, currentAccount, offset, pageSize]
   );
 
   useEffect(() => {
@@ -146,7 +147,7 @@ function MyCollectionsPage() {
             exit={{ opacity: 0 }}
           >
             <Text textAlign="left" color="brand.grayLight">
-              There are  {collections?.length || 0} collection
+              There are {collections?.length || 0} collection
               {collections?.length > 1 ? "s" : ""}.
             </Text>
           </motion.div>
