@@ -40,6 +40,7 @@ import LeftPanel from "./LeftPanel";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import toast from "react-hot-toast";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
+import { isMobile } from "react-device-detect";
 
 const CollectionItems = ({
   result,
@@ -397,10 +398,9 @@ const CollectionGridNew = ({
   const location = useLocation();
 
   const history = useHistory();
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   function handleOnClick(item) {
-    if (isBigScreen) {
+    if (!isMobile) {
       setSelectedNft(item);
       onOpen();
     } else {
@@ -430,7 +430,7 @@ const CollectionGridNew = ({
   }
   return (
     <>
-      {isBigScreen && (
+      {!isMobile && (
         <NFTDetailModal
           {...rest}
           {...selectedNft}
