@@ -193,7 +193,12 @@ const Main = () => {
   const modalSize = useBreakpointValue(["xs", "xs", "xs", "lg"]);
 
   useEffect(() => {
-    onOpen();
+    if (
+      history.location.pathname === "/marketplace" ||
+      history.location.pathname === "/"
+    ) {
+      onOpen();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
