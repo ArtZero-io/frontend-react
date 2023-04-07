@@ -8,6 +8,11 @@ import {
   ModalOverlay,
   ChakraProvider,
   Text,
+  Image,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import "@fontsource/oswald";
 import theme from "@theme/theme";
@@ -29,6 +34,13 @@ import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { START } from "../constants";
 import { Helmet } from "react-helmet";
+import { useHistory } from "react-router-dom";
+
+const pmpLaunchpadUrl =
+  "/launchpad/5F4fBoxKBwXZ5fprZPtkhXtesR7PXEWny6KqwWEHbZWXkg55";
+
+const bannerUrl =
+  "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/QmV7JWVWPtTqoPjju2bPDEVp5PcfNcp6io8dd2XkVaSwRT/1024";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -176,11 +188,43 @@ const Main = () => {
     txStatus?.unstakeStatus,
   ]);
 
+  const history = useHistory();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalSize = useBreakpointValue(["xs", "xs", "xs", "lg"]);
+
+  useEffect(() => {
+    onOpen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <Helmet>
         <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
       </Helmet>
+      <>
+        <Modal isOpen={isOpen} onClose={onClose} size={modalSize} isCentered>
+          <ModalOverlay bg="blackAlpha.800" />
+          <ModalContent borderRadius="0">
+            <ModalCloseButton
+              top="-8"
+              right="-8"
+              bg="#171717"
+              borderRadius="0"
+              _focus={{ borderWidth: "0px" }}
+            />
+            <ModalBody py="24px">
+              <Image
+                cursor="pointer"
+                src={bannerUrl}
+                onClick={() => {
+                  onClose();
+                  history.push(pmpLaunchpadUrl);
+                }}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </>
       {loadContractDone && (
         <Fragment>
           <Toaster
