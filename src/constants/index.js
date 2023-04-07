@@ -74,6 +74,10 @@ export const WITHDRAW_COLLECTION = "withdrawCollection";
 export const WITHDRAW_LAUNCHPAD = "withdrawLaunchpad";
 export const WITHDRAW_MARKETPLACE = "withdrawMarketplace";
 
+
+// MARKETPlACE DETAILS
+export const NUMBER_NFT_PER_PAGE = 24;
+
 // OTHERS
 export const NUMBER_PER_PAGE = 6;
 export const MAX_ITEM_STAKE = 10;

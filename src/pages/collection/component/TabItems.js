@@ -38,6 +38,8 @@ import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { CommonCard } from "@components/Card/NFTChangeSize";
 import LeftPanel from "./LeftPanel";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import toast from "react-hot-toast";
+import { NUMBER_NFT_PER_PAGE } from "@constants";
 
 const CollectionItems = ({
   result,
@@ -409,12 +411,30 @@ const CollectionGridNew = ({
     }
   }
 
+  function handleNav(id, step) {
+    const currentIndex = dataList.findIndex((item) => item.tokenID === id);
+
+    if (step === -1 && currentIndex === 0) {
+      return toast("This is first item!");
+    }
+
+    if (step === 1 && currentIndex === NUMBER_NFT_PER_PAGE - 1) {
+      return toast("End of page!");
+    }
+
+    const newCurrentItem = dataList[currentIndex + step];
+
+    if (newCurrentItem) {
+      setSelectedNft(newCurrentItem);
+    }
+  }
   return (
     <>
       {isBigScreen && (
         <NFTDetailModal
           {...rest}
           {...selectedNft}
+          handleNav={handleNav}
           rarityTable={rarityTable}
           totalNftCount={totalNftCount}
           isOpen={isOpen}

@@ -37,9 +37,7 @@ import qs from "qs";
 import * as ROUTES from "@constants/routes";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-// import toast from "react-hot-toast";
-
-const NUMBER_PER_PAGE = 24;
+import { NUMBER_NFT_PER_PAGE } from "@constants";
 
 const OFFSET_ACTIVITY = 6;
 
@@ -224,7 +222,7 @@ function CollectionPage() {
     initialState: {
       currentPage: 1,
       isDisabled: false,
-      pageSize: NUMBER_PER_PAGE,
+      pageSize: NUMBER_NFT_PER_PAGE,
     },
   });
 
