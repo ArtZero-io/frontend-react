@@ -75,10 +75,8 @@ const MyNFTsPage = () => {
       return setFilterSelected("COLLECTED");
     }
 
-    if (actionType === LIST_TOKEN) return setFilterSelected("LISTING");
-
-    if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected("COLLECTED");
+    if (actionType === LIST_TOKEN || actionType === UNLIST_TOKEN) {
+      return setFilterSelected("LISTING");
     }
 
     if (actionType === EDIT_NFT) {
@@ -269,7 +267,7 @@ const MyNFTsPage = () => {
           <HStack maxW={{ base: "320px", md: "500px" }}>
             {[
               { id: "COLLECTED", text: "my collected" },
-              { id: "LISTING", text: "my listing" },
+              { id: "LISTING", text: "my listings" },
               { id: "BIDS", text: "my bids" },
             ].map((i, idx) => (
               <CommonButton
