@@ -137,8 +137,9 @@ export default function LaunchpadEventModal({
         </ModalHeader>
 
         <ModalBody>
-          <Box mt={"20px"}>
+          <Box mt={"0px"}>
             <TableContainer
+              maxH="380px"
               maxW="6xl-mid"
               fontSize="lg"
               h="full"
@@ -174,7 +175,7 @@ export default function LaunchpadEventModal({
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
-                        py={7}
+                        py={4}
                       >
                         BlockNumber
                       </Th>
@@ -183,7 +184,7 @@ export default function LaunchpadEventModal({
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
-                        py={7}
+                        py={4}
                       >
                         Minter Address
                       </Th>
@@ -192,7 +193,7 @@ export default function LaunchpadEventModal({
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
-                        py={7}
+                        py={4}
                       >
                         Mint Amount
                       </Th>
@@ -201,7 +202,7 @@ export default function LaunchpadEventModal({
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
-                        py={7}
+                        py={4}
                       >
                         Minting Fee
                       </Th>
@@ -210,7 +211,7 @@ export default function LaunchpadEventModal({
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
-                        py={7}
+                        py={4}
                       >
                         Project Mint Fee
                       </Th>
@@ -219,27 +220,26 @@ export default function LaunchpadEventModal({
                   <Tbody>
                     {events?.length === 0 ? (
                       <Tr color="#fff">
-                        <Td colSpan={5} py={7} textAlign="center">
+                        <Td colSpan={5} py={4} textAlign="center">
                           No record found
                         </Td>
                       </Tr>
                     ) : (
                       events?.map((reward, index) => (
                         <Tr key={index} color="#fff">
-                          {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
-                          <Td textAlign="left" py={7}>
+                          <Td textAlign="left" py={4}>
                             {reward.blockNumber}
                           </Td>
-                          <Td textAlign="left" py={7}>
+                          <Td textAlign="left" py={4}>
                             {reward.minter}
                           </Td>
-                          <Td textAlign="left" py={7}>
+                          <Td textAlign="left" py={4}>
                             {reward.mintAmount}
                           </Td>
-                          <Td textAlign="left" py={7}>
+                          <Td textAlign="left" py={4}>
                             {reward.mintingFee.toFixed(3)}{" "}
                           </Td>
-                          <Td textAlign="left" py={7}>
+                          <Td textAlign="left" py={4}>
                             {reward.projectMintFee.toFixed(3)}{" "}
                             <AzeroIcon
                               mb="4px"
@@ -254,7 +254,7 @@ export default function LaunchpadEventModal({
                 </Table>
               </Skeleton>
             </TableContainer>
-            <Stack w="full" py="30px">
+            <Stack w="full" py="10px">
               <PaginationMP
                 bg="#333"
                 maxW="230px"
