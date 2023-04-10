@@ -5,7 +5,7 @@ const fs = require("fs");
 const { getProjectByAddress, getCloudFlareImage, getCollectionByAddress } = require("./api");
 const app = express();
 
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
 const indexPath = path.resolve(__dirname, "..", "build", "index.html");
 console.log(PORT, "port");
 // static resources should just be served as they are
