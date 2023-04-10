@@ -76,7 +76,7 @@ export const WITHDRAW_MARKETPLACE = "withdrawMarketplace";
 
 
 // MARKETPlACE DETAILS
-export const NUMBER_NFT_PER_PAGE = 24;
+export const NUMBER_NFT_PER_PAGE = 12;
 
 // OTHERS
 export const NUMBER_PER_PAGE = 6;

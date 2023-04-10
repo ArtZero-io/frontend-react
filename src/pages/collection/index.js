@@ -1,11 +1,9 @@
-import { Flex } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { usePagination } from "@ajna/pagination";
 import { useDispatch } from "react-redux";
 
 import Layout from "@components/Layout/Layout";
-import PaginationMP from "@components/Pagination/Pagination";
 
 import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
@@ -35,9 +33,10 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
-import { useQuery } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
+import { useInView } from "react-intersection-observer";
+import { useMemo } from "react";
 
 const OFFSET_ACTIVITY = 6;
 
@@ -61,6 +60,48 @@ function CollectionPage() {
   const [hasMorePage, setHasMorePage] = useState([true, true, true, true]);
 
   const [sortData, setSortData] = useState(1);
+  const [collectionInfo, setCollectionInfo] = useState(null);
+
+  const fetchCollectionInfo = useCallback(
+    async (isMounted) => {
+      let info;
+
+      const { ret, status } = await APICall.getCollectionByAddress({
+        collection_address,
+      });
+
+      if (status === "OK") {
+        info = ret[0];
+      }
+
+      const totalListedCount =
+        await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
+          getPublicCurrentAccount(),
+          collection_address
+        );
+
+      info.totalListed = totalListedCount || 0;
+
+      const { ret: floorPrice } = await APICall.getCollectionFloorPrice({
+        collection_address,
+      });
+
+      info.floorPrice = !floorPrice?.length ? 0 : floorPrice[0]?.price;
+
+      if (isMounted) {
+        setCollectionInfo(info);
+      }
+    },
+    [collection_address]
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchCollectionInfo(isMounted);
+
+    return () => (isMounted = false);
+  }, [fetchCollectionInfo]);
 
   useEffect(() => {
     if (state?.selectedItem === 1) {
@@ -108,7 +149,7 @@ function CollectionPage() {
     queryFilter["is_for_sale"] = false;
   }
 
-  const fetchData = async () => {
+  const fetchData = async ({ pageParam }) => {
     const makeSubTrait = (name, arr) => {
       return arr.map((v) => {
         return { [`traits.${name}`]: v };
@@ -148,8 +189,8 @@ function CollectionPage() {
     const { ret: result, status } = await APICall.searchNFTOfCollectionByTraits(
       {
         sort: sortData,
-        offset: offset,
-        limit: pageSize,
+        offset: pageParam,
+        limit: NUMBER_NFT_PER_PAGE,
         traitFilters: JSON.stringify(traitsFilter),
         collectionAddress: collection_address,
       }
@@ -159,27 +200,12 @@ function CollectionPage() {
       ret = result;
     }
 
-    const totalListedCount =
-      await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
-        getPublicCurrentAccount(),
-        collection_address
-      );
-
-    ret.totalListed = totalListedCount || 0;
-
-    const { message, ret: floorPrice } = await APICall.getCollectionFloorPrice({
-      collection_address,
-    });
-
-    if (status === "OK") {
-      ret.floorPrice = !floorPrice?.length ? 0 : floorPrice[0]?.price;
-    } else {
-      toast.error(message);
-    }
-
     setTotalCount(ret?.result?.totalResults || 0);
 
-    return ret;
+    return {
+      data: ret?.result?.NFTList,
+      nextId: pageParam + NUMBER_NFT_PER_PAGE,
+    };
   };
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
@@ -210,43 +236,47 @@ function CollectionPage() {
     }
   );
 
-  const {
-    pagesCount,
-    currentPage,
-    isDisabled,
-    offset,
-    pageSize,
-    setCurrentPage,
-  } = usePagination({
-    total: totalCount,
-    initialState: {
-      currentPage: 1,
-      isDisabled: false,
-      pageSize: NUMBER_NFT_PER_PAGE,
-    },
-  });
+  const { ref, inView } = useInView();
 
-  const { data, isLoading } = useQuery(
+  const {
+    isLoading,
+    data,
+
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery(
     [
       "getAllNFTs",
       traitsQuery,
       priceQuery,
       activeTab,
-      currentPage,
       search,
       sortData,
       loadingForceUpdate,
       collection_address,
     ],
-    fetchData
+    ({ pageParam = 0 }) => fetchData({ pageParam }),
+    {
+      getNextPageParam: (lastPage) => lastPage.nextId || 0,
+    }
   );
 
+  const isLastPageResult = useMemo(() => {
+    const pageParams = data?.pageParams;
+    let nextId = pageParams && [...pageParams]?.pop();
+
+    nextId = nextId ?? 0;
+
+    return totalCount < nextId;
+  }, [data?.pageParams, totalCount]);
+
   useEffect(() => {
-    if (currentPage > pagesCount) {
-      setCurrentPage(1);
+    if (inView) {
+      !isLastPageResult && fetchNextPage();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagesCount]);
+  }, [inView]);
 
   useEffect(() => {
     initEvents();
@@ -282,12 +312,12 @@ function CollectionPage() {
       isDisabled: false,
       component: (
         <TabCollectionItems
+          {...collectionInfo}
           {...data}
           traitsQuery={traitsQuery}
           setTraitsQuery={setTraitsQuery}
           priceQuery={priceQuery}
           setPriceQuery={setPriceQuery}
-          offset={offset}
           activeTab={activeTab}
           loadingTime={loadingTime}
           setActiveTab={setActiveTab}
@@ -304,6 +334,7 @@ function CollectionPage() {
       component: (
         <TabActivity
           {...data}
+          {...collectionInfo}
           latestBlockNumber={latestBlockNumber}
           fetchMore={() => setCurrentPageActivity(currentPageActivity + 1)}
           fetchBack={() =>
@@ -317,10 +348,6 @@ function CollectionPage() {
       ),
     },
   ];
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const fetchPlatformEvents = useCallback(async () => {
     try {
@@ -375,11 +402,6 @@ function CollectionPage() {
 
   const initEvents = async () => {
     const payload = await fetchPlatformEvents();
-    // console.log(
-    //   currentPageActivity,
-    //   payload,
-    //   "currentPageActivitycurrentPageActivity"
-    // );
 
     dispatch({
       type: AccountActionTypes.SET_EVENTS,
@@ -389,18 +411,15 @@ function CollectionPage() {
     setLatestBlockNumber(payload?.latestBlockNumber);
   };
 
-  // useInterval(() => initEvents(), 10000);
-
-  const [tabIndex, setTabIndex] = useState(0);
-  const imageUrl = data?.avatarImage?.replace(
+  const imageUrl = collectionInfo?.avatarImage?.replace(
     "ipfs://",
     "https://ipfs.io/ipfs/"
   );
 
   return (
-    <Layout backdrop={data?.headerImage} variant="collection-detail">
+    <Layout backdrop={collectionInfo?.headerImage} variant="collection-detail">
       <Helmet>
-        <title>{data?.name}</title>
+        <title>{collectionInfo?.name}</title>
         {/* <!-- Google / Search Engine Tags --> */}
         <meta itemprop="image" content={imageUrl} />
         {/* <!-- Facebook Meta Tags --> */}
@@ -411,31 +430,19 @@ function CollectionPage() {
         <meta property="twitter:url" content={window.location.href} />
       </Helmet>
 
-      <>
-        <CollectionHeader {...data} />
+      <CollectionHeader {...data} {...collectionInfo} />
 
-        <CommonTabs tabsData={tabsData} onChange={(idx) => setTabIndex(idx)} />
+      <CommonTabs tabsData={tabsData} />
 
-        <Flex
-          w="full"
-          mx="auto"
-          bg="brand.semiBlack"
-          pt={{ base: "14px", xl: "40px" }}
-          pb={{ base: "50px", xl: "100px" }}
-          px={{ base: "24px", "2xl": "100px" }}
-          hidden={pagesCount === 0 ? true : false}
-          display={tabIndex === 1 ? "none" : "flex"}
-        >
-          <Flex w="full" maxW="1920px" mx="auto">
-            <PaginationMP
-              pagesCount={pagesCount}
-              isDisabled={isDisabled}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-          </Flex>
-        </Flex>
-      </>
+      <HStack py={7} justifyContent="center" w="" full>
+        <Text ref={ref}>
+          {isFetchingNextPage
+            ? "Loading..."
+            : isLastPageResult
+            ? "Nothing more to load"
+            : "Load More"}
+        </Text>
+      </HStack>
     </Layout>
   );
 }
