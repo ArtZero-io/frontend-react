@@ -310,6 +310,7 @@ async function autoNewCollection(
                     const value = decodedEvent.args[i];
                     eventValues.push(value.toString());
                   }
+                  await delay(15000)
                   if (event_name === "AddNewCollectionEvent") {
                     if (transactionData.attributes?.length) {
                       let cacheImages = [];
