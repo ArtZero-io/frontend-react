@@ -11,6 +11,7 @@ import {
   HStack,
   Text,
   Flex,
+  Link,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
@@ -19,7 +20,9 @@ import { memo } from "react";
 import { SCROLLBAR } from "@constants";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import CommonButton from "../Button/CommonButton";
-import AddressCopier from "@components/AddressCopier/AddressCopier";
+
+import { Link as ReactRouterLink } from "react-router-dom";
+import { truncateStr } from "@utils";
 
 function EventTable({
   tableHeaders,
@@ -119,7 +122,15 @@ function EventTable({
                           textAlign="left"
                           color="#7ae7ff"
                         >
-                          <AddressCopier address={collectionOwnerName} />
+                          <Link
+                            as={ReactRouterLink}
+                            to={`/public-account/collections/${collectionOwnerName}`}
+                            color="#7AE7FF"
+                            textTransform="capitalize"
+                            textDecoration="underline"
+                          >
+                            {truncateStr(collectionOwnerName)}
+                          </Link>
                         </Td>
                         {Object.keys(tableHeaders)?.map((i, idx) =>
                           i === "avatar" ? null : (
@@ -163,7 +174,15 @@ function EventTable({
                                     ].includes(i) && "#7ae7ff"
                                   }
                                 >
-                                  <AddressCopier address={item[i]} />
+                                  <Link
+                                    as={ReactRouterLink}
+                                    to={`/public-account/collections/${item[i]}`}
+                                    color="#7AE7FF"
+                                    textTransform="capitalize"
+                                    textDecoration="underline"
+                                  >
+                                    {truncateStr(item[i])}
+                                  </Link>
                                 </Text>
                               ) : (
                                 <Text>{item[i]}</Text>
