@@ -75,8 +75,8 @@ export default function ResponsivelySizedModal({
           borderRadius="0"
           position="absolute"
           borderWidth={[0, '2px']}
-          top={['0', '-8', '-8']}
-          right={['0', '-8', '-8']}
+          top="4"
+          right="4"
           onClick={() => step === FINALIZED && onEndClick()}
         />
 

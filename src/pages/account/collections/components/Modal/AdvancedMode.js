@@ -113,8 +113,8 @@ function AdvancedModeModal({
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={["0", "-8", "-8"]}
-            right={["0", "-8", "-8"]}
+            top="4"
+            right="4"
             _hover="none"
             bg="#171717"
             onClick={() => step === FINALIZED && onEndClick()}

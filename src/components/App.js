@@ -211,9 +211,9 @@ const Main = () => {
           <ModalOverlay bg="blackAlpha.800" />
           <ModalContent borderRadius="0">
             <ModalCloseButton
-              top="-8"
-              right="-8"
-              bg="#171717"
+              top="-0.5"
+              right="-0.5"
+              bg="#17171700"
               borderRadius="0"
               _focus={{ borderWidth: "0px" }}
             />

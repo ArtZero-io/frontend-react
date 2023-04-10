@@ -64,7 +64,7 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
     // console.log(res, 'resres');
     if (res.status === "OK") {
       toast.success("Thank you. Submit successful!");
-      onClose()
+      onClose();
     } else {
       toast.error("Submit failed!");
     }
@@ -97,8 +97,8 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
           borderRadius="0"
           position="absolute"
           borderWidth={[0, "2px"]}
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          top="4"
+          right="4"
           onClick={() => step === FINALIZED && onEndClick()}
         />
         <Container p={"20px"}>

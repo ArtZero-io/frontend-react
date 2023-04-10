@@ -86,9 +86,9 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           borderRadius="0"
           position="absolute"
           _hover="none"
-            bg="#171717"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          bg="#171717"
+          top="4"
+          right="4"
           onClick={onCloseModalHandler}
         />
 
@@ -122,7 +122,6 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           <FieldArray
             name="properties"
             render={(arrayHelpers) => {
-
               return (
                 <div>
                   {value?.map((properties, index) => (

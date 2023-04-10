@@ -142,8 +142,8 @@ const AddNewNFTModal = ({
             position="absolute"
             _hover="none"
             bg="#171717"
-            top={["0", "-8", "-8"]}
-            right={["0", "-8", "-8"]}
+            top="4"
+            right="4"
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>

@@ -132,8 +132,8 @@ export default function UpdateURIModal({
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          top="4"
+          right="4"
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">

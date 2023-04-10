@@ -85,8 +85,8 @@ const FeeInfoModal = ({ platformFee }) => {
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={["0", "-8"]}
-            right={["0", "-8"]}
+            top="4"
+            right="4"
           />
 
           <ModalHeader textAlign="center">

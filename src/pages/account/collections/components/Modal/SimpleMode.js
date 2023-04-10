@@ -58,7 +58,16 @@ function SimpleModeModal({
         //     Simple Mode
         //   </Button>
         // </Tooltip>
-        <CreateButton icon={<NFTSimpleIcon />} onClick={() => onOpen()} title={'Simple mode'} data={["Suitable for non-technical creators", "On-chain creation of NFTs with our standard NFT smart contract", "Ability to manually add and list NFTs later"]}/>
+        <CreateButton
+          icon={<NFTSimpleIcon />}
+          onClick={() => onOpen()}
+          title={"Simple mode"}
+          data={[
+            "Suitable for non-technical creators",
+            "On-chain creation of NFTs with our standard NFT smart contract",
+            "Ability to manually add and list NFTs later",
+          ]}
+        />
       )}
 
       {mode === formMode.EDIT && (
@@ -115,8 +124,8 @@ function SimpleModeModal({
             _hover="none"
             bg="#171717"
             position="absolute"
-            top={["0", "-8", "-8"]}
-            right={["0", "-8", "-8"]}
+            top="4"
+            right="4"
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>

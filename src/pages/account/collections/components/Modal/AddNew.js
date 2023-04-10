@@ -85,8 +85,8 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
             position="absolute"
             _hover="none"
             bg="#171717"
-            top={["0", "-8", "-8"]}
-            right={["0", "-8", "-8"]}
+            top="4"
+            right="4"
           />
 
           <ModalHeader textAlign="center">
