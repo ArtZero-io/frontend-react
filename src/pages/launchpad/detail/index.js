@@ -204,6 +204,9 @@ const LaunchpadDetailPage = () => {
     return () => (isUnmounted = true);
   }, [api, collection_address]);
 
+  const [phasesInfoWithDisablePhase, setPhasesInfoWithDisablePhase] = useState(
+    []
+  );
   const [phasesInfo, setPhasesInfo] = useState([]);
   const [loadingPhaseInfo, setLoadingPhaseInfo] = useState(false);
 
@@ -258,7 +261,7 @@ const LaunchpadDetailPage = () => {
         );
 
         if (isUnmounted) return;
-
+        setPhasesInfoWithDisablePhase(allPhases);
         setPhasesInfo(allPhases.filter((p) => p.isActive === true));
         setLoadingPhaseInfo(false);
       } catch (error) {
@@ -333,7 +336,7 @@ const LaunchpadDetailPage = () => {
       setLoadingUserWLInfo(true);
       try {
         const allPhasesAddWL = await Promise.all(
-          phasesInfo?.map(async (item) => {
+          phasesInfoWithDisablePhase?.map(async (item) => {
             const data =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
@@ -368,7 +371,7 @@ const LaunchpadDetailPage = () => {
         setLoadingUserWLInfo(false);
       }
     },
-    [currentAccount, phasesInfo]
+    [currentAccount, phasesInfoWithDisablePhase]
   );
 
   const [userPLClaimedInfo, setUserPLClaimedInfo] = useState([]);
@@ -1084,7 +1087,6 @@ const LaunchpadDetailPage = () => {
                               </Text>
                             </ListItem>
                           )}
-
                           {/* Public Mint */}
                           <ListItem>
                             <Text>
