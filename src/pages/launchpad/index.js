@@ -27,18 +27,15 @@ export const LaunchpadPage = () => {
         );
 
         const liveProjectsArr = activeProjList.filter(
-          ({ startTime, endTime }) =>
-            getProjectStatus({ startTime, endTime }) === "live"
+          (proj) => getProjectStatus(proj) === "live"
         );
 
         const upcomingProjectsArr = activeProjList.filter(
-          ({ startTime, endTime }) =>
-            getProjectStatus({ startTime, endTime }) === "upcoming"
+          (proj) => getProjectStatus(proj) === "upcoming"
         );
 
         const endedProjectsArr = activeProjList.filter(
-          ({ startTime, endTime }) =>
-            getProjectStatus({ startTime, endTime }) === "ended"
+          (proj) => getProjectStatus(proj) === "ended"
         );
 
         if (isUnmounted) return;
@@ -99,12 +96,35 @@ export const LaunchpadPage = () => {
   );
 };
 
-const getProjectStatus = ({ startTime, endTime }) => {
-  const currentTime = Date.now();
+const getProjectStatus = ({ whiteList }) => {
+  // filter isActive phases
+  whiteList = whiteList.filter((i) => !!i.isActive);
 
-  if (currentTime >= endTime) return "ended";
+  const firstPhase = whiteList[0];
 
-  if (currentTime < startTime) return "upcoming";
+  if (whiteList?.length === 1) {
+    const currentTime = Date.now();
 
-  return "live";
+    const { startTime, endTime } = { ...firstPhase?.phaseData };
+
+    if (currentTime >= endTime) return "ended";
+
+    if (currentTime < startTime) return "upcoming";
+
+    return "live";
+  }
+
+  if (whiteList?.length > 1) {
+    const currentTime = Date.now();
+    const lastPhase = [...whiteList]?.pop();
+
+    const { startTime } = { ...firstPhase?.phaseData };
+    const { endTime } = { ...lastPhase?.phaseData };
+
+    if (currentTime >= endTime) return "ended";
+
+    if (currentTime < startTime) return "upcoming";
+
+    return "live";
+  }
 };
