@@ -33,36 +33,36 @@ export default function HeadHelmet({ title, image }) {
 
       <meta
         property="og:title"
-        content="ArtZero.io - NFT Marketplace for Aleph Zero Blockchain"
+        content="__META_OG_TITLE__"
       />
 
       <meta
         property="og:description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="__META_OG_DESCRIPTION__"
       />
       <meta
         property="og:image"
-        content="https://artzero.io/assets/preview.jpg"
+        content="__META_OG_IMAGE__"
       />
 
       {/* <!-- Twitter Meta Tags --> */}
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="summary_large_image" /> 
       <meta property="twitter:domain" content="artzero.io" />
       <meta property="twitter:url" content="https://artzero.io/" />
 
       <meta
         name="twitter:title"
-        content="ArtZero.io - NFT Marketplace for Aleph Zero Blockchain"
+        content="__META_OG_TITLE__"
       />
 
       <meta
         name="twitter:description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="__META_OG_DESCRIPTION__"
       />
 
       <meta
         name="twitter:image"
-        content="https://artzero.io/assets/preview.jpg"
+        content="__META_OG_IMAGE__"
       />
     </Helmet>
   );
