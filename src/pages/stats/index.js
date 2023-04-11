@@ -287,6 +287,6 @@ export const fetchValidatorProfit = async ({
       formattedStrBal?.replaceAll(",", "") * 1 +
       formattedStrBalReserved?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 12 };
+    return { balance: formattedNumBal / 10 ** 18 };
   }
 };

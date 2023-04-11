@@ -445,7 +445,7 @@ function GeneralPage() {
             <Image
               w="full"
               h="full"
-              src="https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH/500"
+              src="https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/9c468bd0-dff4-42ae-5dd1-7005ffbfec00/500"
             />
           </Square>
 
