@@ -20,6 +20,7 @@ import {
   InputGroup,
   InputRightElement,
   Button,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { BsGrid3X3 } from "react-icons/bs";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
@@ -45,7 +46,7 @@ import toast from "react-hot-toast";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { isMobile } from "react-device-detect";
 import { useMemo } from "react";
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
 
 const CollectionItems = ({
   result,
@@ -199,9 +200,36 @@ const CollectionItems = ({
       <Stack flexGrow={1}>
         <Box w="full" mx="auto" textAlign="left" px={["12px", 0]}>
           <Stack direction={{ base: "column", md: "row" }} w="full">
-            <HStack pb={[0, "8px"]} justifyContent="space-between">
-              <Spacer display={["none", "flex"]} />
+            {!isBigScreen && (
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Search2Icon color="gray.300" />}
+                />
+                <Input
+                  w="full"
+                  h="52px"
+                  mx={[0, 1.5]}
+                  value={keyword}
+                  onChange={(e) => onChangeHandler(e)}
+                  placeholder="Search nft..."
+                />
 
+                {keyword && (
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="30px"
+                      w="30px"
+                      size="sm"
+                      onClick={() => onClearHandler("")}
+                    >
+                      <CloseIcon />
+                    </Button>
+                  </InputRightElement>
+                )}
+              </InputGroup>
+            )}
+            <HStack pb={[0, "8px"]} justifyContent="space-between">
               {!isBigScreen ? (
                 <DropdownMobile
                   minW="256px"
@@ -228,29 +256,35 @@ const CollectionItems = ({
               )}
             </HStack>
 
-            <InputGroup>
-              <Input
-                w="full"
-                h="52px"
-                mx={[0, 1.5]}
-                value={keyword}
-                onChange={(e) => onChangeHandler(e)}
-                placeholder="Search nft..."
-              />
+            {isBigScreen && (
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Search2Icon color="gray.300" />}
+                />
+                <Input
+                  w="full"
+                  h="52px"
+                  mx={[0, 1.5]}
+                  value={keyword}
+                  onChange={(e) => onChangeHandler(e)}
+                  placeholder="Search nft..."
+                />
 
-              {keyword && (
-                <InputRightElement width="4.5rem">
-                  <Button
-                    h="30px"
-                    w="30px"
-                    size="sm"
-                    onClick={() => onClearHandler("")}
-                  >
-                    <CloseIcon />
-                  </Button>
-                </InputRightElement>
-              )}
-            </InputGroup>
+                {keyword && (
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="30px"
+                      w="30px"
+                      size="sm"
+                      onClick={() => onClearHandler("")}
+                    >
+                      <CloseIcon />
+                    </Button>
+                  </InputRightElement>
+                )}
+              </InputGroup>
+            )}
 
             <Spacer display={["none", "flex"]} />
 

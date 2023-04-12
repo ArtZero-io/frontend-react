@@ -156,7 +156,9 @@ function LeftPanel({
               >
                 Apply price filter
               </Button>
+
               <Spacer />
+
               <Button
                 isDisabled={activeTab !== "LISTED"}
                 ml="4px"
@@ -402,28 +404,50 @@ function LeftPanel({
                   <Spacer />
                 </Flex>
               </DrawerHeader>
-
+              {/* SEARCH TRAITS & PRICE MOBILE */}
               <DrawerBody px="18px">
-                <Button
-                  isDisabled={activeTab !== "LISTED"}
-                  onClick={() => {
-                    if (!draftPriceQuery.min || !draftPriceQuery.max) {
-                      return toast.error("Please enter min and max price");
-                    }
+                <Flex>
+                  <Button
+                    isDisabled={activeTab !== "LISTED"}
+                    onClick={() => {
+                      if (!draftPriceQuery.min || !draftPriceQuery.max) {
+                        return toast.error("Please enter min and max price");
+                      }
 
-                    setPriceQuery((p) => {
-                      return { ...p, ...draftPriceQuery };
-                    });
-                    onCloseMobile();
-                  }}
-                  w="full"
-                  textAlign="left"
-                  variant="outline"
-                  fontFamily="Oswald"
-                >
-                  Price filter
-                </Button>
+                      setPriceQuery((p) => {
+                        return { ...p, ...draftPriceQuery };
+                      });
+                      onCloseMobile();
+                    }}
+                    w="full"
+                    textAlign="left"
+                    fontWeight="bold"
+                    fontFamily="Oswald"
+                  >
+                    Apply price filter
+                  </Button>
 
+                  <Spacer />
+
+                  <Button
+                    isDisabled={activeTab !== "LISTED"}
+                    ml="4px"
+                    h="50px"
+                    w="60px"
+                    size="sm"
+                    onClick={() => {
+                      setPriceQuery(() => {
+                        return { min: "", max: "" };
+                      });
+
+                      setDraftPriceQuery(() => {
+                        return { min: "", max: "" };
+                      });
+                    }}
+                  >
+                    <CloseIcon />
+                  </Button>
+                </Flex>
                 <Flex
                   alignItems="center"
                   color="#7AE7FF"
