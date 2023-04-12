@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Collapse,
   Drawer,
   DrawerBody,
@@ -15,6 +16,7 @@ import {
   Heading,
   Icon,
   IconButton,
+  Input,
   Spacer,
   Stack,
   Text,
@@ -24,6 +26,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import LeftArrowIcon from "@theme/assets/icon/LeftArrow";
+import RightArrowIcon from "@theme/assets/icon/RightArrow";
+
 import { motion } from "framer-motion";
 import { SCROLLBAR } from "@constants";
 import { useEffect } from "react";
@@ -35,6 +39,7 @@ import { useRef } from "react";
 import CommonButton from "@components/Button/CommonButton";
 
 import { FiFilter } from "react-icons/fi";
+import { CloseIcon } from "@chakra-ui/icons";
 
 function LeftPanel({
   rarityTable,
@@ -132,25 +137,45 @@ function LeftPanel({
           </Flex>
 
           <Collapse in={isOpen} animateOpacity>
-            {/* <Button
-              isDisabled={activeTab !== "LISTED"}
-              onClick={() => {
-                if (!draftPriceQuery.min || !draftPriceQuery.max) {
-                  return toast.error("Please enter min and max price");
-                }
+            <Flex>
+              <Button
+                isDisabled={activeTab !== "LISTED"}
+                onClick={() => {
+                  if (!draftPriceQuery.min || !draftPriceQuery.max) {
+                    return toast.error("Please enter min and max price");
+                  }
 
-                setPriceQuery((p) => {
-                  return { ...p, ...draftPriceQuery };
-                });
-              }}
-              w="full"
-              textAlign="left"
-              variant="outline"
-              fontFamily="Oswald"
-            >
-              Price filter
-            </Button>
+                  setPriceQuery((p) => {
+                    return { ...p, ...draftPriceQuery };
+                  });
+                }}
+                w="full"
+                textAlign="left"
+                fontFamily="Oswald"
+                fontWeight="bold"
+              >
+                Apply price filter
+              </Button>
+              <Spacer />
+              <Button
+                isDisabled={activeTab !== "LISTED"}
+                ml="4px"
+                h="50px"
+                w="60px"
+                size="sm"
+                onClick={() => {
+                  setPriceQuery(() => {
+                    return { min: "", max: "" };
+                  });
 
+                  setDraftPriceQuery(() => {
+                    return { min: "", max: "" };
+                  });
+                }}
+              >
+                <CloseIcon />
+              </Button>
+            </Flex>
             <Flex
               alignItems="center"
               color="#7AE7FF"
@@ -183,7 +208,7 @@ function LeftPanel({
                 }
                 value={draftPriceQuery.max}
               />
-            </Flex> */}
+            </Flex>
 
             <Heading size="h5" mb={"24px"}>
               Attributes
@@ -379,7 +404,7 @@ function LeftPanel({
               </DrawerHeader>
 
               <DrawerBody px="18px">
-                {/* <Button
+                <Button
                   isDisabled={activeTab !== "LISTED"}
                   onClick={() => {
                     if (!draftPriceQuery.min || !draftPriceQuery.max) {
@@ -431,7 +456,7 @@ function LeftPanel({
                     }
                     value={draftPriceQuery.max}
                   />
-                </Flex> */}
+                </Flex>
 
                 <Heading size="h5" mb={"24px"}>
                   Attributes
