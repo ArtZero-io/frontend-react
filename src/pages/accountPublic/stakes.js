@@ -247,7 +247,7 @@ const MyStakesPage = () => {
         </HStack>
       )}
       <Text textAlign="left" color="#fff">
-        Artzero NFT on Astar NFT Stats:
+        Dragon Samurai NFTs NFT Stats:
       </Text>
 
       <Stack

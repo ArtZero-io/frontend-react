@@ -355,7 +355,7 @@ export function handleContractCallAddNftAnimation(
 
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
-    const url = `https://astar.subscan.io/extrinsic/`;
+    const url = `https://astar.subscan.io/block/`;
 
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({

@@ -472,7 +472,7 @@ function GeneralPage() {
               >
                 <span>stake </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  Artzero NFT on Astar
+                  Dragon Samurai NFTs
                 </span>{" "}
                 <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce </span>

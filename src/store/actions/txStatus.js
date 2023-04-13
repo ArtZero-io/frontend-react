@@ -48,7 +48,7 @@ export const txResponseErrorHandler = async ({
   caller_account,
   isApprovalTx = false,
 }) => {
-  const url = `https://astar.subscan.io/extrinsic/`;
+  const url = `https://astar.subscan.io/block/`;
   const statusToHuman = Object.entries(status.toHuman());
 
   if (dispatchError) {

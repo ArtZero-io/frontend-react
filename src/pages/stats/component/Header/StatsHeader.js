@@ -16,7 +16,7 @@ function StatsHeader({ platformStatistics, isLoading = true }) {
             statistics
           </Heading>
           <Text maxW="320px" fontSize={["md", "lg", "lg"]} mx="auto">
-            Payout Rewards will be paid on monthly basis to all staked PMP NFTs
+            Payout Rewards will be paid on monthly basis to all staked Dragon Samurai NFTs
             owner. Remember to claim your rewards.
           </Text>
         </Box>
