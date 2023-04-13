@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.8313ed8f.css",
-    "main.js": "/static/js/main.113ef633.js",
+    "main.js": "/static/js/main.4d4e0da3.js",
     "static/media/bg-hero-full.png": "/static/media/bg-hero-full.48934fe8f5f267e3be61.png",
     "static/media/oswald-all-400-normal.woff": "/static/media/oswald-all-400-normal.f2f316c26625136e591d.woff",
     "static/media/astar-logo.png": "/static/media/astar-logo.b48435e09065b7d91275.png",
@@ -14,10 +14,10 @@
     "static/media/oswald-cyrillic-ext-400-normal.woff2": "/static/media/oswald-cyrillic-ext-400-normal.2140c711cd14bc61cc52.woff2",
     "static/media/PolkadotjsLogo.svg": "/static/media/PolkadotjsLogo.a95b08689c198dba64a602125c1644cf.svg",
     "main.8313ed8f.css.map": "/static/css/main.8313ed8f.css.map",
-    "main.113ef633.js.map": "/static/js/main.113ef633.js.map"
+    "main.4d4e0da3.js.map": "/static/js/main.4d4e0da3.js.map"
   },
   "entrypoints": [
     "static/css/main.8313ed8f.css",
-    "static/js/main.113ef633.js"
+    "static/js/main.4d4e0da3.js"
   ]
 }
