@@ -16,9 +16,13 @@ import {
   Tag,
   TagLabel,
   CloseButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Button,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { BsGrid3X3 } from "react-icons/bs";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
 
 import { useHistory, useLocation } from "react-router-dom";
@@ -42,6 +46,7 @@ import toast from "react-hot-toast";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { isMobile } from "react-device-detect";
 import { useMemo } from "react";
+import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
 
 const CollectionItems = ({
   result,
@@ -65,6 +70,11 @@ const CollectionItems = ({
   setSortData,
   name,
   pages,
+  keyword,
+  setKeyword,
+  ref,
+  isFetchingNextPage,
+  isLastPageResult,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -81,10 +91,9 @@ const CollectionItems = ({
   }, [state?.selectedItem]);
 
   const options = [
-    // "Price: Newest",
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Low to High`,
-    `${activeTab === "LISTED" ? "Price" : "ID"}: High to Low`,
-    // 'Price: High to Low',
+    `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
+    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest firs`,
+    // Newly listed order
   ];
 
   // 0 Low first, setSortData(1)
@@ -101,10 +110,14 @@ const CollectionItems = ({
   const [sortedNFT, setSortedNFT] = useState();
 
   useEffect(() => {
-    const abc = async () => {
-      if (!NFTList?.length) return;
-      
-      const fetchData = await Promise.all(
+    const fetchBidsData = async () => {
+      let fetchData = [];
+
+      if (!NFTList?.length) {
+        return setSortedNFT(fetchData);
+      }
+
+      fetchData = await Promise.all(
         NFTList &&
           NFTList?.map(async (i) => {
             const sale_info = await marketplace_contract_calls.getNftSaleInfo(
@@ -144,7 +157,8 @@ const CollectionItems = ({
       );
       setSortedNFT(fetchData);
     };
-    abc();
+
+    fetchBidsData();
   }, [NFTList, currentAccount]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
@@ -165,8 +179,16 @@ const CollectionItems = ({
     (newGridWrapperWidth - stackSpacing * (columns - 1)) / columns;
   // NEW FIXED GRID LAYOUT END
 
+  const onChangeHandler = ({ target }) => {
+    setKeyword(target.value);
+  };
+
+  const onClearHandler = () => {
+    setKeyword("");
+  };
+
   return (
-    <Flex maxW="1920px">
+    <Flex maxW="1920px" alignItems="stretch">
       <LeftPanel
         activeTab={activeTab}
         priceQuery={priceQuery}
@@ -180,19 +202,37 @@ const CollectionItems = ({
       <Stack flexGrow={1}>
         <Box w="full" mx="auto" textAlign="left" px={["12px", 0]}>
           <Stack direction={{ base: "column", md: "row" }} w="full">
+            {!isBigScreen && (
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Search2Icon color="gray.300" />}
+                />
+                <Input
+                  w="full"
+                  h="52px"
+                  mx={[0, 1.5]}
+                  value={keyword}
+                  onChange={(e) => onChangeHandler(e)}
+                  placeholder="Search nft..."
+                />
+
+                {keyword && (
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="30px"
+                      w="30px"
+                      size="sm"
+                      onClick={() => onClearHandler("")}
+                    >
+                      <CloseIcon />
+                    </Button>
+                  </InputRightElement>
+                )}
+              </InputGroup>
+            )}
+
             <HStack pb={[0, "8px"]} justifyContent="space-between">
-              <IconButton
-                mr="2px"
-                size="icon"
-                variant="iconSolid"
-                aria-label="refresh"
-                onClick={() => forceUpdate()}
-                icon={<RefreshIcon />}
-                _hover={{ color: "black", bg: "#7ae7ff" }}
-              />
-
-              <Spacer display={["none", "flex"]} />
-
               {!isBigScreen ? (
                 <DropdownMobile
                   minW="256px"
@@ -219,6 +259,36 @@ const CollectionItems = ({
               )}
             </HStack>
 
+            {isBigScreen && (
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Search2Icon color="gray.300" />}
+                />
+                <Input
+                  w="full"
+                  h="52px"
+                  mx={[0, 1.5]}
+                  value={keyword}
+                  onChange={(e) => onChangeHandler(e)}
+                  placeholder="Search nft..."
+                />
+
+                {keyword && (
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="30px"
+                      w="30px"
+                      size="sm"
+                      onClick={() => onClearHandler("")}
+                    >
+                      <CloseIcon />
+                    </Button>
+                  </InputRightElement>
+                )}
+              </InputGroup>
+            )}
+
             <Spacer display={["none", "flex"]} />
 
             <Flex justifyContent="space-between" align="center" pr={[0, "8px"]}>
@@ -244,7 +314,6 @@ const CollectionItems = ({
               color={bigCardNew ? "#000" : "#fff"}
               display={{ base: "none", xl: "flex" }}
               icon={<BigGridIcon />}
-              // onClick={() => setBigCard(true)}
               onClick={() => setBigCardNew(true)}
             />
 
@@ -257,7 +326,6 @@ const CollectionItems = ({
               color={!bigCardNew ? "#000" : "#fff"}
               display={{ base: "none", xl: "flex" }}
               icon={<BsGrid3X3 fontSize="20px" />}
-              //   onClick={() => setBigCard(false)}
               onClick={() => setBigCardNew(false)}
             />
           </Stack>
@@ -377,6 +445,20 @@ const CollectionItems = ({
             />
           )}
         </Box>
+
+        <Spacer />
+
+        {sortedNFT?.length && (
+          <HStack py={10} justifyContent="center" w="" full>
+            <Text ref={ref}>
+              {isFetchingNextPage
+                ? "Loading..."
+                : isLastPageResult
+                ? "Nothing more to load"
+                : "Load More"}
+            </Text>
+          </HStack>
+        )}
       </Stack>
     </Flex>
   );

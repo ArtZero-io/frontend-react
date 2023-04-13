@@ -1,4 +1,3 @@
-import { HStack, Text } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -37,6 +36,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
+import { HStack } from "@chakra-ui/react";
 
 const OFFSET_ACTIVITY = 6;
 
@@ -49,6 +49,7 @@ function CollectionPage() {
 
   const { actionType } = useTxStatus();
 
+  const [keyword, setKeyword] = useState();
   const [priceQuery, setPriceQuery] = useState({});
   const [traitsQuery, setTraitsQuery] = useState({});
   const [totalCount, setTotalCount] = useState(0);
@@ -119,6 +120,10 @@ function CollectionPage() {
       setPriceQuery({ ...query.price });
     }
 
+    if (query?.keyword) {
+      setKeyword(query.keyword);
+    }
+
     if (query?.is_for_sale === undefined) {
       setActiveTab("ALL");
     }
@@ -136,10 +141,7 @@ function CollectionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const queryFilter = {
-    traits: traitsQuery,
-    price: priceQuery,
-  };
+  const queryFilter = { keyword, traits: traitsQuery, price: priceQuery };
 
   if (activeTab === tabList.LISTED) {
     queryFilter["is_for_sale"] = true;
@@ -156,7 +158,7 @@ function CollectionPage() {
       });
     };
 
-    let traitsFilter = {};
+    let traitsFilter = { keyword };
 
     if (queryFilter?.is_for_sale !== undefined) {
       traitsFilter["is_for_sale"] = queryFilter.is_for_sale;
@@ -165,15 +167,15 @@ function CollectionPage() {
     if (Object.keys(traitsQuery).length) {
       traitsFilter = {
         ...traitsFilter,
-        $and: Object.entries(queryFilter.traits).map(([k, v]) => {
-          return { $or: makeSubTrait(k, v) };
+        and: Object.entries(queryFilter.traits).map(([k, v]) => {
+          return { or: makeSubTrait(k, v) };
         }),
       };
     }
 
     if (priceQuery.min && priceQuery.max) {
       const formatPriceQuery = ({ max, min }) => {
-        return { price: { $lte: max * 10 ** 18, $gte: min * 10 ** 18 } };
+        return { price: { between: [min * 10 ** 18, max * 10 ** 18] } };
       };
 
       const priceQueryFormat = formatPriceQuery(queryFilter.price);
@@ -181,6 +183,7 @@ function CollectionPage() {
       traitsFilter = {
         ...traitsFilter,
         ...priceQueryFormat,
+        keyword,
       };
     }
 
@@ -238,28 +241,23 @@ function CollectionPage() {
 
   const { ref, inView } = useInView();
 
-  const {
-    isLoading,
-    data,
-
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useInfiniteQuery(
-    [
-      "getAllNFTs",
-      traitsQuery,
-      priceQuery,
-      activeTab,
-      search,
-      sortData,
-      loadingForceUpdate,
-      collection_address,
-    ],
-    ({ pageParam = 0 }) => fetchData({ pageParam }),
-    {
-      getNextPageParam: (lastPage) => lastPage.nextId || 0,
-    }
-  );
+  const { isLoading, data, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      [
+        "getAllNFTs",
+        traitsQuery,
+        priceQuery,
+        activeTab,
+        search,
+        sortData,
+        loadingForceUpdate,
+        collection_address,
+      ],
+      ({ pageParam = 0 }) => fetchData({ pageParam }),
+      {
+        getNextPageParam: (lastPage) => lastPage.nextId || 0,
+      }
+    );
 
   const isLastPageResult = useMemo(() => {
     const pageParams = data?.pageParams;
@@ -297,7 +295,7 @@ function CollectionPage() {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, traitsQuery, priceQuery, activeTab]);
+  }, [collection_address, traitsQuery, priceQuery, activeTab, keyword]);
 
   const resetPage = () => {
     if (currentPageActivity !== 1) {
@@ -322,9 +320,13 @@ function CollectionPage() {
           loadingTime={loadingTime}
           setActiveTab={setActiveTab}
           loading={isLoading || loadingForceUpdate}
-          forceUpdate={() => fetchData()}
           totalCount={totalCount}
           setSortData={setSortData}
+          keyword={keyword}
+          setKeyword={setKeyword}
+          ref={ref}
+          isFetchingNextPage={isFetchingNextPage}
+          isLastPageResult={isLastPageResult}
         />
       ),
     },
@@ -435,13 +437,7 @@ function CollectionPage() {
       <CommonTabs tabsData={tabsData} />
 
       <HStack py={7} justifyContent="center" w="" full>
-        <Text ref={ref}>
-          {isFetchingNextPage
-            ? "Loading..."
-            : isLastPageResult
-            ? "Nothing more to load"
-            : "Load More"}
-        </Text>
+        <div ref={ref}></div>
       </HStack>
     </Layout>
   );

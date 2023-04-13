@@ -29,7 +29,7 @@ import {
 import { setTxStatus } from "@store/actions/txStatus";
 
 import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { stringToU8a } from "@polkadot/util";
 import { APICall } from "@api/client";
 import { START, FINALIZED, TRANSFER } from "@constants";
@@ -121,6 +121,10 @@ function TransferNFTModalMobile({
       return unsubscribe;
     }
   };
+
+  useEffect(() => {
+    rest.step === FINALIZED && onClose();
+  }, [onClose, rest.step]);
 
   return (
     <>

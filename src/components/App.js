@@ -50,7 +50,7 @@ export default function App() {
       {apiState === "ERROR" ? (
         <InitModal
           apiState={apiState}
-          loadingErrorMess={` ${apiError.target.url} failed.`}
+          loadingErrorMess={` ${apiError.target.url}...`}
         />
       ) : apiState !== "READY" ? (
         <InitModal apiState={apiState} loadingErrorMess={`to network...`} />

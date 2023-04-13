@@ -61,6 +61,9 @@ import {
   ACCEPT_BID,
   LIST_TOKEN,
   UNLIST_TOKEN,
+  LOCK,
+  TRANSFER,
+  EDIT_NFT,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
@@ -115,7 +118,17 @@ function TokenPage() {
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [BUY, BID, REMOVE_BID, ACCEPT_BID, LIST_TOKEN, UNLIST_TOKEN],
+    [
+      BUY,
+      BID,
+      REMOVE_BID,
+      ACCEPT_BID,
+      LIST_TOKEN,
+      UNLIST_TOKEN,
+      LOCK,
+      TRANSFER,
+      EDIT_NFT,
+    ],
     () => fetchData()
   );
 
