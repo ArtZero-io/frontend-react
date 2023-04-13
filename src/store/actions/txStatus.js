@@ -48,7 +48,7 @@ export const txResponseErrorHandler = async ({
   caller_account,
   isApprovalTx = false,
 }) => {
-  const url = `https://test.azero.dev/#/explorer/query/`;
+  const url = `https://astar.subscan.io/extrinsic/`;
   const statusToHuman = Object.entries(status.toHuman());
 
   if (dispatchError) {

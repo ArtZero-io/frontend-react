@@ -189,7 +189,7 @@ const Main = () => {
   ]);
 
   const history = useHistory();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const modalSize = useBreakpointValue(["xs", "xs", "xs", "lg"]);
 
   useEffect(() => {
@@ -197,7 +197,7 @@ const Main = () => {
       history.location.pathname === "/marketplace" ||
       history.location.pathname === "/"
     ) {
-      onOpen();
+      // onOpen();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

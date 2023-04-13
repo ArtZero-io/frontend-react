@@ -1123,7 +1123,6 @@ export const buyToken = async (
 
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
-
   if (balance < askPrice / 10 ** 18) {
     toast.error(`Not enough balance!`);
     return;

@@ -642,8 +642,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 12)).toString();
-
+  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
   gasLimit = await getEstimatedGas(
     address,
     contract,
