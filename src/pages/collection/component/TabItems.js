@@ -47,6 +47,7 @@ import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { isMobile } from "react-device-detect";
 import { useMemo } from "react";
 import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
+import { BeatLoader } from "react-spinners";
 
 const CollectionItems = ({
   result,
@@ -99,6 +100,7 @@ const CollectionItems = ({
   // 0 Low first, setSortData(1)
   // 1 High first, setSortData(-1)
   // 2 Newest
+
   const NFTList = useMemo(
     () =>
       pages?.reduce((a, b) => {
@@ -451,11 +453,13 @@ const CollectionItems = ({
         {sortedNFT?.length && (
           <HStack py={10} justifyContent="center" w="" full>
             <Text ref={ref}>
-              {isFetchingNextPage
-                ? "Loading..."
-                : isLastPageResult
-                ? "Nothing more to load"
-                : "Load More"}
+              {isFetchingNextPage ? (
+                <BeatLoader color="#7ae7ff" size="10px" />
+              ) : !isLastPageResult ? (
+                ""
+              ) : (
+                "Nothing more to load"
+              )}
             </Text>
           </HStack>
         )}
