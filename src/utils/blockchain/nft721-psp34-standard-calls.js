@@ -383,7 +383,7 @@ async function approve(
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
-    await delay(15000)
+    await delay(20000)
   return unsubscribe;
 }
 
