@@ -14,7 +14,6 @@ import { APICall } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import { truncateStr } from "@utils";
 
 function TabActivity({
   tokenUriType1,
@@ -58,9 +57,9 @@ function TabActivity({
 
               event = {
                 ...event,
-                buyerName: (event.buyer),
-                sellerName: (event.seller),
-                traderName: (event.trader),
+                buyerName: event.buyer,
+                sellerName: event.seller,
+                traderName: event.trader,
                 collectionName: name,
                 nftName,
                 avatar,
@@ -89,7 +88,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="PURCHASE"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={collectionOwner}
           tableHeaders={headers.purchase}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -105,7 +104,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="LIST"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={collectionOwner}
           tableHeaders={headers.list}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -121,7 +120,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="UNLIST"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={collectionOwner}
           tableHeaders={headers.unlist}
           fetchMore={fetchMore}
           hasMore={hasMore[2]}
@@ -137,7 +136,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="BID ACCEPT"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={collectionOwner}
           tableHeaders={headers.bidAccepted}
           fetchMore={fetchMore}
           fetchBack={fetchBack}

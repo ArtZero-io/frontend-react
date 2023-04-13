@@ -75,10 +75,8 @@ const MyNFTsPage = () => {
       return setFilterSelected("COLLECTED");
     }
 
-    if (actionType === LIST_TOKEN) return setFilterSelected("LISTING");
-
-    if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected("COLLECTED");
+    if (actionType === LIST_TOKEN || actionType === UNLIST_TOKEN) {
+      return setFilterSelected("LISTING");
     }
 
     if (actionType === EDIT_NFT) {
@@ -269,7 +267,7 @@ const MyNFTsPage = () => {
           <HStack maxW={{ base: "320px", md: "500px" }}>
             {[
               { id: "COLLECTED", text: "my collected" },
-              { id: "LISTING", text: "my listing" },
+              { id: "LISTING", text: "my listings" },
               { id: "BIDS", text: "my bids" },
             ].map((i, idx) => (
               <CommonButton
@@ -433,7 +431,7 @@ export async function execContractTx(
   ...args
 ) {
   // NOTE: amount need to convert before passing in
-  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
   // console.log("execContractTx ", queryName);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);

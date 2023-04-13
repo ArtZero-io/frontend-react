@@ -7,11 +7,11 @@ import {
   ModalHeader,
   ModalOverlay,
   useBreakpointValue,
-} from '@chakra-ui/react';
-import React, { useEffect } from 'react';
-import ProfileForm from '../Form/Profile';
-import { SCROLLBAR, FINALIZED } from '@constants';
-import useTxStatus from '@hooks/useTxStatus';
+} from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import ProfileForm from "../Form/Profile";
+import { SCROLLBAR, FINALIZED } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 export default function ProfileModal({
   profile,
@@ -56,19 +56,19 @@ export default function ProfileModal({
       <ModalContent
         borderRadius="0"
         textAlign="center"
-        mx={{ '2xl': 72 }}
-        minH={{ xl: 'md' }}
+        mx={{ "2xl": 72 }}
+        minH={{ xl: "md" }}
         position="relative"
         bg="brand.grayDark"
-        px={['4px', '24px', '24px']}
-        pb={['4px', '32px', '32px']}
+        px={["4px", "24px", "24px"]}
+        pb={["4px", "32px", "32px"]}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={['0', '-8', '-8']}
-          right={['0', '-8', '-8']}
+          top="2"
+          right="2"
           onClick={() => step === FINALIZED && onEndClick()}
         />
 
@@ -77,7 +77,7 @@ export default function ProfileModal({
             my={1}
             justifyContent="center"
             display={headingDisplay}
-            fontSize={['xl', '3xl']}
+            fontSize={["xl", "3xl"]}
           >
             update profile
           </Heading>

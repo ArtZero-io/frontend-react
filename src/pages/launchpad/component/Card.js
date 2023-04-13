@@ -19,6 +19,7 @@ import { useSubstrateState } from "@utils/substrate";
 import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { getPublicCurrentAccount } from "@utils";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
+import { useMemo } from "react";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
@@ -27,13 +28,14 @@ export const Card = ({ variant, project }) => {
 
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const {
-    // status,
-    avatarImage,
-    name,
-    nftContractAddress,
-    startTime,
-  } = project;
+  const { name, avatarImage, nftContractAddress } = project;
+
+  const startTime = useMemo(() => {
+    const whiteListFiltered = project?.whiteList.filter((i) => !!i.isActive);
+    const firstPhase = whiteListFiltered[0];
+
+    return firstPhase?.phaseData?.startTime;
+  }, [project?.whiteList]);
 
   useInterval(() => {
     if (variant !== "upcoming") {

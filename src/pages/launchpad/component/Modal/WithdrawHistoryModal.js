@@ -82,7 +82,7 @@ export default function WithdrawHistoryModal({
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [offset, pageSize]
+    [collection_address, offset, pageSize]
   );
 
   useEffect(() => {
@@ -126,8 +126,8 @@ export default function WithdrawHistoryModal({
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          top="4"
+          right="4"
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">

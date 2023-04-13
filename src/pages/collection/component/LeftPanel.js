@@ -126,17 +126,7 @@ function LeftPanel({
               size="icon"
               variant="iconSolid"
               onClick={() => onToggle()}
-              icon={
-                // <motion.div
-                //   animate={
-                //     {
-                //       rotate: isOpen ? 0 : 180,
-                //     }
-                //   }
-                // >
-                <Icon as={FiFilter} w="24px" h="24px" />
-                // </motion.div>
-              }
+              icon={<Icon as={FiFilter} w="24px" h="24px" />}
               _hover={{ color: "black", bg: "#7ae7ff" }}
             />
           </Flex>
@@ -209,8 +199,8 @@ function LeftPanel({
                 >
                   {rarityTableRef.current &&
                     Object.entries(rarityTableRef.current).map(
-                      ([key, value]) => (
-                        <Fragment key={key}>
+                      ([key, value], idx) => (
+                        <Fragment key={idx}>
                           <AccordionItem>
                             <AccordionButton
                               my="4px"
@@ -235,7 +225,7 @@ function LeftPanel({
 
                             <AccordionPanel my="8px" p="0px" w="full">
                               <Stack spacing="10px" w="full">
-                                {value.map((item) => (
+                                {value.map((item, idx) => (
                                   <Stack
                                     border={
                                       !traitsQuery[key] ||
@@ -244,13 +234,14 @@ function LeftPanel({
                                         ? "1px solid #333"
                                         : "1px solid #7AE7FF"
                                     }
-                                    key={item.name}
+                                    key={idx}
                                     p="16px"
                                     cursor="pointer"
                                     _hover={{ bg: "#222" }}
                                     onClick={() => {
                                       const newTraitsQuery = { ...traitsQuery };
 
+                                      // if not exit -> create key
                                       if (!newTraitsQuery[key]) {
                                         newTraitsQuery[key] = [];
                                       }
@@ -260,9 +251,25 @@ function LeftPanel({
                                       );
 
                                       if (idx !== -1) {
-                                        return toast.error(
-                                          "This item is already selected!"
-                                        );
+                                        let tempNewTraitArray =
+                                          newTraitsQuery[key];
+
+                                        tempNewTraitArray.splice(idx, 1);
+
+                                        if (tempNewTraitArray?.length === 0) {
+                                          const {
+                                            // eslint-disable-next-line no-unused-vars
+                                            [key]: _omit,
+                                            ...finalNewTraitsQuery
+                                          } = newTraitsQuery;
+
+                                          setTraitsQuery(finalNewTraitsQuery);
+                                          return;
+                                        }
+                                        newTraitsQuery[key] = tempNewTraitArray;
+                                        setTraitsQuery(newTraitsQuery);
+
+                                        return;
                                       }
 
                                       newTraitsQuery[key].push(item.name);
@@ -440,8 +447,8 @@ function LeftPanel({
                     >
                       {rarityTableRef.current &&
                         Object.entries(rarityTableRef.current).map(
-                          ([key, value]) => (
-                            <Fragment key={key}>
+                          ([key, value], idx) => (
+                            <Fragment key={idx}>
                               <AccordionItem>
                                 <AccordionButton
                                   my="4px"
@@ -466,7 +473,7 @@ function LeftPanel({
 
                                 <AccordionPanel my="8px" p="0px" w="full">
                                   <Stack spacing="10px" w="full">
-                                    {value.map((item) => (
+                                    {value.map((item, idx) => (
                                       <Stack
                                         border={
                                           !traitsQuery[key] ||
@@ -476,7 +483,7 @@ function LeftPanel({
                                             ? "1px solid #333"
                                             : "1px solid #7AE7FF"
                                         }
-                                        key={item.name}
+                                        key={idx}
                                         p="16px"
                                         cursor="pointer"
                                         _hover={{ bg: "#222" }}

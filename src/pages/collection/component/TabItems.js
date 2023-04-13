@@ -38,6 +38,10 @@ import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { CommonCard } from "@components/Card/NFTChangeSize";
 import LeftPanel from "./LeftPanel";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import toast from "react-hot-toast";
+import { NUMBER_NFT_PER_PAGE } from "@constants";
+import { isMobile } from "react-device-detect";
+import { useMemo } from "react";
 
 const CollectionItems = ({
   result,
@@ -60,6 +64,7 @@ const CollectionItems = ({
   setPriceQuery,
   setSortData,
   name,
+  pages,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -85,14 +90,23 @@ const CollectionItems = ({
   // 0 Low first, setSortData(1)
   // 1 High first, setSortData(-1)
   // 2 Newest
+  const NFTList = useMemo(
+    () =>
+      pages?.reduce((a, b) => {
+        return a.concat(b?.data);
+      }, []),
+    [pages]
+  );
 
   const [sortedNFT, setSortedNFT] = useState();
+
   useEffect(() => {
     const abc = async () => {
-      if (!result) return;
+      if (!NFTList?.length) return;
+      
       const fetchData = await Promise.all(
-        result &&
-          result?.NFTList?.map(async (i) => {
+        NFTList &&
+          NFTList?.map(async (i) => {
             const sale_info = await marketplace_contract_calls.getNftSaleInfo(
               currentAccount,
               i.nftContractAddress,
@@ -131,7 +145,7 @@ const CollectionItems = ({
       setSortedNFT(fetchData);
     };
     abc();
-  }, [currentAccount, result, result?.NFTList]);
+  }, [NFTList, currentAccount]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -395,10 +409,9 @@ const CollectionGridNew = ({
   const location = useLocation();
 
   const history = useHistory();
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   function handleOnClick(item) {
-    if (isBigScreen) {
+    if (!isMobile) {
       setSelectedNft(item);
       onOpen();
     } else {
@@ -409,12 +422,30 @@ const CollectionGridNew = ({
     }
   }
 
+  function handleNav(id, step) {
+    const currentIndex = dataList.findIndex((item) => item.tokenID === id);
+
+    if (step === -1 && currentIndex === 0) {
+      return toast("This is first item!");
+    }
+
+    if (step === 1 && currentIndex === NUMBER_NFT_PER_PAGE - 1) {
+      return toast("End of page!");
+    }
+
+    const newCurrentItem = dataList[currentIndex + step];
+
+    if (newCurrentItem) {
+      setSelectedNft(newCurrentItem);
+    }
+  }
   return (
     <>
-      {isBigScreen && (
+      {!isMobile && (
         <NFTDetailModal
           {...rest}
           {...selectedNft}
+          handleNav={handleNav}
           rarityTable={rarityTable}
           totalNftCount={totalNftCount}
           isOpen={isOpen}
