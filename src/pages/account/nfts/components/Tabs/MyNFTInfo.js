@@ -232,7 +232,7 @@ function MyNFTTabInfo(props) {
         tokenID,
         dispatch
       );
-      setAskPrice(1);
+      setAskPrice(10);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
