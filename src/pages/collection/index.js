@@ -1,4 +1,3 @@
-import { HStack, Text } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -37,6 +36,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
+import { HStack } from "@chakra-ui/react";
 
 const OFFSET_ACTIVITY = 6;
 
@@ -324,6 +324,9 @@ function CollectionPage() {
           setSortData={setSortData}
           keyword={keyword}
           setKeyword={setKeyword}
+          ref={ref}
+          isFetchingNextPage={isFetchingNextPage}
+          isLastPageResult={isLastPageResult}
         />
       ),
     },
@@ -434,13 +437,7 @@ function CollectionPage() {
       <CommonTabs tabsData={tabsData} />
 
       <HStack py={7} justifyContent="center" w="" full>
-        <Text ref={ref}>
-          {isFetchingNextPage
-            ? "Loading..."
-            : isLastPageResult
-            ? "Nothing more to load"
-            : "Load More"}
-        </Text>
+        <div ref={ref}></div>
       </HStack>
     </Layout>
   );

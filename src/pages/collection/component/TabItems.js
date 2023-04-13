@@ -72,6 +72,9 @@ const CollectionItems = ({
   pages,
   keyword,
   setKeyword,
+  ref,
+  isFetchingNextPage,
+  isLastPageResult,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -88,10 +91,9 @@ const CollectionItems = ({
   }, [state?.selectedItem]);
 
   const options = [
-    // "Price: Newest",
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Low to High`,
-    `${activeTab === "LISTED" ? "Price" : "ID"}: High to Low`,
-    // 'Price: High to Low',
+    `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
+    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest firs`,
+    // Newly listed order
   ];
 
   // 0 Low first, setSortData(1)
@@ -186,7 +188,7 @@ const CollectionItems = ({
   };
 
   return (
-    <Flex maxW="1920px">
+    <Flex maxW="1920px" alignItems="stretch">
       <LeftPanel
         activeTab={activeTab}
         priceQuery={priceQuery}
@@ -229,6 +231,7 @@ const CollectionItems = ({
                 )}
               </InputGroup>
             )}
+
             <HStack pb={[0, "8px"]} justifyContent="space-between">
               {!isBigScreen ? (
                 <DropdownMobile
@@ -442,6 +445,20 @@ const CollectionItems = ({
             />
           )}
         </Box>
+
+        <Spacer />
+
+        {sortedNFT?.length && (
+          <HStack py={10} justifyContent="center" w="" full>
+            <Text ref={ref}>
+              {isFetchingNextPage
+                ? "Loading..."
+                : isLastPageResult
+                ? "Nothing more to load"
+                : "Load More"}
+            </Text>
+          </HStack>
+        )}
       </Stack>
     </Flex>
   );

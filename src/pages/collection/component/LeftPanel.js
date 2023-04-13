@@ -125,15 +125,21 @@ function LeftPanel({
 
             <Spacer />
 
-            <IconButton
-              bg="transparent"
-              _focus={{ border: "none" }}
-              size="icon"
-              variant="iconSolid"
-              onClick={() => onToggle()}
-              icon={<Icon as={FiFilter} w="24px" h="24px" />}
-              _hover={{ color: "black", bg: "#7ae7ff" }}
-            />
+            {isOpen ? (
+              <IconButton
+                bg="transparent"
+                _focus={{ border: "none" }}
+                size="icon"
+                variant="iconSolid"
+                onClick={() => onToggle()}
+                icon={<Icon as={FiFilter} w="24px" h="24px" />}
+                _hover={{ color: "black", bg: "#7ae7ff" }}
+              />
+            ) : (
+              <Button onClick={() => onToggle()} h="50px" w="50px" size="sm">
+                Filter
+              </Button>
+            )}
           </Flex>
 
           <Collapse in={isOpen} animateOpacity>
