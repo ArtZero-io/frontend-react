@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import { store } from "@store/store";
 import { SubstrateContextProvider } from "@utils/substrate";
@@ -24,9 +24,9 @@ ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <SubstrateContextProvider>
       <Provider store={store}>
-        <BrowserRouter basename={"/"}>
+        <HashRouter basename={"/"}>
           <App />
-        </BrowserRouter>
+        </HashRouter>
       </Provider>
     </SubstrateContextProvider>{" "}
     <ReactQueryDevtools initialIsOpen={false} />
