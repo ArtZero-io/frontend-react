@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.8313ed8f.css",
+    "main.js": "/static/js/main.113ef633.js",
+    "static/media/bg-hero-full.png": "/static/media/bg-hero-full.48934fe8f5f267e3be61.png",
+    "static/media/oswald-all-400-normal.woff": "/static/media/oswald-all-400-normal.f2f316c26625136e591d.woff",
+    "static/media/astar-logo.png": "/static/media/astar-logo.b48435e09065b7d91275.png",
+    "static/media/oswald-latin-400-normal.woff2": "/static/media/oswald-latin-400-normal.c21c1cd857a6c6535478.woff2",
+    "static/media/oswald-latin-ext-400-normal.woff2": "/static/media/oswald-latin-ext-400-normal.0d3864f20f3490be8d05.woff2",
+    "static/media/oswald-cyrillic-400-normal.woff2": "/static/media/oswald-cyrillic-400-normal.31bdfbc69b2e80f4bc4b.woff2",
+    "static/media/SubWalletLogo.svg": "/static/media/SubWalletLogo.8369bfeb651518b2125aa3c2e74a470a.svg",
+    "static/media/oswald-vietnamese-400-normal.woff2": "/static/media/oswald-vietnamese-400-normal.ba5b5084895220583f92.woff2",
+    "index.html": "/index.html",
+    "static/media/oswald-cyrillic-ext-400-normal.woff2": "/static/media/oswald-cyrillic-ext-400-normal.2140c711cd14bc61cc52.woff2",
+    "static/media/PolkadotjsLogo.svg": "/static/media/PolkadotjsLogo.a95b08689c198dba64a602125c1644cf.svg",
+    "main.8313ed8f.css.map": "/static/css/main.8313ed8f.css.map",
+    "main.113ef633.js.map": "/static/js/main.113ef633.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8313ed8f.css",
+    "static/js/main.113ef633.js"
+  ]
+}
