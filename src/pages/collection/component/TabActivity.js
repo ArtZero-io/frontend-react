@@ -257,17 +257,21 @@ const NewEventTable = ({
         ref={ref}
       />
 
-      <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
-        <Text ref={ref}>
-          {isFetchingNextPage ? (
-            <BeatLoader color="#7ae7ff" size="10px" />
-          ) : hasNextPage ? (
-            ""
-          ) : (
-            "Nothing more to load"
-          )}
-        </Text>
-      </HStack>
+      {dataFormatted?.length ? (
+        <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+          <Text ref={ref}>
+            {isFetchingNextPage ? (
+              <BeatLoader color="#7ae7ff" size="10px" />
+            ) : hasNextPage ? (
+              ""
+            ) : (
+              "Nothing more to load"
+            )}
+          </Text>
+        </HStack>
+      ) : (
+        ""
+      )}
     </>
   );
 };

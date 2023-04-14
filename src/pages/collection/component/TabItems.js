@@ -450,7 +450,7 @@ const CollectionItems = ({
 
         <Spacer />
 
-        {sortedNFT?.length && (
+        {sortedNFT?.length ? (
           <HStack py={10} justifyContent="center" w="" full>
             <Text ref={ref}>
               {isFetchingNextPage ? (
@@ -462,6 +462,8 @@ const CollectionItems = ({
               )}
             </Text>
           </HStack>
+        ) : (
+          ""
         )}
       </Stack>
     </Flex>
