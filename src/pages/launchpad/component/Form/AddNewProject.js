@@ -1015,14 +1015,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                     <Text
                                       as="span"
                                       color="#888"
-                                    >{`Create new project you will pay `}</Text>
+                                    >{`I agree to pay `}</Text>
                                     <Text color="#fff" as="span">
                                       {`${addProjectTotalFee} ASTR`}
                                     </Text>
                                     <Text
                                       as="span"
                                       color="#888"
-                                    >{` in fee to ArtZero.io. This fee is non-refundable.`}</Text>
+                                    >{` to ArtZero.io for the creation of new project. This fee is non-refundable`}</Text>
                                   </>
                                 }
                               />
@@ -1047,14 +1047,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                     <Text
                                       as="span"
                                       color="#888"
-                                    >{`I agree to pay `}</Text>
+                                    >{`I agree to a `}</Text>
                                     <Text color="#fff" as="span">
                                       {`${projectMintFeeRate}%`}
                                     </Text>
                                     <Text
                                       as="span"
                                       color="#888"
-                                    >{` of mint price per succeed mint to ArtZero.io.`}</Text>
+                                    >{` share of the mint price for every sucessful mint to be distributed to ArtZerio.io`}</Text>
                                   </>
                                 }
                               />

@@ -26,7 +26,7 @@ const clientPost = async (
     url,
     options = {},
     baseURL = process.env.REACT_APP_API_BASE_URL
-  ) => { 
+  ) => {
     const headers = {
       Accept: "*/*",
       "Content-Type": "application/x-www-form-urlencoded",

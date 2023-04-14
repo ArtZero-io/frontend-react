@@ -1,150 +1,70 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import EventTable from "@components/Table/EventTable";
-import { useSelector } from "react-redux";
 import {
+  HStack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useMediaQuery,
 } from "@chakra-ui/react";
 
 import { APICall } from "@api/client";
-import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import { useCallback } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useMemo } from "react";
+import { BeatLoader } from "react-spinners";
 
-function TabActivity({
-  tokenUriType1,
-  latestBlockNumber,
-  collectionOwner,
-  hasMore,
-  fetchMore,
-  fetchBack,
-  resetPage,
-  currentPage,
-  ...rest
-}) {
-  const { platformEvents } = useSelector((s) => s.account);
+const NUMBER_NFT_PER_PAGE = 5;
 
-  // eslint-disable-next-line no-unused-vars
-  const [loading, setLoading] = useState(null);
-  const [collectionEventsFull, setCollectionEventsFull] = useState(null);
-  const latestBlockNumberRef = useRef(latestBlockNumber);
-  const shouldUpdate = latestBlockNumber !== latestBlockNumberRef.current;
-
-  useEffect(() => {
-    setLoading(true);
-
-    const collectionEventsFull = async () => {
-      try {
-        platformEvents?.events &&
-          (await Promise.all(
-            platformEvents?.events?.map(async (event) => {
-              const {
-                ret: [{ name }],
-              } = await APICall.getCollectionByAddress({
-                collection_address: event.nftContractAddress,
-              });
-
-              const {
-                ret: [{ nftName, avatar }],
-              } = await APICall.getNFTByID({
-                collection_address: event.nftContractAddress,
-                token_id: event.tokenID,
-              });
-
-              event = {
-                ...event,
-                buyerName: event.buyer,
-                sellerName: event.seller,
-                traderName: event.trader,
-                collectionName: name,
-                nftName,
-                avatar,
-              };
-
-              return event;
-            })
-          ).then((arr) => {
-            setLoading(false);
-
-            setCollectionEventsFull(arr);
-          }));
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    latestBlockNumberRef.current = latestBlockNumber;
-    collectionEventsFull();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldUpdate]);
-
+function TabActivity({ collectionOwner, nftContractAddress }) {
   const tabData = [
     {
       label: "PURCHASE",
       content: (
-        <EventTable
-          {...rest}
+        <NewEventTable
           type="PURCHASE"
-          collectionOwnerName={collectionOwner}
+          collectionOwner={collectionOwner}
           tableHeaders={headers.purchase}
-          fetchMore={fetchMore}
-          fetchBack={fetchBack}
-          currentPage={currentPage}
-          hasMore={hasMore[0]}
-          tableData={collectionEventsFull?.filter((i) => i.type === "PURCHASE")}
+          collection_address={nftContractAddress}
         />
       ),
     },
     {
       label: "LIST",
       content: (
-        <EventTable
-          {...rest}
+        <NewEventTable
           type="LIST"
-          collectionOwnerName={collectionOwner}
+          collectionOwner={collectionOwner}
           tableHeaders={headers.list}
-          fetchMore={fetchMore}
-          fetchBack={fetchBack}
-          currentPage={currentPage}
-          hasMore={hasMore[3]}
-          tableData={collectionEventsFull?.filter((i) => i.type === "LIST")}
+          collection_address={nftContractAddress}
         />
       ),
     },
     {
       label: "UNLIST",
       content: (
-        <EventTable
-          {...rest}
+        <NewEventTable
           type="UNLIST"
-          collectionOwnerName={collectionOwner}
+          collectionOwner={collectionOwner}
           tableHeaders={headers.unlist}
-          fetchMore={fetchMore}
-          hasMore={hasMore[2]}
-          currentPage={currentPage}
-          fetchBack={fetchBack}
-          tableData={collectionEventsFull?.filter((i) => i.type === "UNLIST")}
+          collection_address={nftContractAddress}
         />
       ),
     },
     {
       label: "BID ACCEPTED",
       content: (
-        <EventTable
-          {...rest}
-          type="BID ACCEPT"
-          collectionOwnerName={collectionOwner}
+        <NewEventTable
+          type="BID ACCEPTED"
+          collectionOwner={collectionOwner}
           tableHeaders={headers.bidAccepted}
-          fetchMore={fetchMore}
-          fetchBack={fetchBack}
-          currentPage={currentPage}
-          hasMore={hasMore[1]}
-          tableData={collectionEventsFull?.filter(
-            (i) => i.type === "BID ACCEPTED"
-          )}
+          collection_address={nftContractAddress}
         />
       ),
     },
@@ -157,14 +77,11 @@ function TabActivity({
     <>
       <Tabs
         px="12px"
-        index={tabIndex}
-        onChange={(i) => {
-          setTabIndex(i);
-          resetPage();
-        }}
         isLazy
+        index={tabIndex}
         align="center"
         colorScheme="brand.blue"
+        onChange={(i) => setTabIndex(i)}
       >
         {!isBigScreen ? (
           <DropdownMobile
@@ -209,23 +126,155 @@ function TabActivity({
           </TabList>
         )}
 
-        {loading ? (
-          <AnimationLoader loadingTime={5} />
-        ) : (
-          <TabPanels h="full" minH="md">
-            {tabData.map((tab, index) => (
-              <TabPanel p="0px" key={index}>
-                {tab.content}
-              </TabPanel>
-            ))}
-          </TabPanels>
-        )}
+        <TabPanels h="full" minH="md">
+          {tabData.map((tab, index) => (
+            <TabPanel p="0px" key={index}>
+              {tab.content}
+            </TabPanel>
+          ))}
+        </TabPanels>
       </Tabs>
     </>
   );
 }
 
 export default TabActivity;
+
+const NewEventTable = ({
+  type,
+  tableHeaders,
+  collection_address,
+  collectionOwner,
+}) => {
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  const fetchEvents = useCallback(
+    async ({ pageParam }) => {
+      if (pageParam === undefined) return;
+
+      let eventsList = [];
+
+      if (type === "PURCHASE") {
+        eventsList = await APICall.getPurchaseEvents({
+          collection_address,
+          offset: pageParam,
+          limit: NUMBER_NFT_PER_PAGE,
+        });
+      }
+
+      if (type === "LIST") {
+        eventsList = await APICall.getNewListEvents({
+          collection_address,
+          offset: pageParam,
+          limit: NUMBER_NFT_PER_PAGE,
+        });
+      }
+
+      if (type === "UNLIST") {
+        eventsList = await APICall.getUnlistEvents({
+          collection_address,
+          offset: pageParam,
+          limit: NUMBER_NFT_PER_PAGE,
+        });
+      }
+
+      if (type === "BID ACCEPTED") {
+        eventsList = await APICall.getBidWinEvents({
+          collection_address,
+          offset: pageParam,
+          limit: NUMBER_NFT_PER_PAGE,
+        });
+      }
+
+      if (eventsList?.length > 0) {
+        eventsList = await Promise.all(
+          eventsList?.map(async ({ nftContractAddress, tokenID, ...rest }) => {
+            const { status, ret } = await APICall.getNFTByID({
+              token_id: tokenID,
+              collection_address: nftContractAddress,
+            });
+
+            const eventFormatted = {
+              nftContractAddress,
+              tokenID,
+              ...rest,
+            };
+
+            if (status === "OK") {
+              eventFormatted.nftName = ret[0]?.nftName;
+              eventFormatted.avatar = ret[0]?.avatar;
+            }
+
+            return eventFormatted;
+          })
+        );
+      }
+
+      return {
+        eventsList,
+        nextId: pageParam + NUMBER_NFT_PER_PAGE,
+      };
+    },
+    [collection_address, type]
+  );
+
+  const { hasNextPage, data, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      [`getEvents${type}`, collection_address],
+      ({ pageParam = 0 }) => fetchEvents({ pageParam }),
+      {
+        getNextPageParam: (lastPage) => {
+          if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
+            return undefined;
+          }
+          return lastPage.nextId || 0;
+        },
+      }
+    );
+
+  const dataFormatted = useMemo(
+    () =>
+      data?.pages?.reduce((a, b) => {
+        return a.concat(b?.eventsList);
+      }, []),
+    [data]
+  );
+
+  return (
+    <>
+      <EventTable
+        type={type}
+        collectionOwner={collectionOwner}
+        tableHeaders={tableHeaders}
+        tableData={dataFormatted}
+        ref={ref}
+      />
+
+      {dataFormatted?.length ? (
+        <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+          <Text ref={ref}>
+            {isFetchingNextPage ? (
+              <BeatLoader color="#7ae7ff" size="10px" />
+            ) : hasNextPage ? (
+              ""
+            ) : (
+              "Nothing more to load"
+            )}
+          </Text>
+        </HStack>
+      ) : (
+        ""
+      )}
+    </>
+  );
+};
 
 const dropDownMobileOptions = {
   PURCHASE: "purchase",
@@ -236,44 +285,36 @@ const dropDownMobileOptions = {
 
 const headers = {
   purchase: {
-    // collectionName: "collection name",
     nftName: "nft name",
     avatar: "image",
-    // type: "type",
     price: "price",
     platformFee: "platform Fee",
     royaltyFee: "royalty fee",
-    sellerName: "seller",
-    buyerName: "buyer",
+    seller: "seller",
+    buyer: "buyer",
     blockNumber: "block no#",
   },
   list: {
-    // collectionName: "collection name",
     nftName: "nft name",
     avatar: "image",
-    // // type: "type",
     price: "price",
-    traderName: "trader",
+    trader: "trader",
     blockNumber: "block no#",
   },
   unlist: {
-    // collectionName: "collection name",
     nftName: "nft name",
     avatar: "image",
-    // // type: "type",
-    traderName: "trader",
+    trader: "trader",
     blockNumber: "block no#",
   },
   bidAccepted: {
-    // collectionName: "collection name",
     nftName: "nft name",
     avatar: "image",
-    // // type: "type",
     price: "price",
     platformFee: "platform fee",
     royaltyFee: "royalty fee",
-    sellerName: "seller",
-    buyerName: "buyer",
+    seller: "seller",
+    buyer: "buyer",
     blockNumber: "block no#",
   },
 };

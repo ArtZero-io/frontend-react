@@ -27,7 +27,7 @@ app.get("/launchpad/*", async (req, res, next) => {
       if(!result.length) return res.send(htmlData);
       const project = result[0]
       // get post info
-      // inject meta tags 
+      // inject meta tags
       const image = await getCloudFlareImage(project.headerImage)
       htmlData = htmlData
         .replaceAll("__META_OG_TITLE__", project.name)

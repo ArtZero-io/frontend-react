@@ -19,21 +19,11 @@ import { formatNumDynamicDecimal } from "@utils";
 import { memo } from "react";
 import { SCROLLBAR } from "@constants";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
-import CommonButton from "../Button/CommonButton";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
 
-function EventTable({
-  tableHeaders,
-  tableData,
-  collectionOwnerName,
-  type,
-  fetchBack,
-  fetchMore,
-  currentPage,
-  hasMore,
-}) {
+function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
   return (
     <>
       {tableData?.length === 0 ? (
@@ -45,10 +35,8 @@ function EventTable({
           <TableContainer
             w="full"
             fontSize="lg"
-            // w={{ base: "1100px", "2xl": "1560px" }}
             sx={SCROLLBAR}
             overflowY="scroll"
-            h={{ base: "390px", "2xl": "480px" }}
           >
             <motion.div
               initial={{ opacity: 0 }}
@@ -59,22 +47,6 @@ function EventTable({
                 <Table variant="striped" colorScheme="blackAlpha">
                   <Thead>
                     <Tr>
-                      <Th
-                        hidden={type === "UNLIST" || type === "LIST"}
-                        position="sticky"
-                        top={0}
-                        zIndex={1}
-                        textAlign="left"
-                        fontFamily="Evogria"
-                        color="#888"
-                        bg="#171717"
-                        fontSize="15px"
-                        fontWeight="400"
-                        dropShadow="lg"
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
-                      >
-                        creator
-                      </Th>
                       {Object.values(tableHeaders)?.map((item, idx) =>
                         item === "image" ? null : (
                           <Th
@@ -116,77 +88,14 @@ function EventTable({
                   <Tbody>
                     {tableData?.map((item, idx) => (
                       <Tr key={idx} color="#fff">
-                        <Td
-                          hidden={type === "UNLIST" || type === "LIST"}
-                          py={{ base: "1rem", "2xl": "1.75rem" }}
-                          textAlign="left"
-                          color="#7ae7ff"
-                        >
-                          <Link
-                            as={ReactRouterLink}
-                            to={`/public-account/collections/${collectionOwnerName}`}
-                            color="#7AE7FF"
-                            textTransform="capitalize"
-                            textDecoration="underline"
-                          >
-                            {truncateStr(collectionOwnerName)}
-                          </Link>
-                        </Td>
                         {Object.keys(tableHeaders)?.map((i, idx) =>
                           i === "avatar" ? null : (
                             <Td
                               key={idx}
                               textAlign="left"
-                              // minW={["auto", "250px"]}
-                              // isNumeric={i === "price" ? true : false}
                               py={{ base: "1rem", "2xl": "1.75rem" }}
                             >
-                              {i === "price" ||
-                              i === "platformFee" ||
-                              i === "royaltyFee" ? (
-                                <>
-                                  {formatNumDynamicDecimal(item[i])}
-                                  <TagRightIcon as={AzeroIcon} w="16px" />
-                                </>
-                              ) : i === "nftName" ? (
-                                <HStack justifyContent="start">
-                                  <ImageCloudFlare
-                                    w="50px"
-                                    h="50px"
-                                    size="100"
-                                    mr="20px"
-                                    src={item["avatar"]}
-                                  />
-
-                                  <Text>{item.nftName}</Text>
-                                </HStack>
-                              ) : i === "sellerName" ||
-                                i === "traderName" ||
-                                i === "buyerName" ||
-                                i === "nftContractAddress" ? (
-                                <Text
-                                  color={
-                                    [
-                                      "nftContractAddress",
-                                      "sellerName",
-                                      "traderName",
-                                      "buyerName",
-                                    ].includes(i) && "#7ae7ff"
-                                  }
-                                >
-                                  <Link
-                                    as={ReactRouterLink}
-                                    to={`/public-account/collections/${item[i]}`}
-                                    color="#7AE7FF"
-                                    textTransform="capitalize"
-                                    textDecoration="underline"
-                                  >
-                                    {truncateStr(item[i])}
-                                  </Link>
-                                </Text>
-                              ) : (
-                                <Text>{item[i]}</Text>
-                              )}
+                              {formatData(item, i, type)}
                             </Td>
                           )
                         )}
@@ -205,23 +114,6 @@ function EventTable({
               ) : null}
             </motion.div>
           </TableContainer>
-          <Flex mt="30px">
-            <CommonButton
-              px="2px"
-              h="40px"
-              isDisabled={currentPage === 1}
-              text="Back"
-              onClick={fetchBack}
-            />
-            <CommonButton
-              mx="10px"
-              px="2px"
-              h="40px"
-              isDisabled={!hasMore}
-              text="Next"
-              onClick={fetchMore}
-            />
-          </Flex>
         </>
       )}
     </>
@@ -229,3 +121,97 @@ function EventTable({
 }
 
 export default memo(EventTable);
+
+const formatData = (itemObj, headerValue, type) => {
+  switch (headerValue) {
+    case "avatar":
+      return null;
+
+    case "price":
+      return (
+        <>
+          {formatNumDynamicDecimal(itemObj[headerValue])}
+          <TagRightIcon as={AzeroIcon} w="16px" />
+        </>
+      );
+
+    case "platformFee":
+      return (
+        <Flex>
+          {formatNumDynamicDecimal(itemObj[headerValue])}
+          <TagRightIcon as={AzeroIcon} w="16px" />
+        </Flex>
+      );
+
+    case "royaltyFee":
+      return (
+        <>
+          {formatNumDynamicDecimal(itemObj[headerValue])}
+          <TagRightIcon as={AzeroIcon} w="16px" />
+        </>
+      );
+
+    case "buyer":
+      return (
+        <Text color="#7ae7ff">
+          <Link
+            as={ReactRouterLink}
+            to={`/public-account/collections/${itemObj[headerValue]}`}
+            color="#7AE7FF"
+            textTransform="capitalize"
+            textDecoration="underline"
+          >
+            {truncateStr(itemObj[headerValue])}
+          </Link>
+        </Text>
+      );
+
+    case "seller":
+      return (
+        <Text color="#7ae7ff">
+          <Link
+            as={ReactRouterLink}
+            to={`/public-account/collections/${itemObj[headerValue]}`}
+            color="#7AE7FF"
+            textTransform="capitalize"
+            textDecoration="underline"
+          >
+            {truncateStr(itemObj[headerValue])}
+          </Link>
+        </Text>
+      );
+
+    case "trader":
+      return (
+        <Text color="#7ae7ff">
+          <Link
+            as={ReactRouterLink}
+            to={`/public-account/collections/${itemObj[headerValue]}`}
+            color="#7AE7FF"
+            textTransform="capitalize"
+            textDecoration="underline"
+          >
+            {truncateStr(itemObj[headerValue])}
+          </Link>
+        </Text>
+      );
+
+    case "nftName":
+      return (
+        <HStack justifyContent="start">
+          <ImageCloudFlare
+            w="50px"
+            h="50px"
+            size="100"
+            mr="20px"
+            src={itemObj["avatar"]}
+          />
+
+          <Text>{itemObj[headerValue]}</Text>
+        </HStack>
+      );
+
+    default:
+      return <Text> {itemObj[headerValue]} </Text>;
+  }
+};

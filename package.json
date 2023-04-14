@@ -13,7 +13,7 @@
     "eject": "react-scripts eject",
     "eslint:check": "eslint --ext .jsx,.js src/",
     "eslint:write": "eslint --fix --ext .jsx,.js src/",
-    "prettier:check": "prettier -c src/*", 
+    "prettier:check": "prettier -c src/*",
     "prettier:write": "prettier -w src/*",
     "deploy": "gh-pages -d build -m '[ci skip] Updates'",
     "postinstall": "patch-package",
