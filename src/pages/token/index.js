@@ -373,7 +373,7 @@ function TokenPage() {
     let p = askPrice;
 
     if (token?.is_for_sale) {
-      p = token?.price / 1000000000000;
+      p = token?.price / (10 ** 18);
     }
 
     const info = calculateFee(p, collection?.royaltyFee, myTradingFee);
