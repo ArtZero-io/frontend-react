@@ -13,36 +13,43 @@ const PORT = process.env.PORT || 3002;
 const indexPath = path.resolve(__dirname, "..", "build", "index.html");
 console.log(PORT, "port");
 // static resources should just be served as they are
+app.get("/", async (req, res, next) => {
+  sendDefaut(req, res);
+});
+
 app.use(
   express.static(path.resolve(__dirname, "..", "build"), { maxAge: "30d" })
 );
 
 const sendDefaut = (req, res) => {
   fs.readFile(indexPath, "utf8", async (err, htmlData) => {
-    if (err) {
-      console.error("Error during file reading", err);
-      return res.status(404).end();
+    try {
+      if (err) {
+        console.error("Error during file reading", err);
+        return res.status(404).end();
+      }
+
+      // get post info
+      // inject meta tags
+      htmlData = htmlData
+        .replaceAll(
+          "__META_OG_TITLE__",
+          "ArtZero.io - NFT Marketplace for Astar Network Blockchain"
+        )
+        .replaceAll(
+          "__META_OG_DESCRIPTION__",
+          "Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
+        )
+        .replaceAll(
+          "__META_OG_IMAGE__",
+          "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/astar/artzero/preview/public"
+        );
+      return res.send(htmlData);
+    } catch (e) {
+      console.log("failll");
     }
-
-    // get post info
-    // inject meta tags
-    htmlData = htmlData
-      .replaceAll(
-        "__META_OG_TITLE__",
-        "ArtZero.io - NFT Marketplace for Astar Network Blockchain"
-      )
-      .replaceAll(
-        "__META_OG_DESCRIPTION__",
-        "Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
-      )
-      .replaceAll(
-        "__META_OG_IMAGE__",
-        "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/astar/artzero/preview/public"
-      );
-
-    return res.send(htmlData);
   });
-}
+};
 
 // here we serve the index.html page
 app.get("/launchpad/*", async (req, res, next) => {
@@ -60,7 +67,7 @@ app.get("/launchpad/*", async (req, res, next) => {
         const project = result[0];
         // get post info
         // inject meta tags
-        let image = ""; 
+        let image = "";
         if (project?.headerImage) {
           image = await getCloudFlareImage(project.headerImage);
         }
@@ -72,7 +79,7 @@ app.get("/launchpad/*", async (req, res, next) => {
 
       return res.send(htmlData);
     } catch (e) {
-      return sendDefaut(req, res)
+      return sendDefaut(req, res);
     }
   });
 });
@@ -104,13 +111,13 @@ app.get("/collection/*", async (req, res, next) => {
 
       return res.send(htmlData);
     } catch (e) {
-      return sendDefaut(req, res)
+      return sendDefaut(req, res);
     }
   });
-}); 
+});
 
 app.get("/*", async (req, res, next) => {
-  return sendDefaut(req, res)
+  sendDefaut(req, res);
 });
 
 // listening...
