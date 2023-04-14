@@ -47,22 +47,6 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
                 <Table variant="striped" colorScheme="blackAlpha">
                   <Thead>
                     <Tr>
-                      <Th
-                        hidden={type === "UNLIST" || type === "LIST"}
-                        position="sticky"
-                        top={0}
-                        zIndex={1}
-                        textAlign="left"
-                        fontFamily="Evogria"
-                        color="#888"
-                        bg="#171717"
-                        fontSize="15px"
-                        fontWeight="400"
-                        dropShadow="lg"
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
-                      >
-                        creator
-                      </Th>
                       {Object.values(tableHeaders)?.map((item, idx) =>
                         item === "image" ? null : (
                           <Th
@@ -104,22 +88,6 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
                   <Tbody>
                     {tableData?.map((item, idx) => (
                       <Tr key={idx} color="#fff">
-                        <Td
-                          hidden={type === "UNLIST" || type === "LIST"}
-                          py={{ base: "1rem", "2xl": "1.75rem" }}
-                          textAlign="left"
-                          color="#7ae7ff"
-                        >
-                          <Link
-                            as={ReactRouterLink}
-                            to={`/public-account/collections/${collectionOwner}`}
-                            color="#7AE7FF"
-                            textTransform="capitalize"
-                            textDecoration="underline"
-                          >
-                            {truncateStr(collectionOwner)}
-                          </Link>
-                        </Td>
                         {Object.keys(tableHeaders)?.map((i, idx) =>
                           i === "avatar" ? null : (
                             <Td

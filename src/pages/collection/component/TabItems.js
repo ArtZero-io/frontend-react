@@ -93,7 +93,7 @@ const CollectionItems = ({
 
   const options = [
     `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest firs`,
+    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
     // Newly listed order
   ];
 
