@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 import Layout from "@components/Layout/Layout";
 
@@ -10,7 +9,6 @@ import CollectionHeader from "./component/Header/Header";
 
 import { APICall } from "@api/client";
 
-import { AccountActionTypes } from "@store/types/account.types";
 import { getPublicCurrentAccount } from "@utils";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
@@ -29,7 +27,6 @@ import {
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
-import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -38,11 +35,8 @@ import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { HStack } from "@chakra-ui/react";
 
-const OFFSET_ACTIVITY = 6;
-
 function CollectionPage() {
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const { search, state } = useLocation();
   const { collection_address } = useParams();
@@ -54,11 +48,6 @@ function CollectionPage() {
   const [traitsQuery, setTraitsQuery] = useState({});
   const [totalCount, setTotalCount] = useState(0);
   const [activeTab, setActiveTab] = useState("LISTED");
-  const [latestBlockNumber, setLatestBlockNumber] = useState(null);
-
-  const [currentPageActivity, setCurrentPageActivity] = useState(1);
-
-  const [hasMorePage, setHasMorePage] = useState([true, true, true, true]);
 
   const [sortData, setSortData] = useState(1);
   const [collectionInfo, setCollectionInfo] = useState(null);
@@ -137,7 +126,6 @@ function CollectionPage() {
     if (query?.traits && Object.keys(query?.traits).length) {
       setTraitsQuery({ ...query.traits });
     }
-    initEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -277,11 +265,6 @@ function CollectionPage() {
   }, [inView]);
 
   useEffect(() => {
-    initEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPageActivity]);
-
-  useEffect(() => {
     const cleanQuery = { ...queryFilter };
 
     if (!cleanQuery?.price?.min || !cleanQuery?.price?.max) {
@@ -296,13 +279,6 @@ function CollectionPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection_address, traitsQuery, priceQuery, activeTab, keyword]);
-
-  const resetPage = () => {
-    if (currentPageActivity !== 1) {
-      setHasMorePage([true, true, true, true]);
-      setCurrentPageActivity(1);
-    }
-  };
 
   const tabsData = [
     {
@@ -333,109 +309,15 @@ function CollectionPage() {
     {
       label: "activity",
       isDisabled: false,
-      component: (
-        <TabActivity
-          {...data}
-          {...collectionInfo}
-          latestBlockNumber={latestBlockNumber}
-          fetchMore={() => setCurrentPageActivity(currentPageActivity + 1)}
-          fetchBack={() =>
-            currentPageActivity > 1 &&
-            setCurrentPageActivity(currentPageActivity - 1)
-          }
-          currentPage={currentPageActivity}
-          resetPage={resetPage}
-          hasMore={hasMorePage}
-        />
-      ),
+      component: <TabActivity {...collectionInfo} />,
     },
   ];
 
-  const fetchPlatformEvents = useCallback(async () => {
-    try {
-      const getPurchaseEvents = APICall.getPurchaseEvents({
-        collection_address,
-        limit: OFFSET_ACTIVITY + 1,
-        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
-      });
-
-      const getBidWinEvents = APICall.getBidWinEvents({
-        collection_address,
-        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
-        limit: OFFSET_ACTIVITY + 1,
-      });
-
-      const getUnlistEvents = APICall.getUnlistEvents({
-        collection_address,
-        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
-        limit: OFFSET_ACTIVITY + 1,
-      });
-
-      const getNewListEvents = APICall.getNewListEvents({
-        collection_address,
-        offset: currentPageActivity * OFFSET_ACTIVITY - OFFSET_ACTIVITY,
-        limit: OFFSET_ACTIVITY + 1,
-      });
-
-      let result;
-
-      await Promise.all([
-        hasMorePage[0] ? getPurchaseEvents : [],
-        hasMorePage[1] ? getBidWinEvents : [],
-        hasMorePage[2] ? getUnlistEvents : [],
-        hasMorePage[3] ? getNewListEvents : [],
-      ]).then(async (res) => {
-        const newMore = res.map((el) => el.length === OFFSET_ACTIVITY + 1);
-        setHasMorePage(newMore);
-        const newArray = res.map((el) => el.slice(0, 6));
-        result = newArray
-          .reduce((a, b) => [...a, ...b])
-          .sort((a, b) => b.blockNumber - a.blockNumber);
-      });
-      const latestBlockNumber = result?.length && result[0].blockNumber;
-
-      return { events: result, latestBlockNumber };
-    } catch (error) {
-      console.log("error", error);
-
-      return error;
-    }
-  }, [collection_address, currentPageActivity, hasMorePage]);
-
-  const initEvents = async () => {
-    const payload = await fetchPlatformEvents();
-
-    dispatch({
-      type: AccountActionTypes.SET_EVENTS,
-      payload,
-    });
-
-    setLatestBlockNumber(payload?.latestBlockNumber);
-  };
-
-  const imageUrl = collectionInfo?.avatarImage?.replace(
-    "ipfs://",
-    "https://ipfs.io/ipfs/"
-  );
-
   return (
     <Layout backdrop={collectionInfo?.headerImage} variant="collection-detail">
-      <Helmet>
-        <title>{collectionInfo?.name}</title>
-        {/* <!-- Google / Search Engine Tags --> */}
-        <meta itemprop="image" content={imageUrl} />
-        {/* <!-- Facebook Meta Tags --> */}
-        <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={window.location.href} />
-        {/* <!-- Twitter Meta Tags --> */}
-        <meta name="twitter:image" content={imageUrl} />{" "}
-        <meta property="twitter:url" content={window.location.href} />
-      </Helmet>
-
       <CollectionHeader {...data} {...collectionInfo} />
 
       <CommonTabs tabsData={tabsData} />
-
       <HStack py={7} justifyContent="center" w="" full>
         <div ref={ref}></div>
       </HStack>

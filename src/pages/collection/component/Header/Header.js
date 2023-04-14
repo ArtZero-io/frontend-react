@@ -44,6 +44,7 @@ function CollectionHeader(props) {
     isDoxxed,
     isDuplicationChecked,
     nftContractAddress,
+    collectionOwner,
   } = props;
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -140,6 +141,11 @@ function CollectionHeader(props) {
           <HStack>
             <Text>Contract Address:</Text>{" "}
             <AddressCopier address={nftContractAddress} hasIcon={true} />
+          </HStack>
+          
+          <HStack>
+            <Text>Creator:</Text>{" "}
+            <AddressCopier address={collectionOwner} hasIcon={true} />
           </HStack>
 
           <Flex
