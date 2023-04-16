@@ -91,11 +91,22 @@ const CollectionItems = ({
     }
   }, [state?.selectedItem]);
 
-  const options = [
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
-    // Newly listed order
-  ];
+  // const options = [
+  //   `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
+  //   `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
+  //   // Newly listed order
+  // ];
+
+  const options = useMemo(() => {
+    const options = [
+      `${activeTab === "LISTED" ? "Price" : "ID"}: High to Low`,
+      `${activeTab === "LISTED" ? "Price" : "ID"}: Low to High`,
+    ];
+    
+    activeTab === "LISTED" && options.push("Newly listed order");
+
+    return options;
+  }, [activeTab]);
 
   // 0 Low first, setSortData(1)
   // 1 High first, setSortData(-1)
@@ -245,7 +256,13 @@ const CollectionItems = ({
                   fontFamily="Evogria, san serif"
                   options={tabList}
                   selectedItem={activeTab}
-                  setSelectedItem={(i) => setActiveTab(i)}
+                  setSelectedItem={(i) => {
+                    if (i === "ALL" || i === "UNLISTED") {
+                      setSelectedItem(1);
+                      setSortData(2);
+                    }
+                    setActiveTab(i);
+                  }}
                 />
               ) : (
                 Object.keys(tabList).map((item) => (
@@ -254,7 +271,13 @@ const CollectionItems = ({
                     text={item}
                     variant="outline"
                     isActive={item === activeTab}
-                    onClick={() => setActiveTab(item)}
+                    onClick={() => {
+                      if (item === "ALL" || item === "UNLISTED") {
+                        setSelectedItem(1);
+                        setSortData(2);
+                      }
+                      setActiveTab(item);
+                    }}
                     _active={{ bg: "brand.blue", color: "black" }}
                   />
                 ))
@@ -301,7 +324,7 @@ const CollectionItems = ({
                 selectedItem={selectedItem}
                 setSelectedItem={(i) => {
                   setSelectedItem(i);
-                  i === 0 ? setSortData(1) : setSortData(-1);
+                  setSortData(i + 1);
                 }}
               />
             </Flex>
