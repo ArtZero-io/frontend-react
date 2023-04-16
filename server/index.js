@@ -56,6 +56,7 @@ const sendDefaut = (req, res) => {
       }
       return res.send(htmlData);
     } catch (e) {
+      console.log(e);
       console.log("failll");
     }
   });
