@@ -43,7 +43,7 @@ const sendDefaut = (req, res) => {
         )
         .replaceAll(
           "__META_OG_IMAGE__",
-          "https://alephzero.artzero.io/assets/preview.jpg"
+          "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024"
         );
       let type = mime.getType(path);
 

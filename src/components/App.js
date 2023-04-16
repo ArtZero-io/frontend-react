@@ -35,12 +35,13 @@ import useTxStatus from "@hooks/useTxStatus";
 import { START } from "../constants";
 import { Helmet } from "react-helmet";
 import { useHistory } from "react-router-dom";
+import bannerImg from "@theme/assets/banner.jpg";
 
 const pmpLaunchpadUrl =
   "/launchpad/5F4fBoxKBwXZ5fprZPtkhXtesR7PXEWny6KqwWEHbZWXkg55";
 
-const bannerUrl =
-  "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/QmV7JWVWPtTqoPjju2bPDEVp5PcfNcp6io8dd2XkVaSwRT/1024";
+// const bannerUrl =
+//   "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/QmV7JWVWPtTqoPjju2bPDEVp5PcfNcp6io8dd2XkVaSwRT/1024";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -222,7 +223,7 @@ const Main = () => {
             <ModalBody py="24px">
               <Image
                 cursor="pointer"
-                src={bannerUrl}
+                src={bannerImg}
                 onClick={() => {
                   onClose();
                   history.push(pmpLaunchpadUrl);
