@@ -49,7 +49,7 @@ function CollectionPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [activeTab, setActiveTab] = useState("LISTED");
 
-  const [sortData, setSortData] = useState(1);
+  const [sortData, setSortData] = useState(2);
   const [collectionInfo, setCollectionInfo] = useState(null);
 
   const fetchCollectionInfo = useCallback(
