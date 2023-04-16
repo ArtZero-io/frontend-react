@@ -7,6 +7,7 @@ const {
   getCloudFlareImage,
   getCollectionByAddress,
 } = require("./api");
+const mime = require("mime");
 const app = express();
 
 const PORT = process.env.PORT || 3002;
@@ -44,6 +45,15 @@ const sendDefaut = (req, res) => {
           "__META_OG_IMAGE__",
           "https://alephzero.artzero.io/assets/preview.jpg"
         );
+      let type = mime.getType(path);
+
+      // header fields
+      if (!res.getHeader("content-type")) {
+        res.setHeader(
+          "Content-Type",
+          type
+        );
+      }
       return res.send(htmlData);
     } catch (e) {
       console.log("failll");
