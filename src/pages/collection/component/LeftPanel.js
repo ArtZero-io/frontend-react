@@ -556,9 +556,30 @@ function LeftPanel({
                                           ].indexOf(item.name);
 
                                           if (idx !== -1) {
-                                            return toast.error(
-                                              "This item is already selected!"
-                                            );
+                                            let tempNewTraitArray =
+                                              newTraitsQuery[key];
+
+                                            tempNewTraitArray.splice(idx, 1);
+
+                                            if (
+                                              tempNewTraitArray?.length === 0
+                                            ) {
+                                              const {
+                                                // eslint-disable-next-line no-unused-vars
+                                                [key]: _omit,
+                                                ...finalNewTraitsQuery
+                                              } = newTraitsQuery;
+
+                                              setTraitsQuery(
+                                                finalNewTraitsQuery
+                                              );
+                                              return;
+                                            }
+                                            newTraitsQuery[key] =
+                                              tempNewTraitArray;
+                                            setTraitsQuery(newTraitsQuery);
+
+                                            return;
                                           }
 
                                           newTraitsQuery[key].push(item.name);
