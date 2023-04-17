@@ -99,8 +99,8 @@ const CollectionItems = ({
 
   const options = useMemo(() => {
     const options = [
-      `${activeTab === "LISTED" ? "Price" : "ID"}: High to Low`,
-      `${activeTab === "LISTED" ? "Price" : "ID"}: Low to High`,
+      `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
+      `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
     ];
     
     activeTab === "LISTED" && options.push("Newly listed order");
