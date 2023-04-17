@@ -76,6 +76,7 @@ const CollectionItems = ({
   ref,
   isFetchingNextPage,
   isLastPageResult,
+  maxTotalSupply,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -91,26 +92,20 @@ const CollectionItems = ({
     }
   }, [state?.selectedItem]);
 
-  // const options = [
-  //   `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
-  //   `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
-  //   // Newly listed order
-  // ];
-
   const options = useMemo(() => {
     const options = [
       `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
       `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
     ];
-    
+
     activeTab === "LISTED" && options.push("Newly listed order");
 
     return options;
   }, [activeTab]);
 
-  // 0 Low first, setSortData(1)
-  // 1 High first, setSortData(-1)
-  // 2 Newest
+  // index 0 High first, setSortData(1)
+  // index 1 Low first, setSortData(2)
+  // index 2 Newest, setSortData(3)
 
   const NFTList = useMemo(
     () =>
@@ -208,7 +203,7 @@ const CollectionItems = ({
         setPriceQuery={setPriceQuery}
         traitsQuery={traitsQuery}
         setTraitsQuery={setTraitsQuery}
-        totalNftCount={nft_count}
+        totalNftCount={maxTotalSupply || nft_count}
         rarityTable={rarityTable}
       />
 
@@ -463,7 +458,7 @@ const CollectionItems = ({
               collectionOwner={collectionOwner}
               showOnChainMetadata={showOnChainMetadata}
               rarityTable={rarityTable}
-              totalNftCount={nft_count}
+              totalNftCount={maxTotalSupply || nft_count}
               bigCardNew={bigCardNew}
               name={name}
               {...rest}
