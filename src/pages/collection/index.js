@@ -94,10 +94,8 @@ function CollectionPage() {
   }, [fetchCollectionInfo]);
 
   useEffect(() => {
-    if (state?.selectedItem === 1) {
-      setSortData(-1);
-    } else {
-      setSortData(1);
+    if (state?.selectedItem) {
+      setSortData(state?.selectedItem + 1);
     }
   }, [state?.selectedItem]);
 
