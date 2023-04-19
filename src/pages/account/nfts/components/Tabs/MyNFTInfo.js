@@ -78,6 +78,7 @@ function MyNFTTabInfo(props) {
     nft_count,
     rarityTable,
     isActive,
+    maxTotalSupply,
   } = props;
 
   const attrsList = !traits
@@ -495,7 +496,7 @@ function MyNFTTabInfo(props) {
                             <PropCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={nft_count}
+                              totalNftCount={maxTotalSupply || nft_count}
                             />
                           </GridItem>
                         ))
@@ -511,7 +512,7 @@ function MyNFTTabInfo(props) {
                             <LevelCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={nft_count}
+                              totalNftCount={maxTotalSupply || nft_count}
                             />
                           </GridItem>
                         ))

@@ -76,12 +76,13 @@ const CollectionItems = ({
   ref,
   isFetchingNextPage,
   isLastPageResult,
+  maxTotalSupply,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(1);
 
   const { state } = useLocation();
 
@@ -91,15 +92,20 @@ const CollectionItems = ({
     }
   }, [state?.selectedItem]);
 
-  const options = [
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
-    `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
-    // Newly listed order
-  ];
+  const options = useMemo(() => {
+    const options = [
+      `${activeTab === "LISTED" ? "Price" : "ID"}: Highest first`,
+      `${activeTab === "LISTED" ? "Price" : "ID"}: Lowest first`,
+    ];
 
-  // 0 Low first, setSortData(1)
-  // 1 High first, setSortData(-1)
-  // 2 Newest
+    activeTab === "LISTED" && options.push("Newly listed order");
+
+    return options;
+  }, [activeTab]);
+
+  // index 0 High first, setSortData(1)
+  // index 1 Low first, setSortData(2)
+  // index 2 Newest, setSortData(3)
 
   const NFTList = useMemo(
     () =>
@@ -197,7 +203,7 @@ const CollectionItems = ({
         setPriceQuery={setPriceQuery}
         traitsQuery={traitsQuery}
         setTraitsQuery={setTraitsQuery}
-        totalNftCount={nft_count}
+        totalNftCount={maxTotalSupply || nft_count}
         rarityTable={rarityTable}
       />
 
@@ -245,7 +251,13 @@ const CollectionItems = ({
                   fontFamily="Evogria, san serif"
                   options={tabList}
                   selectedItem={activeTab}
-                  setSelectedItem={(i) => setActiveTab(i)}
+                  setSelectedItem={(i) => {
+                    if (i === "ALL" || i === "UNLISTED") {
+                      setSelectedItem(1);
+                      setSortData(2);
+                    }
+                    setActiveTab(i);
+                  }}
                 />
               ) : (
                 Object.keys(tabList).map((item) => (
@@ -254,7 +266,13 @@ const CollectionItems = ({
                     text={item}
                     variant="outline"
                     isActive={item === activeTab}
-                    onClick={() => setActiveTab(item)}
+                    onClick={() => {
+                      if (item === "ALL" || item === "UNLISTED") {
+                        setSelectedItem(1);
+                        setSortData(2);
+                      }
+                      setActiveTab(item);
+                    }}
                     _active={{ bg: "brand.blue", color: "black" }}
                   />
                 ))
@@ -301,7 +319,7 @@ const CollectionItems = ({
                 selectedItem={selectedItem}
                 setSelectedItem={(i) => {
                   setSelectedItem(i);
-                  i === 0 ? setSortData(1) : setSortData(-1);
+                  setSortData(i + 1);
                 }}
               />
             </Flex>
@@ -440,7 +458,7 @@ const CollectionItems = ({
               collectionOwner={collectionOwner}
               showOnChainMetadata={showOnChainMetadata}
               rarityTable={rarityTable}
-              totalNftCount={nft_count}
+              totalNftCount={maxTotalSupply || nft_count}
               bigCardNew={bigCardNew}
               name={name}
               {...rest}

@@ -49,7 +49,7 @@ function CollectionPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [activeTab, setActiveTab] = useState("LISTED");
 
-  const [sortData, setSortData] = useState(1);
+  const [sortData, setSortData] = useState(2);
   const [collectionInfo, setCollectionInfo] = useState(null);
 
   const fetchCollectionInfo = useCallback(
@@ -94,10 +94,8 @@ function CollectionPage() {
   }, [fetchCollectionInfo]);
 
   useEffect(() => {
-    if (state?.selectedItem === 1) {
-      setSortData(-1);
-    } else {
-      setSortData(1);
+    if (state?.selectedItem) {
+      setSortData(state?.selectedItem + 1);
     }
   }, [state?.selectedItem]);
 

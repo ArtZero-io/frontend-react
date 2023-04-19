@@ -836,7 +836,10 @@ function TokenPage() {
                                     collection?.rarityTable,
                                     item
                                   )}
-                                  totalNftCount={collection?.nft_count}
+                                  totalNftCount={
+                                    collection?.maxTotalSupply ||
+                                    collection?.nft_count
+                                  }
                                 />
                               </GridItem>
                             );
@@ -855,7 +858,10 @@ function TokenPage() {
                                     collection?.rarityTable,
                                     item
                                   )}
-                                  totalNftCount={collection?.nft_count}
+                                  totalNftCount={
+                                    collection?.maxTotalSupply ||
+                                    collection?.nft_count
+                                  }
                                 />
                               </GridItem>
                             );
