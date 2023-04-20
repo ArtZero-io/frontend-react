@@ -15,4 +15,5 @@ export const AccountActionTypes = {
   // Move to new set for TNX
   //EVENTS
   SET_EVENTS: "SET_EVENTS",
+  SET_BULK_TX_STATUS: "SET_BULK_TX_STATUS",
 };

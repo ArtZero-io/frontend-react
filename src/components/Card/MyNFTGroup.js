@@ -1,7 +1,13 @@
 import {
   Box,
   Flex,
+  Grid,
+  GridItem,
   Heading,
+  Input,
+  InputGroup,
+  Slide,
+  Square,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -12,7 +18,7 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
 import ResponsivelySizedModal from "@components/Modal/Modal";
 import { useSubstrateState } from "@utils/substrate";
@@ -27,7 +33,7 @@ import {
   CANCEL_REQUEST_UNSTAKE,
   UNSTAKE,
 } from "@constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
@@ -36,6 +42,13 @@ import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
+
+import AzeroIcon from "@theme/assets/icon/Azero.js";
+import useBulkListing from "../../hooks/useBulkListing";
+import { CloseButton } from "@chakra-ui/react";
+import useForceUpdate from "@hooks/useForceUpdate";
+import useBulkTransfer from "../../hooks/useBulkTransfer";
+import { isMobile } from "react-device-detect";
 
 function MyNFTGroupCard({
   name,
@@ -152,9 +165,12 @@ function MyNFTGroupCard({
       ) : (
         <Box borderBottomWidth={hasBottomBorder ? "1px" : "0px"}>
           <GridNftA
+            {...rest}
             isStakingContractLocked={isStakingContractLocked}
             listNFTFormatted={listNFT}
             onClickHandler={onClickHandler}
+            collectionName={name}
+            nftContractAddress={nftContractAddress}
           />
         </Box>
       )}
@@ -168,7 +184,10 @@ function GridNftA({
   listNFTFormatted,
   onClickHandler,
   isStakingContractLocked,
+  collectionName,
+  nftContractAddress,
   variant = "my-collection",
+  isActive,
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -369,6 +388,48 @@ function GridNftA({
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
+  // =============================================================
+
+  const {
+    multiListingData,
+    showSlideMultiListing,
+    doBulkListing,
+    multiListingActionMode,
+    handleSelectMultiListing,
+    handleInputChangeMultiListing,
+    handleCloseButtonForMultiListing,
+  } = useBulkListing({
+    listNFTFormatted,
+    nftContractAddress,
+  });
+
+  const {
+    multiTransferData,
+    showSlideMultiTransfer,
+    doBulkTransfer,
+    multiTransferActionMode,
+    handleSelectMultiTransfer,
+    // handleInputChangeMultiTransfer,
+    handleInputChangeReceiverAddress,
+    handleCloseButtonForMultiTransfer,
+  } = useBulkTransfer({
+    listNFTFormatted,
+  });
+
+  // eslint-disable-next-line no-unused-vars
+  const { loading: _loadingForceUpdate } = useForceUpdate(
+    ["MULTI_TRANSFER", "MULTI_LISTING"],
+    () => {
+      handleCloseButtonForMultiTransfer();
+      handleCloseButtonForMultiListing();
+    },
+    true
+  );
+  // END =============================================================
+  const { bulkTxMode } = useSelector((s) => s?.account?.bulkTxStatus);
+
+  const templateColumnsListing = isMobile ? "repeat(1, 1fr)" : "repeat(5, 1fr)";
+  const templateRowsListing = isMobile ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
   return (
     <>
       {multiStakeData?.action !== null ? (
@@ -408,6 +469,231 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
+      {/* MULTI LISTING */}
+      <Slide
+        direction="bottom"
+        in={showSlideMultiListing}
+        style={{
+          zIndex: 10,
+          maxHeight: "300px",
+          height: "100%",
+        }}
+      >
+        <Box
+          position="relative"
+          maxW="1920px"
+          height="100%"
+          p="20px"
+          color="white"
+          mt="4"
+          bg="#222"
+          rounded="none"
+          shadow="md"
+        >
+          <CloseButton
+            position="absolute"
+            top={-6}
+            right={1}
+            size="sm"
+            borderRadius="0"
+            onClick={handleCloseButtonForMultiListing}
+          />
+          <Grid
+            h="200px"
+            templateColumns={templateColumnsListing}
+            templateRows={templateRowsListing}
+            gap={2}
+          >
+            <GridItem colSpan={isMobile ? 5 : 4}>
+              <Grid templateColumns="repeat(3, 1fr)" gap={2}>
+                {multiListingData?.list?.map((item, idx) => {
+                  return (
+                    <Flex key={`${item}${idx}`}>
+                      {formatSelectedNFT(
+                        collectionName,
+                        listNFTFormatted,
+                        item,
+                        multiListingActionMode,
+                        multiListingData?.infoList,
+                        idx,
+                        actionType,
+                        handleInputChangeMultiListing
+                      )}
+                    </Flex>
+                  );
+                })}
+              </Grid>
+            </GridItem>
+
+            <GridItem colSpan={isMobile ? 5 : 1}>
+              <Box
+                fontSize={["14px", "16px"]}
+                height="100%"
+                p={isMobile ? "10px" : "20px"}
+                color="white"
+                bg="teal.900"
+                rounded="none"
+                shadow="md"
+              >
+                <Heading size="h6" fontSize="14px">
+                  Bulk Listing
+                </Heading>
+
+                <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
+                  {`Your are listing ${collectionName} NFT ID`}
+                  {multiListingData?.listInfo?.map((item) => {
+                    return ` #${item?.info?.tokenID} at ${item.price || 0} A,`;
+                  })}
+
+                  <>
+                    {` Total sale:
+                    ${multiListingData?.listInfo?.reduce((a, b) => {
+                      return a + parseInt(b?.price || 0);
+                    }, 0)}
+                    A`}
+                  </>
+                </Flex>
+
+                <Flex pt="10px" w="full" justifyContent="center">
+                  <CommonButton
+                    {...rest}
+                    size="sm"
+                    text="List now"
+                    onClick={() => {
+                      if (!isActive) {
+                        toast.error("Collection is disabled!");
+                        return;
+                      }
+                      doBulkListing();
+                    }}
+                  />
+                </Flex>
+              </Box>
+            </GridItem>
+          </Grid>
+        </Box>
+      </Slide>
+      {/*END MULTI LISTING */}
+      {/* MULTI TRANSFER */}
+      <Slide
+        direction="bottom"
+        in={showSlideMultiTransfer}
+        style={{
+          zIndex: 10,
+          maxHeight: "300px",
+          height: "100%",
+        }}
+      >
+        <Box
+          position="relative"
+          maxW="1920px"
+          height="100%"
+          p="20px"
+          color="white"
+          mt="4"
+          bg="#222"
+          rounded="none"
+          shadow="md"
+        >
+          <CloseButton
+            position="absolute"
+            top={-6}
+            right={1}
+            size="sm"
+            borderRadius="0"
+            onClick={handleCloseButtonForMultiTransfer}
+          />
+          <Grid
+            h="200px"
+            templateColumns={templateColumnsListing}
+            templateRows={templateRowsListing}
+            gap={2}
+          >
+            <GridItem colSpan={isMobile ? 5 : 4}>
+              <Grid templateColumns="repeat(3, 1fr)" gap={2}>
+                {multiTransferData?.list?.map((item, idx) => {
+                  return (
+                    <Flex key={`${item}${idx}`}>
+                      {formatSelectedNFT(
+                        collectionName,
+                        listNFTFormatted,
+                        item,
+                        multiTransferActionMode,
+                        multiTransferData?.infoList,
+                        idx,
+                        actionType
+                      )}
+                    </Flex>
+                  );
+                })}
+              </Grid>
+            </GridItem>
+
+            <GridItem colSpan={isMobile ? 5 : 1}>
+              <Box
+                fontSize={["14px", "16px"]}
+                height="100%"
+                p={isMobile ? "10px" : "20px"}
+                color="white"
+                bg="teal.900"
+                rounded="none"
+                shadow="md"
+              >
+                <Heading size="h6" fontSize="14px">
+                  Bulk Transfer
+                </Heading>
+
+                <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
+                  {`Your are transfer ${collectionName} NFT ID`}
+                  {multiTransferData?.listInfo?.map((item) => {
+                    return ` #${item?.info?.tokenID},`;
+                  })}{" "}
+                  to receiver address:
+                </Flex>
+                <Flex alignItems="center">
+                  <Input
+                    h={["25px", "40px"]}
+                    w="full"
+                    borderRadius={0}
+                    type="text"
+                    fontSize="14px"
+                    size="md"
+                    pr="26px"
+                    value={multiTransferData?.receiverAddress}
+                    isDisabled={actionType}
+                    placeholder="5ABCD ..."
+                    _placeholder={{ fontSize: "14px" }}
+                    onChange={({ target }) => {
+                      handleInputChangeReceiverAddress(target.value);
+                    }}
+                  />
+                  {isMobile && (
+                    <CommonButton
+                      h={["25px"]}
+                      {...rest}
+                      size="sm"
+                      text="Transfer now"
+                      onClick={doBulkTransfer}
+                    />
+                  )}
+                </Flex>
+
+                {!isMobile && (
+                  <Flex pt="10px" w="full" justifyContent="center">
+                    <CommonButton
+                      {...rest}
+                      size="sm"
+                      text="Transfer now"
+                      onClick={doBulkTransfer}
+                    />
+                  </Flex>
+                )}
+              </Box>
+            </GridItem>
+          </Grid>
+        </Box>
+      </Slide>
+      {/*END MULTI TRANSFER */}
 
       <motion.div
         initial="hidden"
@@ -434,13 +720,17 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => onClickHandler(c)}
+              onClick={() => !bulkTxMode && onClickHandler(c)}
             >
               <MyNFTCard
                 {...c}
                 handleStakeAction={handleStakeAction}
                 handleSelectMultiNfts={handleSelectMultiNfts}
                 multiStakeData={multiStakeData}
+                multiListingData={multiListingData}
+                handleSelectMultiListing={handleSelectMultiListing}
+                multiTransferData={multiTransferData}
+                handleSelectMultiTransfer={handleSelectMultiTransfer}
               />
             </GridItemA>
           ))}
@@ -508,5 +798,109 @@ function GridItemA({
     >
       {children}
     </motion.div>
+  );
+}
+
+function formatSelectedNFT(
+  collectionName,
+  listNFT,
+  id,
+  mode,
+  infoList,
+  idx,
+  actionType,
+  onChange
+) {
+  const selectedNFT = listNFT?.filter((item) => item.tokenID === id);
+  const { avatar, nftName, tokenID } = selectedNFT[0];
+
+  return (
+    <Flex
+      py={[0, 1]}
+      px={[0, 2]}
+      bg="#343"
+      justifyContent="center"
+      alignItems="center"
+    >
+      {!isMobile && (
+        <Square h={"40px"} w={"40px"}>
+          <ImageCloudFlare
+            h={"40px"}
+            w={"40px"}
+            src={avatar}
+            alt={`header-img-${nftName}`}
+          />
+        </Square>
+      )}
+      <Box flexShrink={1} w="full" py={1} px={2}>
+        <Text mb={1} fontSize={["xs", "md"]} textAlign="left">
+          {!isMobile
+            ? nftName
+            : mode === "MULTI_LISTING"
+            ? `#${tokenID}`
+            : nftName}
+        </Text>
+        {!isMobile && (
+          <Heading mb={0} fontSize={["xs"]} textAlign="left">
+            {collectionName}
+          </Heading>
+        )}
+      </Box>
+
+      {mode === "MULTI_LISTING" && (
+        <Box py={[0, 1]} px={[0, 2]}>
+          <InputGroup position="relative">
+            <Input
+              h={["25px", "40px"]}
+              inputmode="decimal"
+              textAlign="right"
+              w="full"
+              borderRadius={0}
+              type="number"
+              fontSize={["12px", "14px"]}
+              size="md"
+              pr={["16px", "26px"]}
+              value={infoList && infoList[idx]?.price}
+              isDisabled={actionType}
+              placeholder="1"
+              _placeholder={{ fontSize: "14px" }}
+              onChange={({ target }) => {
+                onChange(target.value, idx);
+              }}
+            />
+            <AzeroIcon
+              right={["8px", "10px"]}
+              top={["3px", "12px"]}
+              position="absolute"
+              w={["10px", "14px"]}
+            />
+          </InputGroup>
+        </Box>
+      )}
+
+      {/* MULTI_TRANSFER */}
+      {/* {mode === "MULTI_TRANSFER" && (
+        <Box py={1} px={2}>
+          <InputGroup position="relative">
+            <Input
+              textAlign="right"
+              w="full"
+              borderRadius={0}
+              type="text"
+              fontSize="14px"
+              size="md"
+              pr="26px"
+              value={infoList && infoList[idx]?.price}
+              isDisabled={actionType}
+              placeholder="5EFUE..."
+              _placeholder={{ fontSize: "14px" }}
+              onChange={({ target }) => {
+                onChange(target.value, idx);
+              }}
+            />
+          </InputGroup>
+        </Box>
+      )} */}
+    </Flex>
   );
 }
