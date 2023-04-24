@@ -225,8 +225,8 @@ export const Card = ({ variant, project }) => {
 
           <Button
             border="none"
-            bg="black"
-            variant="outline"
+            color="black"
+            variant="solid"
             w="full"
             onClick={() =>
               history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`)

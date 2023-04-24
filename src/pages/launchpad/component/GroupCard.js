@@ -56,7 +56,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
         {currentAccount && variant === "live" && (
           <Button
             my="20px"
-            variant="solid"
+            variant="outline"
             onClick={() =>
               history.push({
                 state: { formMode: "ADD" },
