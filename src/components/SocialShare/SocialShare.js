@@ -81,7 +81,7 @@ function SocialShare({
                 </Button>
 
                 <Button variant="ghost" px="9px">
-                  <EmailShareButton url={shareUrl} subject={title} body="body">
+                  <EmailShareButton url={shareUrl} subject={title}>
                     <EmailIcon size={32} round />
                   </EmailShareButton>
                 </Button>

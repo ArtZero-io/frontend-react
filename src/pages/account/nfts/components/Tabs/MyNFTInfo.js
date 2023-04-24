@@ -37,7 +37,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { truncateStr, getTraitCount } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
-import { formMode } from "@constants";
+import { formMode, SUB_DOMAIN } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 import TransferNFTModal from "@components/Modal/TransferNFTModal";
@@ -58,6 +58,7 @@ import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
+import SocialShare from "@components/SocialShare/SocialShare";
 
 function MyNFTTabInfo(props) {
   const {
@@ -294,6 +295,7 @@ function MyNFTTabInfo(props) {
   }, [currentAccount]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const path = `${SUB_DOMAIN}/#/nft/${nftContractAddress}/${tokenID}`;
 
   return (
     <>
@@ -413,14 +415,14 @@ function MyNFTTabInfo(props) {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-              {console.log("isActive", isActive)}
-              {console.log("is_for_sale", is_for_sale)}
+
               {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
                   isDisabled={is_for_sale || actionType}
                 />
               )}
+              <SocialShare title={nftName} shareUrl={path} />
             </HStack>
           </HStack>
 

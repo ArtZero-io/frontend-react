@@ -44,7 +44,7 @@ import { useSubstrateState } from "@utils/substrate";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import { formMode } from "@constants";
+import { formMode, SUB_DOMAIN } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 
@@ -256,10 +256,7 @@ const NFTTabCollectible = (props) => {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
-  const path = `${window.location.href.replace(
-    "#/collection/",
-    "#/nft/"
-  )}/${tokenID}`;
+  const path = `${SUB_DOMAIN}/#/nft/${nftContractAddress}/${tokenID}`;
 
   const [askPrice, setAskPrice] = useState(1);
 
