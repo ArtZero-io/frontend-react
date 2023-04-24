@@ -39,15 +39,12 @@ import { Helmet } from "react-helmet";
 //   "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/QmV7JWVWPtTqoPjju2bPDEVp5PcfNcp6io8dd2XkVaSwRT/1024";
 
 export default function App() {
-  const { apiState, apiError } = useSubstrateState();
+  const { apiState } = useSubstrateState();
 
   return (
     <ChakraProvider theme={theme}>
       {apiState === "ERROR" ? (
-        <InitModal
-          apiState={apiState}
-          loadingErrorMess={` ${apiError.target.url}...`}
-        />
+        <InitModal apiState={apiState} loadingErrorMess={`...`} />
       ) : apiState !== "READY" ? (
         <InitModal apiState={apiState} loadingErrorMess={`to network...`} />
       ) : (
