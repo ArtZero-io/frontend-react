@@ -409,7 +409,7 @@ export const formatNumDynamicDecimal = (num = 0, dec = 2) => {
   return (
     <span>
       {intPart}
-      <span style={{ color: "#777" }}>{`${
+      <span style={{ color: "#B4B4B4" }}>{`${
         dotIdx === -1 ? "" : `.${decPart}`
       }`}</span>
     </span>
