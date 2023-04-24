@@ -406,7 +406,14 @@ export const formatNumDynamicDecimal = (num = 0, dec = 2) => {
   const intPart = numeral(numStr.slice(0, dotIdx)).format("0,0");
   const decPart = numStr.slice(dotIdx + 1, numStr.length);
 
-  return intPart + `${dotIdx === -1 ? "" : `.${decPart}`}`;
+  return (
+    <span>
+      {intPart}
+      <span style={{ color: "#777" }}>{`${
+        dotIdx === -1 ? "" : `.${decPart}`
+      }`}</span>
+    </span>
+  );
 };
 
 export const isPhaseTimeOverlap = (phaseArr) => {
