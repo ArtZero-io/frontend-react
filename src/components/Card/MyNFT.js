@@ -77,7 +77,9 @@ function MyNFTCard({
     if (target.checked && multiStakeData?.list?.length >= MAX_ITEM_STAKE) {
       !multiStakeData?.list?.includes(tokenID) && setIsTicked(false);
 
-      return toast.error(`You can stake up to ${MAX_ITEM_STAKE} PMPs per transaction!`);
+      return toast.error(
+        `You can stake up to ${MAX_ITEM_STAKE} PMPs per transaction!`
+      );
     }
 
     target.checked ? setIsTicked(true) : setIsTicked(false);
@@ -185,7 +187,11 @@ function MyNFTCard({
     >
       {!is_for_sale && location?.pathname === "/account/stakes" ? (
         <Checkbox
+          display={!multiStakeData?.action && "none"}
           sx={{
+            ".my-nft-card:hover &": {
+              display: "inline-flex",
+            },
             "span.chakra-checkbox__control": {
               borderRadius: "0",
               borderWidth: "0.2px",
