@@ -34,6 +34,9 @@ import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { HStack } from "@chakra-ui/react";
+import { isValidAddressPolkadotAddress } from "@utils";
+import { delay } from "@utils";
+import toast from "react-hot-toast";
 
 function CollectionPage() {
   const history = useHistory();
@@ -56,9 +59,30 @@ function CollectionPage() {
     async (isMounted) => {
       let info;
 
+      const isValidAddr = isValidAddressPolkadotAddress(collection_address);
+
+      if (!isValidAddr) {
+        toast.error("Collection address invalid!");
+
+        await delay(500).then(async () => {
+          history.push(`${ROUTES.MARKETPLACE}`);
+        });
+
+        return;
+      }
+
       const { ret, status } = await APICall.getCollectionByAddress({
         collection_address,
       });
+
+      if (status === "FAILED") {
+        toast.error("Collection address not exist!");
+
+        await delay(500).then(async () => {
+          history.push(`${ROUTES.MARKETPLACE}`);
+        });
+        return;
+      }
 
       if (status === "OK") {
         info = ret[0];

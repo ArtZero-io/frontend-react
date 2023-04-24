@@ -131,7 +131,7 @@ const LaunchpadDetailPage = () => {
         const isValidAddr = isValidAddressPolkadotAddress(collection_address);
 
         if (!isValidAddr) {
-          toast.error("Collection address invalid!");
+          toast.error("Launchpad address invalid!");
 
           await delay(500).then(async () => {
             history.push(`${ROUTES.LAUNCHPAD_BASE}`);
@@ -145,7 +145,16 @@ const LaunchpadDetailPage = () => {
         const { ret } = await APICall.getProjectByAddress({
           nftContractAddress: collection_address,
         });
-        // console.log("ret", ret);
+
+        if (ret?.length === 0) {
+          toast.error("Launchpad address not exist!");
+
+          await delay(500).then(async () => {
+            history.push(`${ROUTES.LAUNCHPAD_BASE}`);
+          });
+          return;
+        }
+
         const data = {
           ...ret[0],
           roadmaps: JSON.parse(ret[0]?.roadmaps),
@@ -724,10 +733,10 @@ const LaunchpadDetailPage = () => {
                     <span>
                       <Skeleton isLoaded={!loadingForceUpdate}>
                         <Text as="span" color="#888" fontSize={["sm", "md"]}>
-                          {Math.round(
+                          {(
                             (currentPhase?.claimedAmount * 100) /
-                              currentPhase?.totalAmount
-                          ) || 0}
+                            currentPhase?.totalAmount
+                          ).toFixed(2) || 0}
                           % ({currentPhase?.claimedAmount}/
                           {currentPhase?.totalAmount})
                         </Text>

@@ -25,7 +25,12 @@ import ProjectNFTIcon from "@theme/assets/icon/ProjectNFTIcon";
 import { useHistory } from "react-router-dom";
 import { SCROLLBAR } from "@constants";
 
-function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
+function AddNewCollection({
+  variant = "",
+  mode = formMode.ADD,
+  id,
+  hasCollection,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { step } = useTxStatus();
@@ -42,7 +47,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
     <>
       {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          become a creator
+          {hasCollection ? "add a collection" : "become a creator"}
         </Button>
       )}
 

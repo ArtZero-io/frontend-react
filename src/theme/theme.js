@@ -43,10 +43,10 @@ const theme = extendTheme({
         fontWeight: 'normal',
         fontSize: '16px',
         // "-msOverflowStyle": "none",
-        scrollbarWidth: 'none',
+        //  scrollbarWidth: 'none',
       },
       'body::-webkit-scrollbar': {
-        display: 'none',
+        // display: 'none',
       },
       '#root': {
         height: '100%',
