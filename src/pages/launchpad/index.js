@@ -111,6 +111,9 @@ const getProjectStatus = ({ whiteList }) => {
 
     if (currentTime < startTime) return "upcoming";
 
+    const totalAmount = firstPhase?.phaseData?.totalAmount;
+    const claimedAmount = firstPhase?.phaseData?.claimedAmount;
+    if (totalAmount === claimedAmount) return "ended";
     return "live";
   }
 
@@ -124,6 +127,10 @@ const getProjectStatus = ({ whiteList }) => {
     if (currentTime >= endTime) return "ended";
 
     if (currentTime < startTime) return "upcoming";
+
+    const totalAmount = lastPhase?.phaseData?.totalAmount;
+    const claimedAmount = lastPhase?.phaseData?.claimedAmount;
+    if (totalAmount === claimedAmount) return "ended";
 
     return "live";
   }
