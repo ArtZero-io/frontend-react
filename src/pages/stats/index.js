@@ -221,6 +221,7 @@ function StatsPage() {
       <StatsHeader
         platformStatistics={platformStatistics}
         isLoading={isLoading}
+        azeroPrice={azeroPrice}
       />
 
       <Tabs isLazy align="center" colorScheme="brand.blue">

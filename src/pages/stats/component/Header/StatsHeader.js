@@ -1,9 +1,17 @@
-import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { formatNumDynamicDecimal } from "@utils";
 import StatsCardContentLoader from "../StatsCardContentLoader";
 
-function StatsHeader({ platformStatistics, isLoading = true }) {
+function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
   return (
     <Box as="section" position="relative" w="full">
       <Box
@@ -59,6 +67,14 @@ function StatsHeader({ platformStatistics, isLoading = true }) {
                   <Text color="brand.grayLight" fontSize={["md", "lg", "lg"]}>
                     {item.title}
                   </Text>
+                  {item?.title !== "Total NFTs Staked" && (
+                    <>
+                      <Spacer />$
+                      <Text as="span" color="#b4b4b4">
+                        {formatNumDynamicDecimal(item.value * azeroPrice, 0)}
+                      </Text>
+                    </>
+                  )}
                 </Flex>
 
                 <Flex
