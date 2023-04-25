@@ -412,7 +412,7 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={!isActive || is_for_sale || actionType}
+                    isDisabled={is_for_sale || actionType}
                   />
                 )}
 

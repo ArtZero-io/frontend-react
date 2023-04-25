@@ -395,7 +395,7 @@ const NFTTabCollectible = (props) => {
                   <AddNewNFTModal
                     {...props}
                     mode={formMode.EDIT}
-                    isDisabled={!isActive || is_for_sale || actionType}
+                    isDisabled={is_for_sale || actionType}
                   />
                 )}
 
