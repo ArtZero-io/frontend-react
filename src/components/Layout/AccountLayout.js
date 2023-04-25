@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   Box,
   HStack,
@@ -9,13 +8,12 @@ import {
   TabPanels,
   Tabs,
   useMediaQuery,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import * as ROUTES from '@constants/routes';
-import Layout from '@components/Layout/Layout';
-import ProfileHeader from '@pages/account/components/Header';
-import { SCROLLBAR } from '@constants';
-import { CREATE_NFT } from '../../constants';
+import * as ROUTES from "@constants/routes";
+import Layout from "@components/Layout/Layout";
+import ProfileHeader from "@pages/account/components/Header";
+import { CREATE_NFT } from "../../constants";
 import useForceUpdate from "@hooks/useForceUpdate";
 
 const AccountLayout = ({ children }) => {
@@ -25,7 +23,8 @@ const AccountLayout = ({ children }) => {
   // eslint-disable-next-line no-unused-vars
   const [tabsData, setTabsData] = useState(tabsList);
 
-  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate } = useForceUpdate(
     [CREATE_NFT],
     () => handleForceUpdate()
   );
@@ -42,7 +41,7 @@ const AccountLayout = ({ children }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Layout>
@@ -67,19 +66,19 @@ const AccountLayout = ({ children }) => {
               >
                 {tabsData.map((tab) => (
                   <Tab
-                    minW={['135px', 'auto']}
+                    minW={["135px", "auto"]}
                     px="2.5px"
                     color="#fff"
                     key={tab.label}
                     isDisabled={tab.isDisabled}
-                    py={['8px', '20px']}
-                    fontSize={['md', 'lg', 'lg']}
+                    py={["8px", "20px"]}
+                    fontSize={["md", "lg", "lg"]}
                     fontFamily="Evogria Italic, san serif"
                     _selected={{
                       // color: '#7ae7ff',
-                      color: '#000',
-                      borderBottom: '2px #7ae7ff solid',
-                      bg: '#7ae7ff',
+                      color: "#000",
+                      borderBottom: "2px #7ae7ff solid",
+                      bg: "#7ae7ff",
                     }}
                   >
                     {tab.label}
@@ -94,12 +93,12 @@ const AccountLayout = ({ children }) => {
                   color="#fff"
                   key={tab.label}
                   isDisabled={tab.isDisabled}
-                  py={['8px', '20px']}
-                  fontSize={['md', 'lg', 'lg']}
+                  py={["8px", "20px"]}
+                  fontSize={["md", "lg", "lg"]}
                   fontFamily="Evogria Italic, san serif"
                   _selected={{
-                    color: '#7ae7ff',
-                    borderBottom: '2px #7ae7ff solid',
+                    color: "#7ae7ff",
+                    borderBottom: "2px #7ae7ff solid",
                   }}
                 >
                   {tab.label}
@@ -126,27 +125,27 @@ export default AccountLayout;
 
 const tabsList = [
   {
-    label: 'General',
+    label: "General",
     isDisabled: false,
     route: ROUTES.ACCOUNT,
   },
   {
-    label: 'My Collections',
+    label: "My Collections",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_COLLECTIONS,
   },
   {
-    label: 'My NFTS',
+    label: "My NFTS",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_NFTS,
   },
   {
-    label: 'My Stakes',
+    label: "My Stakes",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_STAKES,
   },
   {
-    label: 'My Projects',
+    label: "My Projects",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_PROJECTS,
   },

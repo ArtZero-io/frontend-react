@@ -84,11 +84,11 @@ export default function ResponsivelySizedModal({
         bg="brand.grayDark"
       >
         <ModalCloseButton
+          top="4"
+          right="4"
           borderRadius="0"
           position="absolute"
           borderWidth={[0, "2px"]}
-          top="4"
-          right="4"
           onClick={() => step === FINALIZED && onEndClick()}
         />
 
