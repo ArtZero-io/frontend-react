@@ -11,6 +11,7 @@ const activeAddressLocal = JSON.parse(
 
 const initialState = {
   platformEvents: null,
+  bulkTxStatus: {},
   activeAddress: activeAddressLocal || null,
   accountLoaders: {
     getProfile: false,
@@ -28,6 +29,11 @@ const accountReducer = (state = initialState, action) => {
       return {
         ...state,
         platformEvents: action.payload,
+      };
+    case AccountActionTypes.SET_BULK_TX_STATUS:
+      return {
+        ...state,
+        bulkTxStatus: action.payload,
       };
     case AccountActionTypes.GET_PROFILE:
       return {

@@ -54,6 +54,8 @@ const MyNFTsPage = () => {
       LOCK,
       TRANSFER,
       EDIT_NFT,
+      "MULTI_LISTING",
+      "MULTI_TRANSFER",
     ],
     () => handleForceUpdate()
   );

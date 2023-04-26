@@ -603,3 +603,36 @@ export const checkHasRoleAdmin = async ({
 
   return queryResult.toHuman().Ok;
 };
+
+export async function getEstimatedGasBatchTx(
+  address,
+  contract,
+  value,
+  queryName,
+  ...args
+) {
+  let ret;
+
+  try {
+    const gasLimitResult = await getGasLimit(
+      contract?.api,
+      address,
+      queryName,
+      contract,
+      { value },
+      args
+    );
+
+    if (!gasLimitResult.ok) {
+      console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
+      return;
+    }
+
+    ret = gasLimitResult?.value;
+  } catch (error) {
+    toast.error("Error fetch gas:", error.message);
+    console.log("error fetchGas xx>>", error.message);
+  }
+
+  return ret;
+}
