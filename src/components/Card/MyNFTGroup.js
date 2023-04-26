@@ -85,6 +85,7 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
+
   return (
     <Box my={10} position="relative">
       <ResponsivelySizedModal
@@ -94,8 +95,8 @@ function MyNFTGroupCard({
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
-        {...rest}
         {...selectedNFT}
+        {...rest}
       />
 
       <motion.div
@@ -428,7 +429,9 @@ function GridNftA({
   // END =============================================================
   const { bulkTxMode } = useSelector((s) => s?.account?.bulkTxStatus);
 
-  const templateColumnsListing = isMobile ? "repeat(1, 1fr)" : "repeat(5, 1fr)";
+  const templateColumnsListing = isMobile
+    ? "repeat(1, 1fr)"
+    : "repeat(12, 1fr)";
   const templateRowsListing = isMobile ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
   return (
     <>
@@ -504,7 +507,7 @@ function GridNftA({
             templateRows={templateRowsListing}
             gap={2}
           >
-            <GridItem colSpan={isMobile ? 5 : 4}>
+            <GridItem colSpan={isMobile ? 5 : 10}>
               <Grid templateColumns="repeat(3, 1fr)" gap={2}>
                 {multiListingData?.list?.map((item, idx) => {
                   return (
@@ -525,7 +528,7 @@ function GridNftA({
               </Grid>
             </GridItem>
 
-            <GridItem colSpan={isMobile ? 5 : 1}>
+            <GridItem colSpan={isMobile ? 5 : 2}>
               <Box
                 fontSize={["14px", "16px"]}
                 height="100%"
@@ -609,7 +612,7 @@ function GridNftA({
             templateRows={templateRowsListing}
             gap={2}
           >
-            <GridItem colSpan={isMobile ? 5 : 4}>
+            <GridItem colSpan={isMobile ? 5 : 9}>
               <Grid templateColumns="repeat(3, 1fr)" gap={2}>
                 {multiTransferData?.list?.map((item, idx) => {
                   return (
@@ -629,11 +632,12 @@ function GridNftA({
               </Grid>
             </GridItem>
 
-            <GridItem colSpan={isMobile ? 5 : 1}>
+            <GridItem colSpan={isMobile ? 5 : 3}>
               <Box
                 fontSize={["14px", "16px"]}
                 height="100%"
                 p={isMobile ? "10px" : "20px"}
+                px="10px"
                 color="white"
                 bg="teal.900"
                 rounded="none"
@@ -658,7 +662,7 @@ function GridNftA({
                     type="text"
                     fontSize="14px"
                     size="md"
-                    pr="26px"
+                    px="5px"
                     value={multiTransferData?.receiverAddress}
                     isDisabled={actionType}
                     placeholder="5ABCD ..."
