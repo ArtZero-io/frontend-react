@@ -862,7 +862,7 @@ function formatSelectedNFT(
               pr={["16px", "26px"]}
               value={infoList && infoList[idx]?.price}
               isDisabled={actionType}
-              placeholder="1"
+              placeholder="0"
               _placeholder={{ fontSize: "14px" }}
               onChange={({ target }) => {
                 onChange(target.value, idx);
