@@ -45,6 +45,7 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import {MAX_ITEM_BULK_LISTING, MAX_ITEM_BULK_TRANSFER} from "../../constants";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -188,11 +189,11 @@ function MyNFTCard({
     e.cancelBubble = true;
 
     const target = !multiListingData?.list?.includes(tokenID);
-    if (target && multiListingData?.list?.length >= MAX_ITEM_STAKE) {
+    if (target && multiListingData?.list?.length >= MAX_ITEM_BULK_LISTING) {
       !multiListingData?.list?.includes(tokenID) &&
         setIsMultiListCheckbox(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_STAKE}!`);
+      return toast.error(`Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`);
     }
 
     target ? setIsMultiListCheckbox(true) : setIsMultiListCheckbox(false);
@@ -220,11 +221,11 @@ function MyNFTCard({
 
     const target = !multiTransferData?.list?.includes(tokenID);
 
-    if (target && multiTransferData?.list?.length >= MAX_ITEM_STAKE) {
+    if (target && multiTransferData?.list?.length >= MAX_ITEM_BULK_TRANSFER) {
       !multiTransferData?.list?.includes(tokenID) &&
         setIsMultiTransferCheckbox(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_STAKE}!`);
+      return toast.error(`Max items allowed limited to ${MAX_ITEM_BULK_TRANSFER}!`);
     }
 
     target
