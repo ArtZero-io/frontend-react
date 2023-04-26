@@ -57,7 +57,7 @@ import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
-import { getPublicCurrentAccount } from "../../utils";
+import { getPublicCurrentAccount, convertStringToPrice } from "../../utils";
 import { fetchValidatorProfit } from "../stats";
 
 function GeneralPage() {
@@ -255,6 +255,30 @@ function GeneralPage() {
     [currentAccount]
   );
 
+  const getUnsuccessBid = useCallback(async () => {
+    let totalHolderAmount = 0;
+    let holdBidderCount = await marketplace_contract_calls.getHoldBidderCount(
+      currentAccount
+    );
+    console.log('holdBidderCount', holdBidderCount);
+    if (holdBidderCount) {
+      for (let i = 0; i < holdBidderCount; i++) {
+        let holdBidder = await marketplace_contract_calls.getHoldBiddersByIndex(
+          currentAccount,
+          i
+        );
+        console.log('holdBidder', holdBidder);
+        let holdBidderAmount = await marketplace_contract_calls.getHoldAmountOfBidder(
+          currentAccount,
+          holdBidder
+        );
+        console.log('holdBidderAmount', holdBidderAmount);
+        totalHolderAmount += convertStringToPrice(holdBidderAmount);
+      }
+    }
+    console.log('totalHolderAmount', totalHolderAmount);
+  }, [currentAccount]);
+
   const claimReward = async () => {
     try {
       dispatch(setTxStatus({ type: CLAIM_REWARDS, step: START }));
@@ -278,13 +302,14 @@ function GeneralPage() {
 
   useEffect(() => {
     let isMounted = true;
-
+    
     const fetch = async () => {
       try {
         setLoading(true);
+        await getUnsuccessBid(isMounted);
         await checkRewardStatus(isMounted);
         await getRewardHistory(isMounted);
-
+        
         if (
           !nftList ||
           (dashboardInfo?.length &&

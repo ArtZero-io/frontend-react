@@ -355,6 +355,79 @@ async function getListedTokenCountByCollectionAddress(
   return null;
 }
 
+async function getHoldAmountOfBidder(
+  caller_account,
+  bidder
+) {
+  if (
+    !contract ||
+    !caller_account
+  ) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = readOnlyGasLimit(contract);
+  const azero_value = 0;
+
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getHoldAmountOfBidder"
+  ](address, { value: azero_value, gasLimit }, bidder);
+  if (result.isOk) {
+    return formatOutput(output);
+  }
+  return null;
+}
+
+async function getHoldBiddersByIndex(
+  caller_account,
+  index
+) {
+  if (
+    !contract ||
+    !caller_account
+  ) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = readOnlyGasLimit(contract);
+  const azero_value = 0;
+
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getHoldBiddersByIndex"
+  ](address, { value: azero_value, gasLimit }, index);
+  if (result.isOk) {
+    return formatOutput(output);
+    
+  }
+  return null;
+}
+
+async function getHoldBidderCount(
+  caller_account
+) {
+  if (
+    !contract ||
+    !caller_account
+  ) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = readOnlyGasLimit(contract);
+  const azero_value = 0;
+
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getHoldBidderCount"
+  ](address, { value: azero_value, gasLimit });
+  if (result.isOk) {
+    return formatOutput(output);
+  }
+  return 0;
+}
+
+
 //SETS
 async function list(
   caller_account,
@@ -782,6 +855,9 @@ const marketplace_contract_calls = {
   removeBid,
   getStakingDiscountCriteria,
   getStakingDiscountRate,
+  getHoldBidderCount,
+  getHoldBiddersByIndex,
+  getHoldAmountOfBidder
 };
 
 export default marketplace_contract_calls;
