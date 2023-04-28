@@ -19,6 +19,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { BeatLoader } from "react-spinners";
+import { useSubstrateState } from "@utils/substrate";
+import moment from "moment/moment";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
@@ -147,6 +149,8 @@ const NewEventTable = ({
   collectionOwner,
 }) => {
   const { ref, inView } = useInView();
+  // eslint-disable-next-line no-unused-vars
+  const { api } = useSubstrateState();
 
   useEffect(() => {
     if (inView) {
@@ -207,11 +211,16 @@ const NewEventTable = ({
               ...rest,
             };
 
+            const timestamp = await getTimestamp(api, rest?.blockNumber);
+
+            if (timestamp) {
+              eventFormatted.timestamp = timestamp;
+            }
+
             if (status === "OK") {
               eventFormatted.nftName = ret[0]?.nftName;
               eventFormatted.avatar = ret[0]?.avatar;
             }
-
             return eventFormatted;
           })
         );
@@ -222,7 +231,7 @@ const NewEventTable = ({
         nextId: pageParam + NUMBER_NFT_PER_PAGE,
       };
     },
-    [collection_address, type]
+    [api, collection_address, type]
   );
 
   const { hasNextPage, data, isFetchingNextPage, fetchNextPage } =
@@ -292,20 +301,23 @@ const headers = {
     royaltyFee: "royalty fee",
     seller: "seller",
     buyer: "buyer",
-    blockNumber: "block no#",
+    // blockNumber: "block no#",
+    timestamp: "timestamp",
   },
   list: {
     nftName: "nft name",
     avatar: "image",
     price: "price",
     trader: "trader",
-    blockNumber: "block no#",
+    // blockNumber: "block no#",
+    timestamp: "timestamp",
   },
   unlist: {
     nftName: "nft name",
     avatar: "image",
     trader: "trader",
-    blockNumber: "block no#",
+    // blockNumber: "block no#",
+    timestamp: "timestamp",
   },
   bidAccepted: {
     nftName: "nft name",
@@ -315,6 +327,25 @@ const headers = {
     royaltyFee: "royalty fee",
     seller: "seller",
     buyer: "buyer",
-    blockNumber: "block no#",
+    // blockNumber: "block no#",
+    timestamp: "timestamp",
   },
+};
+
+// eslint-disable-next-line no-unused-vars
+const getTimestamp = async (api, blockNumber) => {
+  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+
+  let ret = null;
+
+  const signedBlock = await api.rpc.chain.getBlock(blockHash);
+
+  signedBlock?.block?.extrinsics?.forEach(
+    ({ method: { args, section, method: extrinsicsMethod } }) => {
+      if (section === "timestamp" && extrinsicsMethod === "set") {
+        ret = args[0].toString();
+      }
+    }
+  );
+  return moment(parseInt(ret)).format("DD/MM/YY, H:mm");
 };
