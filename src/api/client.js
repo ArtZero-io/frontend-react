@@ -450,7 +450,7 @@ export const APICall = {
 
   getNFTByID: async ({ collection_address, token_id }) => {
     try {
-      if (token_id?.includes(",")) {
+      if (typeof token_id === "string" && token_id?.includes(",")) {
         token_id?.replaceAll(",", "");
       }
     } catch (error) {

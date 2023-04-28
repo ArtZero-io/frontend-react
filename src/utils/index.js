@@ -8,7 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
-import getGasLimit from "../utils/blockchain/dryRun";
+import getGasLimit, { getGasLimitBulkAction } from "../utils/blockchain/dryRun";
 import { execContractQuery } from "../pages/account/nfts/nfts";
 import { ADMIN_ROLE_CODE } from "../constants";
 import moment from "moment/moment";
@@ -604,6 +604,7 @@ export const checkHasRoleAdmin = async ({
   return queryResult.toHuman().Ok;
 };
 
+// getEstimatedGasBatchTx//
 export async function getEstimatedGasBatchTx(
   address,
   contract,
@@ -612,9 +613,9 @@ export async function getEstimatedGasBatchTx(
   ...args
 ) {
   let ret;
-
+  // getEstimatedGasBatchTx
   try {
-    const gasLimitResult = await getGasLimit(
+    const gasLimitResult = await getGasLimitBulkAction(
       contract?.api,
       address,
       queryName,

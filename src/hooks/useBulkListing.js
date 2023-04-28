@@ -90,26 +90,46 @@ export default function useBulkListing({
 
     toast("Estimated transaction fee...");
 
+    // Change to get gasEst for every single tx to 1 for all
+    const value = 0;
+    let gasLimit;
+
+    const nftPsp34Contract = new ContractPromise(
+      api,
+      nft721_psp34_standard.CONTRACT_ABI,
+      listInfo[0].info?.nftContractAddress
+    );
+
+    gasLimit = await getEstimatedGasBatchTx(
+      address,
+      nftPsp34Contract,
+      value,
+      "psp34::approve",
+      marketplace.CONTRACT_ADDRESS, //   operator_address
+      { u64: listInfo[0].info?.tokenID },
+      true
+    );
+
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        const value = 0;
-        let gasLimit;
+        // const value = 0;
+        // let gasLimit;
 
-        const nftPsp34Contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          info?.nftContractAddress
-        );
+        // const nftPsp34Contract = new ContractPromise(
+        //   api,
+        //   nft721_psp34_standard.CONTRACT_ABI,
+        //   info?.nftContractAddress
+        // );
 
-        gasLimit = await getEstimatedGasBatchTx(
-          address,
-          nftPsp34Contract,
-          value,
-          "psp34::approve",
-          marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.tokenID },
-          true
-        );
+        // gasLimit = await getEstimatedGasBatchTx(
+        //   address,
+        //   nftPsp34Contract,
+        //   value,
+        //   "psp34::approve",
+        //   marketplace.CONTRACT_ADDRESS, //   operator_address
+        //   { u64: info?.tokenID },
+        //   true
+        // );
 
         return nftPsp34Contract.tx["psp34::approve"](
           { gasLimit, value },
@@ -191,30 +211,51 @@ export default function useBulkListing({
 
     toast("Estimated transaction fee...");
 
+    // Change to get gasEst for every single tx to 1 for all
+    const value = 0;
+    let gasLimit;
+
+    const marketplaceContract = new ContractPromise(
+      api,
+      marketplace.CONTRACT_ABI,
+      marketplace.CONTRACT_ADDRESS
+    );
+
+    gasLimit = await getEstimatedGasBatchTx(
+      address,
+      marketplaceContract,
+      value,
+      "list",
+      listInfo[0].info?.nftContractAddress,
+      { u64: listInfo[0].info?.tokenID },
+      new BN(listInfo[0].price * 10 ** 6).mul(new BN(10 ** 6)).toString()
+    );
+    // TODOS: monitor gas is ok for different price above
+
     await Promise.all(
       listInfo.map(async ({ price, info }) => {
-        const value = 0;
-        let gasLimit;
+        // const value = 0;
+        // let gasLimit;
 
-        const marketplaceContract = new ContractPromise(
-          api,
-          marketplace.CONTRACT_ABI,
-          marketplace.CONTRACT_ADDRESS
-        );
+        // const marketplaceContract = new ContractPromise(
+        //   api,
+        //   marketplace.CONTRACT_ABI,
+        //   marketplace.CONTRACT_ADDRESS
+        // );
 
         const salePrice = new BN(price * 10 ** 6)
           .mul(new BN(10 ** 6))
           .toString();
 
-        gasLimit = await getEstimatedGasBatchTx(
-          address,
-          marketplaceContract,
-          value,
-          "list",
-          info?.nftContractAddress,
-          { u64: info?.tokenID },
-          salePrice
-        );
+        // gasLimit = await getEstimatedGasBatchTx(
+        //   address,
+        //   marketplaceContract,
+        //   value,
+        //   "list",
+        //   info?.nftContractAddress,
+        //   { u64: info?.tokenID },
+        //   salePrice
+        // );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },
@@ -320,7 +361,12 @@ export default function useBulkListing({
         },
       });
     }
-  }, [dispatch, multiListingActionMode, multiListingData?.action, nftContractAddress]);
+  }, [
+    dispatch,
+    multiListingActionMode,
+    multiListingData?.action,
+    nftContractAddress,
+  ]);
 
   function handleSelectMultiListing(tokenID, action, isChecked) {
     let newData = { ...multiListingData };

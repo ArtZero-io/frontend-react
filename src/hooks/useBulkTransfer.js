@@ -57,26 +57,46 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
     toast("Estimated transaction fee...");
 
+    // Change to get gasEst for every single tx to 1 for all
+    const value = 0;
+    let gasLimit;
+
+    const nftPsp34Contract = new ContractPromise(
+      api,
+      nft721_psp34_standard.CONTRACT_ABI,
+      listInfo[0].info?.nftContractAddress
+    );
+
+    gasLimit = await getEstimatedGasBatchTx(
+      address,
+      nftPsp34Contract,
+      value,
+      "psp34::transfer",
+      receiverAddress,
+      { u64: listInfo[0].info?.tokenID },
+      stringToU8a("")
+    );
+
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        const value = 0;
-        let gasLimit;
+        // const value = 0;
+        // let gasLimit;
 
-        const nftPsp34Contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          info?.nftContractAddress
-        );
+        // const nftPsp34Contract = new ContractPromise(
+        //   api,
+        //   nft721_psp34_standard.CONTRACT_ABI,
+        //   info?.nftContractAddress
+        // );
 
-        gasLimit = await getEstimatedGasBatchTx(
-          address,
-          nftPsp34Contract,
-          value,
-          "psp34::transfer",
-          receiverAddress,
-          { u64: info?.tokenID },
-          stringToU8a("")
-        );
+        // gasLimit = await getEstimatedGasBatchTx(
+        //   address,
+        //   nftPsp34Contract,
+        //   value,
+        //   "psp34::transfer",
+        //   receiverAddress,
+        //   { u64: info?.tokenID },
+        //   stringToU8a("")
+        // );
 
         const ret = nftPsp34Contract.tx["psp34::transfer"](
           { gasLimit, value },
@@ -97,6 +117,11 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       })
     );
 
+    // const info = await api.tx.utility.batchAll(transferTxALL);
+
+    // console.log(`estimated fees: ${info}`);
+    // const nonce = await api.rpc.system.accountNextIndex(address);
+    // console.log("nonce", nonce.toString());
     api.tx.utility
       .batch(transferTxALL)
       .signAndSend(
@@ -259,21 +284,3 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     handleCloseButtonForMultiTransfer,
   };
 }
-
-// function handleInputChangeMultiListing(price, idx) {
-//   let newData = { ...multiTransferData };
-
-//   let newListInfo = newData.listInfo;
-
-//   newListInfo.map((item, index) => {
-//     if (index === idx) {
-//       return (item.price = price);
-//     }
-
-//     return item;
-//   });
-
-//   setMultiTransferData((prev) => {
-//     return { ...prev, listInfo: newListInfo };
-//   });
-// }

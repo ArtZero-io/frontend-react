@@ -568,7 +568,7 @@ function MyNFTTabInfo(props) {
             )}
 
             {filterSelected !== "BIDS" &&
-              owner === marketplace_contract.CONTRACT_ADDRESS &&
+              // owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
                   w="full"

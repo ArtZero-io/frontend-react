@@ -72,12 +72,16 @@ const MyNFTsPage = () => {
       return setFilterSelected("LISTING");
     }
 
-    if (actionType === TRANSFER) {
+    if (actionType === TRANSFER || actionType === "MULTI_TRANSFER") {
       fetchMyCollections();
       return setFilterSelected("COLLECTED");
     }
 
-    if (actionType === LIST_TOKEN || actionType === UNLIST_TOKEN) {
+    if (
+      actionType === LIST_TOKEN ||
+      actionType === "MULTI_LISTING" ||
+      actionType === UNLIST_TOKEN
+    ) {
       return setFilterSelected("LISTING");
     }
 
@@ -218,9 +222,27 @@ const MyNFTsPage = () => {
           // filter nft have is_for_sale is false
           data = data.filter((item) => item.is_for_sale === true);
 
-          collection[0].listNFT = data;
+          if (collections.length > 0) {
+            const collectionAddressMap = collections.map(
+              (i) => i.nftContractAddress
+            );
 
-          collections.push(collection[0]);
+            const indexFound = collectionAddressMap.indexOf(
+              collection[0].nftContractAddress
+            );
+
+            if (indexFound !== -1) {
+              const tempNFTList = collections[indexFound]["listNFT"];
+
+              collections[indexFound]["listNFT"] = [...tempNFTList, ...data];
+            } else {
+              collection[0].listNFT = data;
+              collections.push(collection[0]);
+            }
+          } else {
+            collection[0].listNFT = data;
+            collections.push(collection[0]);
+          }
         }
 
         collections = collections.filter((item) => item.listNFT?.length > 0);

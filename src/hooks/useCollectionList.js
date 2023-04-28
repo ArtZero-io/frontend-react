@@ -19,7 +19,7 @@ export function useCollectionList() {
   const { data, isLoading } = useQuery(
     [queryKeys.project],
     fetchCollectionList,
-    {refetchOnWindowFocus: false}
+    { refetchOnWindowFocus: false }
   );
 
   return { collectionList: data, isLoading };
