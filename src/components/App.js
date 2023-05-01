@@ -18,6 +18,7 @@ import { useSubstrateState } from "@utils/substrate";
 import contractData from "@utils/blockchain/";
 
 import { setAZNFTContract } from "@utils/blockchain/artzero-nft-calls";
+import { setAzeroDomainsNFTContract } from "@utils/blockchain/azero-domains-nft-calls";
 import { setCollectionContract } from "@utils/blockchain/collection-manager-calls";
 import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { setProfileContract } from "@utils/blockchain/profile_calls";
@@ -92,6 +93,7 @@ const Main = () => {
     profile,
     staking,
     artzeroNft,
+    azeroDomainsNft,
     collection,
     marketplace,
     launchpad_manager,
@@ -107,6 +109,7 @@ const Main = () => {
           await setProfileContract(api, profile);
           await setStakingContract(api, staking);
           await setAZNFTContract(api, artzeroNft);
+          await setAzeroDomainsNFTContract(api, azeroDomainsNft);
           await setLaunchPadContract(api, launchpad_manager);
 
           setLoadContractDone(true);
@@ -120,6 +123,7 @@ const Main = () => {
     api,
     apiState,
     artzeroNft,
+    azeroDomainsNft,
     collection,
     marketplace,
     profile,
