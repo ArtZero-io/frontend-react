@@ -160,18 +160,28 @@ function GeneralPage() {
           launchpadBalance?.balance +
           collectionBalance?.balance;
 
+        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
+
         const estimatedEarning =
           platformTotalStaked * 1
-            ? ((totalProfit * 0.3 + validatorProfit * 0.5) *
+            ? ((totalProfit * 0.3 +
+                validatorProfit * 0.5 +
+                (rewardStarted ? 0 : rewardPoolData)) *
                 totalStakedPromise) /
               (platformTotalStaked * 1)
             : 0;
 
+        // console.log("rewardPoolData", rewardPoolData);
+        // console.log(
+        //   "rewardPoolData SUM",
+        //   totalProfit * 0.3 +
+        //     validatorProfit * 0.5 +
+        //     (rewardStarted ? 0 : rewardPoolData)
+        // );
+
         if (!isMounted) return;
 
         setEstimatedEarning(estimatedEarning);
-        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
-
         const estimatedEarningBaseRewardPoolData = rewardPoolData
           ? (rewardPoolData * totalStakedPromise) / platformTotalStaked
           : 0;

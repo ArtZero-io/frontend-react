@@ -82,7 +82,7 @@ function ProfileHeader() {
 
   // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate } = useForceUpdate(
-    [UPDATE_PROFILE],
+    [UPDATE_PROFILE, "receiveHoldAmount"],
     () => async () => {
       const res = await dispatch(getProfile(currentAccount));
       if (res.status === "OK") {

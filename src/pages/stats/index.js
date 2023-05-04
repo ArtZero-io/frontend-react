@@ -58,6 +58,17 @@ function StatsPage() {
         return acc + curr.rewardAmount;
       }, 0);
 
+      let remainRewardPool = 0;
+      let isRewardStarted = await staking_calls.getRewardStarted(
+        publicCurrentAccount
+      );
+
+      if (!isRewardStarted) {
+        let remainRewardPoolData = await staking_calls.getRewardPool(
+          publicCurrentAccount
+        );
+        remainRewardPool = remainRewardPoolData;
+      }
       // Total Marketplace Vol
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         publicCurrentAccount
@@ -151,7 +162,7 @@ function StatsPage() {
         platformStatistics: [
           {
             title: "Total Payout",
-            value: totalPayouts.toFixed(2),
+            value: (totalPayouts - remainRewardPool).toFixed(2),
             unit: "azero",
           },
           {
@@ -161,7 +172,7 @@ function StatsPage() {
           },
           {
             title: "Next Payout",
-            value: totalNextPayout.toFixed(2),
+            value: (totalNextPayout + remainRewardPool).toFixed(2),
             unit: "azero",
           },
           {
