@@ -33,11 +33,13 @@ import {
   UNSTAKE,
   REQUEST_UNSTAKE,
   CANCEL_REQUEST_UNSTAKE,
+  MAX_ITEM_STAKE,
+  MAX_ITEM_BULK_LISTING,
+  MAX_ITEM_BULK_TRANSFER,
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
-import { MAX_ITEM_STAKE } from "@constants";
 import {
   RiMoneyDollarBoxLine,
   RiMoneyDollarBoxFill,
@@ -45,7 +47,6 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import {MAX_ITEM_BULK_LISTING, MAX_ITEM_BULK_TRANSFER} from "../../constants";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -193,7 +194,9 @@ function MyNFTCard({
       !multiListingData?.list?.includes(tokenID) &&
         setIsMultiListCheckbox(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`);
+      return toast.error(
+        `Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`
+      );
     }
 
     target ? setIsMultiListCheckbox(true) : setIsMultiListCheckbox(false);
@@ -225,7 +228,9 @@ function MyNFTCard({
       !multiTransferData?.list?.includes(tokenID) &&
         setIsMultiTransferCheckbox(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_BULK_TRANSFER}!`);
+      return toast.error(
+        `Max items allowed limited to ${MAX_ITEM_BULK_TRANSFER}!`
+      );
     }
 
     target
@@ -275,11 +280,6 @@ function MyNFTCard({
             // borderRightWidth="1px"
             borderColor="#333"
             onClick={(e) => {
-              if (is_locked) {
-                toast.error("This NFT is is locked!");
-                return;
-              }
-
               handleOnChangeMultiListCheckbox(e);
             }}
             cursor="pointer"
