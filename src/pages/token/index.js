@@ -41,7 +41,8 @@ import {
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-
+// import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
+import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
@@ -1487,3 +1488,183 @@ export const FeeCalculatedBar = ({ feeCalculated }) => {
     </HStack>
   );
 };
+
+
+/**
+ * AzeroDomains Functions
+ */
+export const listAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice,
+  nftContractAddress,
+  marketplace_contract,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  //check askPrice
+  if (parseFloat(askPrice) <= 0) {
+    toast.error(`Bid price must greater than zero!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: LIST_TOKEN,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+
+  const isAllowance = await azero_domains_nft_contract_calls.allowance(
+    currentAccount,
+    currentAccount?.address,
+    marketplace_contract,
+    azDomainName,
+    dispatch
+  );
+
+  let res;
+
+  if (!isAllowance) {
+    toast.success("Step 1: Approving NFT transfer...");
+
+    res = await azero_domains_nft_contract_calls.approve(
+      currentAccount,
+      marketplace_contract,
+      azDomainName,
+      true,
+      dispatch,
+      LIST_TOKEN,
+      api
+    );
+  }
+  if (res || isAllowance) {
+    await delay(6000).then(async () => {
+      toast.success(`${res ? "Step 2:" : ""} Listing on marketplace...`);
+
+      await marketplace_contract_calls.list(
+        currentAccount,
+        nftContractAddress,
+        { bytes: azDomainName },
+        askPrice,
+        dispatch,
+        LIST_TOKEN,
+        api
+      );
+    });
+  }
+};
+
+export const unlistAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  nftContractAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: UNLIST_TOKEN,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+  await marketplace_contract_calls.unlist(
+    currentAccount,
+    nftContractAddress,
+    currentAccount.address,
+    { bytes: azDomainName },
+    dispatch,
+    UNLIST_TOKEN,
+    api
+  );
+};
+
+export const placeAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice, // Int 10**12
+  bidPrice, // Float
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (isOwner) {
+    toast.error(`Can not bid your own NFT!`);
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < bidPrice) {
+    toast.error(`Not enough balance!`);
+    return;
+  }
+
+  //check bidPrice
+  if (parseFloat(bidPrice) <= 0) {
+    toast.error(`Bid price must greater than zero!`);
+    return;
+  }
+
+  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
+    toast.error(`Bid amount must be less than current price!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({ type: BID, step: START, tokenIDArray: Array.of(azDomainName) })
+  );
+
+  await marketplace_contract_calls.bid(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    bidPrice,
+    dispatch,
+    BID,
+    api
+  );
+};
+
+/**
+ * End AzeroDomains Functions
+ */

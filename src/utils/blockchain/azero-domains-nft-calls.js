@@ -38,7 +38,7 @@ async function balanceOf(caller_account, account) {
   return null;
 }
 
-async function tokenUri(caller_account, tokenId) {
+async function tokenUri(caller_account, token_id) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -52,7 +52,7 @@ async function tokenUri(caller_account, tokenId) {
       value: azero_value,
       gasLimit,
     },
-    tokenId
+    {bytes: token_id}
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -64,7 +64,7 @@ async function allowance(
   caller_account,
   owner_address,
   operator_address,
-  token_id
+  domain_name
 ) {
   if (!contract || !caller_account) {
     return null;
@@ -79,7 +79,7 @@ async function allowance(
     { value: azero_value, gasLimit },
     owner_address,
     operator_address,
-    token_id
+    {bytes: domain_name}
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -90,7 +90,7 @@ async function allowance(
 async function approve(
   caller_account,
   operator_address,
-  token_id,
+  domain_name,
   is_approve,
   dispatch
 ) {
@@ -105,21 +105,21 @@ async function approve(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
-
+  console.log('approve::domain_name', domain_name);
   gasLimit = await getEstimatedGas(
     address,
     contract,
     value,
     "psp34::approve",
     operator_address,
-    token_id,
+    {bytes: domain_name},
     is_approve
   );
 
   await contract.tx["psp34::approve"](
     { gasLimit, value },
     operator_address,
-    token_id,
+    {bytes: domain_name},
     is_approve
   )
     .signAndSend(address, { signer }, ({ dispatchError, status }) => {
