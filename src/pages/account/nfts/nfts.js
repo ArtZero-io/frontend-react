@@ -54,6 +54,7 @@ const MyNFTsPage = () => {
       LOCK,
       TRANSFER,
       EDIT_NFT,
+      "MULTI_DELIST",
       "MULTI_LISTING",
       "MULTI_TRANSFER",
     ],
@@ -77,12 +78,12 @@ const MyNFTsPage = () => {
       return setFilterSelected("COLLECTED");
     }
 
-    if (
-      actionType === LIST_TOKEN ||
-      actionType === "MULTI_LISTING" ||
-      actionType === UNLIST_TOKEN
-    ) {
+    if (actionType === LIST_TOKEN || actionType === "MULTI_LISTING") {
       return setFilterSelected("LISTING");
+    }
+
+    if (actionType === "MULTI_DELIST" || actionType === UNLIST_TOKEN) {
+      return setFilterSelected("COLLECTED");
     }
 
     if (actionType === EDIT_NFT) {

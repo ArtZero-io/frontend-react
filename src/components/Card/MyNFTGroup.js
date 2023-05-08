@@ -49,6 +49,7 @@ import { CloseButton } from "@chakra-ui/react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkTransfer from "../../hooks/useBulkTransfer";
 import { isMobile } from "react-device-detect";
+import useBulkDelist from "../../hooks/useBulkDelist";
 
 function MyNFTGroupCard({
   name,
@@ -172,6 +173,7 @@ function MyNFTGroupCard({
             onClickHandler={onClickHandler}
             collectionName={name}
             nftContractAddress={nftContractAddress}
+            filterSelected={filterSelected}
           />
         </Box>
       )}
@@ -189,6 +191,7 @@ function GridNftA({
   nftContractAddress,
   variant = "my-collection",
   isActive,
+  filterSelected,
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -207,8 +210,6 @@ function GridNftA({
   });
 
   const cardSize = useBreakpointValue([156, 224]);
-
-  // const multiStakeDataRef = useRef(multiStakeData);
 
   async function handleStakeAction(action, tokenIDArray) {
     if (isStakingContractLocked) {
@@ -339,7 +340,6 @@ function GridNftA({
       newData.action = action;
       newData.list = [tokenID];
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
       return;
     }
 
@@ -356,7 +356,6 @@ function GridNftA({
       newData.list = [...newList, tokenID];
 
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
 
       return;
     } else {
@@ -368,7 +367,6 @@ function GridNftA({
       }
 
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
     }
   }
 
@@ -417,6 +415,15 @@ function GridNftA({
     listNFTFormatted,
   });
 
+  const {
+    multiDelistData,
+    showSlideMultiDelist,
+    doBulkDelist,
+    handleSelectMultiDelist,
+  } = useBulkDelist({
+    listNFTFormatted,
+  });
+
   // eslint-disable-next-line no-unused-vars
   const { loading: _loadingForceUpdate } = useForceUpdate(
     ["MULTI_TRANSFER", "MULTI_LISTING"],
@@ -432,10 +439,12 @@ function GridNftA({
   const templateColumnsListing = isMobile
     ? "repeat(1, 1fr)"
     : "repeat(12, 1fr)";
+
   const templateRowsListing = isMobile ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
+
   return (
     <>
-      {multiStakeData?.action !== null ? (
+      {multiStakeData?.action === "stake" ? (
         <motion.div
           style={{
             width: "100%",
@@ -472,6 +481,44 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
+
+      {/* MULTI LISTING */}
+      {showSlideMultiDelist ? (
+        <motion.div
+          style={{
+            width: "100%",
+            position: "fixed",
+            bottom: "30px",
+            right: "15px",
+            zIndex: "10",
+          }}
+          animate={{
+            y: [0, 1.5, 0],
+            rotate: 0,
+            scale: [1, 1, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            curve: [0.42, 0, 0.58, 1],
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <CommonButton
+            {...rest}
+            height={["36px", "50px"]}
+            text={
+              <>
+                Delist <br />
+                {` ID# ${multiDelistData?.list?.toString()}`}
+              </>
+            }
+            onClick={() => doBulkDelist()}
+          />
+        </motion.div>
+      ) : null}
+      {/*END MULTI LISTING */}
+
       {/* MULTI LISTING */}
       <Slide
         direction="bottom"
@@ -735,6 +782,9 @@ function GridNftA({
                 handleSelectMultiListing={handleSelectMultiListing}
                 multiTransferData={multiTransferData}
                 handleSelectMultiTransfer={handleSelectMultiTransfer}
+                filterSelected={filterSelected}
+                multiDelistData={multiDelistData}
+                handleSelectMultiDelist={handleSelectMultiDelist}
               />
             </GridItemA>
           ))}
