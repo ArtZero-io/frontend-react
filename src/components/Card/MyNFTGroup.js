@@ -17,6 +17,8 @@ import {
   useDisclosure,
   useMediaQuery,
   VStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
@@ -378,11 +380,27 @@ function GridNftA({
         ? "cancel unstake"
         : multiStakeData?.action;
 
-    const tokenList = multiStakeData?.list?.map((i, idx) => {
-      return i;
-    });
-
-    return actionText + " PMPs: " + tokenList;
+    return (
+      <VStack py="4px">
+        <Flex>
+          <Text>{actionText} PMP ID#</Text>
+        </Flex>
+        <Flex>
+          <Wrap justify="center">
+            {multiStakeData?.list?.map((i, idx) => {
+              return (
+                <WrapItem key={idx}>
+                  <Text>
+                    {i}
+                    {multiStakeData?.list?.length !== idx + 1 ? "," : ""}
+                  </Text>
+                </WrapItem>
+              );
+            })}
+          </Wrap>
+        </Flex>
+      </VStack>
+    );
   };
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
@@ -444,13 +462,13 @@ function GridNftA({
 
   return (
     <>
-      {multiStakeData?.action === "stake" ? (
+      {multiStakeData?.action !== null ? (
         <motion.div
           style={{
             width: "100%",
             position: "fixed",
             bottom: "30px",
-            right: "15px",
+            right: "0px",
             zIndex: "10",
           }}
           animate={{
@@ -467,7 +485,8 @@ function GridNftA({
         >
           <CommonButton
             {...rest}
-            height={["36px", "40px"]}
+            minH="content"
+            py="40px"
             text={multiStakeButtonText()}
             onClick={() =>
               handleStakeAction(
@@ -489,7 +508,7 @@ function GridNftA({
             width: "100%",
             position: "fixed",
             bottom: "30px",
-            right: "15px",
+            right: "0px",
             zIndex: "10",
           }}
           animate={{
@@ -506,11 +525,12 @@ function GridNftA({
         >
           <CommonButton
             {...rest}
-            height={["36px", "50px"]}
+            minH="content"
+            py="20px"
             text={
               <>
-                Delist <br />
-                {` ID# ${multiDelistData?.list?.toString()}`}
+                Delist ID# <br />
+                {`${multiDelistData?.list?.toString()}`}
               </>
             }
             onClick={() => doBulkDelist()}
