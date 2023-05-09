@@ -52,6 +52,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkTransfer from "../../hooks/useBulkTransfer";
 import { isMobile } from "react-device-detect";
 import useBulkDelist from "../../hooks/useBulkDelist";
+import useBulkRemoveBids from "../../hooks/useBulkRemoveBids";
 
 function MyNFTGroupCard({
   name,
@@ -88,6 +89,8 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
+  const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
+  const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
 
   return (
     <Box my={10} position="relative">
@@ -107,7 +110,7 @@ function MyNFTGroupCard({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <Flex w="full">
+        <Flex w="full" alignItems="center">
           <ImageCloudFlare
             w="64px"
             h="64px"
@@ -151,7 +154,24 @@ function MyNFTGroupCard({
               {listNFT?.length > 1 ? "s" : ""}
             </Text>
           </VStack>
+
+          {!isMobile && filterSelected === "BIDS" && (
+            <CommonButton
+              size="sm"
+              {...restStatus}
+              text="Remove Bids"
+              onClick={() => doBulkRemoveBids()}
+            />
+          )}
         </Flex>
+        {isMobile && filterSelected === "BIDS" && (
+          <CommonButton
+            size="sm"
+            {...restStatus}
+            text="Remove Bids"
+            onClick={() => doBulkRemoveBids()}
+          />
+        )}
       </motion.div>
 
       {!listNFT?.length ? (

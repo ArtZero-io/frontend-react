@@ -57,6 +57,7 @@ const MyNFTsPage = () => {
       "MULTI_DELIST",
       "MULTI_LISTING",
       "MULTI_TRANSFER",
+      "MULTI_REMOVE_BIDS",
     ],
     () => handleForceUpdate()
   );
@@ -90,7 +91,10 @@ const MyNFTsPage = () => {
       fetchMyCollections();
       return;
     }
-
+    if (actionType === "MULTI_REMOVE_BIDS" || actionType === REMOVE_BID) {
+      fetchMyBids(true);
+      return setFilterSelected("BIDS");
+    }
     setFilterSelected("COLLECTED");
   };
 
@@ -311,7 +315,9 @@ const MyNFTsPage = () => {
               aria-label="refresh"
               icon={<RefreshIcon />}
               onClick={() => {
-                fetchMyCollections();
+                filterSelected !== "BIDS"
+                  ? fetchMyCollections()
+                  : fetchMyBids(true);
               }}
             />
           </HStack>
