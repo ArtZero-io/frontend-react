@@ -18,6 +18,7 @@ import {
   InputRightElement,
   Tooltip,
   useBreakpointValue,
+  Flex,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TiArrowBackOutline } from "react-icons/ti";
@@ -989,7 +990,12 @@ function TokenPage() {
                             isDisabled={actionType && actionType !== BUY}
                           />
 
-                          <VStack w="50%" alignItems="end">
+                          <Flex
+                            w="50%"
+                            alignItems="end"
+                            direction={["column", "row"]}
+                            justifyContent={["end"]}
+                          >
                             <Text color="#888">Current price</Text>
 
                             <Tag minH="20px" pr={0} bg="transparent">
@@ -1000,7 +1006,7 @@ function TokenPage() {
                               </TagLabel>
                               <TagRightIcon as={AzeroIcon} w="14px" />
                             </Tag>
-                          </VStack>
+                          </Flex>
                         </HStack>
                       </Stack>
                       {isAlreadyBid ? (
