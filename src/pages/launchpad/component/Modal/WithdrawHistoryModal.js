@@ -19,17 +19,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-// import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
-// import { clearTxStatus } from "@store/actions/txStatus";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import PaginationMP from "@components/Pagination/Pagination";
 
 import toast from "react-hot-toast";
 import { usePagination } from "@ajna/pagination";
-import { APICall } from "../../../../api/client";
+import { APICall } from "@api/client";
 import moment from "moment/moment";
 import { formatNumDynamicDecimal } from "@utils";
 

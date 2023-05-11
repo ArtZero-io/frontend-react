@@ -281,15 +281,17 @@ export const APICall = {
     });
   },
 
-  getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
-    return clientWithGetParams("GET", "/api/launchpad-minting-event-schemas", {
-      filter: {
-        limit,
-        offset,
-        where: {
-          nftContractAddress: nftContractAddress,
-        },
-      },
+  getLaunchpadEvent: async ({
+    limit = 5,
+    offset = 0,
+    nftContractAddress,
+    ...rest
+  }) => {
+    return await client("POST", `/api/launchpad-minting-event-schemas-v1`, {
+      nftContractAddress,
+      limit,
+      offset,
+      ...rest,
     });
   },
 
