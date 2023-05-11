@@ -766,27 +766,7 @@ function LaunchpadDetailHeader({
           ) : null}
         </VStack>
       </Box>
-      <HStack
-        minW="fit-content"
-        cursor="pointer"
-        onClick={() =>
-          !isProjOwner
-            ? onOpenHistoryModal()
-            : toast.error(
-                "You must be the project owner to update art location!"
-              )
-        }
-      >
-        <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
-        <Heading
-          fontSize={["md", "sm"]}
-          color={isProjOwner ? "brand.blue" : "#888"}
-          textDecoration="underline"
-          fontFamily="Evogria, sans-serif"
-        >
-          Minting History
-        </Heading>
-      </HStack>
+
       <Divider
         width="2px"
         height="30px"
@@ -893,17 +873,6 @@ function LaunchpadDetailHeader({
           />
         </>
       )}
-      <LaunchpadEventModal
-        isOpen={isOpenHistoryModal}
-        collection_address={collection_address}
-        onClose={onCloseHistoryModal}
-      />
-
-      <WithdrawHistoryModal
-        isOpen={isOpenWithdrawHistoryModal}
-        collection_address={collection_address}
-        onClose={onCloseWithdrawHistoryModal}
-      />
     </Box>
   );
 }
