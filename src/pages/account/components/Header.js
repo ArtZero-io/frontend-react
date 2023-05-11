@@ -39,6 +39,9 @@ import {
 } from "../nfts/nfts";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -145,6 +148,9 @@ function ProfileHeader() {
       fetchMyBidHoldInfo();
     });
   };
+  const { pathname } = useLocation();
+
+  const tabPath = useMemo(() => pathname?.split("/")?.pop(), [pathname]);
 
   return (
     <Box
@@ -214,15 +220,26 @@ function ProfileHeader() {
               {profile?.bio || "Something about yourself ..."}
             </Text>
 
-            {profile && (
-              <SocialCard
-                profile={Object.entries(profile)
-                  .splice(3, 4)
-                  .map(([k, v]) => {
-                    return { [k]: v };
-                  })}
-              />
-            )}
+            <Flex>
+              {profile && (
+                <SocialCard
+                  profile={Object.entries(profile)
+                    .splice(3, 4)
+                    .map(([k, v]) => {
+                      return { [k]: v };
+                    })}
+                />
+              )}
+
+              {(tabPath === "nfts" ||
+                tabPath === "projects" ||
+                tabPath === "collections") && (
+                <PublicProfileLinkCopier
+                  tabPath={tabPath}
+                  accountAddress={currentAccount.address}
+                />
+              )}
+            </Flex>
 
             <Flex
               hidden={claimAmount <= 0}

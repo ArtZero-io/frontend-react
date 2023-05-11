@@ -223,7 +223,7 @@ function GeneralPage() {
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [api, currentAccount, publicCurrentAccount]
+    [api, currentAccount, publicCurrentAccount, rewardStarted]
   );
 
   const getTradeFee = useCallback(

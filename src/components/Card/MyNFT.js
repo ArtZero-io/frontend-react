@@ -388,40 +388,42 @@ function MyNFTCard({
         {/*END Check Box for multi TRANSFER*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi DE-LISTING */}
-        {filterSelected === "LISTING" && is_for_sale && (
-          <Square
-            borderColor="#333"
-            onClick={(e) => handleOnChangeMultiDelistCheckbox(e)}
-            cursor="pointer"
-            h="40px"
-            display={
-              !(
-                bulkTxMode &&
-                bulkTxMode === "MULTI_DELIST" &&
-                nftContractAddress === selectedCollectionAddress
-              ) && "none"
-            }
-            px="8px"
-            top="0px"
-            zIndex="1"
-            minW="40px"
-            right="0px"
-            pos="absolute"
-            lineHeight="36px"
-            color="#7ae7ff"
-            sx={{
-              ".my-nft-card-wrapper:hover &": {
-                display: !bulkTxMode && "inline-flex",
-              },
-            }}
-          >
-            {isMultiDelistCheckbox ? (
-              <Icon as={RiMoneyDollarBoxFill} w={8} h={8} />
-            ) : (
-              <Icon as={RiMoneyDollarBoxLine} w={8} h={8} />
-            )}
-          </Square>
-        )}
+        {location?.pathname === "/account/nfts" &&
+          filterSelected === "LISTING" &&
+          is_for_sale && (
+            <Square
+              borderColor="#333"
+              onClick={(e) => handleOnChangeMultiDelistCheckbox(e)}
+              cursor="pointer"
+              h="40px"
+              display={
+                !(
+                  bulkTxMode &&
+                  bulkTxMode === "MULTI_DELIST" &&
+                  nftContractAddress === selectedCollectionAddress
+                ) && "none"
+              }
+              px="8px"
+              top="0px"
+              zIndex="1"
+              minW="40px"
+              right="0px"
+              pos="absolute"
+              lineHeight="36px"
+              color="#7ae7ff"
+              sx={{
+                ".my-nft-card-wrapper:hover &": {
+                  display: !bulkTxMode && "inline-flex",
+                },
+              }}
+            >
+              {isMultiDelistCheckbox ? (
+                <Icon as={RiMoneyDollarBoxFill} w={8} h={8} />
+              ) : (
+                <Icon as={RiMoneyDollarBoxLine} w={8} h={8} />
+              )}
+            </Square>
+          )}
         {/*END Check Box for multi DE-LISTING*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi STAKE */}
