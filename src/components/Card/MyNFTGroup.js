@@ -17,8 +17,6 @@ import {
   useDisclosure,
   useMediaQuery,
   VStack,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
@@ -400,27 +398,7 @@ function GridNftA({
         ? "cancel unstake"
         : multiStakeData?.action;
 
-    return (
-      <VStack py="4px">
-        <Flex>
-          <Text>{actionText} PMP ID#</Text>
-        </Flex>
-        <Flex>
-          <Wrap justify="center">
-            {multiStakeData?.list?.map((i, idx) => {
-              return (
-                <WrapItem key={idx}>
-                  <Text>
-                    {i}
-                    {multiStakeData?.list?.length !== idx + 1 ? "," : ""}
-                  </Text>
-                </WrapItem>
-              );
-            })}
-          </Wrap>
-        </Flex>
-      </VStack>
-    );
+    return <Text>{actionText}</Text>;
   };
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
@@ -506,7 +484,6 @@ function GridNftA({
           <CommonButton
             {...rest}
             minH="content"
-            py="40px"
             text={multiStakeButtonText()}
             onClick={() =>
               handleStakeAction(
