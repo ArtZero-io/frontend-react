@@ -83,7 +83,9 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
               }
 
               if (api.events.utility?.BatchCompleted.is(event)) {
-                toast.success("Bulk remove bids TXs are fully completed");
+                toast.success(
+                  "All bids from this collection have been removed successfully"
+                );
               }
             });
 
@@ -101,7 +103,7 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk remove bids TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                `Bulk delistings are not fully successful! ${totalSuccessTxCount} delistings completed successfully.`
               );
 
               dispatch(clearTxStatus());

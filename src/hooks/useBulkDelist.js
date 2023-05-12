@@ -97,7 +97,7 @@ export default function useBulkDelist({ listNFTFormatted }) {
               }
 
               if (api.events.utility?.BatchCompleted.is(event)) {
-                toast.success("Bulk delist TXs are fully completed");
+                toast.success("All NFTs have been delisted successfully.");
               }
             });
 
@@ -111,7 +111,7 @@ export default function useBulkDelist({ listNFTFormatted }) {
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk delist TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                `Bulk delistings are not fully successful!${totalSuccessTxCount} delistings completed successfully.`
               );
 
               dispatch(clearTxStatus());

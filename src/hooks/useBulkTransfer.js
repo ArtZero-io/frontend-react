@@ -138,7 +138,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
                 }
 
                 if (api.events.utility?.BatchCompleted.is(event)) {
-                  toast.success("Bulk listing TXs are fully completed");
+                  toast.success("All NFTs have been transferred successfully");
                 }
               }
             );
@@ -153,7 +153,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk listing TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                `Bulk transfer are not fully successful! ${totalSuccessTxCount} transfers completed successfully.`
               );
 
               dispatch(clearTxStatus());

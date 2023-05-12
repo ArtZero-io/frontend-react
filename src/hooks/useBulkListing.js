@@ -162,7 +162,7 @@ export default function useBulkListing({
 
               if (api.events.utility?.BatchCompleted.is(event)) {
                 totalSuccessTxCount = list?.length;
-                toast.success("Approval TXs are fully completed");
+                toast.success("All NFTs have been approved successfully");
               }
             }
           );
@@ -170,7 +170,7 @@ export default function useBulkListing({
           // eslint-disable-next-line no-extra-boolean-cast
           if (totalSuccessTxCount !== list?.length) {
             toast.error(
-              `Approval TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+              `Approval are not fully successful! ${totalSuccessTxCount} approvals completed successfully.`
             );
 
             dispatch(clearTxStatus());
@@ -292,7 +292,7 @@ export default function useBulkListing({
                 }
 
                 if (api.events.utility?.BatchCompleted.is(event)) {
-                  toast.success("Bulk listing TXs are fully completed");
+                  toast.success("All NFTs have been listed successfully");
                 }
               }
             );
@@ -307,7 +307,7 @@ export default function useBulkListing({
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk listing TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                `Bulk listings are not fully successful! ${totalSuccessTxCount} listings completed successfully.`
               );
 
               dispatch(clearTxStatus());
