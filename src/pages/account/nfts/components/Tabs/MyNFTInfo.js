@@ -295,7 +295,7 @@ function MyNFTTabInfo(props) {
   }, [currentAccount]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
-  const path = `${SUB_DOMAIN}/#/nft/${nftContractAddress}/${tokenID}`;
+  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;
 
   return (
     <>
