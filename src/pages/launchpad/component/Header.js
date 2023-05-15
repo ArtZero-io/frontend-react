@@ -767,39 +767,6 @@ function LaunchpadDetailHeader({
         </VStack>
       </Box>
 
-      <Divider
-        width="2px"
-        height="30px"
-        bg="#232323"
-        display={["none", "inline"]}
-      />
-      <HStack
-        minW="fit-content"
-        cursor="pointer"
-        onClick={() =>
-          !isProjOwner
-            ? onOpenWithdrawHistoryModal()
-            : toast.error(
-                "You must be the project owner to update art location!"
-              )
-        }
-      >
-        <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
-        <Heading
-          fontSize={["md", "sm"]}
-          color={isProjOwner ? "brand.blue" : "#888"}
-          textDecoration="underline"
-          fontFamily="Evogria, sans-serif"
-        >
-          Withdraw History
-        </Heading>
-      </HStack>
-      <Divider
-        width="2px"
-        height="30px"
-        bg="#232323"
-        display={["none", "inline"]}
-      />
       <HStack
         cursor="pointer"
         onClick={() => history.goBack()}
