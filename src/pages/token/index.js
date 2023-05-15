@@ -952,7 +952,12 @@ function TokenPage() {
                                 actionType && actionType !== UNLIST_TOKEN
                               }
                             />{" "}
-                            <VStack w="50%" alignItems="end">
+                            <Flex
+                              w="50%"
+                              justifyContent={["end"]}
+                              direction={["column", "row"]}
+                              alignItems={["end", "baseline"]}
+                            >
                               <Text color="#888">Current price</Text>
 
                               <Tag minH="20px" pr={0} bg="transparent">
@@ -963,7 +968,7 @@ function TokenPage() {
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
                               </Tag>
-                            </VStack>
+                            </Flex>
                           </HStack>
                         </Stack>
                       </Stack>
@@ -992,9 +997,9 @@ function TokenPage() {
 
                           <Flex
                             w="50%"
-                            alignItems="end"
-                            direction={["column", "row"]}
                             justifyContent={["end"]}
+                            direction={["column", "row"]}
+                            alignItems={["end", "baseline"]}
                           >
                             <Text color="#888">Current price</Text>
 
