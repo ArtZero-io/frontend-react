@@ -1,4 +1,5 @@
 import { Box, Flex, Spacer, Text, Tooltip } from "@chakra-ui/react";
+import { formatNumDynamicDecimal } from "@utils";
 
 export default function PropCard({
   item,
@@ -20,18 +21,31 @@ export default function PropCard({
       m="auto"
     >
       <Flex w="full" pb={["8px"]}>
-        <Box color="brand.grayLight" w="full">
-          <Text textTransform="capitalize" isTruncated fontSize={["sm", "md"]}>
-            {objItem[0]}
-          </Text>
-        </Box>
+        <Tooltip
+          hasArrow
+          bg="#333"
+          color="#fff"
+          cursor="pointer"
+          borderRadius="0"
+          label={objItem[0]}
+        >
+          <Box color="brand.grayLight" w="full" maxW="110px">
+            <Text
+              textTransform="capitalize"
+              isTruncated
+              fontSize={["sm", "md"]}
+            >
+              {objItem[0]}
+            </Text>
+          </Box>
+        </Tooltip>
         <Spacer />{" "}
         {variant !== "add-nft" && (
           <Flex w="full" fontSize={["sm", "md"]} color="#fff">
             <Spacer />
 
             <Text fontSize={["sm", "sm"]} isTruncated pr={1}>
-              {((100 * traitCount) / totalNftCount).toFixed(2)}%
+              {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
             </Text>
           </Flex>
         )}
