@@ -299,7 +299,7 @@ const AlertCookiesAccepted = () => {
               <CloseButton color="white" onClick={() => toast.closeAll()} />
             </Flex>
             <Button mt="4px" size="xs" onClick={() => handleAccept()}>
-              Accept
+              OK
             </Button>
           </Box>
         ),
