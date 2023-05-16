@@ -41,7 +41,7 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
           }}
         >
           {!platformStatistics &&
-            Array.from(6).map((_, idx) => (
+            [...Array(6)].map((_, idx) => (
               <GridItem
                 m="0"
                 bg="brand.grayDark"
