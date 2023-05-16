@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import {
   useSubstrate,
@@ -188,7 +188,14 @@ function WalletSelector({ display }) {
 export default function AccountSelector(props) {
   const { keyring, api } = useSubstrateState();
 
-  return keyring?.getPairs && api?.query ? (
+ 
+  const isWalletConnect = useMemo(() => {
+    const walletPairs = keyring?.getPairs();
+
+    return walletPairs?.length && api?.query;
+  }, [api?.query, keyring]);
+
+  return isWalletConnect ? (
     <WalletSelector {...props} />
   ) : (
     <WalletNotConnected {...props} />
