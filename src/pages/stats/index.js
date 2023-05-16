@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
+const INW_RATE = 120;
 
 function StatsPage() {
   const { api } = useSubstrateState();
@@ -56,6 +57,10 @@ function StatsPage() {
 
       const totalPayouts = data.reduce((acc, curr) => {
         return acc + curr.rewardAmount;
+      }, 0);
+
+      const totalNftPayouts = data.reduce((acc, curr) => {
+        return acc + curr.totalStakedAmount * 10 ** 12;
       }, 0);
 
       let remainRewardPool = 0;
@@ -161,7 +166,7 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Total Payout",
+            title: "Total Payout (AZERO)",
             value: (totalPayouts - remainRewardPool).toFixed(2),
             unit: "azero",
           },
@@ -171,14 +176,24 @@ function StatsPage() {
             unit: "azero",
           },
           {
-            title: "Next Payout",
+            title: "Next Payout (AZERO)",
             value: (totalNextPayout + remainRewardPool).toFixed(2),
             unit: "azero",
+          },
+          {
+            title: "Total Payout (INW)",
+            value: totalNftPayouts * INW_RATE,
+            unit: "INW",
           },
           {
             title: "Total NFTs Staked",
             value: platformTotalStaked,
             unit: "NFTs",
+          },
+          {
+            title: "Next Payout (INW)",
+            value: platformTotalStaked * INW_RATE,
+            unit: "INW",
           },
         ],
         topCollections: dataListWithFP,
