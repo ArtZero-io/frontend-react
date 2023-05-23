@@ -157,7 +157,7 @@ function MyNFTGroupCard({
             <CommonButton
               size="sm"
               {...restStatus}
-              text="Remove All Bids"
+              text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
               onClick={() => doBulkRemoveBids()}
             />
           )}
@@ -166,7 +166,7 @@ function MyNFTGroupCard({
           <CommonButton
             size="sm"
             {...restStatus}
-            text="Remove All Bids"
+            text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
             onClick={() => doBulkRemoveBids()}
           />
         )}
