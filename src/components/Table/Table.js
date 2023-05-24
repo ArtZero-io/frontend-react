@@ -87,7 +87,7 @@ function CommonTable({
                       // isNumeric
                     >
                       <Tag pr={0} bg="transparent">
-                        <TagLabel bg="transparent">
+                        <TagLabel bg="transparent" minW="fit-content">
                           {convertStringToPrice(item.bidValue)}
                         </TagLabel>
                         <TagRightIcon as={AzeroIcon} />
