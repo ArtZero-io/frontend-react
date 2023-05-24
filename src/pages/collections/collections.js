@@ -123,32 +123,32 @@ const CollectionsPage = () => {
     return persistedId ? persistedId : null;
   }, [history.action, setCurrentPage]);
 
-  const [randomCollections, setRandomCollections] = useState([]);
-  const fetchRandomCollections = useCallback(async () => {
-    try {
-      const { status, ret } = await APICall.getAllCollections({
-        limit: 9999,
-      });
-      if (status === "OK") {
-        const randNum = Math.random();
-        const rand1 = Math.floor(
-          (randNum < 0.3 ? randNum * 2 : randNum) * ret?.length
-        );
-        const rand2 = Math.floor(rand1 * 0.8);
-        const rand3 = Math.floor(rand2 * 0.5);
+  // const [randomCollections, setRandomCollections] = useState([]);
+  // const fetchRandomCollections = useCallback(async () => {
+  //   try {
+  //     const { status, ret } = await APICall.getAllCollections({
+  //       limit: 9999,
+  //     });
+  //     if (status === "OK") {
+  //       const randNum = Math.random();
+  //       const rand1 = Math.floor(
+  //         (randNum < 0.3 ? randNum * 2 : randNum) * ret?.length
+  //       );
+  //       const rand2 = Math.floor(rand1 * 0.8);
+  //       const rand3 = Math.floor(rand2 * 0.5);
 
-        const randomList = ret.filter(
-          (i, index) => index === rand1 || index === rand2 || index === rand3
-        );
+  //       const randomList = ret.filter(
+  //         (i, index) => index === rand1 || index === rand2 || index === rand3
+  //       );
 
-        return setRandomCollections(randomList);
-      }
-    } catch (error) {
-      console.log(error);
+  //       return setRandomCollections(randomList);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
 
-      toast.error("There was an error while fetching the Random collections.");
-    }
-  }, []);
+  //     toast.error("There was an error while fetching the Random collections.");
+  //   }
+  // }, []);
 
   const [trendingCollections, setTrendingCollections] = useState([]);
   const fetchTrendingCollections = useCallback(async () => {
@@ -170,9 +170,9 @@ const CollectionsPage = () => {
   }, []);
 
   useEffect(() => {
-    fetchRandomCollections();
+    // fetchRandomCollections();
     fetchTrendingCollections();
-  }, [fetchRandomCollections, fetchTrendingCollections]);
+  }, [fetchTrendingCollections]);
 
   return (
     <Layout variant="marketplace">
@@ -233,7 +233,7 @@ const CollectionsPage = () => {
             </>
           ) : null}
 
-          {randomCollections?.length ? (
+          {/* {randomCollections?.length ? (
             <>
               <Box as="section" w="full">
                 <Box
@@ -256,7 +256,8 @@ const CollectionsPage = () => {
                 </Box>
               </Box>
             </>
-          ) : null}
+          ) : null} */}
+
           {trendingCollections?.length ? (
             <>
               <Box as="section" w="full">

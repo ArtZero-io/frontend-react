@@ -188,7 +188,7 @@ export const secondsToTime = (secs) => {
   let seconds = Math.ceil(divisor_for_seconds);
 
   let obj = {
-    d: twoDigit(days),
+    d: days,
     h: twoDigit(hours),
     m: twoDigit(minutes),
     s: twoDigit(seconds),
