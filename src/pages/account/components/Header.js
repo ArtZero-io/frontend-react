@@ -62,7 +62,7 @@ function ProfileHeader() {
       if (!api) return;
 
       const res = await dispatch(getProfile(currentAccount));
-      if (res.status === "OK") {
+      if (res?.status === "OK") {
         if (!res.data.username) {
           res.data.username = truncateStr(currentAccount?.address);
         }
@@ -88,7 +88,7 @@ function ProfileHeader() {
     [UPDATE_PROFILE, "receiveHoldAmount"],
     () => async () => {
       const res = await dispatch(getProfile(currentAccount));
-      if (res.status === "OK") {
+      if (res?.status === "OK") {
         if (!res.data.username) {
           res.data.username = truncateStr(currentAccount?.address);
         }
