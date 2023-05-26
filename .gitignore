@@ -37,3 +37,4 @@ src/utils/blockchain/marketplace.js
 src/utils/blockchain/nft721-psp34-standard.js
 src/utils/blockchain/profile.js
 src/utils/blockchain/staking.js
+src/utils/blockchain/azero-domains-nft.js
