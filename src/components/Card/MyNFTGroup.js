@@ -49,6 +49,8 @@ import { CloseButton } from "@chakra-ui/react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkTransfer from "../../hooks/useBulkTransfer";
 import { isMobile } from "react-device-detect";
+import useBulkDelist from "../../hooks/useBulkDelist";
+import useBulkRemoveBids from "../../hooks/useBulkRemoveBids";
 
 function MyNFTGroupCard({
   name,
@@ -85,6 +87,8 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
+  const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
+  const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
 
   return (
     <Box my={10} position="relative">
@@ -104,7 +108,7 @@ function MyNFTGroupCard({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <Flex w="full">
+        <Flex w="full" alignItems="center">
           <ImageCloudFlare
             w="64px"
             h="64px"
@@ -148,7 +152,24 @@ function MyNFTGroupCard({
               {listNFT?.length > 1 ? "s" : ""}
             </Text>
           </VStack>
+
+          {!isMobile && filterSelected === "BIDS" && (
+            <CommonButton
+              size="sm"
+              {...restStatus}
+              text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
+              onClick={() => doBulkRemoveBids()}
+            />
+          )}
         </Flex>
+        {isMobile && filterSelected === "BIDS" && (
+          <CommonButton
+            size="sm"
+            {...restStatus}
+            text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
+            onClick={() => doBulkRemoveBids()}
+          />
+        )}
       </motion.div>
 
       {!listNFT?.length ? (
@@ -172,6 +193,7 @@ function MyNFTGroupCard({
             onClickHandler={onClickHandler}
             collectionName={name}
             nftContractAddress={nftContractAddress}
+            filterSelected={filterSelected}
           />
         </Box>
       )}
@@ -189,6 +211,7 @@ function GridNftA({
   nftContractAddress,
   variant = "my-collection",
   isActive,
+  filterSelected,
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -207,8 +230,6 @@ function GridNftA({
   });
 
   const cardSize = useBreakpointValue([156, 224]);
-
-  // const multiStakeDataRef = useRef(multiStakeData);
 
   async function handleStakeAction(action, tokenIDArray) {
     if (isStakingContractLocked) {
@@ -339,7 +360,6 @@ function GridNftA({
       newData.action = action;
       newData.list = [tokenID];
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
       return;
     }
 
@@ -356,7 +376,6 @@ function GridNftA({
       newData.list = [...newList, tokenID];
 
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
 
       return;
     } else {
@@ -368,7 +387,6 @@ function GridNftA({
       }
 
       setMultiStakeData(newData);
-      // multiStakeDataRef.current = newData;
     }
   }
 
@@ -380,11 +398,7 @@ function GridNftA({
         ? "cancel unstake"
         : multiStakeData?.action;
 
-    const tokenList = multiStakeData?.list?.map((i, idx) => {
-      return i;
-    });
-
-    return actionText + " PMPs: " + tokenList;
+    return <Text>{actionText}</Text>;
   };
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
@@ -417,6 +431,15 @@ function GridNftA({
     listNFTFormatted,
   });
 
+  const {
+    multiDelistData,
+    showSlideMultiDelist,
+    doBulkDelist,
+    handleSelectMultiDelist,
+  } = useBulkDelist({
+    listNFTFormatted,
+  });
+
   // eslint-disable-next-line no-unused-vars
   const { loading: _loadingForceUpdate } = useForceUpdate(
     ["MULTI_TRANSFER", "MULTI_LISTING"],
@@ -432,7 +455,9 @@ function GridNftA({
   const templateColumnsListing = isMobile
     ? "repeat(1, 1fr)"
     : "repeat(12, 1fr)";
+
   const templateRowsListing = isMobile ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
+
   return (
     <>
       {multiStakeData?.action !== null ? (
@@ -441,7 +466,7 @@ function GridNftA({
             width: "100%",
             position: "fixed",
             bottom: "30px",
-            right: "15px",
+            right: "0px",
             zIndex: "10",
           }}
           animate={{
@@ -458,7 +483,7 @@ function GridNftA({
         >
           <CommonButton
             {...rest}
-            height={["36px", "40px"]}
+            minH="content"
             text={multiStakeButtonText()}
             onClick={() =>
               handleStakeAction(
@@ -472,6 +497,45 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
+
+      {/* MULTI LISTING */}
+      {showSlideMultiDelist ? (
+        <motion.div
+          style={{
+            width: "100%",
+            position: "fixed",
+            bottom: "30px",
+            right: "0px",
+            zIndex: "10",
+          }}
+          animate={{
+            y: [0, 1.5, 0],
+            rotate: 0,
+            scale: [1, 1, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            curve: [0.42, 0, 0.58, 1],
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <CommonButton
+            {...rest}
+            minH="content"
+            py="20px"
+            text={
+              <>
+                Delist ID# <br />
+                {`${multiDelistData?.list?.toString()}`}
+              </>
+            }
+            onClick={() => doBulkDelist()}
+          />
+        </motion.div>
+      ) : null}
+      {/*END MULTI LISTING */}
+
       {/* MULTI LISTING */}
       <Slide
         direction="bottom"
@@ -735,6 +799,9 @@ function GridNftA({
                 handleSelectMultiListing={handleSelectMultiListing}
                 multiTransferData={multiTransferData}
                 handleSelectMultiTransfer={handleSelectMultiTransfer}
+                filterSelected={filterSelected}
+                multiDelistData={multiDelistData}
+                handleSelectMultiDelist={handleSelectMultiDelist}
               />
             </GridItemA>
           ))}

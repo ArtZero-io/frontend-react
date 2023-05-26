@@ -106,7 +106,7 @@ function CollectionPage() {
         setCollectionInfo(info);
       }
     },
-    [collection_address]
+    [collection_address, history]
   );
 
   useEffect(() => {

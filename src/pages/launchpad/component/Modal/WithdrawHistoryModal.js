@@ -16,20 +16,20 @@ import {
   Skeleton,
   Box,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-// import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
-// import { clearTxStatus } from "@store/actions/txStatus";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import PaginationMP from "@components/Pagination/Pagination";
 
 import toast from "react-hot-toast";
 import { usePagination } from "@ajna/pagination";
-import { APICall } from "../../../../api/client";
+import { APICall } from "@api/client";
 import moment from "moment/moment";
+import { formatNumDynamicDecimal } from "@utils";
 
 const NUMBER_PER_PAGE = 5;
 
@@ -43,6 +43,7 @@ export default function WithdrawHistoryModal({
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [events, setEvents] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [totalWithdrawn, setTotalWithdrawn] = useState(0);
 
   const {
     pagesCount,
@@ -69,11 +70,14 @@ export default function WithdrawHistoryModal({
       };
 
       try {
-        const { ret: dataList, totalCount } = await APICall.getWithdrawEvent(
-          options
-        );
-        // console.log(dataList, "dataList");
+        const {
+          ret: dataList,
+          totalCount,
+          totalBalanceAmount,
+        } = await APICall.getWithdrawEvent(options);
+
         setTotalCount(totalCount?.count);
+        setTotalWithdrawn(totalBalanceAmount);
         setEvents(dataList);
       } catch (error) {
         console.log(error);
@@ -134,6 +138,9 @@ export default function WithdrawHistoryModal({
           <Heading size="h4" my={2}>
             Withdraw history
           </Heading>
+          <Text fontWeight="500" fontSize="16px">
+            Total withdrawn: {formatNumDynamicDecimal(totalWithdrawn)} AZERO
+          </Text>
         </ModalHeader>
 
         <ModalBody>
@@ -225,7 +232,7 @@ export default function WithdrawHistoryModal({
                             {reward.receiver}
                           </Td>
                           <Td textAlign="left" py={7}>
-                            {reward.withdrawAmount.toFixed(3)}{" "}
+                            {formatNumDynamicDecimal(reward?.withdrawAmount)}{" "}
                             <AzeroIcon
                               mb="4px"
                               w={["14px", "16px"]}
@@ -234,7 +241,7 @@ export default function WithdrawHistoryModal({
                           </Td>
                           <Td textAlign="left" py={7}>
                             {moment(reward.createdTime).format(
-                              "MMMM Do YYYY, h:mm:ss a"
+                              "MMMM D YYYY, h:mm:ss a"
                             )}
                           </Td>
                         </Tr>

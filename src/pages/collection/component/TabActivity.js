@@ -149,7 +149,6 @@ const NewEventTable = ({
   collectionOwner,
 }) => {
   const { ref, inView } = useInView();
-  // eslint-disable-next-line no-unused-vars
   const { api } = useSubstrateState();
 
   useEffect(() => {

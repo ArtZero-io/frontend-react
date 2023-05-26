@@ -8,7 +8,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
@@ -16,7 +16,6 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import CommonButton from "@components/Button/CommonButton";
 import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
-import useTxStatus from "@hooks/useTxStatus";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { formatBalance } from "@polkadot/util";
 import { web3FromSource } from "@utils/wallets/extension-dapp";
@@ -31,19 +30,17 @@ import {
   ACCEPT_BID,
   EDIT_NFT,
 } from "@constants";
-import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
-//  import toast from "react-hot-toast";
 import { readOnlyGasLimit } from "@utils";
-import { useCollectionList } from "../../../hooks/useCollectionList";
 import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
+import { useMyCollectionList } from "@hooks/useMyCollectionList";
+import { useMyBidList } from "@hooks/useMyBidList";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
-  const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [
@@ -54,222 +51,39 @@ const MyNFTsPage = () => {
       LOCK,
       TRANSFER,
       EDIT_NFT,
+      "MULTI_DELIST",
       "MULTI_LISTING",
       "MULTI_TRANSFER",
+      "MULTI_REMOVE_BIDS",
+      "UPDATE_BID_PRICE",
     ],
     () => handleForceUpdate()
   );
 
-  // eslint-disable-next-line no-unused-vars
-  const [owner, setOwner] = useState(null);
-  const [loading, setLoading] = useState(null);
   const [filterSelected, setFilterSelected] = useState("COLLECTED");
-  const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    if (actionType === ACCEPT_BID) {
-      fetchMyCollections();
-      return setFilterSelected("LISTING");
-    }
-
-    if (actionType === TRANSFER || actionType === "MULTI_TRANSFER") {
-      fetchMyCollections();
-      return setFilterSelected("COLLECTED");
-    }
-
-    if (
-      actionType === LIST_TOKEN ||
-      actionType === "MULTI_LISTING" ||
-      actionType === UNLIST_TOKEN
-    ) {
-      return setFilterSelected("LISTING");
-    }
-
-    if (actionType === EDIT_NFT) {
-      fetchMyCollections();
-      return;
-    }
-
-    setFilterSelected("COLLECTED");
+    refetchMyCollectionList();
+    refetchMyBidList();
   };
 
   function onClickHandler(v) {
     if (filterSelected !== v) {
       setFilterSelected(Object.keys(tabList)[v]);
-      setMyCollections(null);
     }
   }
 
-  const { collectionList } = useCollectionList();
+  const {
+    myCollectionList,
+    isLoading: isLoadingMyCollectionList,
+    refetch: refetchMyCollectionList,
+  } = useMyCollectionList(filterSelected, currentAccount.address);
 
-  const fetchMyCollections = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      let data =
-        collectionList &&
-        (await Promise.all(
-          collectionList?.map(async (collection) => {
-            const options = {
-              collection_address: collection.nftContractAddress,
-              owner: currentAccount?.address,
-              limit: 10000,
-              offset: 0,
-              sort: -1,
-            };
-
-            let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
-              options
-            );
-
-            if (filterSelected === "COLLECTED") {
-              dataList = dataList?.filter((item) => item.is_for_sale !== true);
-            }
-
-            if (filterSelected === "LISTING") {
-              dataList = dataList?.filter((item) => item.is_for_sale === true);
-            }
-
-            const data = dataList?.map((item) => {
-              return { ...item, stakeStatus: 0 };
-            });
-
-            collection.listNFT = data;
-
-            return collection;
-          })
-        ));
-
-      //Don't Display Collection with no NFT
-      data = data?.filter((item) => item.listNFT?.length > 0);
-
-      if (data?.length) {
-        setMyCollections(data);
-        const nft = data[0].listNFT[0];
-
-        setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
-      } else {
-        setMyCollections([]);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setMyCollections([]);
-
-      setLoading(false);
-    }
-  }, [collectionList, currentAccount?.address, filterSelected]);
-
-  const fetchMyBids = useCallback(
-    async (isMounted) => {
-      try {
-        setLoading(true);
-
-        const options = {
-          bidder: currentAccount?.address,
-          limit: 10000,
-          offset: 0,
-          sort: -1,
-        };
-
-        let { ret: Bids } = await APICall.getBidsByBidderAddress(options);
-
-        if (!isMounted) return;
-
-        if (!Bids?.length) {
-          setOwner(null);
-          setMyCollections([]);
-
-          setLoading(false);
-
-          return;
-        }
-
-        setOwner(Bids[0].bidder);
-
-        let length = Bids.length;
-
-        let collections = [];
-        for (var i = 0; i < length; i++) {
-          let bid = Bids[i];
-
-          let { ret: collection } = await APICall.getCollectionByAddress({
-            collection_address: bid.nftContractAddress,
-          });
-
-          if (!collection) return;
-
-          const options = {
-            collection_address: bid.nftContractAddress,
-            token_id: bid.tokenID,
-          };
-
-          let { ret: dataList } = await APICall.getNFTByID(options);
-
-          if (!dataList) return;
-
-          let data = dataList?.map((item) => {
-            return {
-              ...item,
-              stakeStatus: 0,
-              isBid: {
-                status: true,
-                bidPrice: bid.bid_value,
-              },
-            };
-          });
-
-          // filter nft have is_for_sale is false
-          data = data.filter((item) => item.is_for_sale === true);
-
-          if (collections.length > 0) {
-            const collectionAddressMap = collections.map(
-              (i) => i.nftContractAddress
-            );
-
-            const indexFound = collectionAddressMap.indexOf(
-              collection[0].nftContractAddress
-            );
-
-            if (indexFound !== -1) {
-              const tempNFTList = collections[indexFound]["listNFT"];
-
-              collections[indexFound]["listNFT"] = [...tempNFTList, ...data];
-            } else {
-              collection[0].listNFT = data;
-              collections.push(collection[0]);
-            }
-          } else {
-            collection[0].listNFT = data;
-            collections.push(collection[0]);
-          }
-        }
-
-        collections = collections.filter((item) => item.listNFT?.length > 0);
-
-        if (collections?.length) {
-          setMyCollections(collections);
-        } else {
-          setMyCollections([]);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        setMyCollections([]);
-
-        setLoading(false);
-        console.log(error);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentAccount?.address, filterSelected]
-  );
-  useEffect(() => {
-    let isMounted = true;
-    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
-
-    return () => (isMounted = false);
-  }, [currentAccount.address, fetchMyBids, fetchMyCollections, filterSelected]);
+  const {
+    myBidList,
+    isLoading: isLoadingMyBidList,
+    refetch: refetchMyBidList,
+  } = useMyBidList(currentAccount.address);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -310,7 +124,9 @@ const MyNFTsPage = () => {
               aria-label="refresh"
               icon={<RefreshIcon />}
               onClick={() => {
-                fetchMyCollections();
+                filterSelected !== "BIDS"
+                  ? refetchMyCollectionList()
+                  : refetchMyBidList();
               }}
             />
           </HStack>
@@ -324,7 +140,11 @@ const MyNFTsPage = () => {
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            onClick={() => fetchMyCollections()}
+            onClick={() => {
+              filterSelected !== "BIDS"
+                ? refetchMyCollectionList()
+                : refetchMyBidList();
+            }}
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
           />
@@ -347,35 +167,19 @@ const MyNFTsPage = () => {
         </HStack>
       )}
 
-      {loading || loadingForceUpdate ? (
+      {loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime} />
       ) : (
         <>
-          {(!myCollections || myCollections?.length === 0) && (
-            <HStack
-              py={10}
-              ml={3}
-              w={"full"}
-              align="start"
-              justifyContent="center"
-            >
-              <Text textAlign="center" color="brand.grayLight" size="2xs">
-                No NFT found.
-              </Text>
-            </HStack>
-          )}
-
-          {myCollections &&
-            myCollections?.map((item, idx) => {
-              return (
-                <MyNFTGroupCard
-                  {...item}
-                  key={idx}
-                  filterSelected={filterSelected}
-                  hasBottomBorder={true}
-                />
-              );
-            })}
+          <MyNFTGroupCardContainer
+            isLoading={
+              filterSelected !== "BIDS"
+                ? isLoadingMyCollectionList
+                : isLoadingMyBidList
+            }
+            list={filterSelected !== "BIDS" ? myCollectionList : myBidList}
+            filterSelected={filterSelected}
+          />
         </>
       )}
     </CommonContainer>
@@ -495,4 +299,24 @@ export async function execContractTx(
     .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
+}
+
+function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
+  return isLoading ? (
+    <AnimationLoader />
+  ) : (
+    <>
+      {list?.length === 0 && (
+        <HStack py={10} ml={3} w={"full"} align="start" justifyContent="center">
+          <Text textAlign="center" color="brand.grayLight" size="2xs">
+            No NFT found.
+          </Text>
+        </HStack>
+      )}
+
+      {list?.map((item, idx) => (
+        <MyNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />
+      ))}
+    </>
+  );
 }

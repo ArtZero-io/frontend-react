@@ -1,5 +1,6 @@
 import { Box, Flex, Progress, Spacer, Text, Tooltip } from "@chakra-ui/react";
 import { createLevelAttribute } from "@utils";
+import { formatNumDynamicDecimal } from "@utils";
 
 export default function LevelCard({
   item,
@@ -46,7 +47,7 @@ export default function LevelCard({
             <Spacer />
 
             <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
-              {((100 * traitCount) / totalNftCount).toFixed(2)}%
+              {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
             </Text>
           </Flex>
         )}

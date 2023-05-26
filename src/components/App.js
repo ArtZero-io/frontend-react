@@ -8,6 +8,12 @@ import {
   ModalOverlay,
   ChakraProvider,
   Text,
+  useToast,
+  Box,
+  Flex,
+  Link,
+  CloseButton,
+  Button,
 } from "@chakra-ui/react";
 import "@fontsource/oswald";
 import theme from "@theme/theme";
@@ -28,7 +34,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
-import { START } from "../constants";
+import { ArtZero_Privacy, START } from "../constants";
 import { Helmet } from "react-helmet";
 // import { useHistory } from "react-router-dom";
 // import bannerImg from "@theme/assets/banner.jpg";
@@ -229,6 +235,9 @@ const Main = () => {
           </ModalContent>
         </Modal>
       </> */}
+
+      <AlertCookiesAccepted />
+
       {loadContractDone && (
         <Fragment>
           <Toaster
@@ -249,4 +258,59 @@ const Main = () => {
       )}
     </>
   );
+};
+
+const AlertCookiesAccepted = () => {
+  const toast = useToast();
+
+  const id = "cookies-settings-toast";
+  const isAccepted =
+    localStorage.getItem("ARTZERO_COOKIES_STATUS") === "ACCEPTED";
+
+  const handleAccept = () => {
+    localStorage.setItem("ARTZERO_COOKIES_STATUS", "ACCEPTED");
+    toast.closeAll();
+  };
+
+  useEffect(() => {
+    if (!isAccepted) {
+      toast({
+        id,
+        position: "bottom-right",
+        duration: 999999,
+        status: "warning",
+        render: () => (
+          <Box color="white" p={3} bg="#333">
+            <Flex>
+              <Text>
+                This website uses cookies to improve your experience. By
+                continuing to use this website, you agree to its{" "}
+                <Link
+                  textTransform="none"
+                  color="#7ae7ff"
+                  fontWeight="500"
+                  target="_blank"
+                  href={ArtZero_Privacy}
+                  _hover={{
+                    color: "#7ae7ff",
+                    textDecoration: "underline",
+                  }}
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </Text>
+              <CloseButton color="white" onClick={() => toast.closeAll()} />
+            </Flex>
+            <Button mt="4px" size="xs" onClick={() => handleAccept()}>
+              OK
+            </Button>
+          </Box>
+        ),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAccepted, toast]);
+
+  return <></>;
 };

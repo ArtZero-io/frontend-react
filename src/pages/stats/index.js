@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
+const INW_RATE = 120;
 
 function StatsPage() {
   const { api } = useSubstrateState();
@@ -35,7 +36,7 @@ function StatsPage() {
     await fetch(url)
       .then((res) => res.json())
       .then(({ USD }) => {
-        console.log("AZERO - USD:", USD.toFixed(4));
+        console.log("AZERO - USD:", USD?.toFixed(4));
         setAzeroPrice(USD.toFixed(4));
       })
       .catch((err) => {
@@ -58,6 +59,21 @@ function StatsPage() {
         return acc + curr.rewardAmount;
       }, 0);
 
+      const totalNftPayouts = data.reduce((acc, curr) => {
+        return acc + curr.totalStakedAmount * 10 ** 12;
+      }, 0);
+
+      let remainRewardPool = 0;
+      let isRewardStarted = await staking_calls.getRewardStarted(
+        publicCurrentAccount
+      );
+
+      if (!isRewardStarted) {
+        let remainRewardPoolData = await staking_calls.getRewardPool(
+          publicCurrentAccount
+        );
+        remainRewardPool = remainRewardPoolData;
+      }
       // Total Marketplace Vol
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         publicCurrentAccount
@@ -150,24 +166,34 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Total Payout",
-            value: totalPayouts.toFixed(2),
+            title: "Total Payout (AZERO)",
+            value: (totalPayouts - remainRewardPool)?.toFixed(2),
             unit: "azero",
           },
           {
             title: "Total Marketplace Vol",
-            value: totalVolume.toFixed(2),
+            value: totalVolume?.toFixed(2),
             unit: "azero",
           },
           {
-            title: "Next Payout",
-            value: totalNextPayout.toFixed(2),
+            title: "Next Payout (AZERO)",
+            value: (totalNextPayout + remainRewardPool)?.toFixed(2),
             unit: "azero",
+          },
+          {
+            title: "Total Payout (INW)",
+            value: totalNftPayouts * INW_RATE,
+            unit: "INW",
           },
           {
             title: "Total NFTs Staked",
             value: platformTotalStaked,
             unit: "NFTs",
+          },
+          {
+            title: "Next Payout (INW)",
+            value: platformTotalStaked * INW_RATE,
+            unit: "INW",
           },
         ],
         topCollections: dataListWithFP,

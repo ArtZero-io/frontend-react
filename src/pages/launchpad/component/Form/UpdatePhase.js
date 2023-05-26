@@ -26,7 +26,7 @@ import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
-// import { isPhaseEnd } from "@utils";
+import { isPhaseTimeOverlapOnAddNewPhase } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 
 function UpdatePhase({
@@ -75,22 +75,6 @@ function UpdatePhase({
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 
-    // const lastPhase = allPhases[allPhases?.length - 1];
-    // const firstPhase = allPhases[0];
-
-    // const prjEndTime = arrayHelpers?.form?.values?.endTime;
-    // const prjStartTime = arrayHelpers?.form?.values?.startTime;
-
-    // if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
-    //   const newValue = value.map((i, idx) => {
-    //     return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
-    //   });
-
-    //   helpers.setValue(newValue);
-
-    //   return toast.error("Phase time can not overlaps project time.");
-    // }
-
     arrayHelpers.push({
       name: "",
       start: "",
@@ -106,15 +90,11 @@ function UpdatePhase({
   const onUpdatePhase = async (index) => {
     // Check each phase edit is overlap?
     const isOverlap = isPhaseTimeOverlap(value);
-
     if (isOverlap) {
       return;
     }
 
     const phasesArray = [...value];
-
-    // const prjStartTime = strToNumber(startTime);
-    // const prjEndTime = strToNumber(endTime);
 
     // check public mint amount max
     if (phasesArray?.length) {
@@ -128,23 +108,6 @@ function UpdatePhase({
           }`
         );
       }
-
-      // const startFirstPhase = phasesArray[0]?.start;
-      // const endLastPhase = [...phasesArray].pop().end;
-
-      // check proj & phase overlap
-      // if (
-      //   !(
-      //     prjStartTime <= startFirstPhase &&
-      //     startFirstPhase <= endLastPhase &&
-      //     endLastPhase <= prjEndTime
-      //   )
-      // ) {
-      //   toast.error(
-      //     "Sub phase time is not valid or overlap project phase time."
-      //   );
-      //   return;
-      // }
     }
 
     const {
@@ -215,18 +178,13 @@ function UpdatePhase({
       return;
     }
 
-    const isOverlap = isPhaseTimeOverlap(value);
+    const isOverlap = isPhaseTimeOverlapOnAddNewPhase(value);
 
     if (isOverlap) {
       return;
     }
 
     const phasesArray = [...value];
-
-    // const prjStartTime = parseInt(
-    //   JSON.stringify(startTime).replaceAll(",", "")
-    // );
-    // const prjEndTime = parseInt(JSON.stringify(endTime).replaceAll(",", ""));
 
     if (phasesArray?.length) {
       const { publicAmount } = phasesArray[index];
@@ -237,22 +195,6 @@ function UpdatePhase({
           `Public amount can not excess ${availableTokenAmount}`
         );
       }
-
-      // const startFirstPhase = phasesArray[0]?.start;
-      // const endLastPhase = [...phasesArray].pop().end;
-
-      // if (
-      //   !(
-      //     prjStartTime <= startFirstPhase &&
-      //     startFirstPhase <= endLastPhase &&
-      //     endLastPhase <= prjEndTime
-      //   )
-      // ) {
-      //   toast.error(
-      //     "Sub phase time is not valid or overlap project phase time."
-      //   );
-      //   return;
-      // }
     }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(

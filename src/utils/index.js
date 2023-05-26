@@ -190,7 +190,7 @@ export const secondsToTime = (secs) => {
   let seconds = Math.ceil(divisor_for_seconds);
 
   let obj = {
-    d: twoDigit(days),
+    d: days,
     h: twoDigit(hours),
     m: twoDigit(minutes),
     s: twoDigit(seconds),
@@ -437,6 +437,27 @@ export const isPhaseTimeOverlap = (phaseArr) => {
   return false;
 };
 
+export const isPhaseTimeOverlapOnAddNewPhase = (phaseArr) => {
+  const newPhase = [...phaseArr].pop();
+
+  if (!canEditPhase(newPhase.start) || !canEditPhase(newPhase.end)) {
+    toast.error("New Phase time can not in the past.");
+    return true;
+  }
+
+  phaseArr.sort((a, b) => a.start - b.start);
+
+  for (let i = 1; i < phaseArr?.length; i++) {
+    if (phaseArr[i - 1].end > phaseArr[i].start) {
+      toast.error("Phase time is not valid or overlap.");
+
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export default function isNotEmptyStr(data) {
   if (!data) return false;
 
@@ -489,7 +510,6 @@ export async function getEstimatedGas(
         console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
         return;
       }
-      console.log("gasLimit", gasLimitResult);
 
       ret = gasLimitResult?.value;
     } catch (error) {

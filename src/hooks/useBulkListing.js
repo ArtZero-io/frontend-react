@@ -162,7 +162,11 @@ export default function useBulkListing({
 
               if (api.events.utility?.BatchCompleted.is(event)) {
                 totalSuccessTxCount = list?.length;
-                toast.success("Approval TXs are fully completed");
+                toast.success(
+                  totalSuccessTxCount === 1
+                    ? "NFT have been approved successfully"
+                    : "All NFTs have been approved successfully"
+                );
               }
             }
           );
@@ -170,7 +174,9 @@ export default function useBulkListing({
           // eslint-disable-next-line no-extra-boolean-cast
           if (totalSuccessTxCount !== list?.length) {
             toast.error(
-              `Approval TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+              list?.length === 1
+                ? "Approval is not successful!"
+                : `Approval are not fully successful! ${totalSuccessTxCount} approvals completed successfully.`
             );
 
             dispatch(clearTxStatus());
@@ -201,7 +207,11 @@ export default function useBulkListing({
       return;
     }
 
-    toast(`Bulk listing on marketplace...`);
+    toast(
+      listInfo?.length === 1
+        ? "Listing on marketplace... "
+        : `Bulk listing on marketplace...`
+    );
 
     let unsubscribe;
     let listingTxALL;
@@ -292,7 +302,11 @@ export default function useBulkListing({
                 }
 
                 if (api.events.utility?.BatchCompleted.is(event)) {
-                  toast.success("Bulk listing TXs are fully completed");
+                  toast.success(
+                    listInfo?.length === 1
+                      ? "NFT has been listed successfully                  "
+                      : "All NFTs have been listed successfully"
+                  );
                 }
               }
             );
@@ -307,7 +321,9 @@ export default function useBulkListing({
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk listing TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                listInfo?.length === 1
+                  ? "The listings is not fully successful!                "
+                  : `Bulk listings are not fully successful! ${totalSuccessTxCount} listings completed successfully.`
               );
 
               dispatch(clearTxStatus());

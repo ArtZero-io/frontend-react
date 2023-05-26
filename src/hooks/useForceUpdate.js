@@ -21,15 +21,6 @@ function useForceUpdate(typeArray, cb, noDelay = false) {
       return;
     }
 
-    // if (!timeStamp || !endTimeStamp) {
-    //   return;
-    // }
-
-    // const diffTime = 7500 - Number(endTimeStamp - timeStamp);
-    // const delayTime = diffTime > 500 ? diffTime : 500;
-
-    // 8 giay
-
     const delayTime = noDelay ? 100 : 3000;
 
     const doDelay = async () => {
@@ -39,8 +30,8 @@ function useForceUpdate(typeArray, cb, noDelay = false) {
         setLoadingTime(delayTime / 1000);
 
         await delay(delayTime).then(() => {
-          cb();
           dispatch(clearTxStatus());
+          cb();
           setLoading(false);
         });
       } catch (error) {

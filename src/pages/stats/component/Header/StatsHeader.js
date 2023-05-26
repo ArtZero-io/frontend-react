@@ -34,14 +34,14 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
           px="16px"
           w="full"
           gap={["15px", "30px"]}
-          maxW="1200px"
+          maxW="1000px"
           minH={"120px"}
           templateColumns={{
             base: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
           }}
         >
           {!platformStatistics &&
-            [1, 2, 3, 4].map((_, idx) => (
+            [...Array(6)].map((_, idx) => (
               <GridItem
                 m="0"
                 bg="brand.grayDark"
@@ -67,7 +67,7 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
                   <Text color="brand.grayLight" fontSize={["md", "lg", "lg"]}>
                     {item.title}
                   </Text>
-                  {item?.title !== "Total NFTs Staked" && (
+                  {item?.unit === "azero" && (
                     <>
                       <Spacer />$
                       <Text as="span" color="#b4b4b4">

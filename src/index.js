@@ -24,7 +24,7 @@ ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <SubstrateContextProvider>
       <Provider store={store}>
-        <BrowserRouter> 
+        <BrowserRouter>
           <App />
         </BrowserRouter>
       </Provider>

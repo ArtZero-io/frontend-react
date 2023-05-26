@@ -15,6 +15,12 @@ import {
   Skeleton,
   Box,
   Stack,
+  Text,
+  Flex,
+  InputGroup,
+  Input,
+  InputRightElement,
+  Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 // import { useDispatch } from "react-redux";
@@ -27,7 +33,10 @@ import PaginationMP from "@components/Pagination/Pagination";
 
 import toast from "react-hot-toast";
 import { usePagination } from "@ajna/pagination";
-import { APICall } from "../../../../api/client";
+import { APICall } from "@api/client";
+import { formatNumDynamicDecimal } from "@utils";
+import { useRef } from "react";
+
 const NUMBER_PER_PAGE = 5;
 
 export default function LaunchpadEventModal({
@@ -41,6 +50,9 @@ export default function LaunchpadEventModal({
   const [totalCount, setTotalCount] = useState(0);
   const [, setLoading] = useState(false);
   const [events, setEvents] = useState([]);
+  const [totalMintedAmount, setTotalMintedAmount] = useState(0);
+  const [searchAddress, setSearchAddress] = useState("");
+  const [address, setAddress] = useState("");
 
   const {
     pagesCount,
@@ -59,7 +71,7 @@ export default function LaunchpadEventModal({
   });
 
   const fetchEvents = useCallback(
-    async (isMounted) => {
+    async (isMounted = true) => {
       setLoading(true);
 
       const options = {
@@ -68,12 +80,20 @@ export default function LaunchpadEventModal({
         offset: offset,
       };
 
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!searchAddress) {
+        options.keyword = searchAddress;
+      }
+
       try {
-        const { ret: dataList, totalCount } = await APICall.getLaunchpadEvent(
-          options
-        );
+        const {
+          ret: dataList,
+          totalCount,
+          totalMintedAmount,
+        } = await APICall.getLaunchpadEvent(options);
         if (!isMounted) return;
         setTotalCount(totalCount?.count);
+        setTotalMintedAmount(totalMintedAmount);
         setEvents(dataList);
 
         setLoading(false);
@@ -86,7 +106,7 @@ export default function LaunchpadEventModal({
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [collection_address, offset, pageSize]
+    [collection_address, offset, pageSize, searchAddress]
   );
 
   useEffect(() => {
@@ -99,11 +119,17 @@ export default function LaunchpadEventModal({
     };
   }, [currentAccount, fetchEvents]);
 
-  // if (rest.step === FINALIZED) {
-  //   dispatch(clearTxStatus());
-  //   onClose();
-  // }
+  const searchAddressRef = useRef(null);
 
+  const onChangeHandler = (value) => {
+    setAddress(value);
+
+    if (searchAddressRef.current) {
+      clearTimeout(searchAddressRef.current);
+    }
+
+    searchAddressRef.current = setTimeout(() => setSearchAddress(value), 500);
+  };
   return (
     <Modal
       closeOnOverlayClick={false}
@@ -133,10 +159,35 @@ export default function LaunchpadEventModal({
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
             Minting history
-          </Heading>
+          </Heading>{" "}
+          <Text fontWeight="500" fontSize="16px">
+            Total minted: {formatNumDynamicDecimal(totalMintedAmount)} NFTs
+          </Text>
         </ModalHeader>
 
         <ModalBody>
+          <Flex>
+            <InputGroup size="md">
+              <Input
+                borderRadius={0}
+                variant="outline"
+                pr="4.5rem"
+                type="text"
+                placeholder="Enter minter address"
+                value={address}
+                onChange={({ target }) => onChangeHandler(target.value)}
+              />
+              <InputRightElement mr="4px" width="4.5rem">
+                <Button
+                  size="sm"
+                  isDisabled={!searchAddress}
+                  onClick={() => onChangeHandler("")}
+                >
+                  clear
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </Flex>
           <Box mt={"0px"}>
             <TableContainer
               maxH="380px"

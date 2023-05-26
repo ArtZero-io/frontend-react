@@ -817,20 +817,19 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
             onClose={onCloseWithdrawModal}
           />
-          {
-            <LaunchpadEventModal
-              isOpen={isOpenHistoryModal}
-              collection_address={collection_address}
-              onClose={onCloseHistoryModal}
-            />
-          }
-          {
-            <WithdrawHistoryModal
-              isOpen={isOpenWithdrawHistoryModal}
-              collection_address={collection_address}
-              onClose={onCloseWithdrawHistoryModal}
-            />
-          }
+
+          <LaunchpadEventModal
+            isOpen={isOpenHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseHistoryModal}
+          />
+
+          <WithdrawHistoryModal
+            isOpen={isOpenWithdrawHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseWithdrawHistoryModal}
+          />
+
           <UpdatePhasesModal
             {...project}
             isOpen={isOpenPhase}
