@@ -55,6 +55,7 @@ const MyNFTsPage = () => {
       "MULTI_LISTING",
       "MULTI_TRANSFER",
       "MULTI_REMOVE_BIDS",
+      "UPDATE_BID_PRICE",
     ],
     () => handleForceUpdate()
   );
@@ -82,7 +83,7 @@ const MyNFTsPage = () => {
     myBidList,
     isLoading: isLoadingMyBidList,
     refetch: refetchMyBidList,
-  } = useMyBidList(filterSelected, currentAccount.address);
+  } = useMyBidList(currentAccount.address);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 

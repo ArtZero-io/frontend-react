@@ -88,7 +88,7 @@ export default function C14Modal() {
           <ModalBody p="30px">
             <iframe
               title="c14 money"
-              src="https://pay.c14.money/?targetAssetId=01d80aba-7688-4e5b-97b8-5f3f77dd6714&sourceAmount=100"
+              src="https://pay.c14.money/?targetAssetId=01d80aba-7688-4e5b-97b8-5f3f77dd6714"
               width="100%"
               height="750px"
             ></iframe>
