@@ -21,6 +21,7 @@ import TxHistory from "../Tab/TxHistory";
 import PrevArrowIcon from "@theme/assets/icon/PrevArrow";
 import AzeroDomainsNFTTabCollectible from '../../../azero-domains/collection/component/Tab/Collectible';
 import { isAzeroDomainCollection } from '@utils';
+import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
 
 function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -45,7 +46,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
       },
       {
         label: 'offers',
-        content: <MyNFTOffer {...rest} />,
+        content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled: actionType || !rest?.is_for_sale,
       },
       {

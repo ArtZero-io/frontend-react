@@ -50,6 +50,7 @@ import {
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
 // import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -1728,7 +1729,7 @@ export const listAzeroDomainsToken = async (
     await delay(6000).then(async () => {
       toast.success(`${res ? "Step 2:" : ""} Listing on marketplace...`);
 
-      await marketplace_contract_calls.list(
+      await marketplace_azero_domains_contract_calls.list(
         currentAccount,
         nftContractAddress,
         { bytes: azDomainName },
@@ -1768,7 +1769,7 @@ export const unlistAzeroDomainsToken = async (
       tokenIDArray: Array.of(azDomainName),
     })
   );
-  await marketplace_contract_calls.unlist(
+  await marketplace_azero_domains_contract_calls.unlist(
     currentAccount,
     nftContractAddress,
     currentAccount.address,
@@ -1825,7 +1826,7 @@ export const placeAzeroDomainsBid = async (
     setTxStatus({ type: BID, step: START, tokenIDArray: Array.of(azDomainName) })
   );
 
-  await marketplace_contract_calls.bid(
+  await marketplace_azero_domains_contract_calls.bid(
     currentAccount,
     nftContractAddress,
     ownerAddress,
@@ -1833,6 +1834,135 @@ export const placeAzeroDomainsBid = async (
     bidPrice,
     dispatch,
     BID,
+    api
+  );
+};
+
+export const buyAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice,
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+  //check owner of the NFT
+  if (isOwner) {
+    toast.error(`Can not buy your own NFT!`);
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < askPrice / 10 ** 12) {
+    toast.error(`Not enough balance!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(azDomainName) })
+  );
+
+  await marketplace_azero_domains_contract_calls.buy(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    askPrice,
+    dispatch,
+    BUY,
+    api
+  );
+};
+
+export const acceptAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  isOwner,
+  nftContractAddress,
+  azDomainName,
+  bidId,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: ACCEPT_BID,
+      step: START,
+      tokenIDArray: Array.of(bidId),
+      // array of bidId NOT TokenID
+    })
+  );
+  await marketplace_azero_domains_contract_calls.acceptBid(
+    currentAccount,
+    nftContractAddress,
+    currentAccount.address,
+    { bytes: azDomainName },
+    bidId,
+    dispatch,
+    ACCEPT_BID,
+    api
+  );
+};
+
+
+
+export const removeAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < 0.001) {
+    toast.error(`Balance is low!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: REMOVE_BID,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+
+  await marketplace_azero_domains_contract_calls.removeBid(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    dispatch,
+    REMOVE_BID,
     api
   );
 };

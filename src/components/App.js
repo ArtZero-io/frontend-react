@@ -30,6 +30,7 @@ import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_c
 import { setProfileContract } from "@utils/blockchain/profile_calls";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
+import { setMarketplaceAzeroDomainsContract } from "@utils/blockchain/marketplace-azero-domains-calls";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
@@ -117,7 +118,7 @@ const Main = () => {
           await setAZNFTContract(api, artzeroNft);
           await setAzeroDomainsNFTContract(api, azeroDomainsNft);
           await setLaunchPadContract(api, launchpad_manager);
-
+          await setMarketplaceAzeroDomainsContract(api, marketplace);
           setLoadContractDone(true);
         }
       } catch (e) {

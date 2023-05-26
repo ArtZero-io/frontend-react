@@ -593,6 +593,21 @@ export const APICall = {
     // TEMP format to match current return format
     return { ret };
   },
+
+  askBeUpdateAzeroDomainsBidsData: async ({ collection_address, seller, azDomainName }) => {
+    return await client("POST", "/updateBids", {
+      collection_address,
+      seller,
+      azDomainName,
+    });
+  },
+
+  askBeUpdateAzeroDomainsNftData: async ({ collection_address, azDomainName }) => {
+    return await client("POST", "/updateNFT", {
+      collection_address,
+      azDomainName,
+    });
+  },
 };
 
 // IPFS API client call

@@ -64,12 +64,12 @@ import {
   import NFTReportModal from "../../../../collection/component/Modal/NFTReport";
   import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
   import {
-    buyToken,
+    buyAzeroDomainsToken,
     calculateFee,
     FeeCalculatedBar,
     listAzeroDomainsToken,
     placeAzeroDomainsBid,
-    removeBid,
+    removeAzeroDomainsBid,
     unlistAzeroDomainsToken,
   } from "../../../../token";
   import marketplace from "@utils/blockchain/marketplace";
@@ -187,14 +187,14 @@ import {
       if (!isActive) return toast.error("This collection is inactive!");
   
       try {
-        await buyToken(
+        await buyAzeroDomainsToken(
           api,
           currentAccount,
           isOwner,
           price,
           nftContractAddress,
           ownerAddress,
-          tokenID,
+          azDomainName,
           dispatch
         );
       } catch (error) {
@@ -208,12 +208,12 @@ import {
       if (!isActive) return toast.error("This collection is inactive!");
   
       try {
-        await removeBid(
+        await removeAzeroDomainsBid(
           api,
           currentAccount,
           nftContractAddress,
           ownerAddress,
-          tokenID,
+          azDomainName,
           dispatch
         );
       } catch (error) {
