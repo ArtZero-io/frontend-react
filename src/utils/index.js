@@ -508,7 +508,6 @@ export async function getEstimatedGas(
         console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
         return;
       }
-      console.log("gasLimit", gasLimitResult);
 
       ret = gasLimitResult?.value;
     } catch (error) {
