@@ -150,3 +150,8 @@ export const SUPPORTED_WALLET_LIST = [
 ];
 
 export const MESSAGE_SIGN = "Sign message to report";
+
+// Name of Contract
+export const AZERO_DOMAINS_COLLECTION = 'azeroDomains';
+export const ARTZERO_COLLECTION = 'artzero';
+export const OTHER_COLLECTION = 'other';
