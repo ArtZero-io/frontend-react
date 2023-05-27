@@ -69,7 +69,7 @@ function MyNFTCard({
   multiListingData,
   handleSelectMultiListing,
   multiTransferData,
-  handleSelectMultiTransfer,
+  handleSelectAzeroDomainsMultiTransfer,
   filterSelected,
   multiDelistData,
   handleSelectMultiDelist,
@@ -276,7 +276,7 @@ function MyNFTCard({
       !multiTransferData?.action ||
       multiTransferData?.action === "MULTI_TRANSFER"
     ) {
-      handleSelectMultiTransfer(tokenID, "MULTI_TRANSFER", target);
+      handleSelectAzeroDomainsMultiTransfer(tokenID, "MULTI_TRANSFER", target);
       return;
     }
 

@@ -19,7 +19,7 @@ import {
     VStack,
   } from "@chakra-ui/react";
   import React, { useEffect, useRef, useState } from "react";
-  import MyNFTCard from "./MyNFT";
+  import MyAzeroDomainsNFTCard from "./MyAzeroDomainsNFT";
   import ResponsivelySizedModal from "@components/Modal/Modal";
   import { useSubstrateState } from "@utils/substrate";
   import { motion, useAnimation } from "framer-motion";
@@ -47,7 +47,7 @@ import {
   import useBulkListing from "../../hooks/useBulkListing";
   import { CloseButton } from "@chakra-ui/react";
   import useForceUpdate from "@hooks/useForceUpdate";
-  import useBulkTransfer from "../../hooks/useBulkTransfer";
+  import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
   import { isMobile } from "react-device-detect";
 
   function MyAzeroDomainsNFTGroupCard({
@@ -409,11 +409,11 @@ import {
       showSlideMultiTransfer,
       doBulkTransfer,
       multiTransferActionMode,
-      handleSelectMultiTransfer,
+      handleSelectAzeroDomainsMultiTransfer,
       // handleInputChangeMultiTransfer,
       handleInputChangeReceiverAddress,
       handleCloseButtonForMultiTransfer,
-    } = useBulkTransfer({
+    } = useBulkAzeroDomainsTransfer({
       listNFTFormatted,
     });
 
@@ -507,6 +507,7 @@ import {
             >
               <GridItem colSpan={isMobile ? 5 : 4}>
                 <Grid templateColumns="repeat(3, 1fr)" gap={2}>
+                  {console.log(multiListingData)}
                   {multiListingData?.list?.map((item, idx) => {
                     return (
                       <Flex key={`${item}${idx}`}>
@@ -647,7 +648,7 @@ import {
                   <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                     {`Your are transfer ${collectionName} NFT ID`}
                     {multiTransferData?.listInfo?.map((item) => {
-                      return ` #${item?.info?.tokenID},`;
+                      return ` #${item?.info?.azDomainName},`;
                     })}{" "}
                     to receiver address:
                   </Flex>
@@ -723,7 +724,7 @@ import {
                 id="grid-item-a"
                 onClick={() => !bulkTxMode && onClickHandler(c)}
               >
-                <MyNFTCard
+                <MyAzeroDomainsNFTCard
                   {...c}
                   handleStakeAction={handleStakeAction}
                   handleSelectMultiNfts={handleSelectMultiNfts}
@@ -731,7 +732,7 @@ import {
                   multiListingData={multiListingData}
                   handleSelectMultiListing={handleSelectMultiListing}
                   multiTransferData={multiTransferData}
-                  handleSelectMultiTransfer={handleSelectMultiTransfer}
+                  handleSelectAzeroDomainsMultiTransfer={handleSelectAzeroDomainsMultiTransfer}
                 />
               </GridItemA>
             ))}
@@ -812,7 +813,8 @@ import {
     actionType,
     onChange
   ) {
-    const selectedNFT = listNFT?.filter((item) => item.tokenID === id);
+    console.log(listNFT);
+    const selectedNFT = listNFT?.filter((item) => item.azDomainName === id);
     const { avatar, nftName, tokenID } = selectedNFT[0];
 
     return (
