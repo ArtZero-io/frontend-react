@@ -44,7 +44,7 @@ import {
   import InActiveIcon from "@theme/assets/icon/InActive.js";
 
   import AzeroIcon from "@theme/assets/icon/Azero.js";
-  import useBulkListing from "../../hooks/useBulkListing";
+  import useBulkAzeroDomainsListing from "../../hooks/useBulkAzeroDomainsListing";
   import { CloseButton } from "@chakra-ui/react";
   import useForceUpdate from "@hooks/useForceUpdate";
   import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
@@ -82,7 +82,7 @@ import {
       }
 
       if (location?.pathname === "/account/nfts") {
-        history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+        history.push(`/nft/${item.nftContractAddress}/${item.azDomainName}`);
       }
     }
 
@@ -329,7 +329,7 @@ import {
       }
     }
 
-    function handleSelectMultiNfts(tokenID, action, isChecked) {
+    function handleSelectMultiNfts(azDomainName, action, isChecked) {
       let newData = { ...multiStakeData };
 
       // Initial data is empty
@@ -337,7 +337,7 @@ import {
         if (!isChecked) return;
 
         newData.action = action;
-        newData.list = [tokenID];
+        newData.list = [azDomainName];
         setMultiStakeData(newData);
         // multiStakeDataRef.current = newData;
         return;
@@ -347,13 +347,13 @@ import {
         return toast.error("Please select same action!");
       }
 
-      const isExisted = multiStakeData?.list.includes(tokenID);
+      const isExisted = multiStakeData?.list.includes(azDomainName);
 
       if (isChecked) {
         if (isExisted) return toast.error("This item is already added!");
 
         const newList = multiStakeData?.list;
-        newData.list = [...newList, tokenID];
+        newData.list = [...newList, azDomainName];
 
         setMultiStakeData(newData);
         // multiStakeDataRef.current = newData;
@@ -362,7 +362,7 @@ import {
       } else {
         if (!isExisted) return toast.error("This item is not add yet!");
 
-        newData.list = multiStakeData?.list?.filter((item) => item !== tokenID);
+        newData.list = multiStakeData?.list?.filter((item) => item !== azDomainName);
         if (newData?.list?.length === 0) {
           newData.action = null;
         }
@@ -399,7 +399,7 @@ import {
       handleSelectMultiListing,
       handleInputChangeMultiListing,
       handleCloseButtonForMultiListing,
-    } = useBulkListing({
+    } = useBulkAzeroDomainsListing({
       listNFTFormatted,
       nftContractAddress,
     });
@@ -540,11 +540,11 @@ import {
                   <Heading size="h6" fontSize="14px">
                     Bulk Listing
                   </Heading>
-
+                  {console.log('multiListingData', multiListingData)}
                   <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                     {`Your are listing ${collectionName} NFT ID`}
                     {multiListingData?.listInfo?.map((item) => {
-                      return ` #${item?.info?.tokenID} at ${item.price || 0} A,`;
+                      return ` #${item?.info?.azDomainName} at ${item.price || 0} A,`;
                     })}
 
                     <>
@@ -815,7 +815,7 @@ import {
   ) {
     console.log(listNFT);
     const selectedNFT = listNFT?.filter((item) => item.azDomainName === id);
-    const { avatar, nftName, tokenID } = selectedNFT[0];
+    const { avatar, nftName, azDomainName } = selectedNFT[0];
 
     return (
       <Flex
@@ -840,7 +840,7 @@ import {
             {!isMobile
               ? nftName
               : mode === "MULTI_LISTING"
-              ? `#${tokenID}`
+              ? `#${azDomainName}`
               : nftName}
           </Text>
           {!isMobile && (
