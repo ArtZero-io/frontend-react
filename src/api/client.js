@@ -603,6 +603,7 @@ export const APICall = {
   },
 
   askBeUpdateAzeroDomainsNftData: async ({ collection_address, azDomainName }) => {
+    console.log({ collection_address, azDomainName });
     return await client("POST", "/updateNFT", {
       collection_address,
       azDomainName,

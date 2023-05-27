@@ -38,7 +38,7 @@ import {
 
   import LockNFTModal from "@components/Modal/LockNFTModal";
   import TransferNFTModal from "@components/Modal/TransferNFTModal";
-
+  import TransferAzeroDomainsNFTModal from "@components/Modal/TransferAzeroDomainsNFTModal";
   import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
   import {
     fetchMyPMPStakedCount,
@@ -59,6 +59,7 @@ import {
   import PropCard from "@components/Card/PropCard";
   import LevelCard from "@components/Card/LevelCard";
   import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
+  import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
   import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
   import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
 
@@ -107,7 +108,7 @@ import {
     const [isOwner, setIsOwner] = useState(false);
     const [ownerAddress, setOwnerAddress] = useState("");
     const [, setLoading] = useState(false);
-
+    const [isAzeroDomain, setIsAzeroDomain] = useState(true);
     const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
     const doLoad = useCallback(async () => {
@@ -152,7 +153,7 @@ import {
         console.log('4');
         setOwnerAddress(accountAddress);
         setOwnerName(name);
-
+        setIsAzeroDomain(nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS);
         setLoading(false);
         console.log('5');
       } catch (error) {
@@ -407,8 +408,16 @@ import {
                       isDisabled={!isActive || is_for_sale || actionType}
                     />
                   )}
-                {ownerAddress === currentAccount?.address && (
+                  {console.log('isAzeroDomainCollection', isAzeroDomain)}
+                  {console.log('nftContractAddress', props)}
+                {ownerAddress === currentAccount?.address && !isAzeroDomain && (
                   <TransferNFTModal
+                    {...props}
+                    isDisabled={!isActive || is_for_sale || actionType}
+                  />
+                )}
+                {ownerAddress === currentAccount?.address && isAzeroDomain && (
+                  <TransferAzeroDomainsNFTModal
                     {...props}
                     isDisabled={!isActive || is_for_sale || actionType}
                   />

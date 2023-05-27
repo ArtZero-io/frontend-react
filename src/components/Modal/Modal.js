@@ -14,11 +14,11 @@ import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import MyAzeroDomainsNFTTabInfo from '@pages/account/azero-domains/components/Tabs/MyNFTInfo';
 import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
 import { useEffect } from "react";
-import {isAzeroDomainCollection} from '@utils'
 import { FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import OwnershipHistory from "@pages/collection/component/Tab/OwnershipHistory";
 import TxHistory from "@pages/collection/component/Tab/TxHistory";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 export default function ResponsivelySizedModal({
   onClose,
@@ -39,7 +39,7 @@ export default function ResponsivelySizedModal({
   }, [step, onClose]);
   let tabData = [];
   {console.log('rest Data', rest)}
-  if (isAzeroDomainCollection(rest.nftContractAddress)) {
+  if (rest.nfCONTRACT_ADDRESStContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
     tabData = [
       {
         label: 'detail',

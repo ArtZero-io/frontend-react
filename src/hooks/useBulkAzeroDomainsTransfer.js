@@ -6,17 +6,18 @@ import {
   batchTxResponseErrorHandler,
   setTxStatus,
 } from "@store/actions/txStatus";
-
-import { START } from "@constants";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { stringToU8a } from "@polkadot/util";
+import { START } from "@constants";  
+import { APICall } from "../api/client";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { APICall } from "../api/client";
+
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
 import { isValidAddress } from "../utils";
-import { stringToU8a } from "@polkadot/util";
+
 
 export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
   const dispatch = useDispatch();
@@ -57,32 +58,34 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
 
     toast("Estimated transaction fee...");
 
+    // Change to get gasEst for every single tx to 1 for all
+    const value = 0;
+    let gasLimit;
+    let additionalData = '';
+    const azeroDomainsNftContract = new ContractPromise(
+      api,
+      azero_domains_nft.CONTRACT_ABI,
+      azero_domains_nft.CONTRACT_ADDRESS
+    );
+
+    gasLimit = await getEstimatedGasBatchTx(
+      address,
+      azeroDomainsNftContract,
+      value,
+      "psp34::transfer",
+      receiverAddress,
+      { bytes: listInfo[0].info?.azDomainName },
+      stringToU8a("")
+    );
+
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        const value = 0;
-        let gasLimit;
 
-        const nftPsp34Contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          info?.nftContractAddress
-        );
-
-        gasLimit = await getEstimatedGasBatchTx(
-          address,
-          nftPsp34Contract,
-          value,
-          "psp34::transfer",
-          receiverAddress,
-          { u64: info?.azDomainName },
-          stringToU8a("")
-        );
-
-        const ret = nftPsp34Contract.tx["psp34::transfer"](
+        const ret = azeroDomainsNftContract.tx["psp34::transfer"](
           { gasLimit, value },
           receiverAddress,
-          { u64: info?.azDomainName },
-          stringToU8a("")
+          { bytes: info?.azDomainName },
+          stringToU8a(additionalData)
         );
 
         return ret;
@@ -97,6 +100,11 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       })
     );
 
+    // const info = await api.tx.utility.batchAll(transferTxALL);
+
+    // console.log(`estimated fees: ${info}`);
+    // const nonce = await api.rpc.system.accountNextIndex(address);
+    // console.log("nonce", nonce.toString());
     api.tx.utility
       .batch(transferTxALL)
       .signAndSend(
@@ -113,22 +121,22 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
                 }
 
                 if (api.events.utility?.BatchCompleted.is(event)) {
-                  toast.success("Bulk listing TXs are fully completed");
+                  toast.success("All NFTs have been transferred successfully");
                 }
               }
             );
 
             await listInfo.map(
               async ({ info }) =>
-                await APICall.askBeUpdateNftData({
+                await APICall.askBeUpdateAzeroDomainsNftData({
                   collection_address: info?.nftContractAddress,
-                  token_id: info?.azDomainName,
+                  azDomainName: info?.azDomainName
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Bulk listing TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+                `Bulk transfer are not fully successful! ${totalSuccessTxCount} transfers completed successfully.`
               );
 
               dispatch(clearTxStatus());
