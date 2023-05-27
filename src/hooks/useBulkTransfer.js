@@ -206,6 +206,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
   function handleSelectMultiTransfer(tokenID, action, isChecked) {
     let newData = { ...multiTransferData };
+    console.log('handleSelectMultiTransfer::listNFTFormatted', listNFTFormatted);
     let info = listNFTFormatted?.find((item) => item.tokenID === tokenID);
 
     // Initial data is empty
@@ -260,6 +261,63 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     }
   }
 
+  function handleSelectAzeroDomainsMultiTransfer(azDomainName, action, isChecked) {
+    let newData = { ...multiTransferData };
+    console.log('handleSelectAzeroDomainsMultiTransfer::listNFTFormatted', listNFTFormatted);
+    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+
+    // Initial data is empty
+    if (multiTransferData?.action === null) {
+      if (!isChecked) return;
+
+      newData.action = action;
+      newData.selectedCollectionAddress = info?.nftContractAddress;
+      newData.list = [azDomainName];
+      newData.listInfo = [{ price: null, info }];
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+      return;
+    }
+
+    if (multiTransferData?.action !== action) {
+      return toast.error("Please select same action!");
+    }
+
+    const isExisted = multiTransferData?.list.includes(azDomainName);
+
+    if (isChecked) {
+      if (isExisted) return toast.error("This item is already added!");
+
+      const newList = multiTransferData?.list;
+      const newListInfo = multiTransferData?.listInfo;
+
+      newData.list = [...newList, azDomainName];
+      newData.listInfo = [...newListInfo, { price: null, info }];
+
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+
+      return;
+    } else {
+      if (!isExisted) return toast.error("This item is not add yet!");
+
+      newData.list = multiTransferData?.list?.filter(
+        (item) => item !== azDomainName
+      );
+
+      const idxFound = multiTransferData?.list?.indexOf(azDomainName);
+      newData.listInfo = multiTransferData?.listInfo?.filter(
+        (_, idx) => idx !== idxFound
+      );
+      if (newData?.list?.length === 0) {
+        newData.action = null;
+      }
+
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+    }
+  }
+
   function handleInputChangeReceiverAddress(address) {
     setMultiTransferData((prev) => {
       return { ...prev, receiverAddress: address };
@@ -282,5 +340,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     handleSelectMultiTransfer,
     handleInputChangeReceiverAddress,
     handleCloseButtonForMultiTransfer,
+    handleSelectAzeroDomainsMultiTransfer
   };
 }

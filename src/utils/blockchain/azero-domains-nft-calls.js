@@ -148,11 +148,72 @@ async function approve(
   return unsubscribe;
 }
 
+async function transfer(
+  caller_account,
+  receiver,
+  domain_name,
+  additionalData,
+  dispatch
+) {
+  if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
+
+  let unsubscribe;
+  let gasLimit;
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "psp34::transfer",
+    receiver,
+    {bytes: domain_name},
+    additionalData
+  );
+
+  await contract.tx["psp34::transfer"](
+    { gasLimit, value },
+    receiver,
+    {bytes: domain_name},
+    additionalData
+  )
+    .signAndSend(address, { signer }, ({ dispatchError, status }) => {
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(`There is some error with your request`);
+        } else {
+          console.log("dispatchError ", dispatchError.toString());
+        }
+      }
+
+      if (status) {
+        const statusText = Object.keys(status?.toHuman().Ok)[0];
+        if (status.isFinalized) {
+          toast.success(
+            `Transfer ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+
 const azero_domains_nft_contract_calls = {
   allowance,
   approve,
   tokenUri,
   balanceOf,
+  transfer
 };
 
 export default azero_domains_nft_contract_calls;
