@@ -10,7 +10,7 @@ import {
 
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -56,12 +56,12 @@ export default function useBulkAzeroDomainsListing({
         const queryResult = await execContractQuery(
           currentAccount?.address,
           api,
-          nft721_psp34_standard.CONTRACT_ABI,
+          azero_domains_nft.CONTRACT_ABI,
           info?.nftContractAddress,
           "psp34::allowance",
           currentAccount?.address,
           marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.azDomainName }
+          { bytes: info?.azDomainName }
         );
 
         return queryResult.toHuman().Ok;
@@ -97,8 +97,8 @@ export default function useBulkAzeroDomainsListing({
 
         const nftPsp34Contract = new ContractPromise(
           api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          info?.nftContractAddress
+          azero_domains_nft.CONTRACT_ABI,
+          azero_domains_nft.CONTRACT_ADDRESS
         );
 
         gasLimit = await getEstimatedGasBatchTx(
@@ -107,14 +107,14 @@ export default function useBulkAzeroDomainsListing({
           value,
           "psp34::approve",
           marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.azDomainName },
+          { bytes: info?.azDomainName },
           true
         );
 
         return nftPsp34Contract.tx["psp34::approve"](
           { gasLimit, value },
           marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.azDomainName },
+          { bytes: info?.azDomainName },
           true
         );
       })
