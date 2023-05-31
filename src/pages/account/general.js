@@ -325,8 +325,16 @@ function GeneralPage() {
 
   const lastDay = useMemo(() => {
     const now = new Date();
-    const lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
+    let lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    if (lastDayA.getDay() === 0) {
+      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -5);
+    }
+
+    if (lastDayA.getDay() === 6) {
+      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -4);
+    }
 
     return (
       <>
