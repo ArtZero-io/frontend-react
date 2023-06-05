@@ -288,7 +288,7 @@ async function getClaimableReward(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -310,7 +310,7 @@ async function getRewardPool(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }

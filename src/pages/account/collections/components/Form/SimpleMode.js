@@ -64,7 +64,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** 18);
         }
       } catch (error) {
         console.log("error fetchFee", error.message);

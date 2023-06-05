@@ -60,7 +60,7 @@ function StatsPage() {
       }, 0);
 
       const totalNftPayouts = data.reduce((acc, curr) => {
-        return acc + curr.totalStakedAmount * 10 ** 12;
+        return acc + curr.totalStakedAmount * 10 ** 18;
       }, 0);
 
       let remainRewardPool = 0;
@@ -156,7 +156,7 @@ function StatsPage() {
           return {
             ...item,
             order: index + 1,
-            floorPrice: data?.price / 10 ** 12 || 0,
+            floorPrice: data?.price / 10 ** 18 || 0,
           };
         })
       );
@@ -313,6 +313,6 @@ export const fetchValidatorProfit = async ({
       formattedStrBal?.replaceAll(",", "") * 1 +
       formattedStrBalReserved?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 12 };
+    return { balance: formattedNumBal / 10 ** 18 };
   }
 };

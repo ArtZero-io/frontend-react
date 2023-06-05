@@ -189,7 +189,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** 18);
         }
       }
 
@@ -227,7 +227,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount || getPublicCurrentAccount()
         );
 
-      const totalFee = addProjFee / 10 ** 12 + addCollectionFee / 10 ** 12;
+      const totalFee = addProjFee / 10 ** 18 + addCollectionFee / 10 ** 18;
 
       setAddProjectTotalFee(totalFee);
     };
@@ -1188,7 +1188,7 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
       formattedStrBal?.replaceAll(",", "") * 1 -
       formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 12 };
+    return { balance: formattedNumBal / 10 ** 18 };
   }
 };
 

@@ -339,7 +339,7 @@ function MyNFTTabInfo(props) {
       return;
     }
 
-    if (parseFloat(newBidPrice) >= price / 10 ** 12) {
+    if (parseFloat(newBidPrice) >= price / 10 ** 18) {
       toast.error(`Bid amount must be less than current price!`);
       return;
     }
@@ -635,7 +635,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                      {formatNumDynamicDecimal(price / 10 ** 18)}
                     </Text>
                     <AzeroIcon />
                   </Flex>
@@ -833,7 +833,7 @@ function MyNFTTabInfo(props) {
                 </Text>{" "}
                 {formatNumDynamicDecimal(
                   price *
-                    (1 / 10 ** 12 -
+                    (1 / 10 ** 18 -
                       myTradingFee / 10 ** 14 -
                       royaltyFee / 10 ** 16)
                 )}{" "}

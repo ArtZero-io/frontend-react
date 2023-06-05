@@ -68,7 +68,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address);
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return 0;
 }
@@ -89,7 +89,7 @@ async function getTotalVolume(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -305,7 +305,7 @@ async function getCurrentProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -326,7 +326,7 @@ async function getTotalProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }

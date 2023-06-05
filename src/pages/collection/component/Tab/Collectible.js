@@ -664,7 +664,7 @@ const NFTTabCollectible = (props) => {
 
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
-                                  {formatNumDynamicDecimal(price / 10 ** 12)}
+                                  {formatNumDynamicDecimal(price / 10 ** 18)}
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
                               </Tag>
@@ -730,12 +730,12 @@ const NFTTabCollectible = (props) => {
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
                                       label={formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** 18
                                       )}
                                       aria-label="A tooltip"
                                     >
                                       {formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** 18
                                       )}
                                     </Tooltip>
                                   </TagLabel>

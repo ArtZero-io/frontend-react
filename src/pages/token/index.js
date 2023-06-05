@@ -225,7 +225,7 @@ function TokenPage() {
             const myBid = listBidder.filter((item) => item.isMyBid === true);
             if (myBid.length) {
               const bidValue =
-                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 12;
+                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 18;
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
@@ -976,7 +976,7 @@ function TokenPage() {
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
                                   {formatNumDynamicDecimal(
-                                    token?.price / 10 ** 12
+                                    token?.price / 10 ** 18
                                   )}
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
@@ -1019,7 +1019,7 @@ function TokenPage() {
                             <Tag minH="20px" pr={0} bg="transparent">
                               <TagLabel bg="transparent">
                                 {formatNumDynamicDecimal(
-                                  token?.price / 10 ** 12
+                                  token?.price / 10 ** 18
                                 )}
                               </TagLabel>
                               <TagRightIcon as={AzeroIcon} w="14px" />
@@ -1161,7 +1161,7 @@ export const buyToken = async (
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
 
-  if (balance < askPrice / 10 ** 12) {
+  if (balance < askPrice / 10 ** 18) {
     toast.error(`Not enough balance!`);
     return;
   }
@@ -1219,7 +1219,7 @@ export const placeBid = async (
     return;
   }
 
-  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
+  if (parseFloat(bidPrice) >= askPrice / 10 ** 18) {
     toast.error(`Bid amount must be less than current price!`);
     return;
   }
@@ -1568,7 +1568,7 @@ function MobileEditBidPriceModal({
       return;
     }
 
-    if (parseFloat(newBidPrice) >= price / 10 ** 12) {
+    if (parseFloat(newBidPrice) >= price / 10 ** 18) {
       toast.error(`Bid amount must be less than current price!`);
       return;
     }
@@ -1817,7 +1817,7 @@ export const placeAzeroDomainsBid = async (
     return;
   }
 
-  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
+  if (parseFloat(bidPrice) >= askPrice / 10 ** 18) {
     toast.error(`Bid amount must be less than current price!`);
     return;
   }
@@ -1862,7 +1862,7 @@ export const buyAzeroDomainsToken = async (
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
 
-  if (balance < askPrice / 10 ** 12) {
+  if (balance < askPrice / 10 ** 18) {
     toast.error(`Not enough balance!`);
     return;
   }

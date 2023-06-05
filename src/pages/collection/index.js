@@ -185,7 +185,7 @@ function CollectionPage() {
 
     if (priceQuery.min && priceQuery.max) {
       const formatPriceQuery = ({ max, min }) => {
-        return { price: { between: [min * 10 ** 12, max * 10 ** 12] } };
+        return { price: { between: [min * 10 ** 18, max * 10 ** 18] } };
       };
 
       const priceQueryFormat = formatPriceQuery(queryFilter.price);

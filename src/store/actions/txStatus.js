@@ -96,7 +96,7 @@ export const txResponseErrorHandler = async ({
           // }
 
           if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-            data.FeePaid = -event.data[1]?.toString() / 10 ** 12;
+            data.FeePaid = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "transactionPayment?.TransactionFeePaid (-)",
@@ -105,7 +105,7 @@ export const txResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.Reserved.is(event)) {
-            data.Reserved = -event.data[1]?.toString() / 10 ** 12;
+            data.Reserved = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.Reserved (-)",
@@ -114,7 +114,7 @@ export const txResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.ReserveRepatriated.is(event)) {
-            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 12;
+            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.ReserveRepatriated (+)",
@@ -240,7 +240,7 @@ export const txResponseErrorHandler = async ({
           //   });
           // }
           if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-            data.FeePaid = -event.data[1]?.toString() / 10 ** 12;
+            data.FeePaid = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "transactionPayment?.TransactionFeePaid (-)",
@@ -249,7 +249,7 @@ export const txResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.Reserved.is(event)) {
-            data.Reserved = -event.data[1]?.toString() / 10 ** 12;
+            data.Reserved = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.Reserved (-)",
@@ -258,7 +258,7 @@ export const txResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.ReserveRepatriated.is(event)) {
-            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 12;
+            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.ReserveRepatriated (+)",
@@ -351,7 +351,7 @@ export const batchTxResponseErrorHandler = async ({
           // }
 
           if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-            data.FeePaid = -event.data[1]?.toString() / 10 ** 12;
+            data.FeePaid = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "transactionPayment?.TransactionFeePaid (-)",
@@ -360,7 +360,7 @@ export const batchTxResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.Reserved.is(event)) {
-            data.Reserved = -event.data[1]?.toString() / 10 ** 12;
+            data.Reserved = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.Reserved (-)",
@@ -369,7 +369,7 @@ export const batchTxResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.ReserveRepatriated.is(event)) {
-            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 12;
+            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.ReserveRepatriated (+)",
@@ -495,7 +495,7 @@ export const batchTxResponseErrorHandler = async ({
           //   });
           // }
           if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-            data.FeePaid = -event.data[1]?.toString() / 10 ** 12;
+            data.FeePaid = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "transactionPayment?.TransactionFeePaid (-)",
@@ -504,7 +504,7 @@ export const batchTxResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.Reserved.is(event)) {
-            data.Reserved = -event.data[1]?.toString() / 10 ** 12;
+            data.Reserved = -event.data[1]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.Reserved (-)",
@@ -513,7 +513,7 @@ export const batchTxResponseErrorHandler = async ({
           }
 
           if (api.events.balances?.ReserveRepatriated.is(event)) {
-            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 12;
+            data.ReserveRepatriated = event.data[2]?.toString() / 10 ** 18;
 
             // console.table({
             //   Event: "balances?.ReserveRepatriated (+)",

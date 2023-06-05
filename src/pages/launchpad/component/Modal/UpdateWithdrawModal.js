@@ -61,9 +61,9 @@ export default function UpdateWithdrawModal({
         collection_address
       );
 
-      const balFree = balance.toHuman().free?.replaceAll(",", "") / 10 ** 12;
+      const balFree = balance.toHuman().free?.replaceAll(",", "") / 10 ** 18;
       const balMiscFrozen =
-        balance.toHuman().miscFrozen?.replaceAll(",", "") / 10 ** 12;
+        balance.toHuman().miscFrozen?.replaceAll(",", "") / 10 ** 18;
 
       const tempBal = balFree - balMiscFrozen;
 
