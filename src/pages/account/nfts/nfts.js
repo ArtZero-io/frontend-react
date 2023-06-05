@@ -31,7 +31,7 @@ import {
   EDIT_NFT,
 } from "@constants";
 import { ContractPromise } from "@polkadot/api-contract";
-import { readOnlyGasLimit, isAzeroDomainCollection } from "@utils";
+import { readOnlyGasLimit } from "@utils";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -39,7 +39,6 @@ import {
 import { useMyCollectionList } from "@hooks/useMyCollectionList";
 import { useMyBidList } from "@hooks/useMyBidList";
 import azero_domains_nft from "@blockchain/azero-domains-nft";
-import { readOnlyGasLimit } from "@utils";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
