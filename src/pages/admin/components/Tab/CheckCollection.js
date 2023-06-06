@@ -10,7 +10,7 @@ import {
 import { useSubstrateState } from "@utils/substrate";
 // import { useSelector } from "react-redux";
 import Loader from "@components/Loader/CommonLoader";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { isValidAddressPolkadotAddress } from "@utils";

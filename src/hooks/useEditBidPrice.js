@@ -10,7 +10,7 @@ import { web3FromSource } from "../utils/wallets/extension-dapp";
 
 import { START } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
-import marketplace from "@utils/blockchain/marketplace";
+import { marketplace } from "@utils/blockchain/abi";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";

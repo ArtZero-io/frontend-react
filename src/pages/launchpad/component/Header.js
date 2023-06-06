@@ -40,7 +40,7 @@ import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 
 import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
-import launchpad_psp34_nft_standard from "../../../utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import { useEffect } from "react";
 import { execContractQuery } from "../../account/nfts/nfts";
 import { useMemo } from "react";

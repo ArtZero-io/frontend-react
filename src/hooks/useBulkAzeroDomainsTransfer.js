@@ -7,9 +7,9 @@ import {
   setTxStatus,
 } from "@store/actions/txStatus";
 import { stringToU8a } from "@polkadot/util";
-import { START } from "@constants";  
+import { START } from "@constants";
 import { APICall } from "../api/client";
-import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
+import { azero_domains_nft } from "@utils/blockchain/abi";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";

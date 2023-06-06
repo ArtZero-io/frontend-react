@@ -30,7 +30,7 @@ import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 import CommonButton from "@components/Button/CommonButton";
 
-import marketplace from "../../../utils/blockchain/marketplace";
+import { marketplace } from "@utils/blockchain/abi";
 import { delay } from "@utils";
 import {
   execContractQuery,

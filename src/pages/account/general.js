@@ -44,8 +44,8 @@ import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
 import CommonContainer from "../../components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
-import launchpad_manager from "@utils/blockchain/launchpad-manager";
-import collection_manager from "@utils/blockchain/collection-manager";
+import { launchpad_manager } from "@utils/blockchain/abi";
+import { collection_manager } from "@utils/blockchain/abi";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { useDispatch } from "react-redux";
@@ -207,7 +207,7 @@ function GeneralPage() {
               { name: "Pending Staked NFTs", value: pendingCount * 1 },
               {
                 name: "Total Owned NFTs",
-                value: nftList.length + totalStaked + pendingCount * 1,
+                value: nftList?.length + totalStaked + pendingCount * 1,
               },
             ];
 
@@ -729,14 +729,14 @@ function GeneralPage() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {rewardHistory.length === 0 ? (
+                    {rewardHistory?.length === 0 ? (
                       <Tr color="#fff">
                         <Td colSpan={4} py={7} textAlign="center">
                           No record found
                         </Td>
                       </Tr>
                     ) : (
-                      rewardHistory.map((reward, index) => (
+                      rewardHistory?.map((reward, index) => (
                         <Tr key={index} color="#fff">
                           {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
                           <Td textAlign="left" py={7}>

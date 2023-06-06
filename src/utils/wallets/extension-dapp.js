@@ -66,7 +66,7 @@ function getWindowExtensions(originName, wallet) {
           }),
           enable(originName).catch((error) => {
             console.error(`Error initializing ${name}: ${error.message}`);
-            throw new Error(`Error initializing ${name}: ${error.message}`)
+            throw new Error(`Error initializing ${name}: ${error.message}`);
           }),
         ])
       )
@@ -102,7 +102,7 @@ export function web3Enable(originName, compatInits = [], wallet) {
         )
         .catch((error) => {
           console.log(error);
-          throw new Error(error)
+          throw new Error(error);
         })
         .then((values) => {
           const names = values.map(({ name, version }) => `${name}/${version}`);

@@ -4,7 +4,7 @@ import CommonContainer from "@components/Container/CommonContainer";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";
 
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 import { useHistory } from "react-router-dom";
 import * as ROUTES from "@constants/routes";

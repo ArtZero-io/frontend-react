@@ -38,7 +38,7 @@ import {
 } from "@store/actions/txStatus";
 import { useMyCollectionList } from "@hooks/useMyCollectionList";
 import { useMyBidList } from "@hooks/useMyBidList";
-import azero_domains_nft from "@blockchain/azero-domains-nft";
+import { azero_domains_nft } from "@utils/blockchain/abi";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -316,9 +316,21 @@ function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
       )}
       {list?.map((item, idx) => {
         if (item.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
-          return (<MyAzeroDomainsNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
+          return (
+            <MyAzeroDomainsNFTGroupCard
+              {...item}
+              key={idx}
+              filterSelected={filterSelected}
+            />
+          );
         } else {
-          return (<MyNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
+          return (
+            <MyNFTGroupCard
+              {...item}
+              key={idx}
+              filterSelected={filterSelected}
+            />
+          );
         }
       })}
     </>

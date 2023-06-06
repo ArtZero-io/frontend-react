@@ -31,7 +31,7 @@ import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import { execContractQuery } from "../../../nfts/nfts";
 import { ipfsClient } from "@api/client";
 

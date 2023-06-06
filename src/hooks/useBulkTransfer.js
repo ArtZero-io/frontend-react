@@ -8,7 +8,7 @@ import {
 } from "@store/actions/txStatus";
 
 import { START } from "@constants";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";

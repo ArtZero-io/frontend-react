@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
 import { READY, FINALIZED } from "@constants";
-import launchpad_manager from "../../utils/blockchain/launchpad-manager";
+import { launchpad_manager } from "@utils/blockchain/abi";
 import { Abi } from "@polkadot/api-contract";
 import { CREATE_PROJECT_STEP_1 } from "../../constants";
 
@@ -183,7 +183,6 @@ export const txResponseErrorHandler = async ({
           })
         );
       }
-
 
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {
@@ -438,7 +437,6 @@ export const batchTxResponseErrorHandler = async ({
           })
         );
       }
-
 
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {

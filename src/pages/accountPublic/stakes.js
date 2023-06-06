@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 
-import artzero_nft from "@utils/blockchain/artzero-nft";
+import { artzero_nft } from "@utils/blockchain/abi";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";

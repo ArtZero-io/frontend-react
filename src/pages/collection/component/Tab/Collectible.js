@@ -73,10 +73,9 @@ import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import { MAX_BID_COUNT } from "../../../../constants";
 import NFTReportModal from "../Modal/NFTReport";
-import marketplace from "@utils/blockchain/marketplace";
+import { marketplace, nft721_psp34_standard } from "@utils/blockchain/abi";
 
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 
 import {

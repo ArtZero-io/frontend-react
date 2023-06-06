@@ -35,7 +35,7 @@ import AddRoadmap from "./AddRoadmap";
 import CommonInput from "@components/Input/Input";
 import { useHistory, useLocation } from "react-router-dom";
 import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
@@ -1054,7 +1054,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                     <Text
                                       as="span"
                                       color="#888"
-                                    >{` share of the mint price for every sucessful mint to be distributed to ArtZerio.io`}</Text>
+                                    >{` share of the mint price for every successful mint to be distributed to ArtZero.io`}</Text>
                                   </>
                                 }
                               />

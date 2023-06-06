@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
-import artzero_nft from "@utils/blockchain/artzero-nft";
+import { artzero_nft } from "@utils/blockchain/abi";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -13,7 +13,6 @@ import { formatOutput } from "..";
 import { BN } from "@polkadot/util";
 
 let contract;
-
 export const setStakingContract = (api, data) => {
   contract = new ContractPromise(
     api,

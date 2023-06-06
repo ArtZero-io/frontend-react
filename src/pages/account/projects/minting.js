@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";

@@ -27,11 +27,9 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
-import marketplace_contract from "@utils/blockchain/marketplace";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard, marketplace } from "@utils/blockchain/abi";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import marketplace from "@utils/blockchain/marketplace";
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -183,7 +181,7 @@ function MyNFTTabInfo(props) {
         const isAllowance = await nft721_psp34_standard_calls.allowance(
           currentAccount,
           currentAccount?.address,
-          marketplace_contract.CONTRACT_ADDRESS,
+          marketplace.CONTRACT_ADDRESS,
           { u64: tokenID },
           dispatch
         );

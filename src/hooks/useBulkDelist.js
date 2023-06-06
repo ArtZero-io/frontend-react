@@ -8,7 +8,7 @@ import {
 } from "@store/actions/txStatus";
 
 import { START } from "@constants";
-import marketplace from "@utils/blockchain/marketplace";
+import { marketplace } from "@utils/blockchain/abi";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";

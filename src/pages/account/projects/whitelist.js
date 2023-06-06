@@ -30,7 +30,7 @@ import { useRef, useState, useCallback } from "react";
 import { convertStringToDateTime } from "@utils";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
 import debounce from "lodash.debounce";
@@ -1015,9 +1015,9 @@ function MyWhiteListProjectPage(props) {
                   size="sm"
                   placeholder="Enter one address, WL amount and mint price Azero on each line.
                 A decimal separator of amount must use dot (.)
-                
 
-                Example: for WL amount 50 and mint price 2.99 Azero 
+
+                Example: for WL amount 50 and mint price 2.99 Azero
                 5GRdmMkKeKaV94qU3JjDr2ZwRAgn3xwzd2FEJYKjjSFipiAe,50,2.99"
                 />
                 <Stack my="8px">

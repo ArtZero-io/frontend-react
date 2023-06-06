@@ -35,7 +35,7 @@ import {
 } from "@constants";
 import { useDispatch, useSelector } from "react-redux";
 import staking_calls from "@utils/blockchain/staking_calls";
-import staking from "@utils/blockchain/staking";
+import { staking } from "@utils/blockchain/abi";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { delay } from "@utils";
 import CommonButton from "../Button/CommonButton";
@@ -65,7 +65,7 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
-  console.log('ret data', rest);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);

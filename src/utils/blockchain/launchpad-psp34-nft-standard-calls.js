@@ -4,7 +4,7 @@ import BN from "bn.js";
 import { APICall } from "../../api/client";
 import { isValidAddressPolkadotAddress } from "@utils";
 import launchpad_contract_calls from "./launchpad-contract-calls";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import { ContractPromise } from "@polkadot/api-contract";
 import {
   txErrorHandler,

@@ -48,12 +48,10 @@ import {
   getTraitCount,
 } from "@utils";
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
-import marketplace from "@utils/blockchain/marketplace";
+import { marketplace, nft721_psp34_standard } from "@utils/blockchain/abi";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
-// import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
 import staking_calls from "@utils/blockchain/staking_calls";
@@ -1823,7 +1821,11 @@ export const placeAzeroDomainsBid = async (
   }
 
   dispatch(
-    setTxStatus({ type: BID, step: START, tokenIDArray: Array.of(azDomainName) })
+    setTxStatus({
+      type: BID,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
   );
 
   await marketplace_azero_domains_contract_calls.bid(
@@ -1868,7 +1870,11 @@ export const buyAzeroDomainsToken = async (
   }
 
   dispatch(
-    setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(azDomainName) })
+    setTxStatus({
+      type: BUY,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
   );
 
   await marketplace_azero_domains_contract_calls.buy(
@@ -1923,8 +1929,6 @@ export const acceptAzeroDomainsBid = async (
     api
   );
 };
-
-
 
 export const removeAzeroDomainsBid = async (
   api,

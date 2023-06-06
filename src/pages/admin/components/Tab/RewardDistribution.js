@@ -26,9 +26,13 @@ import toast from "react-hot-toast";
 import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import launchpad_manager from "@utils/blockchain/launchpad-manager";
-import collection_manager from "@utils/blockchain/collection-manager";
-import staking_contract from "@utils/blockchain/staking";
+
+import {
+  marketplace,
+  launchpad_manager,
+  collection_manager,
+  staking as staking_contract,
+} from "@utils/blockchain/abi";
 import { useMemo } from "react";
 import { formatNumDynamicDecimal } from "@utils";
 
@@ -50,7 +54,6 @@ import { useCallback } from "react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { execContractQuery } from "../../../account/nfts/nfts";
-import marketplace from "@utils/blockchain/marketplace";
 import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
 
 function RewardDistribution() {

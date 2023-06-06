@@ -14,7 +14,10 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import {
+  launchpad_psp34_nft_standard,
+  nft721_psp34_standard,
+} from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import useTxStatus from "@hooks/useTxStatus";
@@ -24,7 +27,6 @@ import { UPDATE_BASE_URI, START, FINALIZED } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { getPublicCurrentAccount } from "@utils";
 

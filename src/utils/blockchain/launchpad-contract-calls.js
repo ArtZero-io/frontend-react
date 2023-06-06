@@ -12,7 +12,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import { launchpad_manager } from "@utils/blockchain/abi";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
 // import emailjs from "@emailjs/browser";

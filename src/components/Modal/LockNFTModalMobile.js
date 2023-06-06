@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 import { ContractPromise } from "@polkadot/api-contract";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import { web3FromSource } from "@utils/wallets/extension-dapp";
 import {
   txErrorHandler,

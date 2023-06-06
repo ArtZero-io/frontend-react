@@ -8,7 +8,7 @@ import { clientAPI } from "@api/client";
 import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import {
   createObjAttrsNFT,
   formatOutput,

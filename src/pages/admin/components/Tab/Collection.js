@@ -10,7 +10,7 @@ import {
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import collection_manager from "@utils/blockchain/collection-manager";
+import { collection_manager } from "@utils/blockchain/abi";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import BN from "bn.js";

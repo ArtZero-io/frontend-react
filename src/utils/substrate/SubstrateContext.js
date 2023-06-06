@@ -55,6 +55,8 @@ const reducer = (state, action) => {
       return { ...state, keyringState: "LOADING" };
     case "SET_KEYRING":
       return { ...state, keyring: action.payload, keyringState: "READY" };
+    case "SET_CHAIN_INFO":
+      return { ...state, ...action.payload };
     case "KEYRING_ERROR":
       return { ...state, keyring: null, keyringState: "ERROR" };
     case "SET_CURRENT_ACCOUNT":
@@ -124,16 +126,23 @@ const connect = (state, dispatch) => {
 };
 
 const retrieveChainInfo = async (api) => {
-  const [systemChain, systemChainType] = await Promise.all([
-    api?.rpc?.system?.chain(),
-    api?.rpc?.system?.chainType
-      ? api?.rpc?.system?.chainType()
-      : Promise.resolve(registry?.createType("ChainType", "Live")),
-  ]);
+  const [systemChain, systemChainType, chainSS58, chainDecimals, chainTokens] =
+    await Promise.all([
+      api?.rpc?.system?.chain(),
+      api?.rpc?.system?.chainType
+        ? api?.rpc?.system?.chainType()
+        : Promise.resolve(registry?.createType("ChainType", "Live")),
+      api?.registry?.chainSS58,
+      api?.registry?.chainDecimals,
+      api?.registry?.chainTokens,
+    ]);
 
   return {
     systemChain: (systemChain || "<unknown>").toString(),
     systemChainType,
+    chainSS58,
+    chainDecimal: chainDecimals[0],
+    chainTokens: chainTokens[0],
   };
 };
 
@@ -157,7 +166,31 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       }));
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
-      const { systemChain, systemChainType } = await retrieveChainInfo(api);
+      const {
+        systemChain,
+        systemChainType,
+        chainSS58,
+        chainDecimal,
+        chainTokens,
+      } = await retrieveChainInfo(api);
+
+      console.log("+++++++++++++++++++++++CHAIN INFO++++++++++++++++++++++++");
+      console.log("+++   chainName", systemChain);
+      console.log("+++   chainSS58", chainSS58);
+      console.log("+++   chainDecimal", chainDecimal);
+      console.log("+++   chainTokens", chainTokens);
+      console.log("+++++++++++++++++++++++CHAIN INFO++++++++++++++++++++++++");
+
+      dispatch({
+        type: "SET_CHAIN_INFO",
+        payload: {
+          chainName: systemChain,
+          chainSS58,
+          chainDecimal,
+          chainTokens,
+        },
+      });
+
       const isDevelopment =
         systemChainType.isDevelopment ||
         systemChainType.isLocal ||

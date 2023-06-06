@@ -21,7 +21,15 @@ import toast from "react-hot-toast";
 
 import Router from "@components/Router";
 import { useSubstrateState } from "@utils/substrate";
-import contractData from "@utils/blockchain/";
+import {
+  artzero_nft,
+  azero_domains_nft,
+  collection_manager,
+  launchpad_manager,
+  marketplace,
+  profile,
+  staking,
+} from "@utils/blockchain/abi";
 
 import { setAZNFTContract } from "@utils/blockchain/artzero-nft-calls";
 import { setAzeroDomainsNFTContract } from "@utils/blockchain/azero-domains-nft-calls";
@@ -96,27 +104,19 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
-  const {
-    profile,
-    staking,
-    artzeroNft,
-    azeroDomainsNft,
-    collection,
-    marketplace,
-    launchpad_manager,
-  } = contractData;
+
   const [loadContractDone, setLoadContractDone] = useState(false);
 
   useEffect(() => {
     const initContract = async () => {
       try {
         if (apiState === "READY") {
-          await setCollectionContract(api, collection);
+          await setCollectionContract(api, collection_manager);
           await setMarketplaceContract(api, marketplace);
           await setProfileContract(api, profile);
           await setStakingContract(api, staking);
-          await setAZNFTContract(api, artzeroNft);
-          await setAzeroDomainsNFTContract(api, azeroDomainsNft);
+          await setAZNFTContract(api, artzero_nft);
+          await setAzeroDomainsNFTContract(api, azero_domains_nft);
           await setLaunchPadContract(api, launchpad_manager);
           await setMarketplaceAzeroDomainsContract(api, marketplace);
           setLoadContractDone(true);
@@ -126,17 +126,7 @@ const Main = () => {
       }
     };
     initContract();
-  }, [
-    api,
-    apiState,
-    artzeroNft,
-    azeroDomainsNft,
-    collection,
-    marketplace,
-    profile,
-    staking,
-    launchpad_manager,
-  ]);
+  }, [api, apiState]);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders

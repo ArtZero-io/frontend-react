@@ -10,11 +10,16 @@ import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit, { getGasLimitBulkAction } from "../utils/blockchain/dryRun";
 import { execContractQuery } from "../pages/account/nfts/nfts";
-import { ADMIN_ROLE_CODE, AZERO_DOMAINS_COLLECTION, ARTZERO_COLLECTION, OTHER_COLLECTION } from "../constants";
+import {
+  ADMIN_ROLE_CODE,
+  AZERO_DOMAINS_COLLECTION,
+  ARTZERO_COLLECTION,
+  OTHER_COLLECTION,
+} from "../constants";
 import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
-import azero_domains_nft from "./blockchain/azero-domains-nft";
-import artzero_nft from './blockchain/artzero-nft';
+
+import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -660,21 +665,17 @@ export async function getEstimatedGasBatchTx(
   return ret;
 }
 
-export const switchCollection = async ({
-  contractAddress,
-}) => {
+export const switchCollection = async ({ contractAddress }) => {
   if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
     return AZERO_DOMAINS_COLLECTION;
-  } else if(contractAddress == artzero_nft.CONTRACT_ADDRESS) {
+  } else if (contractAddress == artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
   } else {
     return OTHER_COLLECTION;
   }
 };
 
-export const isAzeroDomainCollection = async ({
-  contractAddress,
-}) => {
+export const isAzeroDomainCollection = async ({ contractAddress }) => {
   if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {

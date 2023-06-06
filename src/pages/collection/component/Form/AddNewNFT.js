@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { nft721_psp34_standard } from "@utils/blockchain/abi";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
 import { ContractPromise } from "@polkadot/api-contract";

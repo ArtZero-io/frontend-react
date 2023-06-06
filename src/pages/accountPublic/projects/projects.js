@@ -6,7 +6,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";
 import { APICall } from "@api/client";
 import { execContractQuery } from "../nfts/nfts";
-import launchpad_psp34_nft_standard from "../../../utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import { useParams } from "react-router-dom";
 
 const MyProjectsPage = () => {

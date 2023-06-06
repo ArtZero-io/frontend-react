@@ -17,7 +17,7 @@ import UpdatePhase from "../Form/UpdatePhase";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
 import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { convertStringToPrice, strToNumber, delay } from "@utils";

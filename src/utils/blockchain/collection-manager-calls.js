@@ -9,7 +9,7 @@ import {
 } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
-import collection_manager from "@utils/blockchain/collection-manager";
+import { collection_manager } from "@utils/blockchain/abi";
 import { getEstimatedGas, readOnlyGasLimit, formatOutput } from "..";
 import emailjs from "@emailjs/browser";
 import { delay } from "@utils";

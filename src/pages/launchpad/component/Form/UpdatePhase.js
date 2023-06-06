@@ -5,7 +5,7 @@ import { FieldArray, useField } from "formik";
 import { Button, HStack, Stack, Text } from "@chakra-ui/react";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 

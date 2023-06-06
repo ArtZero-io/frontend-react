@@ -12,8 +12,8 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
 import { getPublicCurrentAccount } from "@utils";
-import launchpad_manager from "@utils/blockchain/launchpad-manager";
-import collection_manager from "@utils/blockchain/collection-manager";
+import { launchpad_manager, collection_manager } from "@utils/blockchain/abi";
+
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
@@ -297,6 +297,12 @@ export const fetchValidatorProfit = async ({
     } = await api.query.system.account(address || currentAccount?.address);
 
     const [chainDecimals] = await api.registry.chainDecimals;
+    {
+      const { chainDecimals, chainTokens, chainSS58 } = await api.registry;
+      console.log("chainDecimals", chainDecimals);
+      console.log("chainTokens", chainTokens);
+      console.log("chainSS58", chainSS58);
+    }
 
     const formattedStrBal = formatBalance(free, {
       withSi: false,

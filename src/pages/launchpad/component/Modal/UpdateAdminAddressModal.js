@@ -21,7 +21,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import useTxStatus from "@hooks/useTxStatus";
