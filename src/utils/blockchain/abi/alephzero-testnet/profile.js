@@ -1,127 +1,181 @@
 const profile = {
-	CONTRACT_ADDRESS: "5Fpj4hw4XZZF43ZBtrkZgn2mWd2m6tTE1MPwFN95TcTQx8Y3",
+	CONTRACT_ADDRESS: "5DxuvUB5p4F4fB1GN3oFsaoUFuU2y1agcQ2PBY3NfiAFkXjR",
 	CONTRACT_ABI: {
 		"source": {
-		  "hash": "0x63b75a4c4ada69ed4b8e94330ef0e8f579de0745ea17bcbc0952a6bdcbd063b0",
-		  "language": "ink! 4.0.1",
-		  "compiler": "rustc 1.70.0-nightly",
-		  "build_info": {
-			"build_mode": "Release",
-			"cargo_contract_version": "2.1.0",
+		"hash": "0x0fae9732950d2e127019b1a433095d40f1b07dee55c1c5c69fd3a38b649c6d8a",
+		"language": "ink! 4.0.0",
+		"compiler": "rustc 1.69.0-nightly",
+		"build_info": {
+			"build_mode": "Debug",
+			"cargo_contract_version": "2.0.0-rc",
 			"rust_toolchain": "nightly-x86_64-unknown-linux-gnu",
 			"wasm_opt_settings": {
-			  "keep_debug_symbols": false,
-			  "optimization_passes": "Z"
+			"keep_debug_symbols": false,
+			"optimization_passes": "Z"
 			}
-		  }
+		}
 		},
 		"contract": {
-		  "name": "profile_manager",
-		  "version": "1.0.0",
-		  "authors": [
+		"name": "profile_manager",
+		"version": "1.0.0",
+		"authors": [
 			"ArtZero <admin@artzero.io>"
-		  ]
+		]
 		},
 		"spec": {
-		  "constructors": [
+		"constructors": [
 			{
-			  "args": [],
-			  "docs": [],
-			  "label": "new",
-			  "payable": false,
-			  "returnType": {
+			"args": [],
+			"docs": [],
+			"label": "new",
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink_primitives",
-				  "ConstructorResult"
+				"ink_primitives",
+				"ConstructorResult"
 				],
 				"type": 5
-			  },
-			  "selector": "0x9bae9d5e"
+			},
+			"selector": "0x9bae9d5e"
 			}
-		  ],
-		  "docs": [],
-		  "events": [],
-		  "lang_error": {
+		],
+		"docs": [],
+		"events": [],
+		"lang_error": {
 			"displayName": [
-			  "ink",
-			  "LangError"
+			"ink",
+			"LangError"
 			],
 			"type": 6
-		  },
-		  "messages": [
+		},
+		"messages": [
 			{
-			  "args": [
+			"args": [
 				{
-				  "label": "attributes",
-				  "type": {
+				"label": "attributes",
+				"type": {
 					"displayName": [
-					  "Vec"
+					"Vec"
 					],
 					"type": 7
-				  }
+				}
 				},
 				{
-				  "label": "values",
-				  "type": {
+				"label": "values",
+				"type": {
 					"displayName": [
-					  "Vec"
+					"Vec"
 					],
 					"type": 7
-				  }
 				}
-			  ],
-			  "docs": [
+				}
+			],
+			"docs": [
 				" Set multiple profile attributes"
-			  ],
-			  "label": "set_multiple_attributes",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
+			],
+			"label": "set_multiple_attributes",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
 				"type": 9
-			  },
-			  "selector": "0x8119d25e"
+			},
+			"selector": "0x8119d25e"
 			},
 			{
-			  "args": [
+			"args": [
 				{
-				  "label": "account",
-				  "type": {
+				"label": "account",
+				"type": {
 					"displayName": [
-					  "AccountId"
+					"AccountId"
 					],
 					"type": 0
-				  }
+				}
 				},
 				{
-				  "label": "attributes",
-				  "type": {
+				"label": "attributes",
+				"type": {
 					"displayName": [
-					  "Vec"
+					"Vec"
 					],
 					"type": 7
-				  }
 				}
-			  ],
-			  "docs": [],
-			  "label": "get_attributes",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
+				}
+			],
+			"docs": [],
+			"label": "get_attributes",
+			"mutates": false,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
 				"type": 16
-			  },
-			  "selector": "0x8d76b3fe"
+			},
+			"selector": "0x8d76b3fe"
 			},
 			{
-			  "args": [],
-			  "docs": [
+			"args": [],
+			"docs": [
+				" Returns the address of the current owner."
+			],
+			"label": "Ownable::owner",
+			"mutates": false,
+			"payable": false,
+			"returnType": {
+				"displayName": [
+				"ink",
+				"MessageResult"
+				],
+				"type": 17
+			},
+			"selector": "0x4fa43c8c"
+			},
+			{
+			"args": [
+				{
+				"label": "new_owner",
+				"type": {
+					"displayName": [
+					"ownable_external",
+					"TransferOwnershipInput1"
+					],
+					"type": 0
+				}
+				}
+			],
+			"docs": [
+				" Transfers ownership of the contract to a `new_owner`.",
+				" Can only be called by the current owner.",
+				"",
+				" On success a `OwnershipTransferred` event is emitted.",
+				"",
+				" # Errors",
+				"",
+				" Panics with `CallerIsNotOwner` error if caller is not owner.",
+				"",
+				" Panics with `NewOwnerIsZero` error if new owner's address is zero."
+			],
+			"label": "Ownable::transfer_ownership",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
+				"displayName": [
+				"ink",
+				"MessageResult"
+				],
+				"type": 18
+			},
+			"selector": "0x11f43efd"
+			},
+			{
+			"args": [],
+			"docs": [
 				" Leaves the contract without owner. It will not be possible to call",
 				" owner's functions anymore. Can only be called by the current owner.",
 				"",
@@ -133,1323 +187,1253 @@ const profile = {
 				" # Errors",
 				"",
 				" Panics with `CallerIsNotOwner` error if caller is not owner"
-			  ],
-			  "label": "Ownable::renounce_ownership",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
+			],
+			"label": "Ownable::renounce_ownership",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
-				"type": 17
-			  },
-			  "selector": "0x5e228753"
+				"type": 18
+			},
+			"selector": "0x5e228753"
 			},
 			{
-			  "args": [
+			"args": [
 				{
-				  "label": "new_owner",
-				  "type": {
+				"label": "nft_contract_address",
+				"type": {
 					"displayName": [
-					  "ownable_external",
-					  "TransferOwnershipInput1"
+					"admintrait_external",
+					"TranferNftInput1"
 					],
 					"type": 0
-				  }
 				}
-			  ],
-			  "docs": [
-				" Transfers ownership of the contract to a `new_owner`.",
-				" Can only be called by the current owner.",
-				"",
-				" On success a `OwnershipTransferred` event is emitted.",
-				"",
-				" # Errors",
-				"",
-				" Panics with `CallerIsNotOwner` error if caller is not owner.",
-				"",
-				" Panics with `NewOwnerIsZero` error if new owner's address is zero."
-			  ],
-			  "label": "Ownable::transfer_ownership",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 17
-			  },
-			  "selector": "0x11f43efd"
-			},
-			{
-			  "args": [],
-			  "docs": [
-				" Returns the address of the current owner."
-			  ],
-			  "label": "Ownable::owner",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 19
-			  },
-			  "selector": "0x4fa43c8c"
-			},
-			{
-			  "args": [
-				{
-				  "label": "nft_contract_address",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "TranferNftInput1"
-					],
-					"type": 0
-				  }
 				},
 				{
-				  "label": "token_id",
-				  "type": {
+				"label": "token_id",
+				"type": {
 					"displayName": [
-					  "admintrait_external",
-					  "TranferNftInput2"
+					"admintrait_external",
+					"TranferNftInput2"
 					],
 					"type": 20
-				  }
+				}
 				},
 				{
-				  "label": "receiver",
-				  "type": {
+				"label": "receiver",
+				"type": {
 					"displayName": [
-					  "admintrait_external",
-					  "TranferNftInput3"
+					"admintrait_external",
+					"TranferNftInput3"
 					],
 					"type": 0
-				  }
 				}
-			  ],
-			  "docs": [
+				}
+			],
+			"docs": [
 				" This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-			  ],
-			  "label": "AdminTrait::tranfer_nft",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
+			],
+			"label": "AdminTrait::tranfer_nft",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
 				"type": 9
-			  },
-			  "selector": "0xed1e1dfa"
+			},
+			"selector": "0xed1e1dfa"
 			},
 			{
-			  "args": [
+			"args": [
 				{
-				  "label": "psp22_contract_address",
-				  "type": {
+				"label": "value",
+				"type": {
 					"displayName": [
-					  "admintrait_external",
-					  "TranferPsp22Input1"
-					],
-					"type": 0
-				  }
-				},
-				{
-				  "label": "amount",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "TranferPsp22Input2"
+					"admintrait_external",
+					"WithdrawFeeInput1"
 					],
 					"type": 24
-				  }
+				}
 				},
 				{
-				  "label": "receiver",
-				  "type": {
+				"label": "receiver",
+				"type": {
 					"displayName": [
-					  "admintrait_external",
-					  "TranferPsp22Input3"
+					"admintrait_external",
+					"WithdrawFeeInput2"
 					],
 					"type": 0
-				  }
 				}
-			  ],
-			  "docs": [
-				" This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
-			  ],
-			  "label": "AdminTrait::tranfer_psp22",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 9
-			  },
-			  "selector": "0xd9aad284"
-			},
-			{
-			  "args": [
-				{
-				  "label": "value",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "WithdrawFeeInput1"
-					],
-					"type": 24
-				  }
-				},
-				{
-				  "label": "receiver",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "WithdrawFeeInput2"
-					],
-					"type": 0
-				  }
 				}
-			  ],
-			  "docs": [
+			],
+			"docs": [
 				" This function allows contract owner to withdraw contract balance to his account."
-			  ],
-			  "label": "AdminTrait::withdraw_fee",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
+			],
+			"label": "AdminTrait::withdraw_fee",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
 				"type": 9
-			  },
-			  "selector": "0x07573e99"
+			},
+			"selector": "0x07573e99"
 			},
 			{
-			  "args": [
+			"args": [
 				{
-				  "label": "code_hash",
-				  "type": {
+				"label": "psp22_contract_address",
+				"type": {
 					"displayName": [
-					  "upgradabletrait_external",
-					  "SetCodeInput1"
+					"admintrait_external",
+					"TranferPsp22Input1"
+					],
+					"type": 0
+				}
+				},
+				{
+				"label": "amount",
+				"type": {
+					"displayName": [
+					"admintrait_external",
+					"TranferPsp22Input2"
+					],
+					"type": 24
+				}
+				},
+				{
+				"label": "receiver",
+				"type": {
+					"displayName": [
+					"admintrait_external",
+					"TranferPsp22Input3"
+					],
+					"type": 0
+				}
+				}
+			],
+			"docs": [
+				" This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+			],
+			"label": "AdminTrait::tranfer_psp22",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
+				"displayName": [
+				"ink",
+				"MessageResult"
+				],
+				"type": 9
+			},
+			"selector": "0xd9aad284"
+			},
+			{
+			"args": [
+				{
+				"label": "code_hash",
+				"type": {
+					"displayName": [
+					"upgradabletrait_external",
+					"SetCodeInput1"
 					],
 					"type": 1
-				  }
 				}
-			  ],
-			  "docs": [
+				}
+			],
+			"docs": [
 				" This function allow contract owner modifies the code which is used to execute calls to this contract address (`AccountId`)."
-			  ],
-			  "label": "UpgradableTrait::set_code",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
+			],
+			"label": "UpgradableTrait::set_code",
+			"mutates": true,
+			"payable": false,
+			"returnType": {
 				"displayName": [
-				  "ink",
-				  "MessageResult"
+				"ink",
+				"MessageResult"
 				],
 				"type": 9
-			  },
-			  "selector": "0xa9e46760"
+			},
+			"selector": "0xa9e46760"
 			}
-		  ]
+		]
 		},
 		"storage": {
-		  "root": {
+		"root": {
 			"layout": {
-			  "struct": {
+			"struct": {
 				"fields": [
-				  {
+				{
 					"layout": {
-					  "struct": {
+					"struct": {
 						"fields": [
-						  {
+						{
 							"layout": {
-							  "leaf": {
+							"leaf": {
 								"key": "0x00000000",
 								"ty": 0
-							  }
+							}
 							},
 							"name": "owner"
-						  },
-						  {
+						},
+						{
 							"layout": {
-							  "enum": {
+							"enum": {
 								"dispatchKey": "0x00000000",
 								"name": "Option",
 								"variants": {
-								  "0": {
+								"0": {
 									"fields": [],
 									"name": "None"
-								  },
-								  "1": {
+								},
+								"1": {
 									"fields": [
-									  {
+									{
 										"layout": {
-										  "leaf": {
+										"leaf": {
 											"key": "0x00000000",
 											"ty": 3
-										  }
+										}
 										},
 										"name": "0"
-									  }
+									}
 									],
 									"name": "Some"
-								  }
 								}
-							  }
+								}
+							}
 							},
 							"name": "_reserved"
-						  }
+						}
 						],
 						"name": "Data"
-					  }
+					}
 					},
 					"name": "ownable"
-				  },
-				  {
+				},
+				{
 					"layout": {
-					  "struct": {
+					"struct": {
 						"fields": [
-						  {
+						{
 							"layout": {
-							  "enum": {
+							"enum": {
 								"dispatchKey": "0x00000000",
 								"name": "Option",
 								"variants": {
-								  "0": {
+								"0": {
 									"fields": [],
 									"name": "None"
-								  },
-								  "1": {
+								},
+								"1": {
 									"fields": [
-									  {
+									{
 										"layout": {
-										  "leaf": {
+										"leaf": {
 											"key": "0x00000000",
 											"ty": 3
-										  }
+										}
 										},
 										"name": "0"
-									  }
+									}
 									],
 									"name": "Some"
-								  }
 								}
-							  }
+								}
+							}
 							},
 							"name": "_reserved"
-						  }
+						}
 						],
 						"name": "Data"
-					  }
+					}
 					},
 					"name": "admin_data"
-				  },
-				  {
+				},
+				{
 					"layout": {
-					  "struct": {
+					"struct": {
 						"fields": [
-						  {
+						{
 							"layout": {
-							  "enum": {
+							"enum": {
 								"dispatchKey": "0x00000000",
 								"name": "Option",
 								"variants": {
-								  "0": {
+								"0": {
 									"fields": [],
 									"name": "None"
-								  },
-								  "1": {
+								},
+								"1": {
 									"fields": [
-									  {
+									{
 										"layout": {
-										  "leaf": {
+										"leaf": {
 											"key": "0x00000000",
 											"ty": 3
-										  }
+										}
 										},
 										"name": "0"
-									  }
+									}
 									],
 									"name": "Some"
-								  }
 								}
-							  }
+								}
+							}
 							},
 							"name": "_reserved"
-						  }
+						}
 						],
 						"name": "Data"
-					  }
+					}
 					},
 					"name": "upgradable_data"
-				  },
-				  {
+				},
+				{
 					"layout": {
-					  "struct": {
+					"struct": {
 						"fields": [
-						  {
+						{
 							"layout": {
-							  "root": {
+							"root": {
 								"layout": {
-								  "leaf": {
+								"leaf": {
 									"key": "0x259aa0d2",
 									"ty": 4
-								  }
+								}
 								},
 								"root_key": "0x259aa0d2"
-							  }
+							}
 							},
 							"name": "attributes"
-						  }
+						}
 						],
 						"name": "Manager"
-					  }
+					}
 					},
 					"name": "manager"
-				  }
+				}
 				],
 				"name": "ProfileManager"
-			  }
+			}
 			},
 			"root_key": "0x00000000"
-		  }
+		}
 		},
 		"types": [
-		  {
+		{
 			"id": 0,
 			"type": {
-			  "def": {
+			"def": {
 				"composite": {
-				  "fields": [
+				"fields": [
 					{
-					  "type": 1,
-					  "typeName": "[u8; 32]"
+					"type": 1,
+					"typeName": "[u8; 32]"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"ink_primitives",
 				"types",
 				"AccountId"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 1,
 			"type": {
-			  "def": {
+			"def": {
 				"array": {
-				  "len": 32,
-				  "type": 2
+				"len": 32,
+				"type": 2
 				}
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 2,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "u8"
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 3,
 			"type": {
-			  "def": {
+			"def": {
 				"tuple": []
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 4,
 			"type": {
-			  "def": {
+			"def": {
 				"sequence": {
-				  "type": 2
+				"type": 2
 				}
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 5,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 3
+						"type": 3
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 6
+						"type": 6
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 3
+				"name": "T",
+				"type": 3
 				},
 				{
-				  "name": "E",
-				  "type": 6
+				"name": "E",
+				"type": 6
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 6,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "index": 1,
-					  "name": "CouldNotReadInput"
+					"index": 1,
+					"name": "CouldNotReadInput"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"ink_primitives",
 				"LangError"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 7,
 			"type": {
-			  "def": {
+			"def": {
 				"sequence": {
-				  "type": 8
+				"type": 8
 				}
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 8,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "str"
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 9,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 10
+						"type": 10
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 6
+						"type": 6
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 10
+				"name": "T",
+				"type": 10
 				},
 				{
-				  "name": "E",
-				  "type": 6
+				"name": "E",
+				"type": 6
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 10,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 3
+						"type": 3
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 11
+						"type": 11
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 3
+				"name": "T",
+				"type": 3
 				},
 				{
-				  "name": "E",
-				  "type": 11
+				"name": "E",
+				"type": 11
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 11,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 8,
-						  "typeName": "String"
+						"type": 8,
+						"typeName": "String"
 						}
-					  ],
-					  "index": 0,
-					  "name": "Custom"
+					],
+					"index": 0,
+					"name": "Custom"
 					},
 					{
-					  "index": 1,
-					  "name": "OnlyOwner"
+					"index": 1,
+					"name": "OnlyOwner"
 					},
 					{
-					  "index": 2,
-					  "name": "OnlyAdmin"
+					"index": 2,
+					"name": "OnlyAdmin"
 					},
 					{
-					  "index": 3,
-					  "name": "InvalidCaller"
+					"index": 3,
+					"name": "InvalidCaller"
 					},
 					{
-					  "index": 4,
-					  "name": "InvalidFee"
+					"index": 4,
+					"name": "InvalidFee"
 					},
 					{
-					  "index": 5,
-					  "name": "TokenOwnerNotMatch"
+					"index": 5,
+					"name": "TokenOwnerNotMatch"
 					},
 					{
-					  "index": 6,
-					  "name": "NotApproved"
+					"index": 6,
+					"name": "NotApproved"
 					},
 					{
-					  "index": 7,
-					  "name": "CannotTransfer"
+					"index": 7,
+					"name": "CannotTransfer"
 					},
 					{
-					  "index": 8,
-					  "name": "CannotMint"
+					"index": 8,
+					"name": "CannotMint"
 					},
 					{
-					  "index": 9,
-					  "name": "NotPublicMint"
+					"index": 9,
+					"name": "NotPublicMint"
 					},
 					{
-					  "index": 10,
-					  "name": "NotEnoughBalance"
+					"index": 10,
+					"name": "NotEnoughBalance"
 					},
 					{
-					  "index": 11,
-					  "name": "MaxSupply"
+					"index": 11,
+					"name": "MaxSupply"
 					},
 					{
-					  "index": 12,
-					  "name": "AlreadyInit"
+					"index": 12,
+					"name": "AlreadyInit"
 					},
 					{
-					  "index": 13,
-					  "name": "NotOwner"
+					"index": 13,
+					"name": "NotOwner"
 					},
 					{
-					  "index": 14,
-					  "name": "NotTokenOwner"
+					"index": 14,
+					"name": "NotTokenOwner"
 					},
 					{
-					  "index": 15,
-					  "name": "ProjectNotExist"
+					"index": 15,
+					"name": "ProjectNotExist"
 					},
 					{
-					  "index": 16,
-					  "name": "ProjectOwnerAndAdmin"
+					"index": 16,
+					"name": "ProjectOwnerAndAdmin"
 					},
 					{
-					  "index": 17,
-					  "name": "InvalidStartTimeAndEndTime"
+					"index": 17,
+					"name": "InvalidStartTimeAndEndTime"
 					},
 					{
-					  "index": 18,
-					  "name": "InvalidPhaseCount"
+					"index": 18,
+					"name": "InvalidPhaseCount"
 					},
 					{
-					  "index": 19,
-					  "name": "CollectionOwnerAndAdmin"
+					"index": 19,
+					"name": "CollectionOwnerAndAdmin"
 					},
 					{
-					  "index": 20,
-					  "name": "CollectionNotActive"
+					"index": 20,
+					"name": "CollectionNotActive"
 					},
 					{
-					  "index": 21,
-					  "name": "CollectionNotExist"
+					"index": 21,
+					"name": "InvalidInput"
 					},
 					{
-					  "index": 22,
-					  "name": "InvalidInput"
+					"index": 22,
+					"name": "InvalidType"
 					},
 					{
-					  "index": 23,
-					  "name": "InvalidType"
+					"index": 23,
+					"name": "ClaimedAll"
 					},
 					{
-					  "index": 24,
-					  "name": "ClaimedAll"
+					"index": 24,
+					"name": "TokenLimitReached"
 					},
 					{
-					  "index": 25,
-					  "name": "TokenLimitReached"
+					"index": 25,
+					"name": "UpdatePhase"
 					},
 					{
-					  "index": 26,
-					  "name": "UpdatePhase"
+					"index": 26,
+					"name": "PhaseNotExist"
 					},
 					{
-					  "index": 27,
-					  "name": "PhaseNotExist"
+					"index": 27,
+					"name": "PhaseExpired"
 					},
 					{
-					  "index": 28,
-					  "name": "PhaseExpired"
+					"index": 28,
+					"name": "PhaseDeactivate"
 					},
 					{
-					  "index": 29,
-					  "name": "PhaseDeactivate"
+					"index": 29,
+					"name": "WhitelistNotExist"
 					},
 					{
-					  "index": 30,
-					  "name": "WhitelistNotExist"
+					"index": 30,
+					"name": "WithdrawFeeError"
 					},
 					{
-					  "index": 31,
-					  "name": "WithdrawFeeError"
+					"index": 31,
+					"name": "WithdrawNFTError"
 					},
 					{
-					  "index": 32,
-					  "name": "WithdrawNFTError"
+					"index": 32,
+					"name": "WithdrawPSP22Error"
 					},
 					{
-					  "index": 33,
-					  "name": "WithdrawPSP22Error"
+					"index": 33,
+					"name": "NotListed"
 					},
 					{
-					  "index": 34,
-					  "name": "NotListed"
+					"index": 34,
+					"name": "BidAlreadyExist"
 					},
 					{
-					  "index": 35,
-					  "name": "BidAlreadyExist"
+					"index": 35,
+					"name": "BidNotExist"
 					},
 					{
-					  "index": 36,
-					  "name": "BidNotExist"
+					"index": 36,
+					"name": "NotInMarket"
 					},
 					{
-					  "index": 37,
-					  "name": "NotInMarket"
+					"index": 37,
+					"name": "NotForSale"
 					},
 					{
-					  "index": 38,
-					  "name": "NotForSale"
+					"index": 38,
+					"name": "NotInSaleList"
 					},
 					{
-					  "index": 39,
-					  "name": "NotInSaleList"
+					"index": 39,
+					"name": "InvalidBidLength"
 					},
 					{
-					  "index": 40,
-					  "name": "InvalidBidLength"
+					"index": 40,
+					"name": "InvalidCollectionOwner"
 					},
 					{
-					  "index": 41,
-					  "name": "InvalidCollectionOwner"
+					"index": 41,
+					"name": "InvalidTime"
 					},
 					{
-					  "index": 42,
-					  "name": "InvalidTime"
+					"index": 42,
+					"name": "RewardStarted"
 					},
 					{
-					  "index": 43,
-					  "name": "RewardStarted"
+					"index": 43,
+					"name": "RewardNotStarted"
 					},
 					{
-					  "index": 44,
-					  "name": "RewardNotStarted"
+					"index": 44,
+					"name": "ClaimMustBeFalse"
 					},
 					{
-					  "index": 45,
-					  "name": "RewardNotAdded"
-					},
-					{
-					  "index": 46,
-					  "name": "ClaimMustBeFalse"
-					},
-					{
-					  "index": 47,
-					  "name": "HoldAmountBidderNotExist"
-					},
-					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 12,
-						  "typeName": "OwnableError"
+						"type": 12,
+						"typeName": "OwnableError"
 						}
-					  ],
-					  "index": 48,
-					  "name": "OwnableError"
+					],
+					"index": 45,
+					"name": "OwnableError"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 13,
-						  "typeName": "AccessControlError"
+						"type": 13,
+						"typeName": "AccessControlError"
 						}
-					  ],
-					  "index": 49,
-					  "name": "AccessControlError"
+					],
+					"index": 46,
+					"name": "AccessControlError"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 14,
-						  "typeName": "PSP22Error"
+						"type": 14,
+						"typeName": "PSP22Error"
 						}
-					  ],
-					  "index": 50,
-					  "name": "PSP22Error"
+					],
+					"index": 47,
+					"name": "PSP22Error"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 15,
-						  "typeName": "PSP34Error"
+						"type": 15,
+						"typeName": "PSP34Error"
 						}
-					  ],
-					  "index": 51,
-					  "name": "PSP34Error"
-					},
-					{
-					  "index": 52,
-					  "name": "CheckedOperations"
+					],
+					"index": 48,
+					"name": "PSP34Error"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"artzero_project",
 				"traits",
 				"error",
 				"Error"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 12,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "index": 0,
-					  "name": "CallerIsNotOwner"
+					"index": 0,
+					"name": "CallerIsNotOwner"
 					},
 					{
-					  "index": 1,
-					  "name": "NewOwnerIsZero"
+					"index": 1,
+					"name": "NewOwnerIsZero"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"openbrush_contracts",
 				"traits",
 				"errors",
 				"ownable",
 				"OwnableError"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 13,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "index": 0,
-					  "name": "InvalidCaller"
+					"index": 0,
+					"name": "InvalidCaller"
 					},
 					{
-					  "index": 1,
-					  "name": "MissingRole"
+					"index": 1,
+					"name": "MissingRole"
 					},
 					{
-					  "index": 2,
-					  "name": "RoleRedundant"
+					"index": 2,
+					"name": "RoleRedundant"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"openbrush_contracts",
 				"traits",
 				"errors",
 				"access_control",
 				"AccessControlError"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 14,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 4,
-						  "typeName": "String"
+						"type": 4,
+						"typeName": "String"
 						}
-					  ],
-					  "index": 0,
-					  "name": "Custom"
+					],
+					"index": 0,
+					"name": "Custom"
 					},
 					{
-					  "index": 1,
-					  "name": "InsufficientBalance"
+					"index": 1,
+					"name": "InsufficientBalance"
 					},
 					{
-					  "index": 2,
-					  "name": "InsufficientAllowance"
+					"index": 2,
+					"name": "InsufficientAllowance"
 					},
 					{
-					  "index": 3,
-					  "name": "ZeroRecipientAddress"
+					"index": 3,
+					"name": "ZeroRecipientAddress"
 					},
 					{
-					  "index": 4,
-					  "name": "ZeroSenderAddress"
+					"index": 4,
+					"name": "ZeroSenderAddress"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 4,
-						  "typeName": "String"
+						"type": 4,
+						"typeName": "String"
 						}
-					  ],
-					  "index": 5,
-					  "name": "SafeTransferCheckFailed"
+					],
+					"index": 5,
+					"name": "SafeTransferCheckFailed"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"openbrush_contracts",
 				"traits",
 				"errors",
 				"psp22",
 				"PSP22Error"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 15,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 4,
-						  "typeName": "String"
+						"type": 4,
+						"typeName": "String"
 						}
-					  ],
-					  "index": 0,
-					  "name": "Custom"
+					],
+					"index": 0,
+					"name": "Custom"
 					},
 					{
-					  "index": 1,
-					  "name": "SelfApprove"
+					"index": 1,
+					"name": "SelfApprove"
 					},
 					{
-					  "index": 2,
-					  "name": "NotApproved"
+					"index": 2,
+					"name": "NotApproved"
 					},
 					{
-					  "index": 3,
-					  "name": "TokenExists"
+					"index": 3,
+					"name": "TokenExists"
 					},
 					{
-					  "index": 4,
-					  "name": "TokenNotExists"
+					"index": 4,
+					"name": "TokenNotExists"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 4,
-						  "typeName": "String"
+						"type": 4,
+						"typeName": "String"
 						}
-					  ],
-					  "index": 5,
-					  "name": "SafeTransferCheckFailed"
+					],
+					"index": 5,
+					"name": "SafeTransferCheckFailed"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"openbrush_contracts",
 				"traits",
 				"errors",
 				"psp34",
 				"PSP34Error"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 16,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 7
+						"type": 7
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 6
+						"type": 6
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 7
+				"name": "T",
+				"type": 7
 				},
 				{
-				  "name": "E",
-				  "type": 6
+				"name": "E",
+				"type": 6
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 17,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 18
+						"type": 0
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 6
+						"type": 6
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 18
+				"name": "T",
+				"type": 0
 				},
 				{
-				  "name": "E",
-				  "type": 6
+				"name": "E",
+				"type": 6
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 18,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 3
+						"type": 19
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 12
+						"type": 6
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 3
+				"name": "T",
+				"type": 19
 				},
 				{
-				  "name": "E",
-				  "type": 12
+				"name": "E",
+				"type": 6
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 19,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 0
+						"type": 3
 						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
+					],
+					"index": 0,
+					"name": "Ok"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 6
+						"type": 12
 						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
+					],
+					"index": 1,
+					"name": "Err"
 					}
-				  ]
+				]
 				}
-			  },
-			  "params": [
+			},
+			"params": [
 				{
-				  "name": "T",
-				  "type": 0
+				"name": "T",
+				"type": 3
 				},
 				{
-				  "name": "E",
-				  "type": 6
+				"name": "E",
+				"type": 12
 				}
-			  ],
-			  "path": [
+			],
+			"path": [
 				"Result"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 20,
 			"type": {
-			  "def": {
+			"def": {
 				"variant": {
-				  "variants": [
+				"variants": [
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 2,
-						  "typeName": "u8"
+						"type": 2,
+						"typeName": "u8"
 						}
-					  ],
-					  "index": 0,
-					  "name": "U8"
+					],
+					"index": 0,
+					"name": "U8"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 21,
-						  "typeName": "u16"
+						"type": 21,
+						"typeName": "u16"
 						}
-					  ],
-					  "index": 1,
-					  "name": "U16"
+					],
+					"index": 1,
+					"name": "U16"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 22,
-						  "typeName": "u32"
+						"type": 22,
+						"typeName": "u32"
 						}
-					  ],
-					  "index": 2,
-					  "name": "U32"
+					],
+					"index": 2,
+					"name": "U32"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 23,
-						  "typeName": "u64"
+						"type": 23,
+						"typeName": "u64"
 						}
-					  ],
-					  "index": 3,
-					  "name": "U64"
+					],
+					"index": 3,
+					"name": "U64"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 24,
-						  "typeName": "u128"
+						"type": 24,
+						"typeName": "u128"
 						}
-					  ],
-					  "index": 4,
-					  "name": "U128"
+					],
+					"index": 4,
+					"name": "U128"
 					},
 					{
-					  "fields": [
+					"fields": [
 						{
-						  "type": 4,
-						  "typeName": "Vec<u8>"
+						"type": 4,
+						"typeName": "Vec<u8>"
 						}
-					  ],
-					  "index": 5,
-					  "name": "Bytes"
+					],
+					"index": 5,
+					"name": "Bytes"
 					}
-				  ]
+				]
 				}
-			  },
-			  "path": [
+			},
+			"path": [
 				"openbrush_contracts",
 				"traits",
 				"types",
 				"Id"
-			  ]
+			]
 			}
-		  },
-		  {
+		},
+		{
 			"id": 21,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "u16"
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 22,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "u32"
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 23,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "u64"
-			  }
 			}
-		  },
-		  {
+			}
+		},
+		{
 			"id": 24,
 			"type": {
-			  "def": {
+			"def": {
 				"primitive": "u128"
-			  }
 			}
-		  }
+			}
+		}
 		],
 		"version": "4"
-	  }
+	}
 };
 
 export default profile;

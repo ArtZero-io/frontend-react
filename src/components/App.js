@@ -45,6 +45,8 @@ import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { ArtZero_Privacy, START } from "../constants";
 import { Helmet } from "react-helmet";
+import { isEmptyObj } from "@utils";
+
 // import { useHistory } from "react-router-dom";
 // import bannerImg from "@theme/assets/banner.jpg";
 
@@ -116,7 +118,8 @@ const Main = () => {
           await setProfileContract(api, profile);
           await setStakingContract(api, staking);
           await setAZNFTContract(api, artzero_nft);
-          await setAzeroDomainsNFTContract(api, azero_domains_nft);
+          !isEmptyObj(azero_domains_nft) &&
+            (await setAzeroDomainsNFTContract(api, azero_domains_nft));
           await setLaunchPadContract(api, launchpad_manager);
           await setMarketplaceAzeroDomainsContract(api, marketplace);
           setLoadContractDone(true);

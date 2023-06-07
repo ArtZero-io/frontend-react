@@ -1,13 +1,13 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5FFqxQBrtnVMjSyXXqyoHzmUHHthTqX3rY9Kr7nx9bzE9cD5",
+  CONTRACT_ADDRESS: "5GJvpM8oivvTrK1vceX4zYNBa9eccrBaj2HoMAdSe7yppFE5",
   CONTRACT_ABI: {
 	"source": {
-	  "hash": "0x3cc56938bd78552e9b720786ace3cf63bd59fffad6154d6708ace9cd9d48572b",
+	  "hash": "0x9022d8876293107fa8900dac9338c4ddbc0b7c7ef33c7786362042c2ede34c0d",
 	  "language": "ink! 4.0.1",
 	  "compiler": "rustc 1.70.0-nightly",
 	  "build_info": {
-		"build_mode": "Debug",
-		"cargo_contract_version": "2.0.0-rc",
+		"build_mode": "Release",
+		"cargo_contract_version": "2.1.0",
 		"rust_toolchain": "nightly-x86_64-unknown-linux-gnu",
 		"wasm_opt_settings": {
 		  "keep_debug_symbols": false,
@@ -123,7 +123,7 @@ const collection_manager = {
 				"displayName": [
 				  "CollectionType"
 				],
-				"type": 37
+				"type": 41
 			  }
 			},
 			{
@@ -364,7 +364,7 @@ const collection_manager = {
 			  "type": {
 				"displayName": [
 				  "accesscontrol_external",
-				  "RenounceRoleInput1"
+				  "GrantRoleInput1"
 				],
 				"type": 4
 			  }
@@ -374,26 +374,23 @@ const collection_manager = {
 			  "type": {
 				"displayName": [
 				  "accesscontrol_external",
-				  "RenounceRoleInput2"
+				  "GrantRoleInput2"
 				],
 				"type": 0
 			  }
 			}
 		  ],
 		  "docs": [
-			" Revokes `role` from the calling account.",
-			" Roles are often managed via `grant_role` and `revoke_role`: this function's",
-			" purpose is to provide a mechanism for accounts to lose their privileges",
-			" if they are compromised (such as when a trusted device is misplaced).",
+			" Grants `role` to `account`.",
 			"",
-			" On success a `RoleRevoked` event is emitted.",
+			" On success a `RoleGranted` event is emitted.",
 			"",
 			" # Errors",
 			"",
-			" Returns with `InvalidCaller` error if caller is not `account`.",
-			" Returns with `MissingRole` error if `account` doesn't have `role`."
+			" Returns with `MissingRole` error if caller can't grant the role.",
+			" Returns with `RoleRedundant` error `account` has `role`."
 		  ],
-		  "label": "AccessControl::renounce_role",
+		  "label": "AccessControl::grant_role",
 		  "mutates": true,
 		  "payable": false,
 		  "returnType": {
@@ -403,7 +400,7 @@ const collection_manager = {
 			],
 			"type": 24
 		  },
-		  "selector": "0xeaf1248a"
+		  "selector": "0x4ac062fd"
 		},
 		{
 		  "args": [
@@ -494,6 +491,54 @@ const collection_manager = {
 			  "type": {
 				"displayName": [
 				  "accesscontrol_external",
+				  "RenounceRoleInput1"
+				],
+				"type": 4
+			  }
+			},
+			{
+			  "label": "account",
+			  "type": {
+				"displayName": [
+				  "accesscontrol_external",
+				  "RenounceRoleInput2"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [
+			" Revokes `role` from the calling account.",
+			" Roles are often managed via `grant_role` and `revoke_role`: this function's",
+			" purpose is to provide a mechanism for accounts to lose their privileges",
+			" if they are compromised (such as when a trusted device is misplaced).",
+			"",
+			" On success a `RoleRevoked` event is emitted.",
+			"",
+			" # Errors",
+			"",
+			" Returns with `InvalidCaller` error if caller is not `account`.",
+			" Returns with `MissingRole` error if `account` doesn't have `role`."
+		  ],
+		  "label": "AccessControl::renounce_role",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 24
+		  },
+		  "selector": "0xeaf1248a"
+		},
+		{
+		  "args": [
+			{
+			  "label": "role",
+			  "type": {
+				"displayName": [
+				  "accesscontrol_external",
 				  "GetRoleAdminInput1"
 				],
 				"type": 4
@@ -514,51 +559,6 @@ const collection_manager = {
 			"type": 27
 		  },
 		  "selector": "0x83da3bb2"
-		},
-		{
-		  "args": [
-			{
-			  "label": "role",
-			  "type": {
-				"displayName": [
-				  "accesscontrol_external",
-				  "GrantRoleInput1"
-				],
-				"type": 4
-			  }
-			},
-			{
-			  "label": "account",
-			  "type": {
-				"displayName": [
-				  "accesscontrol_external",
-				  "GrantRoleInput2"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [
-			" Grants `role` to `account`.",
-			"",
-			" On success a `RoleGranted` event is emitted.",
-			"",
-			" # Errors",
-			"",
-			" Returns with `MissingRole` error if caller can't grant the role.",
-			" Returns with `RoleRedundant` error `account` has `role`."
-		  ],
-		  "label": "AccessControl::grant_role",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 24
-		  },
-		  "selector": "0x4ac062fd"
 		},
 		{
 		  "args": [
@@ -715,120 +715,6 @@ const collection_manager = {
 		{
 		  "args": [
 			{
-			  "label": "standard_nft_hash",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateStandardNftHashInput1"
-				],
-				"type": 5
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_standard_nft_hash",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0x8f99cb93"
-		},
-		{
-		  "args": [
-			{
-			  "label": "owner_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetCollectionsByOwnerInput1"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_collections_by_owner",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 33
-		  },
-		  "selector": "0xae558f31"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetCollectionAttributeCountInput1"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_collection_attribute_count",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 35
-		  },
-		  "selector": "0x13a2a329"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateContractTypeInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "contract_type",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateContractTypeInput2"
-				],
-				"type": 37
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_contract_type",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0x9df6e931"
-		},
-		{
-		  "args": [
-			{
 			  "label": "nft_contract_address",
 			  "type": {
 				"displayName": [
@@ -855,116 +741,6 @@ const collection_manager = {
 		  "selector": "0xeb3b33fd"
 		},
 		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateCollectionOwnerInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "new_owner",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateCollectionOwnerInput2"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [
-			" This function updates Owner of Collecion - who receive royalty fee - Only Admin can change"
-		  ],
-		  "label": "ArtZeroCollectionTrait::update_collection_owner",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0x614a1a1a"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateIsCollectRoyaltyFeeInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "is_collect_royalty_fee",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateIsCollectRoyaltyFeeInput2"
-				],
-				"type": 8
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_is_collect_royalty_fee",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0xb889a131"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetCollectionAttributeIndexInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "attribute_key",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetCollectionAttributeIndexInput2"
-				],
-				"type": 18
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_collection_attribute_index",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 35
-		  },
-		  "selector": "0xa29e5168"
-		},
-		{
 		  "args": [],
 		  "docs": [],
 		  "label": "ArtZeroCollectionTrait::get_simple_mode_adding_fee",
@@ -975,257 +751,9 @@ const collection_manager = {
 			  "ink",
 			  "MessageResult"
 			],
-			"type": 38
+			"type": 33
 		  },
 		  "selector": "0xb568138f"
-		},
-		{
-		  "args": [],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_advance_mode_adding_fee",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 38
-		  },
-		  "selector": "0x4d39a1d2"
-		},
-		{
-		  "args": [],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_max_royalty_fee_rate",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 27
-		  },
-		  "selector": "0x1923715e"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "HasAttributeInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "attribute_key",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "HasAttributeInput2"
-				],
-				"type": 18
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::has_attribute",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 26
-		  },
-		  "selector": "0x3222a5ae"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateRoyaltyFeeInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "new_fee",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateRoyaltyFeeInput2"
-				],
-				"type": 4
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_royalty_fee",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0x98c8278a"
-		},
-		{
-		  "args": [],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_standard_nft_hash",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 39
-		  },
-		  "selector": "0x8c600aed"
-		},
-		{
-		  "args": [],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_active_collection_count",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 40
-		  },
-		  "selector": "0x3c35bce3"
-		},
-		{
-		  "args": [
-			{
-			  "label": "id",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetContractByIdInput1"
-				],
-				"type": 6
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_contract_by_id",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 28
-		  },
-		  "selector": "0xea26b44c"
-		},
-		{
-		  "args": [
-			{
-			  "label": "advance_mode_adding_fee",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateAdvanceModeAddingFeeInput1"
-				],
-				"type": 7
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_advance_mode_adding_fee",
-		  "mutates": true,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 15
-		  },
-		  "selector": "0x04c17fa6"
-		},
-		{
-		  "args": [
-			{
-			  "label": "nft_contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetRoyaltyFeeInput1"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [
-			" This function returns royalty fee of a Collection"
-		  ],
-		  "label": "ArtZeroCollectionTrait::get_royalty_fee",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 27
-		  },
-		  "selector": "0xfd0ba95a"
-		},
-		{
-		  "args": [
-			{
-			  "label": "contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetAttributeInput1"
-				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "attribute_key",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetAttributeInput2"
-				],
-				"type": 18
-			  }
-			}
-		  ],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_attribute",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 41
-		  },
-		  "selector": "0xc2b400f5"
 		},
 		{
 		  "args": [
@@ -1287,9 +815,91 @@ const collection_manager = {
 			  "ink",
 			  "MessageResult"
 			],
-			"type": 42
+			"type": 34
 		  },
 		  "selector": "0x1b39c2bc"
+		},
+		{
+		  "args": [],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_advance_mode_adding_fee",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 33
+		  },
+		  "selector": "0x4d39a1d2"
+		},
+		{
+		  "args": [],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_collection_count",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 35
+		  },
+		  "selector": "0xe00e1965"
+		},
+		{
+		  "args": [
+			{
+			  "label": "owner_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetCollectionsByOwnerInput1"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_collections_by_owner",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 36
+		  },
+		  "selector": "0xae558f31"
+		},
+		{
+		  "args": [
+			{
+			  "label": "nft_contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetCollectionByAddressInput1"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_collection_by_address",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 38
+		  },
+		  "selector": "0x5168d7f3"
 		},
 		{
 		  "args": [
@@ -1298,24 +908,24 @@ const collection_manager = {
 			  "type": {
 				"displayName": [
 				  "artzerocollectiontrait_external",
-				  "UpdateShowOnChainMetadataInput1"
+				  "UpdateIsActiveInput1"
 				],
 				"type": 0
 			  }
 			},
 			{
-			  "label": "show_on_chain_metadata",
+			  "label": "is_active",
 			  "type": {
 				"displayName": [
 				  "artzerocollectiontrait_external",
-				  "UpdateShowOnChainMetadataInput2"
+				  "UpdateIsActiveInput2"
 				],
 				"type": 8
 			  }
 			}
 		  ],
 		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_show_on_chain_metadata",
+		  "label": "ArtZeroCollectionTrait::update_is_active",
 		  "mutates": true,
 		  "payable": false,
 		  "returnType": {
@@ -1325,35 +935,7 @@ const collection_manager = {
 			],
 			"type": 15
 		  },
-		  "selector": "0x9d106954"
-		},
-		{
-		  "args": [
-			{
-			  "label": "nft_contract_address",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "GetContractTypeInput1"
-				],
-				"type": 0
-			  }
-			}
-		  ],
-		  "docs": [
-			" This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
-		  ],
-		  "label": "ArtZeroCollectionTrait::get_contract_type",
-		  "mutates": false,
-		  "payable": false,
-		  "returnType": {
-			"displayName": [
-			  "ink",
-			  "MessageResult"
-			],
-			"type": 43
-		  },
-		  "selector": "0xdcd3b8f4"
+		  "selector": "0xc0c13fae"
 		},
 		{
 		  "args": [
@@ -1402,9 +984,22 @@ const collection_manager = {
 		  "selector": "0x88a3a682"
 		},
 		{
-		  "args": [],
-		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_collection_count",
+		  "args": [
+			{
+			  "label": "nft_contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetContractTypeInput1"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [
+			" This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
+		  ],
+		  "label": "ArtZeroCollectionTrait::get_contract_type",
 		  "mutates": false,
 		  "payable": false,
 		  "returnType": {
@@ -1412,25 +1007,25 @@ const collection_manager = {
 			  "ink",
 			  "MessageResult"
 			],
-			"type": 40
+			"type": 42
 		  },
-		  "selector": "0xe00e1965"
+		  "selector": "0xdcd3b8f4"
 		},
 		{
 		  "args": [
 			{
-			  "label": "max_royalty_fee_rate",
+			  "label": "advance_mode_adding_fee",
 			  "type": {
 				"displayName": [
 				  "artzerocollectiontrait_external",
-				  "UpdateMaxRoyaltyFeeRateInput1"
+				  "UpdateAdvanceModeAddingFeeInput1"
 				],
-				"type": 4
+				"type": 7
 			  }
 			}
 		  ],
 		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_max_royalty_fee_rate",
+		  "label": "ArtZeroCollectionTrait::update_advance_mode_adding_fee",
 		  "mutates": true,
 		  "payable": false,
 		  "returnType": {
@@ -1440,7 +1035,284 @@ const collection_manager = {
 			],
 			"type": 15
 		  },
-		  "selector": "0xf3055b84"
+		  "selector": "0x04c17fa6"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateContractTypeInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "contract_type",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateContractTypeInput2"
+				],
+				"type": 41
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::update_contract_type",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0x9df6e931"
+		},
+		{
+		  "args": [
+			{
+			  "label": "id",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetContractByIdInput1"
+				],
+				"type": 6
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_contract_by_id",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 28
+		  },
+		  "selector": "0xea26b44c"
+		},
+		{
+		  "args": [
+			{
+			  "label": "nft_contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetRoyaltyFeeInput1"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [
+			" This function returns royalty fee of a Collection"
+		  ],
+		  "label": "ArtZeroCollectionTrait::get_royalty_fee",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 27
+		  },
+		  "selector": "0xfd0ba95a"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetCollectionAttributeCountInput1"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_collection_attribute_count",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 43
+		  },
+		  "selector": "0x13a2a329"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateRoyaltyFeeInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "new_fee",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateRoyaltyFeeInput2"
+				],
+				"type": 4
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::update_royalty_fee",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0x98c8278a"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateShowOnChainMetadataInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "show_on_chain_metadata",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateShowOnChainMetadataInput2"
+				],
+				"type": 8
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::update_show_on_chain_metadata",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0x9d106954"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateIsCollectRoyaltyFeeInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "is_collect_royalty_fee",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateIsCollectRoyaltyFeeInput2"
+				],
+				"type": 8
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::update_is_collect_royalty_fee",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0xb889a131"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateCollectionOwnerInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "new_owner",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateCollectionOwnerInput2"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [
+			" This function updates Owner of Collecion - who receive royalty fee - Only Admin can change"
+		  ],
+		  "label": "ArtZeroCollectionTrait::update_collection_owner",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0x614a1a1a"
+		},
+		{
+		  "args": [],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_standard_nft_hash",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 45
+		  },
+		  "selector": "0x8c600aed"
 		},
 		{
 		  "args": [
@@ -1471,28 +1343,18 @@ const collection_manager = {
 		{
 		  "args": [
 			{
-			  "label": "contract_address",
+			  "label": "max_royalty_fee_rate",
 			  "type": {
 				"displayName": [
 				  "artzerocollectiontrait_external",
-				  "UpdateIsActiveInput1"
+				  "UpdateMaxRoyaltyFeeRateInput1"
 				],
-				"type": 0
-			  }
-			},
-			{
-			  "label": "is_active",
-			  "type": {
-				"displayName": [
-				  "artzerocollectiontrait_external",
-				  "UpdateIsActiveInput2"
-				],
-				"type": 8
+				"type": 4
 			  }
 			}
 		  ],
 		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::update_is_active",
+		  "label": "ArtZeroCollectionTrait::update_max_royalty_fee_rate",
 		  "mutates": true,
 		  "payable": false,
 		  "returnType": {
@@ -1502,23 +1364,33 @@ const collection_manager = {
 			],
 			"type": 15
 		  },
-		  "selector": "0xc0c13fae"
+		  "selector": "0xf3055b84"
 		},
 		{
 		  "args": [
 			{
-			  "label": "nft_contract_address",
+			  "label": "contract_address",
 			  "type": {
 				"displayName": [
 				  "artzerocollectiontrait_external",
-				  "GetCollectionByAddressInput1"
+				  "HasAttributeInput1"
 				],
 				"type": 0
+			  }
+			},
+			{
+			  "label": "attribute_key",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "HasAttributeInput2"
+				],
+				"type": 18
 			  }
 			}
 		  ],
 		  "docs": [],
-		  "label": "ArtZeroCollectionTrait::get_collection_by_address",
+		  "label": "ArtZeroCollectionTrait::has_attribute",
 		  "mutates": false,
 		  "payable": false,
 		  "returnType": {
@@ -1526,47 +1398,76 @@ const collection_manager = {
 			  "ink",
 			  "MessageResult"
 			],
-			"type": 44
+			"type": 26
 		  },
-		  "selector": "0x5168d7f3"
+		  "selector": "0x3222a5ae"
 		},
 		{
 		  "args": [
 			{
-			  "label": "nft_contract_address",
+			  "label": "contract_address",
 			  "type": {
 				"displayName": [
-				  "admintrait_external",
-				  "TranferNftInput1"
+				  "artzerocollectiontrait_external",
+				  "GetCollectionAttributeIndexInput1"
 				],
 				"type": 0
 			  }
 			},
 			{
-			  "label": "token_id",
+			  "label": "attribute_key",
 			  "type": {
 				"displayName": [
-				  "admintrait_external",
-				  "TranferNftInput2"
+				  "artzerocollectiontrait_external",
+				  "GetCollectionAttributeIndexInput2"
 				],
-				"type": 47
-			  }
-			},
-			{
-			  "label": "receiver",
-			  "type": {
-				"displayName": [
-				  "admintrait_external",
-				  "TranferNftInput3"
-				],
-				"type": 0
+				"type": 18
 			  }
 			}
 		  ],
-		  "docs": [
-			" This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_collection_attribute_index",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 43
+		  },
+		  "selector": "0xa29e5168"
+		},
+		{
+		  "args": [],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_max_royalty_fee_rate",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 27
+		  },
+		  "selector": "0x1923715e"
+		},
+		{
+		  "args": [
+			{
+			  "label": "standard_nft_hash",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "UpdateStandardNftHashInput1"
+				],
+				"type": 5
+			  }
+			}
 		  ],
-		  "label": "AdminTrait::tranfer_nft",
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::update_standard_nft_hash",
 		  "mutates": true,
 		  "payable": false,
 		  "returnType": {
@@ -1576,7 +1477,58 @@ const collection_manager = {
 			],
 			"type": 15
 		  },
-		  "selector": "0xed1e1dfa"
+		  "selector": "0x8f99cb93"
+		},
+		{
+		  "args": [],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_active_collection_count",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 35
+		  },
+		  "selector": "0x3c35bce3"
+		},
+		{
+		  "args": [
+			{
+			  "label": "contract_address",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetAttributeInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "attribute_key",
+			  "type": {
+				"displayName": [
+				  "artzerocollectiontrait_external",
+				  "GetAttributeInput2"
+				],
+				"type": 18
+			  }
+			}
+		  ],
+		  "docs": [],
+		  "label": "ArtZeroCollectionTrait::get_attribute",
+		  "mutates": false,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 46
+		  },
+		  "selector": "0xc2b400f5"
 		},
 		{
 		  "args": [
@@ -1663,6 +1615,54 @@ const collection_manager = {
 			"type": 15
 		  },
 		  "selector": "0xd9aad284"
+		},
+		{
+		  "args": [
+			{
+			  "label": "nft_contract_address",
+			  "type": {
+				"displayName": [
+				  "admintrait_external",
+				  "TranferNftInput1"
+				],
+				"type": 0
+			  }
+			},
+			{
+			  "label": "token_id",
+			  "type": {
+				"displayName": [
+				  "admintrait_external",
+				  "TranferNftInput2"
+				],
+				"type": 47
+			  }
+			},
+			{
+			  "label": "receiver",
+			  "type": {
+				"displayName": [
+				  "admintrait_external",
+				  "TranferNftInput3"
+				],
+				"type": 0
+			  }
+			}
+		  ],
+		  "docs": [
+			" This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+		  ],
+		  "label": "AdminTrait::tranfer_nft",
+		  "mutates": true,
+		  "payable": false,
+		  "returnType": {
+			"displayName": [
+			  "ink",
+			  "MessageResult"
+			],
+			"type": 15
+		  },
+		  "selector": "0xed1e1dfa"
 		},
 		{
 		  "args": [
@@ -3295,7 +3295,7 @@ const collection_manager = {
 				{
 				  "fields": [
 					{
-					  "type": 34
+					  "type": 7
 					}
 				  ],
 				  "index": 0,
@@ -3316,7 +3316,7 @@ const collection_manager = {
 		  "params": [
 			{
 			  "name": "T",
-			  "type": 34
+			  "type": 7
 			},
 			{
 			  "name": "E",
@@ -3330,6 +3330,132 @@ const collection_manager = {
 	  },
 	  {
 		"id": 34,
+		"type": {
+		  "def": {
+			"variant": {
+			  "variants": [
+				{
+				  "fields": [
+					{
+					  "type": 23
+					}
+				  ],
+				  "index": 0,
+				  "name": "Ok"
+				},
+				{
+				  "fields": [
+					{
+					  "type": 14
+					}
+				  ],
+				  "index": 1,
+				  "name": "Err"
+				}
+			  ]
+			}
+		  },
+		  "params": [
+			{
+			  "name": "T",
+			  "type": 23
+			},
+			{
+			  "name": "E",
+			  "type": 14
+			}
+		  ],
+		  "path": [
+			"Result"
+		  ]
+		}
+	  },
+	  {
+		"id": 35,
+		"type": {
+		  "def": {
+			"variant": {
+			  "variants": [
+				{
+				  "fields": [
+					{
+					  "type": 6
+					}
+				  ],
+				  "index": 0,
+				  "name": "Ok"
+				},
+				{
+				  "fields": [
+					{
+					  "type": 14
+					}
+				  ],
+				  "index": 1,
+				  "name": "Err"
+				}
+			  ]
+			}
+		  },
+		  "params": [
+			{
+			  "name": "T",
+			  "type": 6
+			},
+			{
+			  "name": "E",
+			  "type": 14
+			}
+		  ],
+		  "path": [
+			"Result"
+		  ]
+		}
+	  },
+	  {
+		"id": 36,
+		"type": {
+		  "def": {
+			"variant": {
+			  "variants": [
+				{
+				  "fields": [
+					{
+					  "type": 37
+					}
+				  ],
+				  "index": 0,
+				  "name": "Ok"
+				},
+				{
+				  "fields": [
+					{
+					  "type": 14
+					}
+				  ],
+				  "index": 1,
+				  "name": "Err"
+				}
+			  ]
+			}
+		  },
+		  "params": [
+			{
+			  "name": "T",
+			  "type": 37
+			},
+			{
+			  "name": "E",
+			  "type": 14
+			}
+		  ],
+		  "path": [
+			"Result"
+		  ]
+		}
+	  },
+	  {
+		"id": 37,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3362,7 +3488,7 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 35,
+		"id": 38,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3370,7 +3496,7 @@ const collection_manager = {
 				{
 				  "fields": [
 					{
-					  "type": 36
+					  "type": 39
 					}
 				  ],
 				  "index": 0,
@@ -3391,7 +3517,7 @@ const collection_manager = {
 		  "params": [
 			{
 			  "name": "T",
-			  "type": 36
+			  "type": 39
 			},
 			{
 			  "name": "E",
@@ -3404,7 +3530,7 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 36,
+		"id": 39,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3416,7 +3542,7 @@ const collection_manager = {
 				{
 				  "fields": [
 					{
-					  "type": 6
+					  "type": 40
 					}
 				  ],
 				  "index": 1,
@@ -3428,7 +3554,7 @@ const collection_manager = {
 		  "params": [
 			{
 			  "name": "T",
-			  "type": 6
+			  "type": 40
 			}
 		  ],
 		  "path": [
@@ -3437,7 +3563,65 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 37,
+		"id": 40,
+		"type": {
+		  "def": {
+			"composite": {
+			  "fields": [
+				{
+				  "name": "collection_owner",
+				  "type": 0,
+				  "typeName": "AccountId"
+				},
+				{
+				  "name": "collection_id",
+				  "type": 4,
+				  "typeName": "u32"
+				},
+				{
+				  "name": "nft_contract_address",
+				  "type": 0,
+				  "typeName": "AccountId"
+				},
+				{
+				  "name": "contract_type",
+				  "type": 41,
+				  "typeName": "CollectionType"
+				},
+				{
+				  "name": "is_collect_royalty_fee",
+				  "type": 8,
+				  "typeName": "bool"
+				},
+				{
+				  "name": "royalty_fee",
+				  "type": 4,
+				  "typeName": "u32"
+				},
+				{
+				  "name": "is_active",
+				  "type": 8,
+				  "typeName": "bool"
+				},
+				{
+				  "name": "show_on_chain_metadata",
+				  "type": 8,
+				  "typeName": "bool"
+				}
+			  ]
+			}
+		  },
+		  "path": [
+			"artzero_project",
+			"impls",
+			"collection_manager",
+			"data",
+			"Collection"
+		  ]
+		}
+	  },
+	  {
+		"id": 41,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3482,7 +3666,7 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 38,
+		"id": 42,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3490,7 +3674,7 @@ const collection_manager = {
 				{
 				  "fields": [
 					{
-					  "type": 7
+					  "type": 41
 					}
 				  ],
 				  "index": 0,
@@ -3511,7 +3695,7 @@ const collection_manager = {
 		  "params": [
 			{
 			  "name": "T",
-			  "type": 7
+			  "type": 41
 			},
 			{
 			  "name": "E",
@@ -3524,7 +3708,82 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 39,
+		"id": 43,
+		"type": {
+		  "def": {
+			"variant": {
+			  "variants": [
+				{
+				  "fields": [
+					{
+					  "type": 44
+					}
+				  ],
+				  "index": 0,
+				  "name": "Ok"
+				},
+				{
+				  "fields": [
+					{
+					  "type": 14
+					}
+				  ],
+				  "index": 1,
+				  "name": "Err"
+				}
+			  ]
+			}
+		  },
+		  "params": [
+			{
+			  "name": "T",
+			  "type": 44
+			},
+			{
+			  "name": "E",
+			  "type": 14
+			}
+		  ],
+		  "path": [
+			"Result"
+		  ]
+		}
+	  },
+	  {
+		"id": 44,
+		"type": {
+		  "def": {
+			"variant": {
+			  "variants": [
+				{
+				  "index": 0,
+				  "name": "None"
+				},
+				{
+				  "fields": [
+					{
+					  "type": 6
+					}
+				  ],
+				  "index": 1,
+				  "name": "Some"
+				}
+			  ]
+			}
+		  },
+		  "params": [
+			{
+			  "name": "T",
+			  "type": 6
+			}
+		  ],
+		  "path": [
+			"Option"
+		  ]
+		}
+	  },
+	  {
+		"id": 45,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3566,49 +3825,7 @@ const collection_manager = {
 		}
 	  },
 	  {
-		"id": 40,
-		"type": {
-		  "def": {
-			"variant": {
-			  "variants": [
-				{
-				  "fields": [
-					{
-					  "type": 6
-					}
-				  ],
-				  "index": 0,
-				  "name": "Ok"
-				},
-				{
-				  "fields": [
-					{
-					  "type": 14
-					}
-				  ],
-				  "index": 1,
-				  "name": "Err"
-				}
-			  ]
-			}
-		  },
-		  "params": [
-			{
-			  "name": "T",
-			  "type": 6
-			},
-			{
-			  "name": "E",
-			  "type": 14
-			}
-		  ],
-		  "path": [
-			"Result"
-		  ]
-		}
-	  },
-	  {
-		"id": 41,
+		"id": 46,
 		"type": {
 		  "def": {
 			"variant": {
@@ -3646,223 +3863,6 @@ const collection_manager = {
 		  ],
 		  "path": [
 			"Result"
-		  ]
-		}
-	  },
-	  {
-		"id": 42,
-		"type": {
-		  "def": {
-			"variant": {
-			  "variants": [
-				{
-				  "fields": [
-					{
-					  "type": 23
-					}
-				  ],
-				  "index": 0,
-				  "name": "Ok"
-				},
-				{
-				  "fields": [
-					{
-					  "type": 14
-					}
-				  ],
-				  "index": 1,
-				  "name": "Err"
-				}
-			  ]
-			}
-		  },
-		  "params": [
-			{
-			  "name": "T",
-			  "type": 23
-			},
-			{
-			  "name": "E",
-			  "type": 14
-			}
-		  ],
-		  "path": [
-			"Result"
-		  ]
-		}
-	  },
-	  {
-		"id": 43,
-		"type": {
-		  "def": {
-			"variant": {
-			  "variants": [
-				{
-				  "fields": [
-					{
-					  "type": 37
-					}
-				  ],
-				  "index": 0,
-				  "name": "Ok"
-				},
-				{
-				  "fields": [
-					{
-					  "type": 14
-					}
-				  ],
-				  "index": 1,
-				  "name": "Err"
-				}
-			  ]
-			}
-		  },
-		  "params": [
-			{
-			  "name": "T",
-			  "type": 37
-			},
-			{
-			  "name": "E",
-			  "type": 14
-			}
-		  ],
-		  "path": [
-			"Result"
-		  ]
-		}
-	  },
-	  {
-		"id": 44,
-		"type": {
-		  "def": {
-			"variant": {
-			  "variants": [
-				{
-				  "fields": [
-					{
-					  "type": 45
-					}
-				  ],
-				  "index": 0,
-				  "name": "Ok"
-				},
-				{
-				  "fields": [
-					{
-					  "type": 14
-					}
-				  ],
-				  "index": 1,
-				  "name": "Err"
-				}
-			  ]
-			}
-		  },
-		  "params": [
-			{
-			  "name": "T",
-			  "type": 45
-			},
-			{
-			  "name": "E",
-			  "type": 14
-			}
-		  ],
-		  "path": [
-			"Result"
-		  ]
-		}
-	  },
-	  {
-		"id": 45,
-		"type": {
-		  "def": {
-			"variant": {
-			  "variants": [
-				{
-				  "index": 0,
-				  "name": "None"
-				},
-				{
-				  "fields": [
-					{
-					  "type": 46
-					}
-				  ],
-				  "index": 1,
-				  "name": "Some"
-				}
-			  ]
-			}
-		  },
-		  "params": [
-			{
-			  "name": "T",
-			  "type": 46
-			}
-		  ],
-		  "path": [
-			"Option"
-		  ]
-		}
-	  },
-	  {
-		"id": 46,
-		"type": {
-		  "def": {
-			"composite": {
-			  "fields": [
-				{
-				  "name": "collection_owner",
-				  "type": 0,
-				  "typeName": "AccountId"
-				},
-				{
-				  "name": "collection_id",
-				  "type": 4,
-				  "typeName": "u32"
-				},
-				{
-				  "name": "nft_contract_address",
-				  "type": 0,
-				  "typeName": "AccountId"
-				},
-				{
-				  "name": "contract_type",
-				  "type": 37,
-				  "typeName": "CollectionType"
-				},
-				{
-				  "name": "is_collect_royalty_fee",
-				  "type": 8,
-				  "typeName": "bool"
-				},
-				{
-				  "name": "royalty_fee",
-				  "type": 4,
-				  "typeName": "u32"
-				},
-				{
-				  "name": "is_active",
-				  "type": 8,
-				  "typeName": "bool"
-				},
-				{
-				  "name": "show_on_chain_metadata",
-				  "type": 8,
-				  "typeName": "bool"
-				}
-			  ]
-			}
-		  },
-		  "path": [
-			"artzero_project",
-			"impls",
-			"collection_manager",
-			"data",
-			"Collection"
 		  ]
 		}
 	  },
