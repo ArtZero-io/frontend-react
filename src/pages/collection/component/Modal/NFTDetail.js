@@ -20,8 +20,8 @@ import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import TxHistory from "../Tab/TxHistory";
 import PrevArrowIcon from "@theme/assets/icon/PrevArrow";
 import AzeroDomainsNFTTabCollectible from '../../../azero-domains/collection/component/Tab/Collectible';
-import { isAzeroDomainCollection } from '@utils';
 import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -37,7 +37,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   }, [step, onClose]);
   console.log('useEffect::rest', rest);
   let tabData = [];
-  if (isAzeroDomainCollection(rest.nftContractAddress)) {
+  if (rest.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
     tabData = [
       {
         label: 'detail',
