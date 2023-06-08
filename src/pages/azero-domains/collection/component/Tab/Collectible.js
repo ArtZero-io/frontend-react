@@ -345,7 +345,7 @@ import {
       let p = askPrice;
   
       if (is_for_sale) {
-        p = price / 1000000000000;
+        p = price / 10 ** 18;
       }
   
       const info = calculateFee(p, royaltyFee, myTradingFee);

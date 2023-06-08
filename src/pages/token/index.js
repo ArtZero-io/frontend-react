@@ -387,7 +387,7 @@ function TokenPage() {
     let p = askPrice;
 
     if (token?.is_for_sale) {
-      p = token?.price / 1000000000000;
+      p = token?.price / 10 ** 18;
     }
 
     const info = calculateFee(p, collection?.royaltyFee, myTradingFee);
@@ -971,7 +971,7 @@ function TokenPage() {
                               direction={["column", "row"]}
                               alignItems={["end", "baseline"]}
                             >
-                              <Text color="#888">Current price</Text>
+                              <Text color="#888">Current price 5</Text>
 
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
@@ -1014,7 +1014,7 @@ function TokenPage() {
                             direction={["column", "row"]}
                             alignItems={["end", "baseline"]}
                           >
-                            <Text color="#888">Current price</Text>
+                            <Text color="#888">Current price 6</Text>
 
                             <Tag minH="20px" pr={0} bg="transparent">
                               <TagLabel bg="transparent">
