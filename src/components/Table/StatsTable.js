@@ -20,8 +20,11 @@ import { memo } from "react";
 import { formatNumDynamicDecimal } from "@utils";
 import { useHistory } from "react-router-dom";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
+import { useSubstrateState } from "@utils/substrate";
 
 function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
+  const { chainToken } = useSubstrateState();
+
   const history = useHistory();
 
   const formatDataCell = (itemObj, headerValue) => {
@@ -37,7 +40,8 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
                 {formatNumDynamicDecimal(
                   itemObj["nft_count"] * itemObj["floorPrice"]
                 )}
-                <TagRightIcon as={AzeroIcon} />
+                {/* <TagRightIcon as={AzeroIcon} />*/}
+                <AzeroIcon chainToken={chainToken} />
               </>
             ) : (
               <>
