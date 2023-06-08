@@ -152,6 +152,14 @@ export const SUPPORTED_WALLET_LIST = [
 export const MESSAGE_SIGN = "Sign message to report";
 
 // Name of Contract
-export const AZERO_DOMAINS_COLLECTION = 'azeroDomains';
-export const ARTZERO_COLLECTION = 'artzero';
-export const OTHER_COLLECTION = 'other';
+export const AZERO_DOMAINS_COLLECTION = "azeroDomains";
+export const ARTZERO_COLLECTION = "artzero";
+export const OTHER_COLLECTION = "other";
+
+export const CHAIN_TOKEN_LIST = {
+  SBY: "SBY",
+  ASTR: "ASTR",
+  AZERO: "AZERO",
+  TZERO: "TZERO",
+  FIVE_IRE: "5IRE",
+};

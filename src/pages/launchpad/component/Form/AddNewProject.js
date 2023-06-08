@@ -1171,24 +1171,24 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
       data: { free, miscFrozen },
     } = await api.query.system.account(address || currentAccount?.address);
 
-    const [chainDecimals] = await api.registry.chainDecimals;
+    const [chainDecimal] = await api.registry.chainDecimals;
 
     const formattedStrBal = formatBalance(free, {
       withSi: false,
       forceUnit: "-",
-      chainDecimals,
+      chainDecimal,
     });
     const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
       withSi: false,
       forceUnit: "-",
-      chainDecimals,
+      chainDecimal,
     });
 
     const formattedNumBal =
       formattedStrBal?.replaceAll(",", "") * 1 -
       formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 12 };
+    return { balance: formattedNumBal / 10 ** chainDecimal };
   }
 };
 

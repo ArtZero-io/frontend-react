@@ -87,9 +87,8 @@ async function getTotalVolume(caller_account) {
     value: azero_value,
     gasLimit,
   });
-
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return null;
 }
@@ -304,7 +303,7 @@ async function getCurrentProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return null;
 }
@@ -848,4 +847,10 @@ export const withdrawMarketplaceContract = async (
     .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
+};
+
+const getChainDecimal = (contract) => {
+  const chainDecimals = contract?.registry?.chainDecimals;
+
+  return chainDecimals[0];
 };

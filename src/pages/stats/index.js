@@ -22,7 +22,7 @@ const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 
 function StatsPage() {
-  const { api } = useSubstrateState();
+  const { api, chainToken } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -166,7 +166,7 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Total Payout (AZERO)",
+            title: `Total Payout (${chainToken})`,
             value: (totalPayouts - remainRewardPool)?.toFixed(2),
             unit: "azero",
           },
@@ -176,7 +176,7 @@ function StatsPage() {
             unit: "azero",
           },
           {
-            title: "Next Payout (AZERO)",
+            title: `Next Payout (${chainToken})`,
             value: (totalNextPayout + remainRewardPool)?.toFixed(2),
             unit: "azero",
           },
@@ -297,12 +297,6 @@ export const fetchValidatorProfit = async ({
     } = await api.query.system.account(address || currentAccount?.address);
 
     const [chainDecimals] = await api.registry.chainDecimals;
-    {
-      const { chainDecimals, chainTokens, chainSS58 } = await api.registry;
-      console.log("chainDecimals", chainDecimals);
-      console.log("chainTokens", chainTokens);
-      console.log("chainSS58", chainSS58);
-    }
 
     const formattedStrBal = formatBalance(free, {
       withSi: false,

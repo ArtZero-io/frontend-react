@@ -142,7 +142,7 @@ const retrieveChainInfo = async (api) => {
     systemChainType,
     chainSS58,
     chainDecimal: chainDecimals[0],
-    chainTokens: chainTokens[0],
+    chainToken: chainTokens[0],
   };
 };
 
@@ -171,15 +171,15 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         systemChainType,
         chainSS58,
         chainDecimal,
-        chainTokens,
+        chainToken,
       } = await retrieveChainInfo(api);
 
-      console.log("+++++++++++++++++++++++CHAIN INFO++++++++++++++++++++++++");
+      console.log("+++++++++++ CHAIN INFO +++++++++++");
       console.log("+++   chainName", systemChain);
       console.log("+++   chainSS58", chainSS58);
       console.log("+++   chainDecimal", chainDecimal);
-      console.log("+++   chainTokens", chainTokens);
-      console.log("+++++++++++++++++++++++CHAIN INFO++++++++++++++++++++++++");
+      console.log("+++   chainToken", chainToken);
+      console.log("+++++++++++ CHAIN INFO +++++++++++");
 
       dispatch({
         type: "SET_CHAIN_INFO",
@@ -187,7 +187,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
           chainName: systemChain,
           chainSS58,
           chainDecimal,
-          chainTokens,
+          chainToken,
         },
       });
 
