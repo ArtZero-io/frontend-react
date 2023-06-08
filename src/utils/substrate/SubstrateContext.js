@@ -204,6 +204,8 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         });
       }
 
+      Keyring.setSS58Format(chainSS58);
+
       dispatch({ type: "SET_KEYRING", payload: Keyring });
     } catch (e) {
       console.error(e);
