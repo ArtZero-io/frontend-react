@@ -9,7 +9,6 @@ import {
   Stack,
   Tag,
   TagLabel,
-  TagRightIcon,
   Text,
   VStack,
   Link,
@@ -105,7 +104,7 @@ import { isMobile } from "react-device-detect";
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainToken } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -921,7 +920,11 @@ function TokenPage() {
                                 h={"40px"}
                                 w={8}
                               >
-                                <AzeroIcon w="14px" h="14px" />
+                                <AzeroIcon
+                                  chainToken={chainToken}
+                                  w="14px"
+                                  h="14px"
+                                />
                               </InputRightElement>
                             </NumberInput>
                             <CommonButton
@@ -977,7 +980,7 @@ function TokenPage() {
                                     token?.price / 10 ** 12
                                   )}
                                 </TagLabel>
-                                <TagRightIcon as={AzeroIcon} w="14px" />
+                                <AzeroIcon chainToken={chainToken} w="14px" />
                               </Tag>
                             </Flex>
                           </HStack>
@@ -1020,7 +1023,7 @@ function TokenPage() {
                                   token?.price / 10 ** 12
                                 )}
                               </TagLabel>
-                              <TagRightIcon as={AzeroIcon} w="14px" />
+                              <AzeroIcon chainToken={chainToken} w="14px" />
                             </Tag>
                           </Flex>
                         </HStack>
@@ -1047,7 +1050,7 @@ function TokenPage() {
                             <Text color="#888">Your offer</Text>
                             <Tag minH="20px" pr={0} bg="transparent">
                               <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                              <TagRightIcon as={AzeroIcon} w="14px" />
+                              <AzeroIcon chainToken={chainToken} w="14px" />
                             </Tag>
                           </VStack>
                         </HStack>
@@ -1086,7 +1089,7 @@ function TokenPage() {
                                 h={"40px"}
                                 w={8}
                               >
-                                <AzeroIcon w="14px" />
+                                <AzeroIcon chainToken={chainToken} w="14px" />
                               </InputRightElement>
                             </NumberInput>
                           </HStack>
@@ -1473,6 +1476,8 @@ export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
 };
 
 export const FeeCalculatedBar = ({ feeCalculated }) => {
+  const { chainToken } = useSubstrateState();
+
   return (
     <HStack
       w="full"
@@ -1489,7 +1494,8 @@ export const FeeCalculatedBar = ({ feeCalculated }) => {
         </Text>
 
         <Text color="#fff">
-          {feeCalculated.royaltyFeeAmount} <AzeroIcon w="12px" mb="2px" />
+          {feeCalculated.royaltyFeeAmount}{" "}
+          <AzeroIcon chainToken={chainToken} w="12px" mb="2px" />
         </Text>
       </VStack>
 
@@ -1501,7 +1507,8 @@ export const FeeCalculatedBar = ({ feeCalculated }) => {
           ({feeCalculated.tradeFeePercent}%)
         </Text>
         <Text color="#fff">
-          {feeCalculated.tradeFeeAmount} <AzeroIcon w="12px" mb="2px" />
+          {feeCalculated.tradeFeeAmount}{" "}
+          <AzeroIcon chainToken={chainToken} w="12px" mb="2px" />
         </Text>
       </VStack>
 
@@ -1510,7 +1517,8 @@ export const FeeCalculatedBar = ({ feeCalculated }) => {
           You will receive:
         </Text>
         <Text color="#fff">
-          {feeCalculated.userPortionAmount} <AzeroIcon w="12px" mb="2px" />
+          {feeCalculated.userPortionAmount}{" "}
+          <AzeroIcon chainToken={chainToken} w="12px" mb="2px" />
         </Text>
       </VStack>
     </HStack>
@@ -1525,7 +1533,7 @@ function MobileEditBidPriceModal({
   owner,
   is_for_sale,
 }) {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -1650,7 +1658,7 @@ function MobileEditBidPriceModal({
                   placeholder="0"
                 />
                 <InputRightElement bg="transparent" h="40px" w="32px">
-                  <AzeroIcon w="12px" />
+                  <AzeroIcon chainToken={chainToken} w="12px" />
                 </InputRightElement>
               </NumberInput>
             </Flex>

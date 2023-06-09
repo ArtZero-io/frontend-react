@@ -6,7 +6,6 @@ import {
   Th,
   Thead,
   Tr,
-  TagRightIcon,
   Heading,
   HStack,
   Text,
@@ -22,8 +21,11 @@ import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
+import { useSubstrateState } from "@utils/substrate";
 
 function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+  const { chainToken } = useSubstrateState();
+
   return (
     <>
       {tableData?.length === 0 ? (
@@ -95,7 +97,7 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
                               textAlign="left"
                               py={{ base: "1rem", "2xl": "1.75rem" }}
                             >
-                              {formatData(item, i, type)}
+                              {formatData(item, i, chainToken)}
                             </Td>
                           )
                         )}
@@ -122,7 +124,7 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
 
 export default memo(EventTable);
 
-const formatData = (itemObj, headerValue, type) => {
+const formatData = (itemObj, headerValue, chainToken) => {
   switch (headerValue) {
     case "avatar":
       return null;
@@ -131,7 +133,7 @@ const formatData = (itemObj, headerValue, type) => {
       return (
         <>
           {formatNumDynamicDecimal(itemObj[headerValue])}
-          <TagRightIcon as={AzeroIcon} w="16px" />
+          <AzeroIcon chainToken={chainToken} w="16px" />
         </>
       );
 
@@ -139,7 +141,7 @@ const formatData = (itemObj, headerValue, type) => {
       return (
         <Flex>
           {formatNumDynamicDecimal(itemObj[headerValue])}
-          <TagRightIcon as={AzeroIcon} w="16px" />
+          <AzeroIcon chainToken={chainToken} w="16px" />
         </Flex>
       );
 
@@ -147,7 +149,7 @@ const formatData = (itemObj, headerValue, type) => {
       return (
         <>
           {formatNumDynamicDecimal(itemObj[headerValue])}
-          <TagRightIcon as={AzeroIcon} w="16px" />
+          <AzeroIcon chainToken={chainToken} w="16px" />
         </>
       );
 

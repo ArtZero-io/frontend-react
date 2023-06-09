@@ -45,7 +45,7 @@ export default function LaunchpadEventModal({
   onClose,
 }) {
   // const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, chainToken } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [totalCount, setTotalCount] = useState(0);
   const [, setLoading] = useState(false);
@@ -293,6 +293,7 @@ export default function LaunchpadEventModal({
                           <Td textAlign="left" py={4}>
                             {reward.projectMintFee.toFixed(3)}{" "}
                             <AzeroIcon
+                              chainToken={chainToken}
                               mb="4px"
                               w={["14px", "16px"]}
                               h={["14px", "16px"]}

@@ -65,7 +65,6 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -214,6 +213,8 @@ function GridNftA({
   isActive,
   filterSelected,
 }) {
+  const { chainToken } = useSubstrateState();
+
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
   const delayPerPixel = 0.0008;
@@ -585,7 +586,8 @@ function GridNftA({
                         multiListingData?.infoList,
                         idx,
                         actionType,
-                        handleInputChangeMultiListing
+                        handleInputChangeMultiListing,
+                        chainToken
                       )}
                     </Flex>
                   );
@@ -881,7 +883,8 @@ function formatSelectedNFT(
   infoList,
   idx,
   actionType,
-  onChange
+  onChange,
+  chainToken
 ) {
   const selectedNFT = listNFT?.filter((item) => item.tokenID === id);
   const { avatar, nftName, tokenID } = selectedNFT[0];
@@ -941,6 +944,7 @@ function formatSelectedNFT(
               }}
             />
             <AzeroIcon
+              chainToken={chainToken}
               right={["8px", "10px"]}
               top={["3px", "12px"]}
               position="absolute"

@@ -12,9 +12,11 @@ import {
 import { FaDollarSign } from "react-icons/fa";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import StatsTable from "@components/Table/StatsTable";
+import { useSubstrateState } from "@utils/substrate";
 
 function TopCollectionsTab({ topCollections, azeroPrice }) {
   const [useAzeroUnit, setUseAzeroUnit] = useState(true);
+  const { chainToken } = useSubstrateState();
 
   return (
     <>
@@ -64,6 +66,7 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
                 color={useAzeroUnit ? "brand.grayLight" : "black"}
                 icon={
                   <AzeroIcon
+                    chainToken={chainToken}
                     fill={!useAzeroUnit ? "#888" : "#000"}
                     fontSize="24px"
                   />

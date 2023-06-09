@@ -84,7 +84,7 @@ const NUMBER_PER_PAGE = 6;
 
 const LaunchpadDetailPage = () => {
   const { collection_address } = useParams();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
@@ -1033,6 +1033,7 @@ const LaunchpadDetailPage = () => {
                           <Text as="span" color="#fff">
                             {item?.publicMintingFee / 10 ** 12}{" "}
                             <AzeroIcon
+                              chainToken={chainToken}
                               mb="5px"
                               w={["14px", "16px"]}
                               h={["14px", "16px"]}
@@ -1072,6 +1073,7 @@ const LaunchpadDetailPage = () => {
                                 <Text as="span" color="#fff">
                                   {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
                                   <AzeroIcon
+                                    chainToken={chainToken}
                                     mb="5px"
                                     w={["14px", "16px"]}
                                     h={["14px", "16px"]}

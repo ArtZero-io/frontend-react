@@ -675,7 +675,7 @@ export const switchCollection = async ({ contractAddress }) => {
   }
 };
 
-export const isAzeroDomainCollection = async ({ contractAddress }) => {
+export const isAzeroDomainCollection = async ({ contractAddress } = {}) => {
   if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {

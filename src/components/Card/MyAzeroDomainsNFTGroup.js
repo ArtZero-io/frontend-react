@@ -35,7 +35,7 @@ import {
 } from "@constants";
 import { useDispatch, useSelector } from "react-redux";
 import staking_calls from "@utils/blockchain/staking_calls";
-import {staking} from "@utils/blockchain/abi";
+import { staking } from "@utils/blockchain/abi";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { delay } from "@utils";
 import CommonButton from "../Button/CommonButton";
@@ -49,7 +49,7 @@ import { CloseButton } from "@chakra-ui/react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
 import { isMobile } from "react-device-detect";
-console.log('staking', staking)
+console.log("staking", staking);
 function MyAzeroDomainsNFTGroupCard({
   name,
   avatarImage,
@@ -190,6 +190,8 @@ function GridNftA({
   variant = "my-collection",
   isActive,
 }) {
+  const { chainToken } = useSubstrateState();
+
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
   const delayPerPixel = 0.0008;
@@ -521,7 +523,8 @@ function GridNftA({
                         multiListingData?.infoList,
                         idx,
                         actionType,
-                        handleInputChangeMultiListing
+                        handleInputChangeMultiListing,
+                        chainToken
                       )}
                     </Flex>
                   );
@@ -817,9 +820,9 @@ function formatSelectedNFT(
   infoList,
   idx,
   actionType,
-  onChange
+  onChange,
+  chainToken
 ) {
-  console.log(listNFT);
   const selectedNFT = listNFT?.filter((item) => item.azDomainName === id);
   const { avatar, nftName, azDomainName } = selectedNFT[0];
 
@@ -878,6 +881,7 @@ function formatSelectedNFT(
               }}
             />
             <AzeroIcon
+              chainToken={chainToken}
               right={["8px", "10px"]}
               top={["3px", "12px"]}
               position="absolute"

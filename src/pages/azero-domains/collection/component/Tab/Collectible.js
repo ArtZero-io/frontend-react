@@ -15,7 +15,6 @@ import {
   Stack,
   Tag,
   TagLabel,
-  TagRightIcon,
   Text,
   Tooltip,
   useBreakpointValue,
@@ -602,7 +601,11 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                 h={"40px"}
                                 w={8}
                               >
-                                <AzeroIcon w="14px" h="14px" />
+                                <AzeroIcon
+                                  chainToken={chainToken}
+                                  w="14px"
+                                  h="14px"
+                                />
                               </InputRightElement>
                             </NumberInput>
 
@@ -652,7 +655,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                 <TagLabel bg="transparent">
                                   {formatNumDynamicDecimal(price / 10 ** 12)}
                                 </TagLabel>
-                                <TagRightIcon as={AzeroIcon} w="14px" />
+                                <AzeroIcon chainToken={chainToken} w="14px" />
                               </Tag>
                             </HStack>
                           </HStack>
@@ -779,7 +782,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                     h={"50px"}
                                     w={8}
                                   >
-                                    <AzeroIcon />
+                                    <AzeroIcon chainToken={chainToken} />
                                   </InputRightElement>
                                 </NumberInput>
                               </>

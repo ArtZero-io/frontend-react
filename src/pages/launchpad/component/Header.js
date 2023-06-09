@@ -78,7 +78,7 @@ function LaunchpadDetailHeader({
   } = project;
 
   const history = useHistory();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainToken } = useSubstrateState();
   const descLength = useBreakpointValue([115, 175]);
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -389,6 +389,7 @@ function LaunchpadDetailHeader({
                               10 ** 12 ||
                             0}{" "}
                           <AzeroIcon
+                            chainToken={chainToken}
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
@@ -420,6 +421,7 @@ function LaunchpadDetailHeader({
                                   10 ** 12 ||
                                 0}{" "}
                               <AzeroIcon
+                                chainToken={chainToken}
                                 mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
@@ -442,6 +444,7 @@ function LaunchpadDetailHeader({
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
                             10 ** 12}{" "}
                           <AzeroIcon
+                            chainToken={chainToken}
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}

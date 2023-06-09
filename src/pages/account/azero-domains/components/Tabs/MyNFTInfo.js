@@ -542,7 +542,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     color="#fff"
                   />
                   <InputRightElement bg="transparent" h={"52px"} w={16}>
-                    <AzeroIcon />
+                    <AzeroIcon chainToken={chainToken} />
                   </InputRightElement>
                 </NumberInput>
                 <CommonButton
@@ -579,7 +579,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     <Text color="#fff" mx={2}>
                       {formatNumDynamicDecimal(price / 10 ** 12)}
                     </Text>
-                    <AzeroIcon />
+                    <AzeroIcon chainToken={chainToken} />
                   </Flex>
 
                   <CommonButton
@@ -635,7 +635,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   Royalty fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((askPrice * royaltyFee) / 10000)}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
+                {(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
               <Text>
@@ -643,7 +644,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   Trade fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
+                {myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
@@ -654,7 +656,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     (askPrice * myTradingFee) / 100 -
                     (askPrice * royaltyFee) / 10000
                 )}{" "}
-                <AzeroIcon w="15px" mb="2px" />
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" />
               </Text>
             </HStack>
           ) : null}
@@ -671,7 +673,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   Royalty fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
+                {(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
               <Text>
@@ -679,7 +682,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   Trade fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
+                {myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
@@ -691,7 +695,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                       myTradingFee / 10 ** 14 -
                       royaltyFee / 10 ** 16)
                 )}{" "}
-                <AzeroIcon w="15px" mb="2px" />
+                <AzeroIcon chainToken={chainToken} w="15px" mb="2px" />
               </Text>
             </HStack>
           ) : null}

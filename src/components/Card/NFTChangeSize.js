@@ -5,7 +5,6 @@ import {
   Spacer,
   Tag,
   TagLabel,
-  TagRightIcon,
   Text,
   Stack,
   useBreakpointValue,
@@ -16,6 +15,7 @@ import { getCloudFlareImage } from "@utils/index";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
 import { useEffect, useState } from "react";
+import { useSubstrateState } from "@utils/substrate";
 
 export const CommonCard = (props) => {
   const {
@@ -28,6 +28,7 @@ export const CommonCard = (props) => {
     cardWidth,
     bigCardNew,
   } = props;
+  const { chainToken } = useSubstrateState();
 
   const [projImage, setProjImage] = useState("");
 
@@ -90,10 +91,10 @@ export const CommonCard = (props) => {
                   <TagLabel fontSize={["14px", "16px", "16px"]}>
                     {formatNumDynamicDecimal(price / 10 ** 12)}
                   </TagLabel>
-                  <TagRightIcon
+                  <AzeroIcon
+                    chainToken={chainToken}
                     h={["12px", "16px", "16px"]}
                     w={["12px", "16px", "16px"]}
-                    as={AzeroIcon}
                   />
                 </Tag>
 
@@ -118,10 +119,10 @@ export const CommonCard = (props) => {
                       Best Offer{" "}
                       {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                     </Text>
-                    <TagRightIcon
+                    <AzeroIcon
+                      chainToken={chainToken}
                       h={["12px", "16px", "16px"]}
                       w={["12px", "16px", "16px"]}
-                      as={AzeroIcon}
                     />
                   </>
                 ) : (

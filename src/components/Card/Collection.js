@@ -20,6 +20,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { delay } from "@utils";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
+import { useSubstrateState } from "@utils/substrate";
 
 export const CollectionCard = ({
   squareImage,
@@ -36,7 +37,8 @@ export const CollectionCard = ({
   isDuplicationChecked,
 }) => {
   const restorationRef = useRef();
-
+  const { chainToken } = useSubstrateState();
+  
   useEffect(() => {
     const doScroll = async () => {
       await delay(1000).then(() => {
@@ -214,7 +216,10 @@ export const CollectionCard = ({
                   h={["12px", "16px", "16px"]}
                   w={["12px", "16px", "16px"]}
                 >
-                  <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
+                  <AzeroIcon
+                    chainToken={chainToken}
+                    fill={isActive ? "#7AE7FF" : "#888"}
+                  />
                 </TagLeftIcon>
                 <TagLabel
                   color={isActive ? "#fff" : "#888"}

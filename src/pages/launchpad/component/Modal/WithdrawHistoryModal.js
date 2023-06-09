@@ -39,7 +39,7 @@ export default function WithdrawHistoryModal({
   onClose,
 }) {
   // const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, chainToken } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [events, setEvents] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -234,6 +234,7 @@ export default function WithdrawHistoryModal({
                           <Td textAlign="left" py={7}>
                             {formatNumDynamicDecimal(reward?.withdrawAmount)}{" "}
                             <AzeroIcon
+                              chainToken={chainToken}
                               mb="4px"
                               w={["14px", "16px"]}
                               h={["14px", "16px"]}

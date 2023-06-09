@@ -68,7 +68,7 @@ function MyWhiteListProjectPage(props) {
   const { projectInfo, selectedProjectAddress } = props;
 
   const dispatch = useDispatch();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
 
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whiteListPrice, setWhiteListPrice] = useState(0);
@@ -1090,7 +1090,8 @@ function MyWhiteListProjectPage(props) {
                                   {item.claimedAmount}
                                 </Td>
                                 <Td textAlign="center" color="#fff">
-                                  {item.mintingFee} <AzeroIcon mb={1.5} />
+                                  {item.mintingFee}{" "}
+                                  <AzeroIcon chainToken={chainToken} mb={1.5} />
                                 </Td>
                               </Tr>
                             ))}
@@ -1191,7 +1192,8 @@ function MyWhiteListProjectPage(props) {
                                   {item.claimedAmount}
                                 </Td>
                                 <Td textAlign="center" color="#fff">
-                                  {item.mintingFee} <AzeroIcon mb={1.5} />
+                                  {item.mintingFee}{" "}
+                                  <AzeroIcon chainToken={chainToken} mb={1.5} />
                                 </Td>
                               </Tr>
                             ))}

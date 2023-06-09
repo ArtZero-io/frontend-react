@@ -17,7 +17,6 @@ import {
   TagLabel,
   useMediaQuery,
   Stack,
-
   Skeleton,
 } from "@chakra-ui/react";
 import { useHistory, useParams } from "react-router-dom";
@@ -53,9 +52,9 @@ import { fetchMyPMPPendingCount } from "./stakes";
 
 function GeneralPage() {
   const history = useHistory();
-  const {address} = useParams()
+  const { address } = useParams();
 
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(address);
 
   const [nftList, setNftList] = useState(null);
@@ -87,10 +86,7 @@ function GeneralPage() {
     );
 
     setIsRewardStarted(is_reward_started);
-    let is_claimed = await staking_calls.isClaimed(
-      currentAccount,
-      address
-    );
+    let is_claimed = await staking_calls.isClaimed(currentAccount, address);
     setClaimed(is_claimed);
   }, [address, currentAccount]);
 
@@ -256,8 +252,7 @@ function GeneralPage() {
 
         if (
           !nftList ||
-          (dashboardInfo?.length &&
-            dashboardInfo[0].address !== address)
+          (dashboardInfo?.length && dashboardInfo[0].address !== address)
         ) {
           await fetchAllNfts(isMounted);
         }
@@ -317,9 +312,7 @@ function GeneralPage() {
                   h={9}
                 >
                   <Text fontFamily="Oswald" fontSize={["14px", "16px"]}>
-                    {isLargerThan480
-                      ? address
-                      : truncateStr(address, 16)}
+                    {isLargerThan480 ? address : truncateStr(address, 16)}
                   </Text>
                   <Input
                     display="none"
@@ -534,6 +527,7 @@ function GeneralPage() {
                           3
                         )}{" "}
                     <AzeroIcon
+                      chainToken={chainToken}
                       mb="2px"
                       w={["14px", "16px"]}
                       h={["14px", "16px"]}
@@ -589,7 +583,6 @@ function GeneralPage() {
             </Skeleton>
           </VStack>
         </Stack>
-
       </>
       {/* )} */}
     </CommonContainer>

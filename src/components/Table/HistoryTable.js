@@ -6,7 +6,6 @@ import {
   Th,
   Thead,
   Tr,
-  TagRightIcon,
   Heading,
   Text,
 } from "@chakra-ui/react";
@@ -15,8 +14,11 @@ import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
 import { SCROLLBAR } from "@constants";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { useSubstrateState } from "@utils/substrate";
 
 function HistoryTable({ tableHeaders, tableData }) {
+  const { chainToken } = useSubstrateState();
+
   const formatDataCell = (itemObj, headerValue) => {
     switch (headerValue) {
       case "blockNumber":
@@ -26,7 +28,7 @@ function HistoryTable({ tableHeaders, tableData }) {
         return (
           <>
             {formatNumDynamicDecimal(itemObj[headerValue])}
-            <TagRightIcon as={AzeroIcon} />
+            <AzeroIcon chainToken={chainToken} />
           </>
         );
 

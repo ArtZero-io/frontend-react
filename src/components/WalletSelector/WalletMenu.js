@@ -3,7 +3,6 @@ import {
   IconButton,
   Tag,
   TagLabel,
-  TagRightIcon,
   useClipboard,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -17,7 +16,7 @@ import toast from 'react-hot-toast';
 import { CopyIcon } from '@chakra-ui/icons';
 
 function WalletMenu() {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const [accountBalance, setAccountBalance] = useState(0);
   const { activeAddress } = useSelector((s) => s.account);
 
@@ -80,7 +79,7 @@ function WalletMenu() {
 
           <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
             <TagLabel>{accountBalance}</TagLabel>
-            <TagRightIcon as={AzeroIcon} />
+            <AzeroIcon chainToken={chainToken} />
           </Tag>
         </Flex>
       </motion.div>

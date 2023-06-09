@@ -22,6 +22,7 @@ import { memo, useRef } from "react";
 import { useState } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { useSubstrateState } from "@utils/substrate";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -46,6 +47,7 @@ function CollectionHeader(props) {
     nftContractAddress,
     collectionOwner,
   } = props;
+  const { chainToken } = useSubstrateState();
 
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
@@ -142,7 +144,7 @@ function CollectionHeader(props) {
             <Text>Contract Address:</Text>{" "}
             <AddressCopier address={nftContractAddress} hasIcon={true} />
           </HStack>
-          
+
           <HStack>
             <Text>Creator:</Text>{" "}
             <AddressCopier address={collectionOwner} hasIcon={true} />
@@ -265,7 +267,7 @@ function CollectionHeader(props) {
                     {shortenNumber(floorPrice / 10 ** 12) || 0}
                   </Text>
 
-                  <AzeroIcon ml="6px" w="20px" />
+                  <AzeroIcon chainToken={chainToken} ml="6px" w="20px" />
                 </Flex>
                 <Text fontSize={["14px", "16px"]}>Floor price</Text>
                 <Divider
@@ -288,7 +290,7 @@ function CollectionHeader(props) {
                   <Text fontSize={["34px", "40px"]}>
                     {shortenNumber(volume) || 0}
                   </Text>
-                  <AzeroIcon ml="6px" w="20px" />
+                  <AzeroIcon chainToken={chainToken} ml="6px" w="20px" />
                 </Flex>
                 <Text fontSize={["14px", "16px"]}>Volume traded</Text>
               </Flex>

@@ -8,7 +8,6 @@ import {
   Spacer,
   Text,
   VStack,
-  TagRightIcon,
   Input,
   useClipboard,
   Square,
@@ -62,7 +61,7 @@ import { fetchValidatorProfit } from "../stats";
 
 function GeneralPage() {
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -466,9 +465,9 @@ function GeneralPage() {
                                     {item.value}
                                   </TagLabel>
                                   {item.name === "Amount Trades" && (
-                                    <TagRightIcon
+                                    <AzeroIcon
+                                      chainToken={chainToken}
                                       fontSize="2xl"
-                                      as={AzeroIcon}
                                     />
                                   )}
                                 </Tag>
@@ -593,6 +592,7 @@ function GeneralPage() {
                           3
                         )}{" "}
                     <AzeroIcon
+                      chainToken={chainToken}
                       mb="2px"
                       w={["14px", "16px"]}
                       h={["14px", "16px"]}
@@ -752,6 +752,7 @@ function GeneralPage() {
                           <Td textAlign="left" py={7}>
                             {reward.rewardAmount.toFixed(3)}{" "}
                             <AzeroIcon
+                              chainToken={chainToken}
                               mb="4px"
                               w={["14px", "16px"]}
                               h={["14px", "16px"]}
