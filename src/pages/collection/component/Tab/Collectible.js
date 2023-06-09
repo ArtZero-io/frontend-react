@@ -75,7 +75,7 @@ import { MAX_BID_COUNT } from "../../../../constants";
 import NFTReportModal from "../Modal/NFTReport";
 import { marketplace, nft721_psp34_standard } from "@utils/blockchain/abi";
 
- import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 
 import {
@@ -106,7 +106,7 @@ const NFTTabCollectible = (props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer] = useState(false);
@@ -738,7 +738,7 @@ const NFTTabCollectible = (props) => {
                                       )}
                                     </Tooltip>
                                   </TagLabel>
-                                  <TagRightIcon as={AzeroIcon} />
+                                  <AzeroIcon chainToken={chainToken} />
                                 </Tag>
                               </Box>
                             </Flex>
@@ -823,7 +823,7 @@ const NFTTabCollectible = (props) => {
                                     <TagLabel bg="transparent">
                                       {bidPrice}
                                     </TagLabel>
-                                    <TagRightIcon as={AzeroIcon} />
+                                    <AzeroIcon chainToken={chainToken} />
                                   </Tag>
                                 </Box>
                               </>

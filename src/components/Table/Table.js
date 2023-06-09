@@ -8,7 +8,6 @@ import {
   Tr,
   Tag,
   TagLabel,
-  TagRightIcon,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
@@ -17,6 +16,7 @@ import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { Fragment } from "react";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { useSubstrateState } from "@utils/substrate";
 
 function CommonTable({
   tableHeaders,
@@ -27,6 +27,7 @@ function CommonTable({
   // saleInfo,
 }) {
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
+  const { chainToken } = useSubstrateState();
 
   return (
     <TableContainer
@@ -90,7 +91,7 @@ function CommonTable({
                         <TagLabel bg="transparent" minW="fit-content">
                           {convertStringToPrice(item.bidValue)}
                         </TagLabel>
-                        <TagRightIcon as={AzeroIcon} />
+                        <AzeroIcon chainToken={chainToken} />
                       </Tag>
                     </Td>
                     {isOwner ? (

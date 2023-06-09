@@ -11,7 +11,6 @@ import {
   Stack,
   Skeleton,
   TagLabel,
-  TagRightIcon,
   NumberInput,
   NumberInputField,
   InputRightElement,
@@ -90,7 +89,7 @@ function MyNFTTabInfo(props) {
         return { [k]: v };
       });
 
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
@@ -758,7 +757,7 @@ function MyNFTTabInfo(props) {
                       </Text>
                       <Flex color="#fff" h="full" alignItems="center" px={1}>
                         <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                        <TagRightIcon as={AzeroIcon} />
+                        <AzeroIcon chainToken={chainToken} />
                       </Flex>
                     </Flex>
                   )}

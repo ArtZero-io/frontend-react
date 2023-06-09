@@ -96,7 +96,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer] = useState(false);
@@ -725,7 +725,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                       )}
                                     </Tooltip>
                                   </TagLabel>
-                                  <TagRightIcon as={AzeroIcon} />
+                                  <AzeroIcon chainToken={chainToken} />
                                 </Tag>
                               </Box>
                             </Flex>
@@ -810,7 +810,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                     <TagLabel bg="transparent">
                                       {bidPrice}
                                     </TagLabel>
-                                    <TagRightIcon as={AzeroIcon} />
+                                    <AzeroIcon chainToken={chainToken} />
                                   </Tag>
                                 </Box>
                               </>

@@ -6,7 +6,6 @@ import {
   Skeleton,
   Tag,
   TagLabel,
-  TagRightIcon,
   Text,
   VStack,
   Spacer,
@@ -74,7 +73,7 @@ function MyNFTCard({
   multiDelistData,
   handleSelectMultiDelist,
 }) {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, chainToken } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
@@ -545,7 +544,7 @@ function MyNFTCard({
                       <TagLabel>
                         {formatNumDynamicDecimal(price / 10 ** 12)}
                       </TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
+                      <AzeroIcon chainToken={chainToken} />
                     </Tag>
                   </VStack>
                   <Spacer />
@@ -563,7 +562,7 @@ function MyNFTCard({
                         <TagLabel bg="transparent">
                           {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
                         </TagLabel>
-                        <TagRightIcon as={AzeroIcon} />
+                        <AzeroIcon chainToken={chainToken} />
                       </HStack>
                     ) : null}
                   </HStack>
@@ -584,7 +583,7 @@ function MyNFTCard({
                             <Text color="#fff" bg="transparent">
                               {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                             </Text>
-                            <TagRightIcon as={AzeroIcon} />
+                            <AzeroIcon chainToken={chainToken} />
                           </HStack>
                         ) : null}
                       </Flex>

@@ -6,7 +6,6 @@ import {
   Th,
   Thead,
   Tr,
-  TagRightIcon,
   Skeleton,
   Heading,
   Flex,
@@ -40,7 +39,6 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
                 {formatNumDynamicDecimal(
                   itemObj["nft_count"] * itemObj["floorPrice"]
                 )}
-                {/* <TagRightIcon as={AzeroIcon} />*/}
                 <AzeroIcon chainToken={chainToken} />
               </>
             ) : (
@@ -61,7 +59,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
             {useAzeroUnit ? (
               <>
                 {formatNumDynamicDecimal(itemObj[headerValue])}
-                <TagRightIcon as={AzeroIcon} />
+                <AzeroIcon chainToken={chainToken} />
               </>
             ) : (
               <>
@@ -108,7 +106,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
               <>
                 <Box>
                   {formatNumDynamicDecimal(itemObj[headerValue])}{" "}
-                  <TagRightIcon as={AzeroIcon} />
+                  <AzeroIcon chainToken={chainToken} />
                 </Box>
 
                 {/* <Box mt="6px" color="#34B979" fontSize="16px">
@@ -143,7 +141,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
         return (
           <HStack justifyContent="end">
             <Text>{formatNumDynamicDecimal(itemObj[headerValue])} </Text>
-            <TagRightIcon as={AzeroIcon} width="14px" height="14px" />
+            <AzeroIcon chainToken={chainToken} />
           </HStack>
         );
 
