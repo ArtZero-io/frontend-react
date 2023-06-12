@@ -248,7 +248,7 @@ function ProfileHeader() {
               justifyContent="center"
             >
               <CommonButton
-                text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
+                text={`Claim unsuccessful Bids: ${claimAmount} 5IRE`}
                 onClick={() => onClaimHandler()}
               />{" "}
               <Tooltip

@@ -36,7 +36,7 @@ function StatsPage() {
     await fetch(url)
       .then((res) => res.json())
       .then(({ USD }) => {
-        console.log("AZERO - USD:", USD?.toFixed(4));
+        console.log("5IRE - USD:", USD?.toFixed(4));
         setAzeroPrice(USD.toFixed(4));
       })
       .catch((err) => {
@@ -166,7 +166,7 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Total Payout (AZERO)",
+            title: "Total Payout (5IRE)",
             value: (totalPayouts - remainRewardPool)?.toFixed(2),
             unit: "azero",
           },
@@ -176,7 +176,7 @@ function StatsPage() {
             unit: "azero",
           },
           {
-            title: "Next Payout (AZERO)",
+            title: "Next Payout (5IRE)",
             value: (totalNextPayout + remainRewardPool)?.toFixed(2),
             unit: "azero",
           },

@@ -1244,7 +1244,7 @@ function MyWhiteListProjectPage(props) {
                       0.0070399999996 *
                       Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)
                     ).toFixed(4)}{" "}
-                    AZERO for{" "}
+                    5IRE for{" "}
                     {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)}{" "}
                     Whitelist address clear.
                   </Text>

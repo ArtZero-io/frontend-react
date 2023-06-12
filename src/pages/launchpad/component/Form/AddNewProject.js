@@ -1017,7 +1017,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       color="#888"
                                     >{`I agree to pay `}</Text>
                                     <Text color="#fff" as="span">
-                                      {`${addProjectTotalFee} AZERO`}
+                                      {`${addProjectTotalFee} 5IRE`}
                                     </Text>
                                     <Text
                                       as="span"
