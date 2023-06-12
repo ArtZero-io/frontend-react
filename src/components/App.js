@@ -208,7 +208,7 @@ const Main = () => {
   return (
     <>
       <Helmet>
-        <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
+        <title>ArtZero.io - NFT Marketplace for 5ire Blockchain</title>
       </Helmet>
       {/* <>
         <Modal isOpen={isOpen} onClose={onClose} size={modalSize} isCentered>

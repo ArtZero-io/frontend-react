@@ -139,7 +139,7 @@ export default function WithdrawHistoryModal({
             Withdraw history
           </Heading>
           <Text fontWeight="500" fontSize="16px">
-            Total withdrawn: {formatNumDynamicDecimal(totalWithdrawn)} AZERO
+            Total withdrawn: {formatNumDynamicDecimal(totalWithdrawn)} 5IRE
           </Text>
         </ModalHeader>
 

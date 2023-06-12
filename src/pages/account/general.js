@@ -537,7 +537,7 @@ function GeneralPage() {
                 <span>to reduce your </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
                 <span> and earn </span>
-                <span style={{ color: "#7AE7FF" }}>AZERO</span>
+                <span style={{ color: "#7AE7FF" }}>5IRE</span>
               </Box>
 
               <Spacer />

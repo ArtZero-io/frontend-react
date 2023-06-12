@@ -236,7 +236,7 @@ export async function execContractQuery(
   }
 }
 
-export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
+export const formatQueryResultToNumber = (result, chainDecimals = 18) => {
   const ret = result?.toHuman().Ok?.replaceAll(",", "");
 
   const formattedStrBal = formatBalance(ret, {

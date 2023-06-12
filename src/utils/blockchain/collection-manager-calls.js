@@ -942,6 +942,7 @@ export const withdrawCollectionContract = async (
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
     .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(

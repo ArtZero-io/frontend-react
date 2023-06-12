@@ -599,7 +599,7 @@ export function isValidAddress(address) {
   }
 }
 
-export const formatNumToBN = (number = 0, decimal = 12) => {
+export const formatNumToBN = (number = 0, decimal = 18) => {
   return new BN(number * 10 ** 6).mul(new BN(10 ** (decimal - 6))).toString();
 };
 

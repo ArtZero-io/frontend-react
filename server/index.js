@@ -53,8 +53,8 @@ app.get("/launchpad/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.headerImage);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.name)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
+          .replaceAll("ArtZero.io - NFT Marketplace for 5ire Blockchain", project.name)
+          .replaceAll("Discover, create, collect and trade NFTs on 5ire Blockchain with ArtZero.io", project.description)
           .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
       }
 
@@ -85,8 +85,8 @@ app.get("/collection/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.headerImage);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.name)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
+          .replaceAll("ArtZero.io - NFT Marketplace for 5ire Blockchain", project.name)
+          .replaceAll("Discover, create, collect and trade NFTs on 5ire Blockchain with ArtZero.io", project.description)
           .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
       }
 
@@ -119,8 +119,8 @@ app.get("/nft/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.avatar);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.nftName)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
+          .replaceAll("ArtZero.io - NFT Marketplace for 5ire Blockchain", project.nftName)
+          .replaceAll("Discover, create, collect and trade NFTs on 5ire Blockchain with ArtZero.io", project.description)
           .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
       }
 
