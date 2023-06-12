@@ -46,7 +46,6 @@ import {
   CloseIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
-import C14Modal from "../Modal/C14Modal";
 
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -171,8 +170,6 @@ const DesktopNavContent = (props) => {
         <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
 
         {currentAccount?.address && <MyAccountDropdown />}
-
-        <C14Modal />
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -410,7 +407,6 @@ const MobileNav = ({ onClose, isOpen }) => {
               />
             ))}
             
-            <C14Modal />
           </DrawerBody>
 
           <DrawerFooter>

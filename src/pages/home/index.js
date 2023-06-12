@@ -327,7 +327,7 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                welcome to artzero - the first nft marketplace on aleph zero
+                welcome to artzero - the first nft marketplace on 5ire
                 network!
               </Text>
             </Center>
