@@ -44,7 +44,6 @@ import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { ArtZero_Privacy, START } from "../constants";
-import { Helmet } from "react-helmet";
 import { isEmptyObj } from "@utils";
 
 // import { useHistory } from "react-router-dom";
@@ -200,9 +199,6 @@ const Main = () => {
   // }, []);
   return (
     <>
-      <Helmet>
-        <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
-      </Helmet>
       {/* <>
         <Modal isOpen={isOpen} onClose={onClose} size={modalSize} isCentered>
           <ModalOverlay bg="blackAlpha.800" />

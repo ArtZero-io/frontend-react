@@ -8,7 +8,7 @@ import {
   Button,
   Flex,
   HStack,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 import {
   FacebookShareButton,
@@ -21,14 +21,14 @@ import {
   TwitterIcon,
   TelegramIcon,
   EmailIcon,
-} from 'react-share/';
-import { BsShare } from 'react-icons/bs';
+} from "react-share/";
+import { BsShare } from "react-icons/bs";
 
 function SocialShare({
-  width = '50px',
-  height = '50px',
-  shareUrl = 'https://artzero.io/',
-  title = 'ArtZero.io - NFT Marketplace for Aleph Zero Blockchain',
+  width = "50px",
+  height = "50px",
+  shareUrl = process.env.REACT_APP_WEBSITE_URL,
+  title = process.env.REACT_APP_WEBSITE_TITLE,
 }) {
   return (
     <>
@@ -47,7 +47,7 @@ function SocialShare({
           <PopoverContent
             borderRadius={0}
             w="fit-content"
-            _focus={{ boxShadow: 'none' }}
+            _focus={{ boxShadow: "none" }}
           >
             <PopoverArrow />
 
@@ -56,7 +56,7 @@ function SocialShare({
                 <Button variant="ghost" px="9px">
                   <FacebookShareButton url={shareUrl} quote={title}>
                     <FacebookIcon size={32} round />
-                  </FacebookShareButton>{' '}
+                  </FacebookShareButton>{" "}
                 </Button>
 
                 <Button variant="ghost" px="9px">
