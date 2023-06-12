@@ -65,7 +65,7 @@ function astarIcon({ w, h, ...rest }) {
         fill="url(#a)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".9"
         d="M37.02 9.626a4.871 4.871 0 0 0-1.705-.02c2.871 1.56 4.96 5.909 3.862 14.493a25.672 25.672 0 0 1-2.428 8.03 26.734 26.734 0 0 1-4.144 6.355 23.653 23.653 0 0 0 2.49 1.638 26.8 26.8 0 0 0 5.068-7.372 25.498 25.498 0 0 0 2.428-8.03c1.31-10.217-1.904-14.437-5.57-15.09v-.004Z"
         fill="url(#b)"
@@ -73,23 +73,23 @@ function astarIcon({ w, h, ...rest }) {
       <path
         d="M39.176 24.094c1.099-8.58-.991-12.933-3.861-14.494-.113.015-.22.041-.334.067 2.809 1.617 4.831 5.96 3.748 14.427a25.673 25.673 0 0 1-2.428 8.03 26.61 26.61 0 0 1-3.969 6.15c.092.072.18.139.272.205a26.84 26.84 0 0 0 4.143-6.356 25.499 25.499 0 0 0 2.429-8.03Z"
         fill="#fff"
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".8"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".5"
         d="M28.266 43.557c-.272-.205-.529-.421-.79-.637-4.236 1.767-10.105 2.875-15.937 1.52a23.383 23.383 0 0 0 3.188 3.342c5.689.776 11.162-1.032 14.89-3.244a44.311 44.311 0 0 1-1.356-.986l.005.005Z"
         fill="url(#c)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".6"
         d="M27.48 42.92c-.128-.108-.261-.215-.384-.323-4.267 1.704-10.166 2.726-15.983 1.273.144.19.288.385.431.57 5.828 1.355 11.701.247 15.937-1.52Z"
         fill="url(#d)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".9"
         d="M8.839 34.1c.03.092.067.18.103.267.19.452.436.857.734 1.222-.082-3.265 2.639-7.255 10.617-10.592a25.619 25.619 0 0 1 8.168-1.91 26.604 26.604 0 0 1 7.578.411c.129-1.078.18-2.084.17-2.973a26.757 26.757 0 0 0-8.918-.703 25.649 25.649 0 0 0-8.169 1.91C9.62 25.706 7.571 30.599 8.84 34.105V34.1Z"
         fill="url(#e)"
@@ -97,23 +97,23 @@ function astarIcon({ w, h, ...rest }) {
       <path
         d="M20.293 25.002c-7.978 3.338-10.7 7.327-10.617 10.592.072.087.149.17.226.252-.006-3.24 2.746-7.162 10.617-10.459a25.622 25.622 0 0 1 8.168-1.91 26.717 26.717 0 0 1 7.311.36 7.67 7.67 0 0 0 .041-.339 26.794 26.794 0 0 0-7.578-.41 25.651 25.651 0 0 0-8.168 1.91v.004Z"
         fill="#fff"
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".8"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".4"
         d="M42.601 24.715c-.04.339-.097.667-.154 1.001 3.645 2.783 7.542 7.316 9.288 13.04a23.595 23.595 0 0 0 1.299-4.435c-2.172-5.314-6.474-9.15-10.253-11.27-.046.54-.103 1.089-.175 1.664h-.005Z"
         fill="url(#f)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".5"
         d="M42.447 25.716c-.031.164-.057.334-.088.498 3.61 2.844 7.445 7.44 9.093 13.205.097-.22.19-.442.277-.662-1.745-5.725-5.637-10.253-9.288-13.041h.006Z"
         fill="url(#g)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".9"
         d="M44.126 46.268a5.13 5.13 0 0 0 .873-1.468c-2.788 1.704-7.6 1.34-14.484-3.903a25.524 25.524 0 0 1-5.74-6.12 26.634 26.634 0 0 1-3.435-6.766c-.996.426-1.894.888-2.664 1.34a26.87 26.87 0 0 0 3.85 8.076c1.54 2.3 3.46 4.38 5.74 6.12 8.194 6.243 13.457 5.57 15.854 2.72h.006Z"
         fill="url(#h)"
@@ -121,107 +121,107 @@ function astarIcon({ w, h, ...rest }) {
       <path
         d="M30.52 40.898c6.879 5.241 11.695 5.606 14.482 3.901.041-.107.077-.215.108-.318-2.803 1.628-7.578 1.201-14.365-3.968a25.526 25.526 0 0 1-5.74-6.12 26.648 26.648 0 0 1-3.342-6.51c-.108.046-.21.087-.313.133a26.633 26.633 0 0 0 3.434 6.767c1.54 2.3 3.46 4.38 5.74 6.12l-.005-.005Z"
         fill="#fff"
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".8"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".3"
         d="M19.117 21.722c.313-.129.626-.247.944-.365.586-4.549 2.562-10.191 6.65-14.56-1.53.22-3.035.58-4.493 1.088C18.7 12.424 17.53 18.066 17.582 22.4c.487-.23.996-.457 1.53-.677h.005Z"
         fill="url(#i)"
       />
       <path
-        style={{ "mix-blend-mode": "overlay" }}
+        style={{ mixBlendMode: "overlay" }}
         opacity=".4"
         d="M20.06 21.357c.16-.056.314-.118.473-.174.657-4.55 2.721-10.166 6.885-14.479-.236.026-.473.057-.709.088-4.087 4.374-6.063 10.011-6.648 14.56v.005Z"
         fill="url(#j)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".4"
         d="M27.963.071c-8.235.56-15.463 4.395-20.51 10.14l-.113.128c.98.976 4.194 2.896 5.493 3.697A23.43 23.43 0 0 1 22.24 7.87c.252-.329.518-.652.796-.965 3.388-3.825 8.014-5.843 13.384-5.843.596 0 1.813.098 1.838.098A29.793 29.793 0 0 0 27.964.07Z"
         fill="url(#k)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".4"
         d="M31.588 53.399c-6.381.436-12.347-1.74-16.855-5.611a17.994 17.994 0 0 1-1.263-.211c-5.006-1.022-9.072-4.02-11.752-8.666a17.608 17.608 0 0 1-.806-1.582c3.466 13.816 16.409 23.602 31.118 22.6.067-1.514-.38-5.03-.447-6.53h.005Z"
         fill="url(#l)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".4"
         d="M59.924 27.965c-.924-.093-5.422.262-6.53.446.138 2.034.01 4.026-.355 5.946.154.38.303.77.436 1.165 1.618 4.847 1.053 9.863-1.627 14.514a17.779 17.779 0 0 1-.965 1.49s.015-.011.02-.021c6.095-5.93 9.642-14.391 9.021-23.535v-.005Z"
         fill="url(#m)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".5"
         d="M36.728 7.803c.657.067 1.36.231 1.992.442.03.01.062.02.087.025a23.587 23.587 0 0 1 6.998 4.426s.01.005.015.01c.986-1.124 2.88-2.361 2.88-2.361s-2.9-2.968-7.341-3.892c-3.106-.647-10.114-1.268-14.535 6.253l.041-.04c.329-.494.673-.976 1.068-1.418 2.141-2.418 5.324-3.8 8.795-3.445Z"
         fill="url(#n)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".5"
         d="M45.856 46.925a9.537 9.537 0 0 1-1.376 1.504c-.02.02-.046.041-.067.062a23.606 23.606 0 0 1-7.331 3.845c-.005 0-.01 0-.016.005.483 1.417.606 3.676.606 3.676s4.02-1.026 7.04-4.41c2.11-2.367 6.155-8.127 1.852-15.715 0 0 .006.025.016.056.267.53.508 1.073.693 1.633 1.022 3.06.631 6.51-1.412 9.339l-.005.005Z"
         fill="url(#o)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".5"
         d="M7.413 35.276a9.531 9.531 0 0 1-.617-1.946c-.005-.03-.015-.062-.02-.093-.38-2.767-.257-5.57.334-8.27v-.016c-1.469-.288-3.486-1.314-3.486-1.314s-1.12 4 .303 8.302c.996 3.013 3.958 9.395 12.68 9.462 0 0-.025-.006-.056-.016-.59-.036-1.18-.097-1.76-.215-3.163-.647-5.951-2.711-7.384-5.894h.006Z"
         fill="url(#p)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".6"
         d="M35.465 19.52c.241.03.477.04.708.035 0 0-.159-3.116-.539-4.718-.385-1.597-.95-2.66-1.566-3.26-.446-.431-1.848-.966-2.936 2.33a5.005 5.005 0 0 0 4.333 5.607v.005Z"
         fill="url(#q)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".5"
         d="M18.19 30.506a5.221 5.221 0 0 0-.324-.631s-2.624 1.694-3.815 2.823c-1.191 1.13-1.828 2.152-2.038 2.988-.149.601.087 2.08 3.486 1.376a5.013 5.013 0 0 0 2.69-6.556Z"
         fill="url(#r)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".6"
         d="M36.338 39.968c-.144.19-.272.396-.385.6 0 0 2.778 1.423 4.354 1.89 1.576.468 2.777.509 3.604.272.596-.169 1.756-1.119-.55-3.706a5.01 5.01 0 0 0-7.023.95v-.006Z"
         fill="url(#s)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M35.26 27.046c-.63 2.095-1.514 4-2.597 5.678-.057.087-.113.175-.175.267 0 0 0 .005-.005.01a21.149 21.149 0 0 1-2.567 3.035c.688.729 1.427 1.437 2.244 2.11a23.507 23.507 0 0 0 2.936 1.971 26.798 26.798 0 0 0 5.068-7.372 26.08 26.08 0 0 0 1.19-2.84c-1.057-.775-2.125-1.396-3.11-1.817a22.816 22.816 0 0 0-2.989-1.042h.006Z"
         fill="url(#t)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M14.734 47.788c5.688.775 11.161-1.032 14.889-3.245a44.311 44.311 0 0 1-1.356-.986 25.583 25.583 0 0 1-3.88-3.67c-2.804 1.226-6.336 1.945-9.607 1.277-3.162-.646-5.95-2.71-7.383-5.893a9.533 9.533 0 0 1-.616-1.946c.827 5.801 3.753 10.863 7.948 14.462h.005Z"
         fill="url(#u)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M29.915 36.035a22.32 22.32 0 0 1-3.614-5.087c-.046-.098-.098-.185-.144-.283v-.01a21.503 21.503 0 0 1-1.345-3.743c-.976.231-1.956.519-2.942.889a23.8 23.8 0 0 0-3.173 1.55c.914 3.168 2.264 5.843 3.84 8.081.57.847 1.187 1.663 1.86 2.449 1.2-.524 2.274-1.145 3.13-1.787a23.401 23.401 0 0 0 2.393-2.064l-.005.005Z"
         fill="url(#v)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M22.22 7.89c-3.517 4.539-4.688 10.181-4.636 14.514a40.21 40.21 0 0 1 1.535-.682 25.254 25.254 0 0 1 5.113-1.525c.34-3.04 1.484-6.459 3.697-8.954 2.14-2.418 5.324-3.8 8.795-3.445.657.067 1.36.231 1.992.442.03.01.061.02.087.025A23.262 23.262 0 0 0 28.4 6.597c-2.156.149-4.22.585-6.171 1.273-.005.005-.01.015-.015.02h.005Z"
         fill="url(#w)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M53.034 34.316c-2.176-5.314-6.479-9.155-10.258-11.275-.046.54-.102 1.094-.18 1.674a25.417 25.417 0 0 1-1.237 5.19c2.465 1.818 4.857 4.513 5.915 7.681 1.021 3.06.631 6.51-1.412 9.339a9.537 9.537 0 0 1-1.376 1.504l-.02.02c4.405-3.46 7.52-8.45 8.589-14.097 0-.01-.01-.021-.01-.031l-.01-.005Z"
         fill="url(#x)"
       />
       <path
-        style={{ "mix-blend-mode": "multiply" }}
+        style={{ mixBlendMode: "multiply" }}
         opacity=".3"
         d="M24.216 23.811a23.07 23.07 0 0 0 .59 3.101c2.131-.503 4.22-.688 6.218-.59l.318.015h.01c1.253.103 2.557.334 3.908.704.287-.96.529-1.957.703-2.994.19-1.293.246-2.49.241-3.532-3.198-.79-6.186-.95-8.912-.703a25.72 25.72 0 0 0-3.055.385c-.144 1.304-.15 2.541-.016 3.61l-.005.004Z"
         fill="url(#y)"
@@ -235,11 +235,11 @@ function astarIcon({ w, h, ...rest }) {
           y2="12.219"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#E6007A" />
-          <stop offset=".21" stop-color="#703AC2" />
-          <stop offset=".46" stop-color="#0070EB" />
-          <stop offset=".77" stop-color="#0297FB" />
-          <stop offset="1" stop-color="#0AE2FF" />
+          <stop stopColor="#E6007A" />
+          <stop offset=".21" stopColor="#703AC2" />
+          <stop offset=".46" stopColor="#0070EB" />
+          <stop offset=".77" stopColor="#0297FB" />
+          <stop offset="1" stopColor="#0AE2FF" />
         </linearGradient>
         <linearGradient
           id="d"
@@ -249,8 +249,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="43.875"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#fff" stop-opacity="0" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#fff" stopOpacity="0" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="g"
@@ -260,8 +260,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="33.336"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#fff" stop-opacity="0" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#fff" stopOpacity="0" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="j"
@@ -271,8 +271,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="12.78"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#fff" stop-opacity="0" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#fff" stopOpacity="0" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="k"
@@ -282,8 +282,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="7.197"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="l"
@@ -293,8 +293,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="50.159"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="m"
@@ -304,8 +304,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="31.697"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="n"
@@ -315,8 +315,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="12.301"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="o"
@@ -326,8 +326,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="52.69"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="p"
@@ -337,8 +337,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="25.012"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="q"
@@ -348,8 +348,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="18.282"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="r"
@@ -359,8 +359,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="34.472"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="s"
@@ -370,8 +370,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="37.243"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="t"
@@ -381,8 +381,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="34.434"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="u"
@@ -392,8 +392,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="38.752"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="v"
@@ -403,8 +403,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="31.297"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="w"
@@ -414,8 +414,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="14.549"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="x"
@@ -425,8 +425,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="35.743"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <linearGradient
           id="y"
@@ -436,8 +436,8 @@ function astarIcon({ w, h, ...rest }) {
           y2="23.919"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#231F20" />
-          <stop offset="1" stop-color="#fff" />
+          <stop stopColor="#231F20" />
+          <stop offset="1" stopColor="#fff" />
         </linearGradient>
         <radialGradient
           id="b"
@@ -447,8 +447,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(38.55 23.924) scale(11.408)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="c"
@@ -458,8 +458,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="matrix(6.63838 0 0 6.63839 21.69 45.087)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="e"
@@ -469,8 +469,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="rotate(-120 17.63 6.906) scale(11.408)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="f"
@@ -480,8 +480,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="rotate(-120 32.17 1.192) scale(6.63838)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="h"
@@ -491,8 +491,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="rotate(120 3.699 28.743) scale(11.408)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <radialGradient
           id="i"
@@ -502,8 +502,8 @@ function astarIcon({ w, h, ...rest }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="rotate(120 6.136 13.716) scale(6.63838)"
         >
-          <stop stop-color="#fff" />
-          <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          <stop stopColor="#fff" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
       </defs>
     </Icon>
