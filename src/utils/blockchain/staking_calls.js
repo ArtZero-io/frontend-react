@@ -9,7 +9,7 @@ import {
 } from "@store/actions/txStatus";
 import { APICall } from "../../api/client";
 import { readOnlyGasLimit, formatNumberOutput } from "@utils";
-import { formatOutput } from "..";
+import { formatOutput, getChainDecimal } from "..";
 import { BN } from "@polkadot/util";
 
 let contract;
@@ -287,7 +287,7 @@ async function getClaimableReward(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return null;
 }
@@ -309,7 +309,7 @@ async function getRewardPool(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return null;
 }

@@ -68,7 +68,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address);
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return 0;
 }
@@ -324,7 +324,7 @@ async function getTotalProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** getChainDecimal(contract);
   }
   return null;
 }

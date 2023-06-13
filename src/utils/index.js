@@ -682,3 +682,8 @@ export const isAzeroDomainCollection = async ({ contractAddress } = {}) => {
     return false;
   }
 };
+
+export function getChainDecimal(contract) {
+  const chainDecimals = contract?.registry.chainDecimals;
+  return chainDecimals[0];
+}
