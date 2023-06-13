@@ -105,7 +105,7 @@ async function approve(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
-  console.log('approve::domain_name', domain_name);
+
   gasLimit = await getEstimatedGas(
     address,
     contract,

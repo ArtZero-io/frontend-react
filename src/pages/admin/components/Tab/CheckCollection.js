@@ -80,7 +80,6 @@ function CheckCollection() {
       1
     );
     // }
-    console.log("token_uri", token_uri);
 
     if (!token_uri) toast.error("No token_uri!");
 

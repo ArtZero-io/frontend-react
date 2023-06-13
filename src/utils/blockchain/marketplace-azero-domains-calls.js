@@ -10,7 +10,12 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
-import { formatNumberOutput, formatOutput, getChainDecimal, readOnlyGasLimit } from "..";
+import {
+  formatNumberOutput,
+  formatOutput,
+  getChainDecimal,
+  readOnlyGasLimit,
+} from "..";
 
 let contract;
 
@@ -120,7 +125,6 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
-
     return output.toHuman().Ok;
   }
   return null;
@@ -428,8 +432,6 @@ async function unlist(
   txType,
   api
 ) {
-    console.log('marketplace for azero domains');
-    console.log(token_id);
   if (
     !contract ||
     !caller_account ||
@@ -469,9 +471,9 @@ async function unlist(
 
       if (status?.isFinalized) {
         console.log({
-            collection_address: nft_contract_address,
-            azDomainName: token_id.bytes,
-          });
+          collection_address: nft_contract_address,
+          azDomainName: token_id.bytes,
+        });
         await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
           azDomainName: token_id.bytes,

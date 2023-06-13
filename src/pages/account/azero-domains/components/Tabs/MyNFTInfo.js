@@ -124,7 +124,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
         );
       setSaleInfo(sale_info);
       let accountAddress = owner;
-      console.log("1");
+
       if (sale_info) {
         const listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
@@ -144,20 +144,16 @@ function MyAzeroDomainsNFTTabInfo(props) {
           }
         }
       }
-      console.log("2");
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }
-      console.log("3");
       const name = truncateStr(accountAddress);
-      console.log("4");
       setOwnerAddress(accountAddress);
       setOwnerName(name);
       setIsAzeroDomain(
         nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS
       );
       setLoading(false);
-      console.log("5");
     } catch (error) {
       setLoading(false);
       toast.error("There is some error when fetching sale info!");
@@ -408,8 +404,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-              {console.log("isAzeroDomainCollection", isAzeroDomain)}
-              {console.log("nftContractAddress", props)}
+
               {ownerAddress === currentAccount?.address && !isAzeroDomain && (
                 <TransferNFTModal
                   {...props}

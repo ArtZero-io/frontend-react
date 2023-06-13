@@ -18,7 +18,6 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
 import { isValidAddress } from "../utils";
 
-
 export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -61,7 +60,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
     // Change to get gasEst for every single tx to 1 for all
     const value = 0;
     let gasLimit;
-    let additionalData = '';
+    let additionalData = "";
     const azeroDomainsNftContract = new ContractPromise(
       api,
       azero_domains_nft.CONTRACT_ABI,
@@ -80,7 +79,6 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
 
     await Promise.all(
       listInfo.map(async ({ info }) => {
-
         const ret = azeroDomainsNftContract.tx["psp34::transfer"](
           { gasLimit, value },
           receiverAddress,
@@ -130,7 +128,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
               async ({ info }) =>
                 await APICall.askBeUpdateAzeroDomainsNftData({
                   collection_address: info?.nftContractAddress,
-                  azDomainName: info?.azDomainName
+                  azDomainName: info?.azDomainName,
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
@@ -189,8 +187,10 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
 
   function handleSelectMultiTransfer(azDomainName, action, isChecked) {
     let newData = { ...multiTransferData };
-    console.log('handleSelectMultiTransfer::listNFTFormatted', listNFTFormatted);
-    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
 
     // Initial data is empty
     if (multiTransferData?.action === null) {
@@ -259,11 +259,16 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
   /**
    * Azero Domains Functions
    */
-  function handleSelectAzeroDomainsMultiTransfer(azDomainName, action, isChecked) {
+  function handleSelectAzeroDomainsMultiTransfer(
+    azDomainName,
+    action,
+    isChecked
+  ) {
     let newData = { ...multiTransferData };
-    console.log('handleSelectAzeroDomainsMultiTransfer111::listNFTFormatted', listNFTFormatted);
-    console.log('azDomainName', azDomainName);
-    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
     console.log(azDomainName, action, isChecked);
     // Initial data is empty
     if (multiTransferData?.action === null) {
@@ -292,8 +297,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
 
       newData.list = [...newList, azDomainName];
       newData.listInfo = [...newListInfo, { price: null, info }];
-      console.log('newData', newData);
-      console.log('action', action);
+
       setMultiTransferData(newData);
       setMultiTransferActionMode(action);
 
@@ -331,7 +335,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
     handleSelectMultiTransfer,
     handleInputChangeReceiverAddress,
     handleCloseButtonForMultiTransfer,
-    handleSelectAzeroDomainsMultiTransfer
+    handleSelectAzeroDomainsMultiTransfer,
   };
 }
 

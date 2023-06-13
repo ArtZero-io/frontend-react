@@ -729,7 +729,6 @@ function MyNFTTabInfo(props) {
                         min={0.1}
                         precision={6}
                         onChange={(v) => {
-                          console.log("v", v);
                           if (/[eE+-]/.test(v)) return;
 
                           setNewBidPrice(v);

@@ -19,7 +19,6 @@ function PayoutHistoryTab() {
         offset: 0,
         sort: -1,
       });
-      console.log("getAllRewardClaimed data", data);
 
       const summary = data.reduce(
         ({ stakerCount, accRewardAmount, nftStakedCount }, e) => {

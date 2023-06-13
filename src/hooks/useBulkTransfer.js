@@ -206,7 +206,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
   function handleSelectMultiTransfer(tokenID, action, isChecked) {
     let newData = { ...multiTransferData };
-    console.log('handleSelectMultiTransfer::listNFTFormatted', listNFTFormatted);
+
     let info = listNFTFormatted?.find((item) => item.tokenID === tokenID);
 
     // Initial data is empty
@@ -264,11 +264,16 @@ export default function useBulkTransfer({ listNFTFormatted }) {
   /**
    * Azero Domains Functions
    */
-  function handleSelectAzeroDomainsMultiTransfer(azDomainName, action, isChecked) {
+  function handleSelectAzeroDomainsMultiTransfer(
+    azDomainName,
+    action,
+    isChecked
+  ) {
     let newData = { ...multiTransferData };
-    console.log('handleSelectAzeroDomainsMultiTransfer::listNFTFormatted', listNFTFormatted);
-    console.log('azDomainName', azDomainName);
-    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
 
     // Initial data is empty
     if (multiTransferData?.action === null) {
@@ -348,6 +353,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     handleSelectMultiTransfer,
     handleInputChangeReceiverAddress,
     handleCloseButtonForMultiTransfer,
-    handleSelectAzeroDomainsMultiTransfer
+    handleSelectAzeroDomainsMultiTransfer,
   };
 }

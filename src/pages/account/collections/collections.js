@@ -87,7 +87,6 @@ function MyCollectionsPage() {
                 currentAccount,
                 item.nftContractAddress
               );
-
             listCollection.push(item);
           }
         }
@@ -133,7 +132,10 @@ function MyCollectionsPage() {
 
         <Spacer mt={{ base: "20px", xl: "0px" }} />
 
-        <AddNewCollectionModal mode={formMode.ADD} hasCollection={collections?.length}/>
+        <AddNewCollectionModal
+          mode={formMode.ADD}
+          hasCollection={collections?.length}
+        />
       </Flex>
 
       {loading || loadingForceUpdate ? (

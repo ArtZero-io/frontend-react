@@ -49,7 +49,7 @@ import { CloseButton } from "@chakra-ui/react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
 import { isMobile } from "react-device-detect";
-console.log("staking", staking);
+
 function MyAzeroDomainsNFTGroupCard({
   name,
   avatarImage,
@@ -545,7 +545,7 @@ function GridNftA({
                 <Heading size="h6" fontSize="14px">
                   Bulk Listing
                 </Heading>
-                {console.log("multiListingData", multiListingData)}
+
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                   {`Your are listing ${collectionName} NFT ID`}
                   {multiListingData?.listInfo?.map((item) => {

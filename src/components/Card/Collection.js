@@ -38,7 +38,7 @@ export const CollectionCard = ({
 }) => {
   const restorationRef = useRef();
   const { chainToken } = useSubstrateState();
-  
+
   useEffect(() => {
     const doScroll = async () => {
       await delay(1000).then(() => {
