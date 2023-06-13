@@ -13,6 +13,7 @@ import { execContractQuery } from "../pages/account/nfts/nfts";
 import { ADMIN_ROLE_CODE } from "../constants";
 import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
+import { formatBalance } from "@polkadot/util";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -657,3 +658,43 @@ export async function getEstimatedGasBatchTx(
 
   return ret;
 }
+
+export const getChainDecimal = (contract) => {
+  const chainDecimals = contract?.registry.chainDecimals;
+  return chainDecimals[0];
+};
+
+export const convertToBNString = (value, decimal = 12) => {
+  return new BN(value / 10 ** decimal).mul(new BN(10 ** decimal)).toString();
+};
+
+export const fetchValidatorProfit = async ({
+  currentAccount,
+  api,
+  address,
+}) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, reserved },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimal] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+    const formattedStrBalReserved = formatBalance(reserved, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 +
+      formattedStrBalReserved?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** chainDecimal };
+  }
+};
