@@ -29,6 +29,7 @@ import { WITHDRAW_LAUNCHPAD, START, FINALIZED } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 
 import toast from "react-hot-toast";
+import { convertStringToPrice } from "@utils";
 
 export default function UpdateWithdrawModal({
   collection_address,
@@ -38,7 +39,7 @@ export default function UpdateWithdrawModal({
   const dispatch = useDispatch();
   const [contractBalance, setContractBalance] = useState(0);
   const [withdrawBalance, setWithdrawBalance] = useState(0);
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
@@ -61,10 +62,15 @@ export default function UpdateWithdrawModal({
         collection_address
       );
 
-      const balFree = balance.toHuman().free?.replaceAll(",", "") / 10 ** 12;
-      const balMiscFrozen =
-        balance.toHuman().miscFrozen?.replaceAll(",", "") / 10 ** 12;
+      const balFree = convertStringToPrice(
+        balance.toHuman().free,
+        chainDecimal
+      );
 
+      const balMiscFrozen = convertStringToPrice(
+        balance.toHuman().miscFrozen,
+        chainDecimal
+      );
       const tempBal = balFree - balMiscFrozen;
 
       const tempBalFloorRound = Math.floor(tempBal);
@@ -73,7 +79,7 @@ export default function UpdateWithdrawModal({
     };
 
     fetch();
-  }, [api, collection_address, dispatch, onClose, rest.step]);
+  }, [api, chainDecimal, collection_address, dispatch, onClose, rest.step]);
 
   const withdrawFee = async () => {
     const launchpad_psp34_nft_standard_contract = new ContractPromise(

@@ -92,19 +92,20 @@ import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import { Helmet } from "react-helmet";
-import ImageCloudFlare from "../../components/ImageWrapper/ImageCloudFlare";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import CommonTabs from "@components/Tabs/CommonTabs";
 import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
 import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
-import { MAX_BID_COUNT } from "../../constants";
+import { MAX_BID_COUNT } from "@constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { isMobile } from "react-device-detect";
+import { convertStringToPrice } from "@utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api, chainToken } = useSubstrateState();
+  const { currentAccount, api, chainToken, chainDecimal } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -220,9 +221,12 @@ function TokenPage() {
             });
 
             const myBid = listBidder.filter((item) => item.isMyBid === true);
+
             if (myBid.length) {
-              const bidValue =
-                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 12;
+              const bidValue = convertStringToPrice(
+                myBid[0].bidValue,
+                chainDecimal
+              );
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
@@ -250,7 +254,7 @@ function TokenPage() {
         setLoading(false);
       }
     },
-    [api, collection_address, currentAccount, token_id]
+    [api, chainDecimal, collection_address, currentAccount, token_id]
   );
 
   useEffect(() => {
@@ -977,7 +981,7 @@ function TokenPage() {
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
                                   {formatNumDynamicDecimal(
-                                    token?.price / 10 ** 12
+                                    token?.price / 10 ** chainDecimal
                                   )}
                                 </TagLabel>
                                 <AzeroIcon chainToken={chainToken} w="14px" />
@@ -1020,7 +1024,7 @@ function TokenPage() {
                             <Tag minH="20px" pr={0} bg="transparent">
                               <TagLabel bg="transparent">
                                 {formatNumDynamicDecimal(
-                                  token?.price / 10 ** 12
+                                  token?.price / 10 ** chainDecimal
                                 )}
                               </TagLabel>
                               <AzeroIcon chainToken={chainToken} w="14px" />
@@ -1161,8 +1165,10 @@ export const buyToken = async (
 
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
+  const chainDecimals = api?.registry?.chainDecimals;
+  const decimal = chainDecimals[0];
 
-  if (balance < askPrice / 10 ** 12) {
+  if (balance < askPrice / 10 ** decimal) {
     toast.error(`Not enough balance!`);
     return;
   }
@@ -1219,8 +1225,10 @@ export const placeBid = async (
     toast.error(`Bid price must greater than zero!`);
     return;
   }
+  const chainDecimals = api?.registry?.chainDecimals;
+  const decimal = chainDecimals[0];
 
-  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
+  if (parseFloat(bidPrice) >= askPrice / 10 ** decimal) {
     toast.error(`Bid amount must be less than current price!`);
     return;
   }
@@ -1573,8 +1581,10 @@ function MobileEditBidPriceModal({
       toast.error(`Bid price must greater than zero!`);
       return;
     }
+    const chainDecimals = api?.registry?.chainDecimals;
+    const decimal = chainDecimals[0];
 
-    if (parseFloat(newBidPrice) >= price / 10 ** 12) {
+    if (parseFloat(newBidPrice) >= price / 10 ** decimal) {
       toast.error(`Bid amount must be less than current price!`);
       return;
     }
@@ -1822,8 +1832,10 @@ export const placeAzeroDomainsBid = async (
     toast.error(`Bid price must greater than zero!`);
     return;
   }
+  const chainDecimals = api?.registry?.chainDecimals;
+  const decimal = chainDecimals[0];
 
-  if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
+  if (parseFloat(bidPrice) >= askPrice / 10 ** decimal) {
     toast.error(`Bid amount must be less than current price!`);
     return;
   }
@@ -1872,7 +1884,10 @@ export const buyAzeroDomainsToken = async (
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
 
-  if (balance < askPrice / 10 ** 12) {
+  const chainDecimals = api?.registry?.chainDecimals;
+  const decimal = chainDecimals[0];
+
+  if (balance < askPrice / 10 ** decimal) {
     toast.error(`Not enough balance!`);
     return;
   }

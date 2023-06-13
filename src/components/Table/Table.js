@@ -27,7 +27,7 @@ function CommonTable({
   // saleInfo,
 }) {
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
-  const { chainToken } = useSubstrateState();
+  const { chainToken, chainDecimal } = useSubstrateState();
 
   return (
     <TableContainer
@@ -89,7 +89,7 @@ function CommonTable({
                     >
                       <Tag pr={0} bg="transparent">
                         <TagLabel bg="transparent" minW="fit-content">
-                          {convertStringToPrice(item.bidValue)}
+                          {convertStringToPrice(item.bidValue, chainDecimal)}
                         </TagLabel>
                         <AzeroIcon chainToken={chainToken} />
                       </Tag>
