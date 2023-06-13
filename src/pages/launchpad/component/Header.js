@@ -78,7 +78,7 @@ function LaunchpadDetailHeader({
   } = project;
 
   const history = useHistory();
-  const { currentAccount, api, chainToken } = useSubstrateState();
+  const { currentAccount, api, chainToken, chainDecimal } = useSubstrateState();
   const descLength = useBreakpointValue([115, 175]);
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -383,10 +383,11 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee / 10 ** 12 ||
+                          {currentPhase?.publicMintingFee /
+                            10 ** chainDecimal ||
                             nextPhaseWhenNoCurrPhaseId?.phase
                               ?.publicMintingFee /
-                              10 ** 12 ||
+                              10 ** chainDecimal ||
                             0}{" "}
                           <AzeroIcon
                             chainToken={chainToken}
@@ -415,10 +416,11 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 12 ||
+                              {currentPhase?.publicMintingFee /
+                                10 ** chainDecimal ||
                                 nextPhaseWhenNoCurrPhaseId?.phase
                                   ?.publicMintingFee /
-                                  10 ** 12 ||
+                                  10 ** chainDecimal ||
                                 0}{" "}
                               <AzeroIcon
                                 chainToken={chainToken}
@@ -442,7 +444,7 @@ function LaunchpadDetailHeader({
                           color="#fff"
                         >
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
-                            10 ** 12}{" "}
+                            10 ** chainDecimal}{" "}
                           <AzeroIcon
                             chainToken={chainToken}
                             mb={["2px", "5px"]}

@@ -37,8 +37,10 @@ import { HStack } from "@chakra-ui/react";
 import { isValidAddressPolkadotAddress } from "@utils";
 import { delay } from "@utils";
 import toast from "react-hot-toast";
+import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 
 function CollectionPage() {
+  const { chainDecimal } = useSubstrateState();
   const history = useHistory();
 
   const { search, state } = useLocation();
@@ -185,7 +187,11 @@ function CollectionPage() {
 
     if (priceQuery.min && priceQuery.max) {
       const formatPriceQuery = ({ max, min }) => {
-        return { price: { between: [min * 10 ** 12, max * 10 ** 12] } };
+        return {
+          price: {
+            between: [min * 10 ** chainDecimal, max * 10 ** chainDecimal],
+          },
+        };
       };
 
       const priceQueryFormat = formatPriceQuery(queryFilter.price);

@@ -47,7 +47,7 @@ function CollectionHeader(props) {
     nftContractAddress,
     collectionOwner,
   } = props;
-  const { chainToken } = useSubstrateState();
+  const { chainToken, chainDecimal } = useSubstrateState();
 
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
@@ -264,7 +264,7 @@ function CollectionHeader(props) {
                 />
                 <Flex alignItems="center" justifyContent="center">
                   <Text fontSize={["34px", "40px"]}>
-                    {shortenNumber(floorPrice / 10 ** 12) || 0}
+                    {shortenNumber(floorPrice / 10 ** chainDecimal) || 0}
                   </Text>
 
                   <AzeroIcon chainToken={chainToken} ml="6px" w="20px" />
@@ -290,7 +290,12 @@ function CollectionHeader(props) {
                   <Text fontSize={["34px", "40px"]}>
                     {shortenNumber(volume) || 0}
                   </Text>
-                  <AzeroIcon chainToken={chainToken} ml="6px" w="20px" />
+                  <AzeroIcon
+                    chainToken={chainToken}
+                    ml="6px"
+                    mb="0px"
+                    w="20px"
+                  />
                 </Flex>
                 <Text fontSize={["14px", "16px"]}>Volume traded</Text>
               </Flex>

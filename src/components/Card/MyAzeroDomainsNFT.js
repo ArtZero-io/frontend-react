@@ -70,7 +70,7 @@ function MyAzeroDomainsNFTCard({
   multiTransferData,
   handleSelectAzeroDomainsMultiTransfer,
 }) {
-  const { currentAccount, chainToken } = useSubstrateState();
+  const { currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
@@ -473,7 +473,7 @@ function MyAzeroDomainsNFTCard({
                     </Text>
                     <Tag minH={["30px", "40px"]}>
                       <TagLabel>
-                        {formatNumDynamicDecimal(price / 10 ** 12)}
+                        {formatNumDynamicDecimal(price / 10 ** chainDecimal)}
                       </TagLabel>
                       <AzeroIcon chainToken={chainToken} />
                     </Tag>
@@ -491,7 +491,9 @@ function MyAzeroDomainsNFTCard({
                     {isBid?.status ? (
                       <HStack minH={"20px"} bg="transparent">
                         <TagLabel bg="transparent">
-                          {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
+                          {formatNumDynamicDecimal(
+                            isBid?.bidPrice / 10 ** chainDecimal
+                          )}
                         </TagLabel>
                         <AzeroIcon chainToken={chainToken} />
                       </HStack>
@@ -512,7 +514,9 @@ function MyAzeroDomainsNFTCard({
                         {highest_bid ? (
                           <HStack ml={"6px"} bg="transparent" i>
                             <Text color="#fff" bg="transparent">
-                              {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
+                              {formatNumDynamicDecimal(
+                                highest_bid / 10 ** chainDecimal
+                              )}
                             </Text>
                             <AzeroIcon chainToken={chainToken} />
                           </HStack>

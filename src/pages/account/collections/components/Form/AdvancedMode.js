@@ -45,7 +45,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   const [maxRoyaltyFeeRate, setMaxRoyaltyFeeRate] = useState(0);
 
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal } = useSubstrateState();
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
@@ -66,11 +66,11 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             currentAccount
           );
 
-        setAddingFee(addingFeeData / 10 ** 12);
+        setAddingFee(addingFeeData / 10 ** chainDecimal);
       }
     };
     fetchFee();
-  }, [addingFee, currentAccount]);
+  }, [addingFee, chainDecimal, currentAccount]);
 
   useEffect(() => {
     const fetchFee = async () => {

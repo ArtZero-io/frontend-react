@@ -105,7 +105,7 @@ const NFTTabCollectible = (props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer] = useState(false);
@@ -666,7 +666,9 @@ const NFTTabCollectible = (props) => {
 
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
-                                  {formatNumDynamicDecimal(price / 10 ** 12)}
+                                  {formatNumDynamicDecimal(
+                                    price / 10 ** chainDecimal
+                                  )}
                                 </TagLabel>
                                 <AzeroIcon chainToken={chainToken} w="14px" />
                               </Tag>
@@ -732,12 +734,12 @@ const NFTTabCollectible = (props) => {
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
                                       label={formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** chainDecimal
                                       )}
                                       aria-label="A tooltip"
                                     >
                                       {formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** chainDecimal
                                       )}
                                     </Tooltip>
                                   </TagLabel>

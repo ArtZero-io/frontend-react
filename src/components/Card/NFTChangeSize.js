@@ -28,7 +28,7 @@ export const CommonCard = (props) => {
     cardWidth,
     bigCardNew,
   } = props;
-  const { chainToken } = useSubstrateState();
+  const { chainToken, chainDecimal } = useSubstrateState();
 
   const [projImage, setProjImage] = useState("");
 
@@ -89,7 +89,7 @@ export const CommonCard = (props) => {
               <Flex w="full">
                 <Tag minH={["30px", "40px"]}>
                   <TagLabel fontSize={["14px", "16px", "16px"]}>
-                    {formatNumDynamicDecimal(price / 10 ** 12)}
+                    {formatNumDynamicDecimal(price / 10 ** chainDecimal)}
                   </TagLabel>
                   <AzeroIcon
                     chainToken={chainToken}
@@ -117,7 +117,9 @@ export const CommonCard = (props) => {
                       color="#fff"
                     >
                       Best Offer{" "}
-                      {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
+                      {formatNumDynamicDecimal(
+                        highest_bid / 10 ** chainDecimal
+                      )}
                     </Text>
                     <AzeroIcon
                       chainToken={chainToken}

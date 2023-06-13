@@ -77,13 +77,13 @@ import {
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { APICall } from "../../../../api/client";
-import { delay } from "../../../../utils";
+import { APICall } from "@api/client";
+import { delay } from "@utils";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal } = useSubstrateState();
 
   const [projectMintFeeRate, setProjectMintFeeRate] = useState(null);
 
@@ -189,7 +189,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** chainDecimal);
         }
       }
 
@@ -206,15 +206,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     };
 
     prepareData();
-  }, [
-    addingFee,
-    api,
-    currentAccount,
-    location.state?.projectInfo,
-    maxRoyaltyFeeRate,
-    mode,
-    nftContractAddress,
-  ]);
+  }, [addingFee, api, chainDecimal, currentAccount, location.state?.projectInfo, maxRoyaltyFeeRate, mode, nftContractAddress]);
 
   useEffect(() => {
     const fetchAddProjectFee = async () => {
@@ -227,13 +219,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount || getPublicCurrentAccount()
         );
 
-      const totalFee = addProjFee / 10 ** 12 + addCollectionFee / 10 ** 12;
+      const totalFee =
+        addProjFee / 10 ** chainDecimal + addCollectionFee / 10 ** chainDecimal;
 
       setAddProjectTotalFee(totalFee);
     };
 
     fetchAddProjectFee();
-  }, [currentAccount]);
+  }, [chainDecimal, currentAccount]);
 
   useEffect(() => {
     if (rest?.step === FINALIZED) {
@@ -424,6 +417,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           .mul(new BN(10 ** 6))
                           .toString()
                       : 0;
+
                     public_minting_fee_phases.push(
                       public_minting_fee_phase_tmp
                     );

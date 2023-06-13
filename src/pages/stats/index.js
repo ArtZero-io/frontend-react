@@ -22,7 +22,7 @@ const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 
 function StatsPage() {
-  const { api, chainToken } = useSubstrateState();
+  const { api, chainToken, chainDecimal } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -60,7 +60,7 @@ function StatsPage() {
       }, 0);
 
       const totalNftPayouts = data.reduce((acc, curr) => {
-        return acc + curr.totalStakedAmount * 10 ** 12;
+        return acc + curr.totalStakedAmount * 10 ** chainDecimal;
       }, 0);
 
       let remainRewardPool = 0;
@@ -156,7 +156,7 @@ function StatsPage() {
           return {
             ...item,
             order: index + 1,
-            floorPrice: data?.price / 10 ** 12 || 0,
+            floorPrice: data?.price / 10 ** chainDecimal || 0,
           };
         })
       );
@@ -296,23 +296,23 @@ export const fetchValidatorProfit = async ({
       data: { free, reserved },
     } = await api.query.system.account(address || currentAccount?.address);
 
-    const [chainDecimals] = await api.registry.chainDecimals;
+    const [chainDecimal] = await api.registry.chainDecimals;
 
     const formattedStrBal = formatBalance(free, {
       withSi: false,
       forceUnit: "-",
-      chainDecimals,
+      chainDecimal,
     });
     const formattedStrBalReserved = formatBalance(reserved, {
       withSi: false,
       forceUnit: "-",
-      chainDecimals,
+      chainDecimal,
     });
 
     const formattedNumBal =
       formattedStrBal?.replaceAll(",", "") * 1 +
       formattedStrBalReserved?.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal / 10 ** 12 };
+    return { balance: formattedNumBal / 10 ** chainDecimal };
   }
 };

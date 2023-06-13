@@ -89,7 +89,7 @@ function MyNFTTabInfo(props) {
         return { [k]: v };
       });
 
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
@@ -336,7 +336,7 @@ function MyNFTTabInfo(props) {
       return;
     }
 
-    if (parseFloat(newBidPrice) >= price / 10 ** 12) {
+    if (parseFloat(newBidPrice) >= price / 10 ** chainDecimal) {
       toast.error(`Bid amount must be less than current price!`);
       return;
     }
@@ -632,7 +632,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                      {formatNumDynamicDecimal(price / 10 ** chainDecimal)}
                     </Text>
                     <AzeroIcon chainToken={chainToken} />
                   </Flex>
@@ -833,7 +833,7 @@ function MyNFTTabInfo(props) {
                 </Text>{" "}
                 {formatNumDynamicDecimal(
                   price *
-                    (1 / 10 ** 12 -
+                    (1 / 10 ** chainDecimal -
                       myTradingFee / 10 ** 14 -
                       royaltyFee / 10 ** 16)
                 )}{" "}

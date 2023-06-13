@@ -95,7 +95,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer] = useState(false);
@@ -140,6 +140,10 @@ const AzeroDomainsNFTTabCollectible = (props) => {
 
         if (listBidder) {
           for (const item of listBidder) {
+            console.log(
+              "convertStringToPrice(item.bidValue)",
+              convertStringToPrice(item.bidValue)
+            );
             if (item.bidder === currentAccount?.address) {
               setIsBided(true);
               setBidPrice(convertStringToPrice(item.bidValue));
@@ -163,14 +167,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [
-    currentAccount,
-    is_for_sale,
-    nftContractAddress,
-    owner,
-    tokenID,
-    azDomainName,
-  ]);
+  }, [currentAccount, is_for_sale, nftContractAddress, owner, azDomainName]);
 
   const attrsList = !traits
     ? {}
@@ -653,7 +650,9 @@ const AzeroDomainsNFTTabCollectible = (props) => {
 
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
-                                  {formatNumDynamicDecimal(price / 10 ** 12)}
+                                  {formatNumDynamicDecimal(
+                                    price / 10 ** chainDecimal
+                                  )}
                                 </TagLabel>
                                 <AzeroIcon chainToken={chainToken} w="14px" />
                               </Tag>
@@ -719,12 +718,12 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
                                       label={formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** chainDecimal
                                       )}
                                       aria-label="A tooltip"
                                     >
                                       {formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** chainDecimal
                                       )}
                                     </Tooltip>
                                   </TagLabel>

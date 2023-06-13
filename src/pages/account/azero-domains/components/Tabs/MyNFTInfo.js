@@ -90,7 +90,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
         return { [k]: v };
       });
 
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
@@ -151,7 +151,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
       setOwnerAddress(accountAddress);
       setOwnerName(name);
       setIsAzeroDomain(
-        nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS
+        nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS
       );
       setLoading(false);
     } catch (error) {
@@ -572,7 +572,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                      {formatNumDynamicDecimal(price / 10 ** chainDecimal)}
                     </Text>
                     <AzeroIcon chainToken={chainToken} />
                   </Flex>
@@ -686,7 +686,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                 </Text>{" "}
                 {formatNumDynamicDecimal(
                   price *
-                    (1 / 10 ** 12 -
+                    (1 / 10 ** chainDecimal -
                       myTradingFee / 10 ** 14 -
                       royaltyFee / 10 ** 16)
                 )}{" "}

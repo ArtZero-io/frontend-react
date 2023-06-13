@@ -41,7 +41,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [maxRoyaltyFeeRate, setMaxRoyaltyFeeRate] = useState(0);
 
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal } = useSubstrateState();
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
@@ -64,7 +64,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** chainDecimal);
         }
       } catch (error) {
         console.log("error fetchFee", error.message);
@@ -72,7 +72,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
     };
 
     fetchFee();
-  }, [addingFee, currentAccount]);
+  }, [addingFee, chainDecimal, currentAccount]);
 
   useEffect(() => {
     const fetchFee = async () => {
