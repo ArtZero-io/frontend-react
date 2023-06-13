@@ -578,13 +578,13 @@ export const isPhaseEnd = (endTime = "") => {
 };
 
 export function formatOutput(o) {
-  const frmtRet = o.toHuman().Ok;
+  const frmtRet = o?.toHuman().Ok;
 
   return frmtRet?.replaceAll(",", "");
 }
 
 export function formatNumberOutput(o) {
-  const frmtRet = o.toHuman().Ok;
+  const frmtRet = o?.toHuman().Ok;
 
   return parseInt(frmtRet?.replaceAll(",", ""));
 }
