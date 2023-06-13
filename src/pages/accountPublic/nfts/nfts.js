@@ -44,7 +44,7 @@ const MyNFTsPage = () => {
     () => handleForceUpdate()
   );
 
-  const {address} = useParams()
+  const { address } = useParams();
 
   // eslint-disable-next-line no-unused-vars
   const [owner, setOwner] = useState(null);
@@ -418,10 +418,6 @@ export async function execContractTx(
   queryName,
   ...args
 ) {
-  // NOTE: amount need to convert before passing in
-  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  // console.log("execContractTx ", queryName);
-
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 
   let unsubscribe;

@@ -259,10 +259,6 @@ export async function execContractTx(
   queryName,
   ...args
 ) {
-  // NOTE: amount need to convert before passing in
-  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  // console.log("execContractTx ", queryName);
-
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 
   let unsubscribe;
@@ -315,7 +311,7 @@ function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
         </HStack>
       )}
       {list?.map((item, idx) => {
-        if (item.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        if (item.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
           return (
             <MyAzeroDomainsNFTGroupCard
               {...item}

@@ -19,9 +19,9 @@ import { FINALIZED } from "@constants";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import TxHistory from "../Tab/TxHistory";
 import PrevArrowIcon from "@theme/assets/icon/PrevArrow";
-import AzeroDomainsNFTTabCollectible from '../../../azero-domains/collection/component/Tab/Collectible';
-import { isAzeroDomainCollection } from '@utils';
-import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
+import AzeroDomainsNFTTabCollectible from "../../../azero-domains/collection/component/Tab/Collectible";
+import { isAzeroDomainCollection } from "@utils";
+import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
 
 function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -37,25 +37,26 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   }, [step, onClose]);
 
   let tabData = [];
+
   if (isAzeroDomainCollection(rest.nftContractAddress)) {
     tabData = [
       {
-        label: 'detail',
+        label: "detail",
         content: <AzeroDomainsNFTTabCollectible {...rest} />,
         isDisabled: actionType,
       },
       {
-        label: 'offers',
+        label: "offers",
         content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled: actionType || !rest?.is_for_sale,
       },
       {
-        label: 'owner history',
+        label: "owner history",
         content: <OwnershipHistory {...rest} />,
         isDisabled: actionType,
       },
       {
-        label: 'tx history',
+        label: "tx history",
         content: <TxHistory {...rest} />,
         isDisabled: actionType,
       },
