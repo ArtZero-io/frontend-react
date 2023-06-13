@@ -11,12 +11,20 @@ import { APICall } from "@api/client";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
-import { getPublicCurrentAccount } from "@utils";
-import { launchpad_manager, collection_manager } from "@utils/blockchain/abi";
+import {
+  getPublicCurrentAccount,
+  fetchValidatorProfit,
+  formatNumberOutput,
+} from "@utils";
+import {
+  launchpad_manager,
+  collection_manager,
+  psp22_contract,
+} from "@utils/blockchain/abi";
 
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
-import { formatBalance } from "@polkadot/util";
+import { execContractQuery } from "@pages/account/nfts/nfts";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
@@ -48,6 +56,25 @@ function StatsPage() {
 
   const prepareStats = async () => {
     try {
+      // ==Fetch Total Payout (INW)===================
+
+      const chainDecimals = api?.registry?.chainDecimals;
+
+      let result = await execContractQuery(
+        publicCurrentAccount?.address,
+        api,
+        psp22_contract.CONTRACT_ABI,
+        process.env.REACT_APP_INW_TOKEN_ADDRESS,
+        "psp22::balanceOf",
+        process.env.REACT_APP_INW_PAYOUT_ADDRESS
+      );
+
+      const bal = formatNumberOutput(result) / 10 ** chainDecimals[0];
+
+      const totalINWPayout = 50 * 10 ** 6 - bal;
+
+      // ================================
+
       // Total Payout
       const { ret: data } = await APICall.getAllRewardPayout({
         limit: 1000,
@@ -59,9 +86,9 @@ function StatsPage() {
         return acc + curr.rewardAmount;
       }, 0);
 
-      const totalNftPayouts = data.reduce((acc, curr) => {
-        return acc + curr.totalStakedAmount * 10 ** chainDecimal;
-      }, 0);
+      // const totalNftPayouts = data.reduce((acc, curr) => {
+      //   return acc + curr.totalStakedAmount * 10 ** chainDecimal;
+      // }, 0);
 
       let remainRewardPool = 0;
       let isRewardStarted = await staking_calls.getRewardStarted(
@@ -182,7 +209,7 @@ function StatsPage() {
           },
           {
             title: "Total Payout (INW)",
-            value: totalNftPayouts * INW_RATE,
+            value: totalINWPayout,
             unit: "INW",
           },
           {
@@ -285,34 +312,3 @@ function StatsPage() {
 }
 
 export default StatsPage;
-
-export const fetchValidatorProfit = async ({
-  currentAccount,
-  api,
-  address,
-}) => {
-  if (currentAccount && api) {
-    const {
-      data: { free, reserved },
-    } = await api.query.system.account(address || currentAccount?.address);
-
-    const [chainDecimal] = await api.registry.chainDecimals;
-
-    const formattedStrBal = formatBalance(free, {
-      withSi: false,
-      forceUnit: "-",
-      chainDecimal,
-    });
-    const formattedStrBalReserved = formatBalance(reserved, {
-      withSi: false,
-      forceUnit: "-",
-      chainDecimal,
-    });
-
-    const formattedNumBal =
-      formattedStrBal?.replaceAll(",", "") * 1 +
-      formattedStrBalReserved?.replaceAll(",", "") * 1;
-
-    return { balance: formattedNumBal / 10 ** chainDecimal };
-  }
-};

@@ -41,7 +41,7 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
-import CommonContainer from "../../components/Container/CommonContainer";
+import CommonContainer from "@components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import { launchpad_manager } from "@utils/blockchain/abi";
 import { collection_manager } from "@utils/blockchain/abi";
@@ -56,8 +56,7 @@ import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
-import { getPublicCurrentAccount } from "../../utils";
-import { fetchValidatorProfit } from "../stats";
+import { fetchValidatorProfit, getPublicCurrentAccount } from "@utils";
 
 function GeneralPage() {
   const history = useHistory();
