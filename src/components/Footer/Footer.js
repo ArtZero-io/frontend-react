@@ -18,6 +18,7 @@ import {
   ArtZero_TOS,
   ArtZero_Assets,
 } from "../../constants";
+import * as ROUTES from "@constants/routes";
 
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -89,52 +90,77 @@ export const Footer = () => {
               <Heading fontSize={["sm", "lg"]} color="brand.blue" mt="2">
                 discover, collect and trade nfts on artzero
               </Heading>
-              <Flex w="full" align="center" justifyContent="center" zIndex={0}>
-                <Link
-                  mx="20px"
-                  textTransform="none"
-                  _hover={{
-                    textDecoration: "underline",
-                    color: "#7ae7ff",
-                  }}
-                  href={ArtZero_Assets}
-                >
-                  Brand Assets
-                </Link>{" "}
-                <Link
-                  mx="20px"
-                  textTransform="none"
-                  _hover={{
-                    textDecoration: "underline",
-                    color: "#7ae7ff",
-                  }}
-                  href={ArtZero_Cookies}
-                >
-                  Cookies Policy
-                </Link>
-                <Link
-                  mx="20px"
-                  textTransform="none"
-                  _hover={{
-                    textDecoration: "underline",
-                    color: "#7ae7ff",
-                  }}
-                  target="_blank"
-                  href={ArtZero_Privacy}
-                >
-                  Privacy Policy
-                </Link>
-                <Link
-                  mx="20px"
-                  textTransform="none"
-                  _hover={{
-                    textDecoration: "underline",
-                    color: "#7ae7ff",
-                  }}
-                  href={ArtZero_TOS}
-                >
-                  Terms of Service
-                </Link>
+              <Flex
+                align="center"
+                justifyContent="center"
+                zIndex={0}
+                direction={["column", "row"]}
+              >
+                <Flex w="full" my={["16px", "0px"]}                 justifyContent="center"
+>
+                  <Link
+                    mx="20px"
+                    textTransform="none"
+                    _hover={{
+                      textDecoration: "underline",
+                      color: "#7ae7ff",
+                    }}
+                    href={ArtZero_Assets}
+                  >
+                    Brand Assets
+                  </Link>{" "}
+                  <Link
+                    mx="20px"
+                    textTransform="none"
+                    _hover={{
+                      textDecoration: "underline",
+                      color: "#7ae7ff",
+                    }}
+                    href={ROUTES.DOCS}
+                  >
+                    Docs
+                  </Link>{" "}
+                </Flex>
+
+                <Flex minW="fit-content">
+                  <Link
+                    textAlign="center"
+                    mx="20px"
+                    textTransform="none"
+                    _hover={{
+                      textDecoration: "underline",
+                      color: "#7ae7ff",
+                    }}
+                    href={ArtZero_Cookies}
+                  >
+                    Cookies Policy
+                  </Link>
+                  <Link
+                    mx="20px"
+                    textAlign="center"
+                    textTransform="none"
+                    _hover={{
+                      textDecoration: "underline",
+                      color: "#7ae7ff",
+                    }}
+                    target="_blank"
+                    href={ArtZero_Privacy}
+                  >
+                    Privacy Policy
+                  </Link>
+                  <Link
+                    mx="20px"
+                    textAlign="center"
+                    textTransform="none"
+                    _hover={{
+                      textDecoration: "underline",
+                      color: "#7ae7ff",
+                    }}
+                    href={ArtZero_TOS}
+                  >
+                    Terms of Service
+                  </Link>
+                </Flex>
               </Flex>
               <Text
                 color="#888"

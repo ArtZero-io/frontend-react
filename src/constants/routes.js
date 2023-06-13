@@ -36,7 +36,7 @@ export const MINTING_EVENT = "/mint";
 
 export const MARKETPLACE = "/marketplace";
 export const DOCS = "https://docs.artzero.io";
-export const STAKE2EARN = "https://testnet.inkwhale.net/#/farms";
+export const STAKE2EARN = "https://a0.inkwhale.net/";
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = "http://artzero.io";
