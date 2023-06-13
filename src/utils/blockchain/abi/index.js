@@ -13,6 +13,8 @@ const nft721_psp34_standard =
 const profile = require(`./${network}/profile`).default;
 const staking = require(`./${network}/staking`).default;
 
+const psp22_contract = require(`./${network}/psp22_contract`).default;
+
 export {
   artzero_nft,
   azero_domains_nft,
@@ -23,4 +25,5 @@ export {
   nft721_psp34_standard,
   profile,
   staking,
+  psp22_contract,
 };
