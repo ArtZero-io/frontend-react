@@ -10,7 +10,7 @@ import {
 import { formatNumDynamicDecimal } from "@utils";
 import StatsCardContentLoader from "../StatsCardContentLoader";
 import { useSubstrateState } from "@utils/substrate";
-import { ChainTokenImage } from "@components/ChainTokenImage/ChainTokenImage";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
   const { chainToken } = useSubstrateState();
@@ -91,12 +91,7 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
                   </Text>
 
                   {item.unit === "azero" ? (
-                    <ChainTokenImage
-                      ml="6px"
-                      w="20px"
-                      h="20px"
-                      chainToken={chainToken}
-                    />
+                    <AzeroIcon mb="0px" chainToken={chainToken} />
                   ) : (
                     <>
                       <Text ml="6px" color="brand.blue">
