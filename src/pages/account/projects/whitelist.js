@@ -54,21 +54,21 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import { SCROLLBAR } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
-import { formatNumToBN, isEmptyObj, isPhaseEnd, isValidAddress } from "@utils";
+import { isEmptyObj, isPhaseEnd, isValidAddress, convertToBNString} from "@utils";
 import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { usePhaseInfo } from "@hooks/usePhaseInfo";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
-
+ 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
 function MyWhiteListProjectPage(props) {
   const { projectInfo, selectedProjectAddress } = props;
 
   const dispatch = useDispatch();
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, currentAccount, chainToken, chainDecimal } = useSubstrateState();
 
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whiteListPrice, setWhiteListPrice] = useState(0);
@@ -309,7 +309,7 @@ function MyWhiteListProjectPage(props) {
 
       addressList.push(curr.address);
       minAmountList.push(curr.whitelistAmount);
-      minPriceList.push(formatNumToBN(curr.mintingFee));
+      minPriceList.push(convertToBNString(curr.mintingFee, chainDecimal));
       totalCount = totalCount + (parseInt(curr.whitelistAmount) || 0);
       falseCase = falseCase + (!curr?.isValid ? 1 : 0);
 

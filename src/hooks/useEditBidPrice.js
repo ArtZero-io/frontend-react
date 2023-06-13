@@ -5,7 +5,6 @@ import {
   txErrorHandler,
 } from "@store/actions/txStatus";
 import { getEstimatedGasBatchTx } from "@utils";
-import BN from "bn.js";
 import { web3FromSource } from "../utils/wallets/extension-dapp";
 
 import { START } from "@constants";
@@ -15,6 +14,7 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
+import { convertToBNString, getChainDecimal } from "../utils";
 
 export default function useEditBidPrice({
   newBidPrice,
@@ -58,9 +58,11 @@ export default function useEditBidPrice({
     );
 
     // ============================================
-    const bidValue = new BN(newBidPrice * 10 ** 6)
-      .mul(new BN(10 ** 6))
-      .toString();
+
+    const bidValue = convertToBNString(
+      newBidPrice,
+      getChainDecimal(marketplaceContract)
+    );
 
     let bidGasLimit = await getEstimatedGasBatchTx(
       address,

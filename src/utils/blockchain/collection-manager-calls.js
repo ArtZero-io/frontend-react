@@ -1,7 +1,14 @@
-import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
+import {
+  getEstimatedGas,
+  readOnlyGasLimit,
+  formatOutput,
+  convertToBNString,
+  getChainDecimal,
+  isValidAddressPolkadotAddress,
+  delay,
+} from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
 import {
   txErrorHandler,
@@ -10,10 +17,8 @@ import {
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import { collection_manager } from "@utils/blockchain/abi";
-import { getEstimatedGas, readOnlyGasLimit, formatOutput } from "..";
 import emailjs from "@emailjs/browser";
-import { delay } from "@utils";
-
+ 
 let contract;
 
 export const setCollectionContract = (api, data) => {
@@ -940,9 +945,7 @@ export const withdrawCollectionContract = async (
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  const amountFormatted = convertToBNString(amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,

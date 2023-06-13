@@ -1,7 +1,6 @@
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../utils/wallets/extension-dapp";
 import { getEstimatedGasBatchTx } from "@utils";
-import { BN } from "bn.js";
 import {
   txErrorHandler,
   batchTxResponseErrorHandler,
@@ -18,6 +17,7 @@ import { execContractQuery } from "../pages/account/nfts/nfts";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
+import { convertToBNString, getChainDecimal } from "../utils";
 
 export default function useBulkListing({
   listNFTFormatted,
@@ -238,34 +238,16 @@ export default function useBulkListing({
       "list",
       listInfo[0].info?.nftContractAddress,
       { u64: listInfo[0].info?.tokenID },
-      new BN(listInfo[0].price * 10 ** 6).mul(new BN(10 ** 6)).toString()
+      convertToBNString(listInfo[0].price, getChainDecimal(marketplaceContract))
     );
     // TODOS: monitor gas is ok for different price above
 
     await Promise.all(
       listInfo.map(async ({ price, info }) => {
-        // const value = 0;
-        // let gasLimit;
-
-        // const marketplaceContract = new ContractPromise(
-        //   api,
-        //   marketplace.CONTRACT_ABI,
-        //   marketplace.CONTRACT_ADDRESS
-        // );
-
-        const salePrice = new BN(price * 10 ** 6)
-          .mul(new BN(10 ** 6))
-          .toString();
-
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   marketplaceContract,
-        //   value,
-        //   "list",
-        //   info?.nftContractAddress,
-        //   { u64: info?.tokenID },
-        //   salePrice
-        // );
+        const salePrice = convertToBNString(
+          price,
+          getChainDecimal(marketplaceContract)
+        );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },

@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { TypeRegistry, U32 } from "@polkadot/types";
@@ -11,6 +10,7 @@ import {
 } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
 import {
+  convertToBNString,
   formatNumberOutput,
   formatOutput,
   getChainDecimal,
@@ -386,7 +386,7 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const sale_price = convertToBNString(price, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -520,7 +520,7 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = convertToBNString(bid_amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -651,7 +651,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = convertToBNString(price, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -819,9 +819,7 @@ export const withdrawMarketplaceContract = async (
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  const amountFormatted = convertToBNString(amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,

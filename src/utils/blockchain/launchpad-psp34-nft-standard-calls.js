@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import BN from "bn.js";
 import { APICall } from "../../api/client";
 import { isValidAddressPolkadotAddress } from "@utils";
 import launchpad_contract_calls from "./launchpad-contract-calls";
@@ -11,8 +10,10 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import {
+  convertToBNString,
   formatNumberOutput,
   formatOutput,
+  getChainDecimal,
   getEstimatedGas,
   readOnlyGasLimit,
 } from "..";
@@ -95,7 +96,7 @@ async function updateWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const minting_fee = convertToBNString(price, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -174,7 +175,7 @@ async function addWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const minting_fee = convertToBNString(price, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -605,7 +606,8 @@ async function publicMint(
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
+  const value = convertToBNString(mintingFee, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -680,7 +682,7 @@ async function whitelistMint(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = convertToBNString(mintingFee, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,
@@ -975,9 +977,10 @@ async function addNewPhase(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  publicMintingFee = convertToBNString(
+    publicMintingFee,
+    getChainDecimal(contract)
+  );
 
   gasLimit = await getEstimatedGas(
     address,
@@ -1047,9 +1050,10 @@ async function updateSchedulePhase(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  publicMintingFee = convertToBNString(
+    publicMintingFee,
+    getChainDecimal(contract)
+  );
 
   gasLimit = await getEstimatedGas(
     address,
@@ -1262,9 +1266,8 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
-  const withdrawAmount = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+
+  const withdrawAmount = convertToBNString(amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,

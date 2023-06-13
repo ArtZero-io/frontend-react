@@ -1,22 +1,20 @@
-import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
+  readOnlyGasLimit,
+  formatOutput,
+  convertToBNString,
+  getChainDecimal,
   getEstimatedGas,
-  // handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
-// import { AccountActionTypes } from "@store/types/account.types";
 import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { launchpad_manager } from "@utils/blockchain/abi";
 import { APICall } from "@api/client";
-import { readOnlyGasLimit, formatOutput } from "..";
-// import emailjs from "@emailjs/browser";
-// import { delay } from "@utils";
 
 let contract;
 
@@ -522,9 +520,7 @@ export const withdrawLaunchpadContract = async (
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  const amountFormatted = convertToBNString(amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(
     address,

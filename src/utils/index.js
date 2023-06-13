@@ -98,6 +98,7 @@ function nFormatter(num, digits) {
   }
   return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 }
+
 export function isValidImage(imageUrl) {
   try {
     fetch(imageUrl).then((res) => {
@@ -119,20 +120,15 @@ export function convertDateToTimeStamp(dateStr) {
   return date?.getTime();
 }
 
-export function convertStringToPrice(stringPrice) {
+export function convertStringToPrice(stringPrice, chainDecimal = 12) {
   try {
-    /* eslint-disable no-useless-escape */
-    const a = stringPrice.replace(/\,/g, "");
-    // let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
-    return a / 10 ** 12;
+    const price = stringPrice?.replace(/,/g, "");
+
+    return new BN(price, 10).div(new BN(10 ** chainDecimal)).toNumber();
   } catch (error) {
     console.log(error);
     return 0;
   }
-}
-
-export function convertNumberWithoutCommas(input) {
-  return input.replace(/,/g, "");
 }
 
 export function convertStringToDateTime(stringTimeStamp) {
@@ -604,10 +600,6 @@ export function isValidAddress(address) {
   }
 }
 
-export const formatNumToBN = (number = 0, decimal = 12) => {
-  return new BN(number * 10 ** 6).mul(new BN(10 ** (decimal - 6))).toString();
-};
-
 export const checkHasRoleAdmin = async ({
   api,
   contractAbi,
@@ -665,25 +657,29 @@ export async function getEstimatedGasBatchTx(
   return ret;
 }
 
-export const switchCollection = async ({ contractAddress }) => {
-  if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+export const switchCollection = ({ contractAddress }) => {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return AZERO_DOMAINS_COLLECTION;
-  } else if (contractAddress == artzero_nft.CONTRACT_ADDRESS) {
+  } else if (contractAddress === artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
   } else {
     return OTHER_COLLECTION;
   }
 };
 
-export const isAzeroDomainCollection = async ({ contractAddress } = {}) => {
-  if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+export const isAzeroDomainCollection = ({ contractAddress } = {}) => {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {
     return false;
   }
 };
 
-export function getChainDecimal(contract) {
+export const getChainDecimal = (contract) => {
   const chainDecimals = contract?.registry.chainDecimals;
   return chainDecimals[0];
-}
+};
+
+export const convertToBNString = (value, decimal = 12) => {
+  return new BN(value / 10 ** decimal).mul(new BN(10 ** decimal)).toString();
+};

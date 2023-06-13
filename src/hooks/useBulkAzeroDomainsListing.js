@@ -1,7 +1,6 @@
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../utils/wallets/extension-dapp";
 import { getEstimatedGasBatchTx } from "@utils";
-import { BN } from "bn.js";
 import {
   txErrorHandler,
   batchTxResponseErrorHandler,
@@ -18,6 +17,7 @@ import { execContractQuery } from "../pages/account/nfts/nfts";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
+import { convertToBNString, getChainDecimal } from "../utils";
 
 export default function useBulkAzeroDomainsListing({
   listNFTFormatted,
@@ -202,9 +202,10 @@ export default function useBulkAzeroDomainsListing({
           marketplace.CONTRACT_ADDRESS
         );
 
-        const salePrice = new BN(price * 10 ** 6)
-          .mul(new BN(10 ** 6))
-          .toString();
+        const salePrice = convertToBNString(
+          price,
+          getChainDecimal(marketplaceContract)
+        );
 
         gasLimit = await getEstimatedGasBatchTx(
           address,
@@ -258,10 +259,9 @@ export default function useBulkAzeroDomainsListing({
 
             await listInfo.map(
               async ({ info }) =>
-
                 await APICall.askBeUpdateAzeroDomainsNftData({
-                    collection_address: info?.nftContractAddress,
-                    azDomainName: info?.azDomainName
+                  collection_address: info?.nftContractAddress,
+                  azDomainName: info?.azDomainName,
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
@@ -321,11 +321,18 @@ export default function useBulkAzeroDomainsListing({
         },
       });
     }
-  }, [dispatch, multiListingActionMode, multiListingData?.action, nftContractAddress]);
+  }, [
+    dispatch,
+    multiListingActionMode,
+    multiListingData?.action,
+    nftContractAddress,
+  ]);
 
   function handleSelectMultiListing(azDomainName, action, isChecked) {
     let newData = { ...multiListingData };
-    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
     // Initial data is empty
     if (multiListingData?.action === null) {
       if (!isChecked) return;
@@ -360,7 +367,9 @@ export default function useBulkAzeroDomainsListing({
     } else {
       if (!isExisted) return toast.error("This item is not add yet!");
 
-      newData.list = multiListingData?.list?.filter((item) => item !== azDomainName);
+      newData.list = multiListingData?.list?.filter(
+        (item) => item !== azDomainName
+      );
 
       const idxFound = multiListingData?.list?.indexOf(azDomainName);
       newData.listInfo = multiListingData?.listInfo?.filter(

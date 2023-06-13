@@ -9,8 +9,7 @@ import {
 } from "@store/actions/txStatus";
 import { APICall } from "../../api/client";
 import { readOnlyGasLimit, formatNumberOutput } from "@utils";
-import { formatOutput, getChainDecimal } from "..";
-import { BN } from "@polkadot/util";
+import { convertToBNString, formatOutput, getChainDecimal } from "..";
 
 let contract;
 export const setStakingContract = (api, data) => {
@@ -402,7 +401,8 @@ async function addReward(caller_account, amount) {
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
+  const value = convertToBNString(amount, getChainDecimal(contract));
 
   gasLimit = await getEstimatedGas(address, contract, value, "addReward");
 
