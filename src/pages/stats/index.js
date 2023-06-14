@@ -87,12 +87,12 @@ function StatsPage() {
         return acc + curr.rewardAmount;
       }, 0);
 
-      // const totalNftPayouts = data.reduce((acc, curr) => {
-      //   return acc + curr.totalStakedAmount * 10 ** chainDecimal;
-      // }, 0);
+      const chainDecimals = api?.registry?.chainDecimals;
 
-      const INWPayout1 = 120 * data[0]?.totalStakedAmount * 10 ** chainDecimal;
-      const INWPayout2 = 150 * data[1]?.totalStakedAmount * 10 ** chainDecimal;
+      const INWPayout1 =
+        120 * data[0]?.totalStakedAmount * 10 ** chainDecimals[0];
+      const INWPayout2 =
+        150 * data[1]?.totalStakedAmount * 10 ** chainDecimals[0];
 
       const totalINWPayout = INWPayout1 + INWPayout2;
 
