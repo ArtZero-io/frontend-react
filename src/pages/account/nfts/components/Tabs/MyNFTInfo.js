@@ -58,7 +58,7 @@ import LevelCard from "@components/Card/LevelCard";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import useEditBidPrice from "@hooks/useEditBidPrice";
-import { fetchUserBalance } from "../../../../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 
 function MyNFTTabInfo(props) {
   const {

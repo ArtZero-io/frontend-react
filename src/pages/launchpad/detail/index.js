@@ -42,7 +42,6 @@ import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp3
 import { ContractPromise } from "@polkadot/api-contract";
 
 import { Interweave } from "interweave";
-import BN from "bn.js";
 import toast from "react-hot-toast";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
@@ -79,6 +78,7 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { ImageCloudFlareLaunchpad } from "@components/ImageWrapper/ImageCloudFlare";
 import { convertStringToDateTime } from "@utils";
+import { fetchUserBalance } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -446,10 +446,11 @@ const LaunchpadDetailPage = () => {
       return toast.error("Project is not active yet!");
     }
 
-    const { data } = await api.query.system.account(currentAccount.address);
-    const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const { balance } = await fetchUserBalance({
+      currentAccount,
+      api,
+    });
+
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
       10 ** chainDecimal;
@@ -498,10 +499,10 @@ const LaunchpadDetailPage = () => {
       return toast.error("Project is not active yet!");
     }
 
-    const { data } = await api.query.system.account(currentAccount.address);
-    const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const { balance } = await fetchUserBalance({
+      currentAccount,
+      api,
+    });
 
     const mintingFee =
       (mintingAmount * currentPhase?.publicMintingFee) / 10 ** chainDecimal;

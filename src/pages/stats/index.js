@@ -22,7 +22,7 @@ import {
   psp22_contract,
 } from "@utils/blockchain/abi";
 
-import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 import toast from "react-hot-toast";
 import { execContractQuery } from "@pages/account/nfts/nfts";
 

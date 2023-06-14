@@ -58,7 +58,7 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import NftLayout from "@components/Layout/NftLayout";
 import CommonButton from "@components/Button/CommonButton";
 import ModalLoader from "@components/Loader/ModalLoader";
-import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 import { useDispatch } from "react-redux";
 import { clearTxStatus, setTxStatus } from "@store/actions/txStatus";
 import {

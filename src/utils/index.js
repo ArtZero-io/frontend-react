@@ -685,6 +685,7 @@ export const convertToBNString = (value, decimal = 12) => {
   return new BN(value / 10 ** decimal).mul(new BN(10 ** decimal)).toString();
 };
 
+// ONLY USER FOR Validator Profit
 export const fetchValidatorProfit = async ({
   currentAccount,
   api,
@@ -702,6 +703,8 @@ export const fetchValidatorProfit = async ({
       forceUnit: "-",
       chainDecimal,
     });
+
+    // get reserved
     const formattedStrBalReserved = formatBalance(reserved, {
       withSi: false,
       forceUnit: "-",
@@ -711,6 +714,34 @@ export const fetchValidatorProfit = async ({
     const formattedNumBal =
       formattedStrBal?.replaceAll(",", "") * 1 +
       formattedStrBalReserved?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** chainDecimal };
+  }
+};
+
+export const fetchUserBalance = async ({ currentAccount, api, address }) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, miscFrozen },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimal] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+    // get miscFrozen
+    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 -
+      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
 
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }

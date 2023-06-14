@@ -12,13 +12,11 @@ import {
   Link,
   Button,
 } from "@chakra-ui/react";
-import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
 
-import { formatBalance } from "@polkadot/util";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { useSubstrateState } from "@utils/substrate";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
@@ -79,6 +77,7 @@ import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import { delay } from "@utils";
+import { convertToBNString, fetchUserBalance } from "../../../../utils";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -206,7 +205,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     };
 
     prepareData();
-  }, [addingFee, api, chainDecimal, currentAccount, location.state?.projectInfo, maxRoyaltyFeeRate, mode, nftContractAddress]);
+  }, [
+    addingFee,
+    api,
+    chainDecimal,
+    currentAccount,
+    location.state?.projectInfo,
+    maxRoyaltyFeeRate,
+    mode,
+    nftContractAddress,
+  ]);
 
   useEffect(() => {
     const fetchAddProjectFee = async () => {
@@ -413,11 +421,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     code_phases.push(phase.name);
                     is_public_phases.push(phase.isPublic);
                     let public_minting_fee_phase_tmp = phase.isPublic
-                      ? new BN(phase.publicMintingFee * 10 ** 6)
-                          .mul(new BN(10 ** 6))
-                          .toString()
+                      ? convertToBNString(phase.publicMintingFee, chainDecimal)
                       : 0;
-
                     public_minting_fee_phases.push(
                       public_minting_fee_phase_tmp
                     );
@@ -1158,33 +1163,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 };
 
 export default AddNewProjectForm;
-
-export const fetchUserBalance = async ({ currentAccount, api, address }) => {
-  if (currentAccount && api) {
-    const {
-      data: { free, miscFrozen },
-    } = await api.query.system.account(address || currentAccount?.address);
-
-    const [chainDecimal] = await api.registry.chainDecimals;
-
-    const formattedStrBal = formatBalance(free, {
-      withSi: false,
-      forceUnit: "-",
-      chainDecimal,
-    });
-    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
-      withSi: false,
-      forceUnit: "-",
-      chainDecimal,
-    });
-
-    const formattedNumBal =
-      formattedStrBal?.replaceAll(",", "") * 1 -
-      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
-
-    return { balance: formattedNumBal / 10 ** chainDecimal };
-  }
-};
 
 export const fetchInitialValuesProject = async ({
   currentAccount,

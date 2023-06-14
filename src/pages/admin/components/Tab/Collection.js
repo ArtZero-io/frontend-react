@@ -13,7 +13,6 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import { collection_manager } from "@utils/blockchain/abi";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import BN from "bn.js";
 import { SCROLLBAR } from "@constants";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
 import { APICall } from "@api/client";
@@ -26,9 +25,9 @@ import CommonButton from "@components/Button/CommonButton";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { useCallback } from "react";
 import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
-import { isValidAddressPolkadotAddress } from "@utils";
-import { isEmptyObj } from "@utils";
+import { isEmptyObj, isValidAddressPolkadotAddress } from "@utils";
 import { ipfsClient } from "@api/client";
+import { fetchUserBalance } from "@utils";
 
 let collection_count = 0;
 
@@ -47,15 +46,14 @@ function CollectionAdmin() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const getCollectionContractBalance = useCallback(async () => {
-    const { data: balance } = await api.query.system.account(
-      collection_manager.CONTRACT_ADDRESS
-    );
-    setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-        new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
-          10 ** 6
-    );
-  }, [api.query.system]);
+    const { balance } = await fetchUserBalance({
+      currentAccount,
+      api,
+      address: collection_manager.CONTRACT_ADDRESS,
+    });
+
+    setCollectionContractBalance(balance);
+  }, [api, currentAccount]);
 
   const onGetCollectionContractOwner = useCallback(async () => {
     let res = await collection_manager_calls.owner(currentAccount);
@@ -452,7 +450,11 @@ function CollectionAdmin() {
                 color="#fff"
                 isLoaded={collectionContractOwner}
               >
-                <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
+                <AddressCopier
+                  truncateStr={9}
+                  textOnly={true}
+                  address={collectionContractOwner}
+                />
               </Skeleton>
             </Flex>
 

@@ -35,7 +35,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
 import CommonContainer from "../../components/Container/CommonContainer";
-import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 import { launchpad_manager } from "@utils/blockchain/abi";
 import { collection_manager } from "@utils/blockchain/abi";
 import useTxStatus from "@hooks/useTxStatus";

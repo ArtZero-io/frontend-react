@@ -23,7 +23,7 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { delay } from "@utils";
 import toast from "react-hot-toast";
-import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
