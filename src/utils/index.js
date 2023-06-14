@@ -682,7 +682,13 @@ export const getChainDecimal = (contract) => {
 };
 
 export const convertToBNString = (value, decimal = 12) => {
-  return new BN(value / 10 ** decimal).mul(new BN(10 ** decimal)).toString();
+  const chainDecimalSplit = decimal - 12;
+
+  return new BN(value / 10 ** 12)
+    .div(new BN(10 ** chainDecimalSplit))
+    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** chainDecimalSplit))
+    .toString();
 };
 
 // ONLY USER FOR Validator Profit

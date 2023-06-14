@@ -27,18 +27,26 @@ function WalletMenu() {
       activeAddress &&
       api.query.system
         .account(activeAddress, (balance) => {
-          let oneSZERO = new BN(10 ** chainDecimal);
+          const chainDecimalSplit = chainDecimal - 12;
+
+          let oneSZERO = new BN(10 ** 12).mul(new BN(10 ** chainDecimalSplit));
           let balSZERO = new BN(balance.data.free, 10, "le");
           let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, "le");
-          // console.log(balance?.data.toHuman());
+
           if (balSZERO.gt(oneSZERO)) {
             balSZERO =
-              balSZERO.div(new BN(10 ** chainDecimal)).toNumber() -
-              miscFrozenBalSZERO.div(new BN(10 ** chainDecimal)).toNumber();
+              balSZERO
+                .div(new BN(10 ** 12))
+                .div(new BN(10 ** chainDecimalSplit))
+                .toNumber() -
+              miscFrozenBalSZERO
+                .div(new BN(10 ** 12))
+                .div(new BN(10 ** chainDecimalSplit))
+                .toNumber();
           } else {
             balSZERO = balSZERO.toNumber() / 10 ** chainDecimal;
           }
-          // console.log('balSZERO - freeze', balSZERO);
+          // console.log("balSZERO - freeze", balSZERO);
           if (balSZERO >= 1) {
             balSZERO = shortenNumber(balSZERO);
           } else {
