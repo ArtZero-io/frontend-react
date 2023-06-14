@@ -776,7 +776,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((askPrice * royaltyFee) / 10000)}{" "}
+                {formatNumDynamicDecimal(askPrice * (royaltyFee / 10000))}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
                 {(royaltyFee / 100).toFixed(2)}
                 %)
@@ -785,7 +785,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
+                {formatNumDynamicDecimal(askPrice * (myTradingFee / 100))}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
                 {myTradingFee}%)
               </Text>
@@ -794,9 +794,7 @@ function MyNFTTabInfo(props) {
                   You will receive:{" "}
                 </Text>
                 {formatNumDynamicDecimal(
-                  askPrice -
-                    (askPrice * myTradingFee) / 100 -
-                    (askPrice * royaltyFee) / 10000
+                  askPrice * (1 - myTradingFee / 100 - royaltyFee / 10000)
                 )}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" />
               </Text>
@@ -814,7 +812,9 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{" "}
+                {formatNumDynamicDecimal(
+                  (price / 10 ** chainDecimal) * (royaltyFee / 10000)
+                )}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
                 {(royaltyFee / 100).toFixed(2)}
                 %)
@@ -823,7 +823,9 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+                {formatNumDynamicDecimal(
+                  (price / 10 ** chainDecimal) * (myTradingFee / 100)
+                )}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" /> (
                 {myTradingFee}%)
               </Text>
@@ -832,10 +834,8 @@ function MyNFTTabInfo(props) {
                   You will receive:{" "}
                 </Text>{" "}
                 {formatNumDynamicDecimal(
-                  price *
-                    (1 / 10 ** chainDecimal -
-                      myTradingFee / 10 ** 14 -
-                      royaltyFee / 10 ** 16)
+                  (price / 10 ** chainDecimal) *
+                    (1 - myTradingFee / 100 - royaltyFee / 10000)
                 )}{" "}
                 <AzeroIcon chainToken={chainToken} w="15px" mb="2px" />
               </Text>
