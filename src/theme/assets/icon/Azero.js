@@ -6,8 +6,8 @@ export default function AzeroIcon({
   fill = "#7AE7FF",
   w = "18px",
   h = "18px",
-  ml = "12px",
-  mb = "6px",
+  ml = "4px",
+  mb,
   ...rest
 }) {
   switch (chainToken) {

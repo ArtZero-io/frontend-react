@@ -8,7 +8,6 @@ import {
   Spacer,
   Text,
   VStack,
-  TagRightIcon,
   Input,
   useClipboard,
   Square,
@@ -179,7 +178,7 @@ function GeneralPage() {
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [api, currentAccount]
+    [address, api, currentAccount]
   );
 
   const getTradeFee = useCallback(
@@ -218,7 +217,7 @@ function GeneralPage() {
 
       setTradeFee(my_discount_rate);
     },
-    [currentAccount]
+    [address, currentAccount]
   );
 
   const claimReward = async () => {
@@ -400,10 +399,7 @@ function GeneralPage() {
                                     {item.value}
                                   </TagLabel>
                                   {item.name === "Amount Trades" && (
-                                    <TagRightIcon
-                                      fontSize="2xl"
-                                      as={AzeroIcon}
-                                    />
+                                    <AzeroIcon chainToken={chainToken} />
                                   )}
                                 </Tag>
                               </Flex>
