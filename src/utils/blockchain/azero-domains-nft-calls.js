@@ -1,12 +1,8 @@
-// import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-// import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
+
 import { ContractPromise } from "@polkadot/api-contract";
-import {
-  txErrorHandler,
-  // txResponseErrorHandler,
-} from "../../store/actions/txStatus";
+import { txErrorHandler } from "../../store/actions/txStatus";
 import { formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
@@ -52,7 +48,7 @@ async function tokenUri(caller_account, token_id) {
       value: azero_value,
       gasLimit,
     },
-    {bytes: token_id}
+    { bytes: token_id }
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -79,7 +75,7 @@ async function allowance(
     { value: azero_value, gasLimit },
     owner_address,
     operator_address,
-    {bytes: domain_name}
+    { bytes: domain_name }
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -112,14 +108,14 @@ async function approve(
     value,
     "psp34::approve",
     operator_address,
-    {bytes: domain_name},
+    { bytes: domain_name },
     is_approve
   );
 
   await contract.tx["psp34::approve"](
     { gasLimit, value },
     operator_address,
-    {bytes: domain_name},
+    { bytes: domain_name },
     is_approve
   )
     .signAndSend(address, { signer }, ({ dispatchError, status }) => {
@@ -172,14 +168,14 @@ async function transfer(
     value,
     "psp34::transfer",
     receiver,
-    {bytes: domain_name},
+    { bytes: domain_name },
     additionalData
   );
 
   await contract.tx["psp34::transfer"](
     { gasLimit, value },
     receiver,
-    {bytes: domain_name},
+    { bytes: domain_name },
     additionalData
   )
     .signAndSend(address, { signer }, ({ dispatchError, status }) => {
@@ -213,7 +209,7 @@ const azero_domains_nft_contract_calls = {
   approve,
   tokenUri,
   balanceOf,
-  transfer
+  transfer,
 };
 
 export default azero_domains_nft_contract_calls;

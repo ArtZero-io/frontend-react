@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { TypeRegistry, U64 } from "@polkadot/types";
@@ -16,11 +14,9 @@ import {
   readOnlyGasLimit,
 } from "..";
 import {
-  setTxStatus,
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { START } from "@constants";
 
 let contract;
 

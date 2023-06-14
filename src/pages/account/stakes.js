@@ -17,7 +17,6 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import BN from "bn.js";
 import { APICall } from "@api/client";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 
@@ -330,15 +329,6 @@ export const isNotNumber = (value) => {
   return (
     typeof value !== "number" || Number.isNaN(value) || !Number.isFinite(value)
   );
-};
-
-export const createNumberBN = (num, pow = 1) => {
-  const numPF = parseFloat(num);
-  const powPF = parseFloat(pow);
-
-  return isNotNumber(numPF) || isNotNumber(powPF)
-    ? 0
-    : new BN(numPF, 10).pow(new BN(powPF));
 };
 
 export const fetchMyPMPStakedCount = async (currentAccount, staking_calls) => {
