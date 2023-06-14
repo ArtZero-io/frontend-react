@@ -27,12 +27,11 @@ import { fetchUserBalance } from "@utils";
 import toast from "react-hot-toast";
 import { execContractQuery } from "@pages/account/nfts/nfts";
 
-const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 
 function StatsPage() {
   const { api, chainToken, chainDecimal } = useSubstrateState();
-
+  console.log("chainToken", chainToken);
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
   const [azeroPrice, setAzeroPrice] = useState(1);
@@ -42,18 +41,21 @@ function StatsPage() {
   const publicCurrentAccount = getPublicCurrentAccount();
 
   const fetchAzeroPrice = useCallback(async () => {
+    const chainTokens = api?.registry?.chainTokens;
+    const url = `https://min-api.cryptocompare.com/data/price?fsym=${chainTokens[0]}&tsyms=USD`;
+
     await fetch(url)
       .then((res) => res.json())
       .then(({ USD }) => {
         console.log("AZERO - USD:", USD?.toFixed(4));
-        setAzeroPrice(USD.toFixed(4));
+        setAzeroPrice(USD?.toFixed(4));
       })
       .catch((err) => {
         setAzeroPrice(1);
         console.log(err);
-        toast.error("Failed to fetch Azero price. Temp set to 1 USD");
+        toast.error(`Failed to fetch $${chainToken} price. Temp set to 1 USD`);
       });
-  }, []);
+  }, [api?.registry?.chainTokens, chainToken]);
 
   const prepareStats = async () => {
     try {
