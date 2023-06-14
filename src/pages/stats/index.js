@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -58,20 +59,20 @@ function StatsPage() {
     try {
       // ==Fetch Total Payout (INW)===================
 
-      const chainDecimals = api?.registry?.chainDecimals;
+      // const chainDecimals = api?.registry?.chainDecimals;
 
-      let result = await execContractQuery(
-        publicCurrentAccount?.address,
-        api,
-        psp22_contract.CONTRACT_ABI,
-        process.env.REACT_APP_INW_TOKEN_ADDRESS,
-        "psp22::balanceOf",
-        process.env.REACT_APP_INW_PAYOUT_ADDRESS
-      );
+      // let result = await execContractQuery(
+      //   publicCurrentAccount?.address,
+      //   api,
+      //   psp22_contract.CONTRACT_ABI,
+      //   process.env.REACT_APP_INW_TOKEN_ADDRESS,
+      //   "psp22::balanceOf",
+      //   process.env.REACT_APP_INW_PAYOUT_ADDRESS
+      // );
 
-      const bal = formatNumberOutput(result) / 10 ** chainDecimals[0];
+      // const bal = formatNumberOutput(result) / 10 ** chainDecimals[0];
 
-      const totalINWPayout = 50 * 10 ** 6 - bal;
+      // const totalINWPayout = 50 * 10 ** 6 - bal;
 
       // ================================
 
@@ -82,13 +83,18 @@ function StatsPage() {
         sort: -1,
       });
 
-      const totalPayouts = data.reduce((acc, curr) => {
+      const totalPayouts = data?.reduce((acc, curr) => {
         return acc + curr.rewardAmount;
       }, 0);
 
       // const totalNftPayouts = data.reduce((acc, curr) => {
       //   return acc + curr.totalStakedAmount * 10 ** chainDecimal;
       // }, 0);
+
+      const INWPayout1 = 120 * data[0]?.totalStakedAmount * 10 ** chainDecimal;
+      const INWPayout2 = 150 * data[1]?.totalStakedAmount * 10 ** chainDecimal;
+
+      const totalINWPayout = INWPayout1 + INWPayout2;
 
       let remainRewardPool = 0;
       let isRewardStarted = await staking_calls.getRewardStarted(
