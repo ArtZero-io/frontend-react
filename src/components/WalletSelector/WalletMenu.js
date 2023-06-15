@@ -52,6 +52,7 @@ function WalletMenu() {
           } else {
             balSZERO = parseFloat(balSZERO).toFixed(3);
           }
+          console.log("balSZERO", balSZERO);
           setAccountBalance(balSZERO);
         })
         .then((unsub) => (unsubscribe = unsub))

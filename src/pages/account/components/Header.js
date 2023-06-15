@@ -32,21 +32,18 @@ import CommonButton from "@components/Button/CommonButton";
 
 import { marketplace } from "@utils/blockchain/abi";
 import { delay } from "@utils";
-import {
-  execContractQuery,
-  execContractTx,
-  formatQueryResultToNumber,
-} from "../nfts/nfts";
+import { execContractQuery, execContractTx } from "../nfts/nfts";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { formatNumberOutput } from "../../../utils";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
 
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [profile, setProfile] = useState(null);
@@ -119,10 +116,10 @@ function ProfileHeader() {
       currentAccount?.address
     );
 
-    const amount = formatQueryResultToNumber(queryResult);
+    const amount = formatNumberOutput(queryResult) / 10 ** chainDecimal;
 
     setClaimAmount(amount);
-  }, [api, currentAccount?.address]);
+  }, [api, chainDecimal, currentAccount?.address]);
 
   useEffect(() => {
     fetchMyBidHoldInfo();
@@ -248,7 +245,7 @@ function ProfileHeader() {
               justifyContent="center"
             >
               <CommonButton
-                text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
+                text={`Claim unsuccessful Bids: ${claimAmount} ${chainToken}`}
                 onClick={() => onClaimHandler()}
               />{" "}
               <Tooltip

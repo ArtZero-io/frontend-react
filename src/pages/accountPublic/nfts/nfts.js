@@ -18,7 +18,6 @@ import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useTxStatus from "@hooks/useTxStatus";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import { formatBalance } from "@polkadot/util";
 import { web3FromSource } from "@utils/wallets/extension-dapp";
 import { getEstimatedGas } from "@utils/";
 
@@ -396,18 +395,6 @@ export async function execContractQuery(
     console.log("@_@ ", queryName, " error >>", error.message);
   }
 }
-
-export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
-  const ret = result?.toHuman().Ok?.replaceAll(",", "");
-
-  const formattedStrBal = formatBalance(ret, {
-    withSi: false,
-    forceUnit: "-",
-    decimals: chainDecimals,
-  });
-
-  return formattedStrBal;
-};
 
 export async function execContractTx(
   caller, // -> currentAccount Object
