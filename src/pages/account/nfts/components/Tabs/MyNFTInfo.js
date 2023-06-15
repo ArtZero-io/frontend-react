@@ -85,7 +85,7 @@ function MyNFTTabInfo(props) {
     maxTotalSupply,
     nft_owner,
   } = props;
-
+  console.log('props', props);
   const attrsList = !traits
     ? {}
     : Object.entries(traits).map(([k, v]) => {
@@ -109,7 +109,7 @@ function MyNFTTabInfo(props) {
   const [isOwner, setIsOwner] = useState(false);
   const [ownerAddress, setOwnerAddress] = useState("");
   const [, setLoading] = useState(false);
-
+  const [feeCalculated, setFeeCalculated] = useState(null);
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const doLoad = useCallback(async () => {
@@ -294,6 +294,12 @@ function MyNFTTabInfo(props) {
       );
 
       setMyTradingFee(myTradingFeeData);
+      console.log(price / 10 ** 18, royaltyFee, myTradingFeeData);
+      const info = calculateFee(price / 10 ** 18, royaltyFee, myTradingFeeData);
+      setFeeCalculated(info);
+      console.log('info', info);
+      console.log('feeCalculated', feeCalculated);
+      
     };
     fetchTradeFee();
   }, [currentAccount]);
@@ -805,7 +811,7 @@ function MyNFTTabInfo(props) {
             </HStack>
           ) : null}
 
-          {isActive && filterSelected === "LISTING" ? (
+          {isActive && filterSelected === "LISTING" && feeCalculated ? (
             <HStack
               w="full"
               pt="10px"
@@ -816,7 +822,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{" "}
+                {feeCalculated.royaltyFeeAmount}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
@@ -824,19 +830,17 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+                {feeCalculated.tradeFeeAmount}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  You will receive:{" "}
-                </Text>{" "}
-                {formatNumDynamicDecimal(
-                  price *
-                    (1 / 10 ** 18 -
-                      myTradingFee / 10 ** 14 -
-                      royaltyFee / 10 ** 16)
-                )}{" "}
+                  You will receive:{" "} 
+                </Text>{feeCalculated.userPortionAmount}{" "}
+                {console.log('price', price)}
+                {console.log('myTradingFee', myTradingFee)}
+                {console.log('myTradingFee', royaltyFee)}
+                {" "}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>
             </HStack>
@@ -846,5 +850,34 @@ function MyNFTTabInfo(props) {
     </>
   );
 }
+
+export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
+  // price 99000000000000 -> price of LISTED item MUST div 10*12
+
+  // askPrice 99.000000 ~ 99 Azero
+  // royaltyFee 450 ~ 4.5%
+  // myTradingFee 5.00 ~ 5%
+  console.log('zxczxcz');
+
+  const royaltyFeePercent = royaltyFee / 100;
+  const royaltyFeeAmount = (askPrice * royaltyFeePercent) / 100;
+
+  const tradeFeePercent = Number(myTradingFee);
+  const tradeFeeAmount = (askPrice * tradeFeePercent) / 100;
+
+  const userPortionPercent = 100 - royaltyFeePercent - tradeFeePercent;
+  const userPortionAmount = askPrice - royaltyFeeAmount - tradeFeeAmount;
+
+  const ret = {
+    royaltyFeePercent: royaltyFeePercent.toFixed(2),
+    royaltyFeeAmount: formatNumDynamicDecimal(royaltyFeeAmount),
+    tradeFeePercent: tradeFeePercent.toFixed(2),
+    tradeFeeAmount: formatNumDynamicDecimal(tradeFeeAmount),
+    userPortionPercent: userPortionPercent.toFixed(2),
+    userPortionAmount: formatNumDynamicDecimal(userPortionAmount),
+  };
+
+  return ret;
+};
 
 export default MyNFTTabInfo;
