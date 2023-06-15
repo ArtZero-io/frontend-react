@@ -63,12 +63,12 @@ export default function UpdateWithdrawModal({
       );
 
       const balFree = convertStringToPrice(
-        balance.toHuman().free,
+        balance?.toHuman()?.free,
         chainDecimal
       );
 
       const balMiscFrozen = convertStringToPrice(
-        balance.toHuman().miscFrozen,
+        balance?.toHuman()?.miscFrozen,
         chainDecimal
       );
       const tempBal = balFree - balMiscFrozen;
