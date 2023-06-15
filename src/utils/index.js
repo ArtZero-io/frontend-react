@@ -761,7 +761,5 @@ export const resolveDomain = async (address) => {
     chainId: SupportedChainId.AlephZeroTestnet,
   });
 
-  const domain = domains[0];
-
-  return domain ?? address;
+  return domains[0];
 };
