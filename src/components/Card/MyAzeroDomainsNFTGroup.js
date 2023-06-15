@@ -511,7 +511,6 @@ function GridNftA({
           >
             <GridItem colSpan={isMobile ? 5 : 4}>
               <Grid templateColumns="repeat(3, 1fr)" gap={2}>
-                {console.log(multiListingData)}
                 {multiListingData?.list?.map((item, idx) => {
                   return (
                     <Flex key={`${item}${idx}`}>

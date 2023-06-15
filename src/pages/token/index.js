@@ -394,7 +394,14 @@ function TokenPage() {
     const info = calculateFee(p, collection?.royaltyFee, myTradingFee);
 
     setFeeCalculated(info);
-  }, [askPrice, chainDecimal, collection?.royaltyFee, myTradingFee, token?.is_for_sale, token?.price]);
+  }, [
+    askPrice,
+    chainDecimal,
+    collection?.royaltyFee,
+    myTradingFee,
+    token?.is_for_sale,
+    token?.price,
+  ]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
@@ -1645,7 +1652,6 @@ function MobileEditBidPriceModal({
                 min={0}
                 precision={6}
                 onChange={(v) => {
-                  console.log("v", v);
                   if (/[eE+-]/.test(v)) return;
 
                   setNewBidPrice(v);

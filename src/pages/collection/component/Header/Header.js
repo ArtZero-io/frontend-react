@@ -28,7 +28,6 @@ const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
 function CollectionHeader(props) {
-  // console.log("props", props?.name);
   const {
     avatarImage,
     name,

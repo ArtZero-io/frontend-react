@@ -148,7 +148,6 @@ function UpdatePhase({
       dispatch(
         setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
       );
-      // console.log("first1");
 
       await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
         currentAccount,
@@ -164,7 +163,6 @@ function UpdatePhase({
         UPDATE_PHASE,
         api
       );
-      // console.log("first");
     } catch (error) {
       console.log("error", error);
       toast.error(error.message);

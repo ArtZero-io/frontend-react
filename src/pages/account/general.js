@@ -169,14 +169,6 @@ function GeneralPage() {
               (platformTotalStaked * 1)
             : 0;
 
-        // console.log("rewardPoolData", rewardPoolData);
-        // console.log(
-        //   "rewardPoolData SUM",
-        //   totalProfit * 0.3 +
-        //     validatorProfit * 0.5 +
-        //     (rewardStarted ? 0 : rewardPoolData)
-        // );
-
         if (!isMounted) return;
 
         setEstimatedEarning(estimatedEarning);

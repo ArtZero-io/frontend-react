@@ -23,15 +23,6 @@ async function fetchProjectList() {
 
   const projList = inactiveProj.concat(activeProj);
 
-  // const ret = projList.find(
-  //   ({ nftContractAddress }) => nftContractAddress === address
-  // );
-
-  // if (isEmptyObj(ret)) {
-  //   toast.error("error: failed to fetch project info!");
-  //   return {};
-  // }
-  // console.log("ret", ret);
   return projList;
 }
 

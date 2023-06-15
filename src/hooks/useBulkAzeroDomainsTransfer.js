@@ -98,11 +98,6 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       })
     );
 
-    // const info = await api.tx.utility.batchAll(transferTxALL);
-
-    // console.log(`estimated fees: ${info}`);
-    // const nonce = await api.rpc.system.accountNextIndex(address);
-    // console.log("nonce", nonce.toString());
     api.tx.utility
       .batch(transferTxALL)
       .signAndSend(
@@ -269,7 +264,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
     let info = listNFTFormatted?.find(
       (item) => item.azDomainName === azDomainName
     );
-    console.log(azDomainName, action, isChecked);
+
     // Initial data is empty
     if (multiTransferData?.action === null) {
       if (!isChecked) return;

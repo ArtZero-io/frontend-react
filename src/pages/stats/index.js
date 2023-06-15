@@ -31,7 +31,7 @@ const INW_RATE = 120;
 
 function StatsPage() {
   const { api, chainToken, chainDecimal } = useSubstrateState();
-  console.log("chainToken", chainToken);
+
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
   const [azeroPrice, setAzeroPrice] = useState(1);

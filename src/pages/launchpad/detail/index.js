@@ -302,7 +302,7 @@ const LaunchpadDetailPage = () => {
   const [currentPhase, setCurrentPhase] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [nextPhase, setNextPhase] = useState(null);
-  // console.log("nextPhase", nextPhase);
+
   useEffect(() => {
     if (isLastPhaseEnded) {
       const lastPhase = [...phasesInfo]?.pop();

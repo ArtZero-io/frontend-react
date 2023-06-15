@@ -594,7 +594,11 @@ export const APICall = {
     return { ret };
   },
 
-  askBeUpdateAzeroDomainsBidsData: async ({ collection_address, seller, azDomainName }) => {
+  askBeUpdateAzeroDomainsBidsData: async ({
+    collection_address,
+    seller,
+    azDomainName,
+  }) => {
     return await client("POST", "/updateBids", {
       collection_address,
       seller,
@@ -602,8 +606,10 @@ export const APICall = {
     });
   },
 
-  askBeUpdateAzeroDomainsNftData: async ({ collection_address, azDomainName }) => {
-    console.log({ collection_address, azDomainName });
+  askBeUpdateAzeroDomainsNftData: async ({
+    collection_address,
+    azDomainName,
+  }) => {
     return await client("POST", "/updateNFT", {
       collection_address,
       azDomainName,

@@ -58,7 +58,6 @@ export default function UpdateURIModal({
         1
       );
 
-      console.log("token_uri", token_uri);
       if (!token_uri) toast.error("No token_uri!");
 
       let base_uri = token_uri.replace("1.json", "");

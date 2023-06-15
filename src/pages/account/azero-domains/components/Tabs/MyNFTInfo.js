@@ -112,8 +112,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   const doLoad = useCallback(async () => {
     setLoading(true);
-    console.log(nftContractAddress);
-    console.log(currentAccount);
+
     try {
       // remove publicCurrentAccount due to private route
       const sale_info =
@@ -549,10 +548,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                 />
               </Flex>
             )}
-            {console.log(filterSelected)}
-            {console.log(owner)}
-            {console.log(marketplace.CONTRACT_ADDRESS)}
-            {console.log(is_for_sale)}
+
             {filterSelected !== "BIDS" &&
               owner === marketplace.CONTRACT_ADDRESS &&
               is_for_sale && (

@@ -117,11 +117,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       })
     );
 
-    // const info = await api.tx.utility.batchAll(transferTxALL);
-
-    // console.log(`estimated fees: ${info}`);
-    // const nonce = await api.rpc.system.accountNextIndex(address);
-    // console.log("nonce", nonce.toString());
     api.tx.utility
       .batch(transferTxALL)
       .signAndSend(

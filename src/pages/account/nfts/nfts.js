@@ -281,7 +281,6 @@ export async function execContractTx(
       caller.address,
       { signer },
       async ({ events = [], status, dispatchError }) => {
-        // console.log("txResponseErrorHandler...1");
         txResponseErrorHandler({
           status,
           dispatchError,

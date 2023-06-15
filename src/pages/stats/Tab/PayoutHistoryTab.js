@@ -20,6 +20,7 @@ function PayoutHistoryTab() {
         sort: -1,
       });
 
+      // eslint-disable-next-line no-unused-vars
       const summary = data.reduce(
         ({ stakerCount, accRewardAmount, nftStakedCount }, e) => {
           stakerCount = stakerCount + 1;
@@ -34,8 +35,6 @@ function PayoutHistoryTab() {
           nftStakedCount: 0,
         }
       );
-
-      console.log("summary", summary);
 
       data = data.map((item, idx) => {
         return { ...item, order: idx + 1 };

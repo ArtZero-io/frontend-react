@@ -163,8 +163,6 @@ function LaunchpadDetailHeader({
     }
   }, [activePhaseId, isLastPhaseEnded, phasesInfo]);
 
-  // console.log("nextPhaseWhenNoCurrPhaseId", nextPhaseWhenNoCurrPhaseId);
-
   useInterval(() => {
     if (isLastPhaseEnded) {
       setCountDownTimer({
