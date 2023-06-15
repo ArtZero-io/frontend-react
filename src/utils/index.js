@@ -21,6 +21,7 @@ import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import { formatBalance } from "@polkadot/util";
 
 import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
+import { BigInt } from "@polkadot/x-bigint";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -125,7 +126,7 @@ export function convertStringToPrice(stringPrice, chainDecimal = 12) {
   try {
     const price = stringPrice?.replace(/,/g, "");
 
-    return new BN(price, 10).div(new BN(10 ** chainDecimal)).toNumber();
+    return price / 10 ** chainDecimal;
   } catch (error) {
     console.log(error);
     return 0;
@@ -682,13 +683,14 @@ export const getChainDecimal = (contract) => {
 };
 
 export const convertToBNString = (value, decimal = 12) => {
-  const chainDecimalSplit = decimal - 12;
+  try {
+    const valueBigInt = BigInt(value * 10 ** decimal);
 
-  return new BN(value / 10 ** 12)
-    .div(new BN(10 ** chainDecimalSplit))
-    .mul(new BN(10 ** 12))
-    .mul(new BN(10 ** chainDecimalSplit))
-    .toString();
+    return valueBigInt.toString(10);
+  } catch (error) {
+    console.log("error convertToBNString", error);
+    return 0;
+  }
 };
 
 // ONLY USER FOR Validator Profit
