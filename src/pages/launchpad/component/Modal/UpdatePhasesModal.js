@@ -121,7 +121,7 @@ const UpdatePhasesModal = React.memo(function ({
       console.log(error);
       setLoading(false);
     }
-  }, [api, collection_address, currentAccount, currentPhaseId]);
+  }, [api, chainDecimal, collection_address, currentAccount, currentPhaseId]);
 
   useEffect(() => {
     fetchData();

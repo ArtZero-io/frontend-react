@@ -163,7 +163,14 @@ const AzeroDomainsNFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, azDomainName]);
+  }, [
+    currentAccount,
+    nftContractAddress,
+    azDomainName,
+    owner,
+    is_for_sale,
+    chainDecimal,
+  ]);
 
   const attrsList = !traits
     ? {}

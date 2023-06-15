@@ -160,7 +160,14 @@ function MyNFTTabInfo(props) {
 
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [
+    chainDecimal,
+    currentAccount,
+    is_for_sale,
+    nftContractAddress,
+    owner,
+    tokenID,
+  ]);
 
   useEffect(() => {
     doLoad();

@@ -150,7 +150,6 @@ const NFTTabCollectible = (props) => {
 
         if (listBidder) {
           for (const item of listBidder) {
-
             if (item.bidder === currentAccount?.address) {
               setIsBided(true);
               setBidPrice(convertStringToPrice(item.bidValue, chainDecimal));
@@ -174,7 +173,14 @@ const NFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [
+    chainDecimal,
+    currentAccount,
+    is_for_sale,
+    nftContractAddress,
+    owner,
+    tokenID,
+  ]);
 
   const attrsList = !traits
     ? {}
