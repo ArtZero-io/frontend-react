@@ -51,7 +51,12 @@ export const txResponseErrorHandler = async ({
   const chainDecimals = api?.registry?.chainDecimals;
   const decimal = chainDecimals[0];
 
-  const url = `https://test.azero.dev/#/explorer/query/`;
+  const params = new URLSearchParams(process.env.REACT_APP_PROVIDER_SOCKET);
+
+  const wssParams = params?.toString()?.replaceAll("=", "");
+
+  const url = `https://polkadot.js.org/apps/?rpc=${wssParams}#/explorer/query/`;
+
   const statusToHuman = Object.entries(status.toHuman());
 
   if (dispatchError) {
@@ -305,7 +310,12 @@ export const batchTxResponseErrorHandler = async ({
   caller_account,
   isApprovalTx = false,
 }) => {
-  const url = `https://test.azero.dev/#/explorer/query/`;
+  const params = new URLSearchParams(process.env.REACT_APP_PROVIDER_SOCKET);
+
+  const wssParams = params?.toString()?.replaceAll("=", "");
+
+  const url = `https://polkadot.js.org/apps/?rpc=${wssParams}#/explorer/query/`;
+
   const statusToHuman = Object.entries(status.toHuman());
   const chainDecimals = api?.registry?.chainDecimals;
   const decimal = chainDecimals[0];
