@@ -16,7 +16,7 @@ import {
   getChainDecimal,
   readOnlyGasLimit,
 } from "..";
-import { BN } from "@polkadot/util";
+import { BigInt } from "@polkadot/x-bigint";
 
 let contract;
 
@@ -652,7 +652,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price, 10);
+  const value = BigInt(price);
 
   gasLimit = await getEstimatedGas(
     address,
