@@ -22,6 +22,7 @@ import { formatBalance } from "@polkadot/util";
 
 import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
 import { BigInt } from "@polkadot/x-bigint";
+import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -753,4 +754,14 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }
+};
+
+export const resolveDomain = async (address) => {
+  const domains = await resolveAddressToDomain(address, {
+    chainId: SupportedChainId.AlephZeroTestnet,
+  });
+
+  const domain = domains[0];
+
+  return domain ?? address;
 };
