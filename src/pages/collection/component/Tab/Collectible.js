@@ -150,9 +150,10 @@ const NFTTabCollectible = (props) => {
 
         if (listBidder) {
           for (const item of listBidder) {
+
             if (item.bidder === currentAccount?.address) {
               setIsBided(true);
-              setBidPrice(convertStringToPrice(item.bidValue));
+              setBidPrice(convertStringToPrice(item.bidValue, chainDecimal));
             }
           }
         }
@@ -346,13 +347,13 @@ const NFTTabCollectible = (props) => {
     let p = askPrice;
 
     if (is_for_sale) {
-      p = price / 1000000000000;
+      p = price / 10 ** chainDecimal;
     }
 
     const info = calculateFee(p, royaltyFee, myTradingFee);
 
     setFeeCalculated(info);
-  }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
+  }, [askPrice, chainDecimal, is_for_sale, myTradingFee, price, royaltyFee]);
 
   return (
     <>

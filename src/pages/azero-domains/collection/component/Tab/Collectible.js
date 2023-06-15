@@ -341,13 +341,13 @@ const AzeroDomainsNFTTabCollectible = (props) => {
     let p = askPrice;
 
     if (is_for_sale) {
-      p = price / 1000000000000;
+      p = price / 10 ** chainDecimal;
     }
 
     const info = calculateFee(p, royaltyFee, myTradingFee);
 
     setFeeCalculated(info);
-  }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
+  }, [askPrice, chainDecimal, is_for_sale, myTradingFee, price, royaltyFee]);
 
   return (
     <>

@@ -388,19 +388,13 @@ function TokenPage() {
     let p = askPrice;
 
     if (token?.is_for_sale) {
-      p = token?.price / 1000000000000;
+      p = token?.price / 10 ** chainDecimal;
     }
 
     const info = calculateFee(p, collection?.royaltyFee, myTradingFee);
 
     setFeeCalculated(info);
-  }, [
-    askPrice,
-    collection?.royaltyFee,
-    myTradingFee,
-    token?.is_for_sale,
-    token?.price,
-  ]);
+  }, [askPrice, chainDecimal, collection?.royaltyFee, myTradingFee, token?.is_for_sale, token?.price]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
