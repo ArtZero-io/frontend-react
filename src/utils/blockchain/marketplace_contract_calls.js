@@ -16,6 +16,7 @@ import {
   getChainDecimal,
   readOnlyGasLimit,
 } from "..";
+import { BN } from "@polkadot/util";
 
 let contract;
 
@@ -646,7 +647,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = convertToBNString(price, getChainDecimal(contract));
+  const value = new BN(price, 10);
 
   gasLimit = await getEstimatedGas(
     address,
