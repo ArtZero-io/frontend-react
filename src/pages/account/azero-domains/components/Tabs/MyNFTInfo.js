@@ -139,7 +139,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
           for (const item of listBidder) {
             if (item.bidder === currentAccount?.address) {
               setIsBided(true);
-              setBidPrice(convertStringToPrice(item.bidValue));
+              setBidPrice(convertStringToPrice(item.bidValue, chainDecimal));
             }
           }
         }

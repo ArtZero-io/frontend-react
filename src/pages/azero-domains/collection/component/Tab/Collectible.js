@@ -140,13 +140,9 @@ const AzeroDomainsNFTTabCollectible = (props) => {
 
         if (listBidder) {
           for (const item of listBidder) {
-            console.log(
-              "convertStringToPrice(item.bidValue)",
-              convertStringToPrice(item.bidValue)
-            );
             if (item.bidder === currentAccount?.address) {
               setIsBided(true);
-              setBidPrice(convertStringToPrice(item.bidValue));
+              setBidPrice(convertStringToPrice(item.bidValue, chainDecimal));
             }
           }
         }

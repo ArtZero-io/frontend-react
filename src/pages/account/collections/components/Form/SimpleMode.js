@@ -93,8 +93,11 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
         currentAccount?.address
       );
 
-      const free = convertStringToPrice(balance?.toHuman()?.free);
-      const miscFrozen = convertStringToPrice(balance?.toHuman()?.miscFrozen);
+      const free = convertStringToPrice(balance?.toHuman()?.free, chainDecimal);
+      const miscFrozen = convertStringToPrice(
+        balance?.toHuman()?.miscFrozen,
+        chainDecimal
+      );
 
       const bal = free - miscFrozen;
 
@@ -102,7 +105,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
     };
 
     checkCurrentBalance();
-  }, [api.query.system, currentAccount?.address]);
+  }, [api.query.system, chainDecimal, currentAccount?.address]);
 
   useEffect(() => {
     let newInitialValues = {

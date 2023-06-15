@@ -91,8 +91,11 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         currentAccount?.address
       );
 
-      const free = convertStringToPrice(balance?.toHuman()?.free);
-      const miscFrozen = convertStringToPrice(balance?.toHuman()?.miscFrozen);
+      const free = convertStringToPrice(balance?.toHuman()?.free, chainDecimal);
+      const miscFrozen = convertStringToPrice(
+        balance?.toHuman()?.miscFrozen,
+        chainDecimal
+      );
 
       const bal = free - miscFrozen;
 
@@ -100,7 +103,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     };
 
     checkCurrentBalance();
-  }, [api.query.system, currentAccount?.address]);
+  }, [api.query.system, chainDecimal, currentAccount?.address]);
 
   useEffect(() => {
     let newInitialValues = {

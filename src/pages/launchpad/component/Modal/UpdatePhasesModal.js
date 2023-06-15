@@ -35,7 +35,7 @@ const UpdatePhasesModal = React.memo(function ({
   startTime,
   endTime,
 }) {
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainDecimal } = useSubstrateState();
   const dispatch = useDispatch();
 
   const [initialValues, setInitialValues] = useState({
@@ -103,7 +103,8 @@ const UpdatePhasesModal = React.memo(function ({
               phaseSchedule.publicMaxMintingAmount
             ),
             publicMintingFee: convertStringToPrice(
-              phaseSchedule.publicMintingFee
+              phaseSchedule.publicMintingFee,
+              chainDecimal
             ),
           };
 
