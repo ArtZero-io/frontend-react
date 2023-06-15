@@ -34,6 +34,10 @@ const initialState = {
   walletPendingApprove: false,
   supportedWallet: null,
   selectedExtension: selectedExtension || null,
+  chainSS58: null,
+  chainDecimal: null,
+  chainToken: null,
+  chainName: null,
 };
 
 const registry = new TypeRegistry();
@@ -112,6 +116,24 @@ const connect = (state, dispatch) => {
     dispatch({ type: "CONNECT", payload: _api });
 
     _api.isReady.then((_api) => {
+      const chainSS58 = _api?.registry?.chainSS58;
+      const chainDecimals = _api?.registry?.chainDecimals;
+      const chainTokens = _api?.registry?.chainTokens;
+
+      dispatch({
+        type: "SET_CHAIN_INFO",
+        payload: {
+          chainSS58,
+          chainDecimal: chainDecimals[0],
+          chainToken: chainTokens[0],
+        },
+      });
+      console.log("++++++++ CHAIN INFO ++++++++");
+      console.log("+++ chainSS58", chainSS58);
+      console.log("+++ chainDecimal", chainDecimals[0]);
+      console.log("+++ chainToken", chainTokens[0]);
+      console.log("++++++++++++++++++++++++++++");
+
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
@@ -126,23 +148,18 @@ const connect = (state, dispatch) => {
 };
 
 const retrieveChainInfo = async (api) => {
-  const [systemChain, systemChainType, chainSS58, chainDecimals, chainTokens] =
-    await Promise.all([
-      api?.rpc?.system?.chain(),
-      api?.rpc?.system?.chainType
-        ? api?.rpc?.system?.chainType()
-        : Promise.resolve(registry?.createType("ChainType", "Live")),
-      api?.registry?.chainSS58,
-      api?.registry?.chainDecimals,
-      api?.registry?.chainTokens,
-    ]);
+  const [systemChain, systemChainType, chainSS58] = await Promise.all([
+    api?.rpc?.system?.chain(),
+    api?.rpc?.system?.chainType
+      ? api?.rpc?.system?.chainType()
+      : Promise.resolve(registry?.createType("ChainType", "Live")),
+    api?.registry?.chainSS58,
+  ]);
 
   return {
     systemChain: (systemChain || "<unknown>").toString(),
     systemChainType,
     chainSS58,
-    chainDecimal: chainDecimals[0],
-    chainToken: chainTokens[0],
   };
 };
 
@@ -166,28 +183,17 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       }));
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
-      const {
-        systemChain,
-        systemChainType,
-        chainSS58,
-        chainDecimal,
-        chainToken,
-      } = await retrieveChainInfo(api);
+      const { systemChain, systemChainType, chainSS58 } =
+        await retrieveChainInfo(api);
 
       console.log("+++++++++++ CHAIN INFO +++++++++++");
-      console.log("+++   chainName", systemChain);
-      console.log("+++   chainSS58", chainSS58);
-      console.log("+++   chainDecimal", chainDecimal);
-      console.log("+++   chainToken", chainToken);
-      console.log("+++++++++++ CHAIN INFO +++++++++++");
+      console.log("+++ chainName", systemChain);
+      console.log("++++++++++++++++++++++++++++++++++");
 
       dispatch({
         type: "SET_CHAIN_INFO",
         payload: {
           chainName: systemChain,
-          chainSS58,
-          chainDecimal,
-          chainToken,
         },
       });
 
@@ -258,7 +264,7 @@ const SubstrateContextProvider = (props) => {
       window.localStorage.setItem("currentAccount", JSON.stringify(""));
     });
   }
-
+  // console.table(state, ["Value"]);
   return (
     <SubstrateContext.Provider
       value={{ state, setCurrentAccount, doLogOut, dispatch }}
