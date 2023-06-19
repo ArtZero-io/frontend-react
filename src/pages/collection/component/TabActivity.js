@@ -20,6 +20,7 @@ import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
+import { resolveDomain } from "@utils";
 import moment from "moment/moment";
 
 const NUMBER_NFT_PER_PAGE = 5;
@@ -204,10 +205,17 @@ const NewEventTable = ({
               collection_address: nftContractAddress,
             });
 
+            const buyerDomain = await resolveDomain(rest?.buyer);
+            const sellerDomain = await resolveDomain(rest?.seller);
+            const traderDomain = await resolveDomain(rest?.trader);
+
             const eventFormatted = {
               nftContractAddress,
               tokenID,
               ...rest,
+              buyerDomain,
+              sellerDomain,
+              traderDomain,
             };
 
             const timestamp = await getTimestamp(api, rest?.blockNumber);

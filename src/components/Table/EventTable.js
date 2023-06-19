@@ -158,10 +158,11 @@ const formatData = (itemObj, headerValue, type) => {
             as={ReactRouterLink}
             to={`/public-account/collections/${itemObj[headerValue]}`}
             color="#7AE7FF"
-            textTransform="capitalize"
+            textTransform="none"
             textDecoration="underline"
           >
-            {truncateStr(itemObj[headerValue])}
+            {itemObj[`${headerValue}Domain`] ??
+              truncateStr(itemObj[headerValue])}
           </Link>
         </Text>
       );
@@ -173,10 +174,11 @@ const formatData = (itemObj, headerValue, type) => {
             as={ReactRouterLink}
             to={`/public-account/collections/${itemObj[headerValue]}`}
             color="#7AE7FF"
-            textTransform="capitalize"
+            textTransform="none"
             textDecoration="underline"
           >
-            {truncateStr(itemObj[headerValue])}
+            {itemObj[`${headerValue}Domain`] ??
+              truncateStr(itemObj[headerValue])}
           </Link>
         </Text>
       );
@@ -188,10 +190,11 @@ const formatData = (itemObj, headerValue, type) => {
             as={ReactRouterLink}
             to={`/public-account/collections/${itemObj[headerValue]}`}
             color="#7AE7FF"
-            textTransform="capitalize"
+            textTransform="none"
             textDecoration="underline"
           >
-            {truncateStr(itemObj[headerValue])}
+            {itemObj[`${headerValue}Domain`] ??
+              truncateStr(itemObj[headerValue])}
           </Link>
         </Text>
       );

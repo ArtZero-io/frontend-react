@@ -89,7 +89,6 @@ import {
   fetchMyTradingFee,
 } from "@pages/account/stakes";
 import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
-import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
@@ -104,6 +103,8 @@ import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import { MAX_BID_COUNT } from "../../constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { isMobile } from "react-device-detect";
+
+import { resolveDomain } from "../../utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -186,7 +187,8 @@ function TokenPage() {
               return { [k]: v };
             });
         // get username onchain if any
-        const name = truncateStr(ownerAddress);
+        const name = await resolveDomain(ownerAddress);
+
         setOwnerName(name);
         setOwnerAddress(ownerAddress);
         if (ownerAddress === currentAccount?.address) {
@@ -1823,7 +1825,11 @@ export const placeAzeroDomainsBid = async (
   }
 
   dispatch(
-    setTxStatus({ type: BID, step: START, tokenIDArray: Array.of(azDomainName) })
+    setTxStatus({
+      type: BID,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
   );
 
   await marketplace_azero_domains_contract_calls.bid(
@@ -1868,7 +1874,11 @@ export const buyAzeroDomainsToken = async (
   }
 
   dispatch(
-    setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(azDomainName) })
+    setTxStatus({
+      type: BUY,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
   );
 
   await marketplace_azero_domains_contract_calls.buy(
@@ -1923,8 +1933,6 @@ export const acceptAzeroDomainsBid = async (
     api
   );
 };
-
-
 
 export const removeAzeroDomainsBid = async (
   api,

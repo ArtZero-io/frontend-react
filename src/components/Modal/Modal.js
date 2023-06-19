@@ -11,8 +11,8 @@ import {
 } from "@chakra-ui/react";
 import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
-import MyAzeroDomainsNFTTabInfo from '@pages/account/azero-domains/components/Tabs/MyNFTInfo';
-import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
+import MyAzeroDomainsNFTTabInfo from "@pages/account/azero-domains/components/Tabs/MyNFTInfo";
+import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
 import { useEffect } from "react";
 import { FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
@@ -38,19 +38,24 @@ export default function ResponsivelySizedModal({
     step === FINALIZED && onClose();
   }, [step, onClose]);
   let tabData = [];
-  {console.log('rest Data', rest)}
-  if (rest.nfCONTRACT_ADDRESStContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+
+  if (
+    rest.nfCONTRACT_ADDRESStContractAddress ===
+    azero_domains_nft.CONTRACT_ADDRESS
+  ) {
     tabData = [
       {
-        label: 'detail',
-        content: <MyAzeroDomainsNFTTabInfo filterSelected={filterSelected} {...rest} />,
+        label: "detail",
+        content: (
+          <MyAzeroDomainsNFTTabInfo filterSelected={filterSelected} {...rest} />
+        ),
         isDisabled: actionType,
       },
       {
-        label: 'offers',
+        label: "offers",
         content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled:
-          filterSelected === 'COLLECTED' || actionType || !rest?.is_for_sale,
+          filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
       },
     ];
   } else {

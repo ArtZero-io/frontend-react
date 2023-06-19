@@ -57,8 +57,11 @@ import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
-import { getPublicCurrentAccount } from "../../utils";
-import { fetchValidatorProfit } from "../stats";
+import {
+  fetchValidatorProfit,
+  getPublicCurrentAccount,
+  resolveDomain,
+} from "@utils";
 
 function GeneralPage() {
   const history = useHistory();
@@ -110,7 +113,13 @@ function GeneralPage() {
       let { ret: rewards } = await APICall.getAllRewardClaimed({
         staker_address: currentAccount.address,
       });
+
+      const stakerDomain = await resolveDomain(currentAccount.address);
+
+      rewards = rewards.map((item) => ({ ...item, stakerDomain }));
+
       if (!isMounted) return;
+
       rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
     },
     [currentAccount]
@@ -738,19 +747,20 @@ function GeneralPage() {
                     ) : (
                       rewardHistory.map((reward, index) => (
                         <Tr key={index} color="#fff">
+                          {console.log("reward", reward)}
                           {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
                           <Td textAlign="left" py={7}>
                             {reward.blockNumber}
                           </Td>
                           <Td textAlign="left" py={7}>
-                            {reward.staker}
+                            {reward.stakerDomain ?? reward.staker}
                           </Td>
                           <Td textAlign="left" py={7}>
                             {reward.stakedAmount} NFT
                             {reward.stakedAmount > 1 ? "s" : ""}
                           </Td>
                           <Td textAlign="left" py={7}>
-                            {reward.rewardAmount.toFixed(3)}{" "}
+                            {reward.rewardAmount?.toFixed(3)}{" "}
                             <AzeroIcon
                               mb="4px"
                               w={["14px", "16px"]}

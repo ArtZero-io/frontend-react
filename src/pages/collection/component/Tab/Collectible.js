@@ -63,7 +63,6 @@ import {
   unlistToken,
 } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
@@ -83,6 +82,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
+import { resolveDomain } from "../../../../utils";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -164,7 +164,7 @@ const NFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = truncateStr(accountAddress);
+      const name = await resolveDomain(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -544,7 +544,7 @@ const NFTTabCollectible = (props) => {
                   as={ReactRouterLink}
                   to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
-                  textTransform="capitalize"
+                  textTransform="none"
                   textDecoration="underline"
                 >
                   {ownerName}

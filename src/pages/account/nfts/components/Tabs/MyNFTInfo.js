@@ -25,7 +25,6 @@ import { useDispatch } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 
-import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract from "@utils/blockchain/marketplace";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -35,7 +34,7 @@ import marketplace from "@utils/blockchain/marketplace";
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { truncateStr, getTraitCount } from "@utils";
+import { truncateStr, getTraitCount, resolveDomain } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
 import { formMode, SUB_DOMAIN } from "@constants";
@@ -61,7 +60,7 @@ import LevelCard from "@components/Card/LevelCard";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import useEditBidPrice from "@hooks/useEditBidPrice";
-import { fetchUserBalance } from "../../../../launchpad/component/Form/AddNewProject";
+import { fetchUserBalance } from "@utils";
 
 function MyNFTTabInfo(props) {
   const {
@@ -151,7 +150,7 @@ function MyNFTTabInfo(props) {
         setIsOwner(true);
       }
 
-      const name = truncateStr(accountAddress);
+      const name = await resolveDomain(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -267,12 +266,7 @@ function MyNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const {
-        data: { username },
-      } = await profile_calls.getProfileOnChain({
-        callerAccount: currentAccount,
-        accountAddress,
-      });
+      const username = await resolveDomain(accountAddress);
 
       return setOwnerName(username || truncateStr(accountAddress, 6));
     };
@@ -359,11 +353,7 @@ function MyNFTTabInfo(props) {
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">
-            <Heading
-              color="#fff"
-              size="h4"
-              fontSize={{ base: "28px", "2xl": "28px" }}
-            >
+            <Heading color="#fff" size="h4" fontSize="24px">
               {nftName}
             </Heading>
 
@@ -504,7 +494,7 @@ function MyNFTTabInfo(props) {
                   as={ReactRouterLink}
                   to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
-                  textTransform="capitalize"
+                  textTransform="none"
                   textDecoration="underline"
                 >
                   {ownerName}
