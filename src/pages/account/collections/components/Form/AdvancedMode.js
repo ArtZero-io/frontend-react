@@ -45,7 +45,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   const [maxRoyaltyFeeRate, setMaxRoyaltyFeeRate] = useState(0);
 
   const dispatch = useDispatch();
-  const { currentAccount, api, chainDecimal } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken } = useSubstrateState();
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
@@ -354,7 +354,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
             if (mode === formMode.ADD && userBalance < addingFee) {
               return toast.error(
-                `You need ${addingFee} AZERO to create new collection!`
+                `You need ${addingFee} $${chainToken} to create new collection!`
               );
             }
 
@@ -754,7 +754,11 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
+                      <strong>
+                        {" "}
+                        {addingFee} ${chainToken}{" "}
+                      </strong>{" "}
+                      in fee to ArtZero.io
                     </Text>
 
                     <HStack justifyContent="center">

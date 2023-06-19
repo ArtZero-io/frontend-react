@@ -131,10 +131,10 @@ const formatData = (itemObj, headerValue, chainToken) => {
 
     case "price":
       return (
-        <>
+        <Flex>
           {formatNumDynamicDecimal(itemObj[headerValue])}
           <AzeroIcon chainToken={chainToken} w="16px" />
-        </>
+        </Flex>
       );
 
     case "platformFee":
@@ -147,10 +147,10 @@ const formatData = (itemObj, headerValue, chainToken) => {
 
     case "royaltyFee":
       return (
-        <>
+        <Flex>
           {formatNumDynamicDecimal(itemObj[headerValue])}
           <AzeroIcon chainToken={chainToken} w="16px" />
-        </>
+        </Flex>
       );
 
     case "buyer":

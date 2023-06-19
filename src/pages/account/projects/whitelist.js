@@ -54,14 +54,19 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import { SCROLLBAR } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
-import { isEmptyObj, isPhaseEnd, isValidAddress, convertToBNString} from "@utils";
+import {
+  isEmptyObj,
+  isPhaseEnd,
+  isValidAddress,
+  convertToBNString,
+} from "@utils";
 import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { usePhaseInfo } from "@hooks/usePhaseInfo";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
- 
+
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
 function MyWhiteListProjectPage(props) {
@@ -702,7 +707,8 @@ function MyWhiteListProjectPage(props) {
               </NumberInput>
               {whiteListPrice < 0 ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Whitelist price must be greater than or equal to 0 Azero
+                  Whitelist price must be greater than or equal to 0 $
+                  {chainToken}
                 </Text>
               ) : null}{" "}
             </Stack>
@@ -1013,12 +1019,12 @@ function MyWhiteListProjectPage(props) {
                   value={value}
                   onChange={handleInputChange}
                   size="sm"
-                  placeholder="Enter one address, WL amount and mint price Azero on each line.
+                  placeholder={`Enter one address, WL amount and mint price ${chainToken} on each line.
                 A decimal separator of amount must use dot (.)
 
 
-                Example: for WL amount 50 and mint price 2.99 Azero
-                5GRdmMkKeKaV94qU3JjDr2ZwRAgn3xwzd2FEJYKjjSFipiAe,50,2.99"
+                Example: for WL amount 50 and mint price 2.99 $${chainToken}}
+                5GRdmMkKeKaV94qU3JjDr2ZwRAgn3xwzd2FEJYKjjSFipiAe,50,2.99`}
                 />
                 <Stack my="8px">
                   <CommonButton
@@ -1246,7 +1252,7 @@ function MyWhiteListProjectPage(props) {
                       0.0070399999996 *
                       Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)
                     ).toFixed(4)}{" "}
-                    AZERO for{" "}
+                    {chainToken} for{" "}
                     {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)}{" "}
                     Whitelist address clear.
                   </Text>

@@ -550,7 +550,7 @@ function GridNftA({
                   {multiListingData?.listInfo?.map((item) => {
                     return ` #${item?.info?.azDomainName} at ${
                       item.price || 0
-                    } A,`;
+                    } ${chainToken},`;
                   })}
 
                   <>
@@ -558,7 +558,7 @@ function GridNftA({
                       ${multiListingData?.listInfo?.reduce((a, b) => {
                         return a + parseInt(b?.price || 0);
                       }, 0)}
-                      A`}
+                      ${chainToken}`}
                   </>
                 </Flex>
 

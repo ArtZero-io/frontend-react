@@ -213,8 +213,6 @@ function GridNftA({
   isActive,
   filterSelected,
 }) {
-  const { chainToken } = useSubstrateState();
-
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
   const delayPerPixel = 0.0008;
@@ -224,7 +222,7 @@ function GridNftA({
   }, [listNFTFormatted, controls]);
 
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, chainToken } = useSubstrateState();
 
   const [multiStakeData, setMultiStakeData] = useState({
     action: null,
@@ -612,7 +610,9 @@ function GridNftA({
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                   {`Your are listing ${collectionName} NFT ID`}
                   {multiListingData?.listInfo?.map((item) => {
-                    return ` #${item?.info?.tokenID} at ${item.price || 0} A,`;
+                    return ` #${item?.info?.tokenID} at ${
+                      item.price || 0
+                    } ${chainToken},`;
                   })}
 
                   <>
@@ -620,7 +620,7 @@ function GridNftA({
                     ${multiListingData?.listInfo?.reduce((a, b) => {
                       return a + parseInt(b?.price || 0);
                     }, 0)}
-                    A`}
+                    ${chainToken}`}
                   </>
                 </Flex>
 

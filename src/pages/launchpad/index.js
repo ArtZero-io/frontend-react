@@ -7,7 +7,7 @@ import { useSubstrateState } from "@utils/substrate";
 import { APICall } from "../../api/client";
 
 export const LaunchpadPage = () => {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainName } = useSubstrateState();
 
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
@@ -63,7 +63,7 @@ export const LaunchpadPage = () => {
             launchpad
           </Heading>
           <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
-            The premier destination to launch your NFT Collection on Aleph Zero
+            The premier destination to launch your NFT Collection on {chainName}{" "}
             Network.
           </Text>
         </VStack>

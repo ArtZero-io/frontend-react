@@ -57,7 +57,7 @@ import { execContractQuery } from "../../../account/nfts/nfts";
 import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
 
 function RewardDistribution() {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
 
   const [addAmount, setAddAmount] = useState(0);
   const [rewardPool, setRewardPool] = useState(0);
@@ -302,7 +302,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} $${chainToken}!`
         );
 
         await withdrawMarketplaceContract(
@@ -335,7 +335,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} $${chainToken}!`
         );
 
         await withdrawCollectionContract(
@@ -368,7 +368,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} $${chainToken}!`
         );
 
         await withdrawLaunchpadContract(
@@ -415,10 +415,13 @@ function RewardDistribution() {
                       <Tr>
                         <Td>{item.name.toLocaleUpperCase()}</Td>
                         <Td>
-                          {formatNumDynamicDecimal(item.balance, 2)} AZERO
+                          {formatNumDynamicDecimal(item.balance, 2)}{" "}
+                          {chainToken}
                         </Td>
                         <Td>{item.percent}</Td>
-                        <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
+                        <Td>
+                          {formatNumDynamicDecimal(item.net, 2)} {chainToken}
+                        </Td>
 
                         <Td>
                           {item.name !== "TOTAL" && (

@@ -39,7 +39,7 @@ export default function UpdateWithdrawModal({
   const dispatch = useDispatch();
   const [contractBalance, setContractBalance] = useState(0);
   const [withdrawBalance, setWithdrawBalance] = useState(0);
-  const { currentAccount, api, chainDecimal } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
@@ -154,7 +154,8 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Your balance {formatNumDynamicDecimal(contractBalance)} AZERO.
+            Your balance {formatNumDynamicDecimal(contractBalance)} ${chainToken}
+            .
           </Text>
         </ModalHeader>
 

@@ -8,6 +8,7 @@ import {
   Tr,
   Heading,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
@@ -26,10 +27,10 @@ function HistoryTable({ tableHeaders, tableData }) {
 
       case "price":
         return (
-          <>
+          <Flex>
             {formatNumDynamicDecimal(itemObj[headerValue])}
             <AzeroIcon chainToken={chainToken} />
-          </>
+          </Flex>
         );
 
       case "trader":

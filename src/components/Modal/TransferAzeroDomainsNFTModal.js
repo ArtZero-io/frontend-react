@@ -46,7 +46,7 @@ function TransferAzeroDomainsNFTModal({
   showOnChainMetadata,
 }) {
   const dispatch = useDispatch();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, chainToken } = useSubstrateState();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
@@ -179,7 +179,7 @@ function TransferAzeroDomainsNFTModal({
 
           <PopoverBody>
             <VStack w="full">
-              <Text>Transfer Azero Domains to address:</Text>
+              <Text>Transfer {chainToken} Domains to address:</Text>
               <Input
                 h="32px"
                 px="4px"

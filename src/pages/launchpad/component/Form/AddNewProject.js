@@ -82,7 +82,8 @@ import { convertToBNString, fetchUserBalance } from "../../../../utils";
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { currentAccount, api, chainDecimal } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken, chainName } =
+    useSubstrateState();
 
   const [projectMintFeeRate, setProjectMintFeeRate] = useState(null);
 
@@ -267,8 +268,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 {`${mode === "ADD" ? "create new" : "edit"} project`}
               </Heading>
               <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
-                The premier destination to launch your NFT Collection on Aleph
-                Zero Network.
+                The premier destination to launch your NFT Collection on{" "}
+                {chainName} Network.
               </Text>
             </VStack>
             <IconButton
@@ -1016,7 +1017,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       color="#888"
                                     >{`I agree to pay `}</Text>
                                     <Text color="#fff" as="span">
-                                      {`${addProjectTotalFee} AZERO`}
+                                      {`${addProjectTotalFee} $${chainToken}`}
                                     </Text>
                                     <Text
                                       as="span"
