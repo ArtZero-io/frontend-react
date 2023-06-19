@@ -552,7 +552,7 @@ import {
                       ${multiListingData?.listInfo?.reduce((a, b) => {
                         return a + parseInt(b?.price || 0);
                       }, 0)}
-                      A`}
+                      5IRE`}
                     </>
                   </Flex>
 

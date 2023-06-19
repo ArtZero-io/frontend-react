@@ -204,6 +204,7 @@ export default function useBulkAzeroDomainsListing({
 
         const salePrice = new BN(price * 10 ** 6)
           .mul(new BN(10 ** 6))
+          .mul(new BN(10 ** 6))
           .toString();
 
         gasLimit = await getEstimatedGasBatchTx(

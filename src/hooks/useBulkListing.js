@@ -238,7 +238,7 @@ export default function useBulkListing({
       "list",
       listInfo[0].info?.nftContractAddress,
       { u64: listInfo[0].info?.tokenID },
-      new BN(listInfo[0].price * 10 ** 6).mul(new BN(10 ** 6)).toString()
+      new BN(listInfo[0].price * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString()
     );
     // TODOS: monitor gas is ok for different price above
 
@@ -254,6 +254,7 @@ export default function useBulkListing({
         // );
 
         const salePrice = new BN(price * 10 ** 6)
+          .mul(new BN(10 ** 6))
           .mul(new BN(10 ** 6))
           .toString();
 
