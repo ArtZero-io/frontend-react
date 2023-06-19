@@ -544,7 +544,7 @@ import {
                   <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                     {`Your are listing ${collectionName} NFT ID`}
                     {multiListingData?.listInfo?.map((item) => {
-                      return ` #${item?.info?.azDomainName} at ${item.price || 0} A,`;
+                      return ` #${item?.info?.azDomainName} at ${item.price || 0} 5IRE,`;
                     })}
 
                     <>
