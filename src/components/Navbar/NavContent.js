@@ -75,7 +75,7 @@ const MobileNavContent = (props) => {
       <Box
         w="full"
         style={{ marginTop: "0px" }}
-        display={{ base: "block", md: "none" }}
+        display={{ base: "block", xl: "none" }}
         zIndex="sticky"
         // backdropBlur="2px"
         // position={scroll ? "fixed" : "sticky"}
@@ -90,7 +90,7 @@ const MobileNavContent = (props) => {
           <Flex
             h="31.25px"
             alignItems="center"
-            display={{ base: "flex", md: "none" }}
+            display={{ base: "flex", xl: "none" }}
           >
             <IconButton
               icon={
@@ -113,7 +113,7 @@ const MobileNavContent = (props) => {
               height="20px"
               width="138px"
               alt="ArtZeroLogo"
-              display={{ base: "flex", md: "none" }}
+              display={{ base: "flex", xl: "none" }}
             />
           </Flex>
 
@@ -123,7 +123,7 @@ const MobileNavContent = (props) => {
             fontSize="2xl"
             color="white"
             onClick={onToggle}
-            display={{ base: "flex", md: "none" }}
+            display={{ base: "flex", xl: "none" }}
           />
         </Flex>
 
@@ -139,7 +139,7 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    <Flex w="full" display={{ base: "none", md: "flex" }}>
+    <Flex w="full" display={{ base: "none", xl: "flex" }}>
       <HStack
         w="full"
         align="stretch"
@@ -148,10 +148,10 @@ const DesktopNavContent = (props) => {
         justifyContent={{
           base: "flex-start",
           md: "space-between",
-          xl: "center",
+          "2xl": "center",
         }}
-        spacing={{ xl: "35px", "2xl": "55px" }}
-        pl={{ base: "8px", md: "32px", xl: "50px" }}
+        spacing={{ base: "20px", "2xl": "40px" }}
+        pl={{ base: "8px", md: "32px", xl: "40px" }}
         pr="10px"
         {...props}
       >
@@ -391,13 +391,13 @@ const MobileNav = ({ onClose, isOpen }) => {
                 alt="ArtZeroLogo"
                 height="20px"
                 width="138px"
-                display={{ base: "flex", md: "none" }}
+                display={{ base: "flex", xl: "none" }}
               />
             </Flex>
           </DrawerHeader>
 
           <Flex pt="28px" w="full">
-            <WalletSelector display={{ base: "flex", md: "none" }} />
+            <WalletSelector display={{ base: "flex", xl: "none" }} />
           </Flex>
 
           <DrawerBody px="18px">
@@ -417,7 +417,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               w="full"
               direction="column"
               justifyContent="center"
-              display={{ base: "flex", md: "none" }}
+              display={{ base: "flex", xl: "none" }}
             >
               <Center w="full" textAlign="center">
                 <SocialCard profile={profile} />

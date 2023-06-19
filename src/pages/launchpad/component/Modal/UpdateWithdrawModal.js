@@ -29,7 +29,7 @@ import { WITHDRAW_LAUNCHPAD, START, FINALIZED } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 
 import toast from "react-hot-toast";
-import { convertStringToPrice } from "@utils";
+import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
 export default function UpdateWithdrawModal({
   collection_address,
@@ -154,7 +154,7 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Your balance {contractBalance} AZERO.
+            Your balance {formatNumDynamicDecimal(contractBalance)} AZERO.
           </Text>
         </ModalHeader>
 

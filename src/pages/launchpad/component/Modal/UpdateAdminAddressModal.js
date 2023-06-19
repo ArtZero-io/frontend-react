@@ -294,7 +294,7 @@ const AdminList = ({ collectionOwner, adminList, onRemoveHandler }) => {
                 </Td>
                 <Td w={"10px"}>
                   {collectionOwner === item ? (
-                    "Project Owner"
+                    <Text textAlign="center">Project Owner</Text>
                   ) : (
                     <CommonButton
                       isDisabled={

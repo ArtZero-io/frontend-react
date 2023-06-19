@@ -68,7 +68,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
         borderWidth="0"
         onClick={onOpen}
         display={display}
-        px={{ base: "4px", xl: "30px" }}
+        px={{ base: "4px", xl: "24px" }}
         leftIcon={<FiSearch size="22px" p="0" />}
         variant={{ base: "unstyled", xl: "outline" }}
         _hover={{ borderWidth: "0", color: "#7ae7ff" }}

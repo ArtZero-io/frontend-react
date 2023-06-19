@@ -77,8 +77,11 @@ import { getMetaDataOffChain, strToNumber } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { ImageCloudFlareLaunchpad } from "@components/ImageWrapper/ImageCloudFlare";
-import { convertStringToDateTime } from "@utils";
-import { fetchUserBalance } from "@utils";
+import {
+  convertStringToDateTime,
+  fetchUserBalance,
+  formatNumDynamicDecimal,
+} from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -1032,7 +1035,9 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Public mint price:{" "}
                           <Text as="span" color="#fff">
-                            {item?.publicMintingFee / 10 ** chainDecimal}{" "}
+                            {formatNumDynamicDecimal(
+                              item?.publicMintingFee / 10 ** chainDecimal
+                            )}{" "}
                             <AzeroIcon
                               chainToken={chainToken}
                               mb="5px"

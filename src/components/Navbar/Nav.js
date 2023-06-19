@@ -33,7 +33,7 @@ function Nav() {
           >
             <VisuallyHidden>ArtZero.io</VisuallyHidden>
             <ArtZeroLogo
-              display={{ base: "none", md: "flex" }}
+              display={{ base: "none", xl: "flex" }}
               alt="ArtZeroLogo"
             />
           </Link>

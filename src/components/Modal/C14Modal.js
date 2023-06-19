@@ -30,15 +30,15 @@ export default function C14Modal() {
             borderBottom: "none",
           }}
           py={["4px", "12px"]}
-          px={["4px", "15px"]}
+          px="0"
           fontFamily="Evogria, sans-serif"
-          fontSize={{ base: "18px", md: "15px" }}
+          fontSize={{ base: "32px", xl: "15px" }}
           variant="ghost"
           onClick={onOpen}
           borderBottomWidth="2px"
           borderBottomColor="transparent"
         >
-          <Text>Buy Azero</Text>
+          <Text>buy azero</Text>
         </Button>
       )}
 
@@ -62,7 +62,7 @@ export default function C14Modal() {
           color={isOpen ? "#7ae7ff" : "#fff"}
           onClick={() => onOpen()}
         >
-          Buy Azero
+          buy azero
         </Text>
       )}
 

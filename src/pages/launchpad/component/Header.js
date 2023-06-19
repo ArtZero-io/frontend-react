@@ -32,6 +32,7 @@ import { useHistory } from "react-router-dom";
 
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
+import { formatNumDynamicDecimal } from "@utils";
 
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
@@ -381,12 +382,14 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee /
-                            10 ** chainDecimal ||
-                            nextPhaseWhenNoCurrPhaseId?.phase
-                              ?.publicMintingFee /
+                          {formatNumDynamicDecimal(
+                            currentPhase?.publicMintingFee /
                               10 ** chainDecimal ||
-                            0}{" "}
+                              nextPhaseWhenNoCurrPhaseId?.phase
+                                ?.publicMintingFee /
+                                10 ** chainDecimal ||
+                              0
+                          )}{" "}
                           <AzeroIcon
                             chainToken={chainToken}
                             mb={["2px", "5px"]}
@@ -414,12 +417,14 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee /
-                                10 ** chainDecimal ||
-                                nextPhaseWhenNoCurrPhaseId?.phase
-                                  ?.publicMintingFee /
+                              {formatNumDynamicDecimal(
+                                currentPhase?.publicMintingFee /
                                   10 ** chainDecimal ||
-                                0}{" "}
+                                  nextPhaseWhenNoCurrPhaseId?.phase
+                                    ?.publicMintingFee /
+                                    10 ** chainDecimal ||
+                                  0
+                              )}{" "}
                               <AzeroIcon
                                 chainToken={chainToken}
                                 mb={["2px", "5px"]}
@@ -441,8 +446,10 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {userWLInfo[currentPhase?.id - 1]?.mintingFee /
-                            10 ** chainDecimal}{" "}
+                          {formatNumDynamicDecimal(
+                            userWLInfo[currentPhase?.id - 1]?.mintingFee /
+                              10 ** chainDecimal
+                          )}{" "}
                           <AzeroIcon
                             chainToken={chainToken}
                             mb={["2px", "5px"]}
