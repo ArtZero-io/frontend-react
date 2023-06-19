@@ -34,7 +34,9 @@ import {
   getPublicCurrentAccount,
   formatNumDynamicDecimal,
   getTraitCount,
+  resolveDomain,
 } from "@utils";
+
 import { useSubstrateState } from "@utils/substrate";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { formMode } from "@constants";
@@ -44,7 +46,6 @@ import CommonButton from "@components/Button/CommonButton";
 import { BUY, BID, REMOVE_BID, LIST_TOKEN, UNLIST_TOKEN } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
@@ -152,7 +153,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = truncateStr(accountAddress);
+      const name = await resolveDomain(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -530,7 +531,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
                   as={ReactRouterLink}
                   to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
-                  textTransform="capitalize"
+                  textTransform="none"
                   textDecoration="underline"
                 >
                   {ownerName}

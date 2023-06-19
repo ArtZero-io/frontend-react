@@ -86,7 +86,6 @@ import {
   fetchMyTradingFee,
 } from "@pages/account/stakes";
 import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
-import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
@@ -102,6 +101,7 @@ import { MAX_BID_COUNT } from "@constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { isMobile } from "react-device-detect";
 import { convertStringToPrice } from "@utils";
+import { resolveDomain } from "../../utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -184,7 +184,8 @@ function TokenPage() {
               return { [k]: v };
             });
         // get username onchain if any
-        const name = truncateStr(ownerAddress);
+        const name = await resolveDomain(ownerAddress);
+
         setOwnerName(name);
         setOwnerAddress(ownerAddress);
         if (ownerAddress === currentAccount?.address) {

@@ -591,7 +591,7 @@ export function formatOutput(o) {
 export function formatNumberOutput(o) {
   const frmtRet = o.toHuman().Ok;
 
-  return parseInt(frmtRet?.replaceAll(",", ""));
+  return !frmtRet ? 0 : parseInt(frmtRet?.replaceAll(",", ""));
 }
 
 export function isValidAddress(address) {
@@ -757,9 +757,18 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 };
 
 export const resolveDomain = async (address) => {
-  const domains = await resolveAddressToDomain(address, {
-    chainId: SupportedChainId.AlephZeroTestnet,
-  });
+  if (
+    process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
+    process.env.REACT_APP_NETWORK === "alephzero"
+  ) {
+    try {
+      const domains = await resolveAddressToDomain(address, {
+        chainId: SupportedChainId.AlephZeroTestnet,
+      });
 
-  return domains[0];
+      return domains[0];
+    } catch (error) {
+      console.log("resolveDomain error", error);
+    }
+  }
 };

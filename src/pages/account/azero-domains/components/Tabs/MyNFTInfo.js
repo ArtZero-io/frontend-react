@@ -23,15 +23,19 @@ import { useDispatch } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 
-import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { marketplace } from "@utils/blockchain/abi";
 
 import { useSubstrateState } from "@utils/substrate";
-import { truncateStr, getTraitCount } from "@utils";
-import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
+import {
+  truncateStr,
+  getTraitCount,
+  resolveDomain,
+  convertStringToPrice,
+  formatNumDynamicDecimal,
+} from "@utils";
 
 import { formMode } from "@constants";
 
@@ -146,7 +150,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }
-      const name = truncateStr(accountAddress);
+      const name = await resolveDomain(accountAddress);
+
       setOwnerAddress(accountAddress);
       setOwnerName(name);
       setIsAzeroDomain(
@@ -259,12 +264,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const {
-        data: { username },
-      } = await profile_calls.getProfileOnChain({
-        callerAccount: currentAccount,
-        accountAddress,
-      });
+      const username = await resolveDomain(accountAddress);
 
       return setOwnerName(username || truncateStr(accountAddress, 6));
     };
