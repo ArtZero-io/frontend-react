@@ -251,14 +251,16 @@ const Main = () => {
 };
 
 const AlertCookiesAccepted = () => {
+  const { chainToken } = useSubstrateState();
+
   const toast = useToast();
 
   const id = "cookies-settings-toast";
   const isAccepted =
-    localStorage.getItem("ARTZERO_COOKIES_STATUS") === "ACCEPTED";
+    localStorage.getItem(`${chainToken}_COOKIES_STATUS`) === "ACCEPTED";
 
   const handleAccept = () => {
-    localStorage.setItem("ARTZERO_COOKIES_STATUS", "ACCEPTED");
+    localStorage.setItem(`${chainToken}_COOKIES_STATUS`, "ACCEPTED");
     toast.closeAll();
   };
 

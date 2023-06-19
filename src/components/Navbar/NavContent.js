@@ -54,6 +54,8 @@ const links = [
   // { label: "Stats", href: ROUTES.STATS },
 ];
 
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
+
 const MobileNavContent = (props) => {
   const { isOpen, onClose, onToggle } = useDisclosure();
   isOpen
@@ -171,7 +173,7 @@ const DesktopNavContent = (props) => {
 
         {currentAccount?.address && <MyAccountDropdown />}
 
-        <C14Modal />
+        {isAleph && <C14Modal />}
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -353,11 +355,11 @@ const MyAccountDropdown = () => {
 };
 
 const profile = [
-  { discord: "https://discord.gg/wzkZ2JTvN4" },
-  { twitter: "https://twitter.com/ArtZero_io" },
-  { medium: "https://medium.com/@artzero_io" },
-  { telegram: "https://t.me/artzero_io" },
-  { mail: "mailto:admin@artzero.io" },
+  { discord: process.env.REACT_APP_DISCORD },
+  { twitter: process.env.REACT_APP_TWITTER },
+  { medium: process.env.REACT_APP_MEDIUM },
+  { telegram: process.env.REACT_APP_TELEGRAM },
+  { mail: process.env.REACT_APP_EMAIL },
 ];
 
 const MobileNav = ({ onClose, isOpen }) => {
@@ -409,7 +411,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               />
             ))}
 
-            <C14Modal />
+            {isAleph && <C14Modal />}
           </DrawerBody>
 
           <DrawerFooter>

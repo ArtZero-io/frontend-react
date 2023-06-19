@@ -87,11 +87,10 @@ export const ADMIN_ROLE_CODE = 3739740293;
 
 export const SUB_DOMAIN = "https://a0.artzero.io";
 
-export const ArtZero_TOS = `${SUB_DOMAIN}/assets/ArtZero_Terms_Of_Service.pdf`;
-export const ArtZero_Cookies = `${SUB_DOMAIN}/assets/ArtZero_Cookies_Policy.pdf`;
-export const ArtZero_Privacy = `${SUB_DOMAIN}/assets/ArtZero_Privacy_Policy.pdf`;
-export const ArtZero_Assets =
-  "https://drive.google.com/drive/folders/1EXuGDmYVypszJUq4yr9dNTOZCuP96e3i";
+export const ArtZero_TOS = process.env.REACT_APP_TOS;
+export const ArtZero_Cookies = process.env.REACT_APP_COOKIES;
+export const ArtZero_Privacy = process.env.REACT_APP_PRIVACY;
+export const ArtZero_Assets = process.env.REACT_APP_BRAND_ASSETS;
 
 export const SCROLLBAR = {
   "&::-webkit-scrollbar": {

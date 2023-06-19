@@ -91,7 +91,7 @@ const FeeInfoModal = ({ platformFee }) => {
 
           <ModalHeader textAlign="center">
             <Heading fontSize={{ base: "xl", md: "32px" }} my={3}>
-              trade discount for PMP NFT staked
+              trade discount for {process.env.REACT_APP_MAIN_COLLECTION_SHORT_NAME} NFT staked
             </Heading>
           </ModalHeader>
 

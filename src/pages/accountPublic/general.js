@@ -461,13 +461,13 @@ function GeneralPage() {
               >
                 <span>stake </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  praying mantis predators
+                  {process.env.REACT_APP_MAIN_COLLECTION_NAME}
                 </span>{" "}
                 <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
                 <span> and earn </span>
-                <span style={{ color: "#7AE7FF" }}>AZERO</span>
+                <span style={{ color: "#7AE7FF" }}>{chainToken}</span>
               </Box>
 
               <Spacer />

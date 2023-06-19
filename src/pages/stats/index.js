@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -12,22 +11,14 @@ import { APICall } from "@api/client";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
-import {
-  getPublicCurrentAccount,
-  fetchValidatorProfit,
-  formatNumberOutput,
-} from "@utils";
-import {
-  launchpad_manager,
-  collection_manager,
-  psp22_contract,
-} from "@utils/blockchain/abi";
+import { getPublicCurrentAccount, fetchValidatorProfit } from "@utils";
+import { launchpad_manager, collection_manager } from "@utils/blockchain/abi";
 
 import { fetchUserBalance } from "@utils";
 import toast from "react-hot-toast";
-import { execContractQuery } from "@pages/account/nfts/nfts";
 
 const INW_RATE = 120;
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
 
 function StatsPage() {
   const { api, chainToken, chainDecimal } = useSubstrateState();
@@ -47,7 +38,7 @@ function StatsPage() {
     await fetch(url)
       .then((res) => res.json())
       .then(({ USD }) => {
-        console.log("AZERO - USD:", USD?.toFixed(4));
+        console.log(chainToken, " - USD:", USD?.toFixed(4));
         setAzeroPrice(USD?.toFixed(4));
       })
       .catch((err) => {
@@ -198,7 +189,7 @@ function StatsPage() {
 
       setIsLoading(false);
 
-      const ret = {
+      let ret = {
         platformStatistics: [
           {
             title: `Total Payout (${chainToken})`,
@@ -233,6 +224,15 @@ function StatsPage() {
         ],
         topCollections: dataListWithFP,
       };
+
+      if (!isAleph) {
+        ret = {
+          ...ret,
+          platformStatistics: ret.platformStatistics.filter(
+            (item) => item.unit !== "INW"
+          ),
+        };
+      }
 
       return ret;
     } catch (err) {

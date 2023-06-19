@@ -15,7 +15,8 @@ export const ACCOUNT_MINTING_PROJECTS = "/account/projects/minting";
 
 //PUBLIC ACCOUNT
 export const PUBLIC_ACCOUNT = "/public-account/collections/:address";
-export const PUBLIC_ACCOUNT_MY_COLLECTIONS = "/public-account/collections/:address";
+export const PUBLIC_ACCOUNT_MY_COLLECTIONS =
+  "/public-account/collections/:address";
 export const PUBLIC_ACCOUNT_MY_NFTS = "/public-account/nfts/:address";
 export const PUBLIC_ACCOUNT_MY_STAKES = "/public-account/stakes/:address";
 export const PUBLIC_ACCOUNT_MY_PROJECTS = "/public-account/projects/:address";
@@ -35,17 +36,6 @@ export const NFT_DETAIL = "/nft/:collection_address/:token_id";
 export const MINTING_EVENT = "/mint";
 
 export const MARKETPLACE = "/marketplace";
-export const DOCS = "https://docs.artzero.io";
+export const DOCS = process.env.REACT_APP_DOCS;
 export const STAKE2EARN = "https://a0.inkwhale.net/";
 
-//EXTERNAL LINKS
-export const LANDING_PAGE = "http://artzero.io";
-export const STAKING_APP = "https://staking.artzero.io";
-export const LAUNCHPAD = "https://launchpad.artzero.io";
-
-// SOCIALS
-export const TELEGRAM = "https://t.me/artzero_io";
-export const TWITTER = "https://twitter.com/ArtZero_io";
-
-//
-export const DESIGN = "/design";

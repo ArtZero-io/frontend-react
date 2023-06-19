@@ -21,11 +21,11 @@ import {
 import * as ROUTES from "@constants/routes";
 
 const profile = [
-  { discord: "https://discord.gg/wzkZ2JTvN4" },
-  { twitter: "https://twitter.com/ArtZero_io" },
-  { medium: "https://medium.com/@artzero_io" },
-  { telegram: "https://t.me/artzero_io" },
-  { mail: "mailto:admin@artzero.io" },
+  { discord: process.env.REACT_APP_DISCORD },
+  { twitter: process.env.REACT_APP_TWITTER },
+  { medium: process.env.REACT_APP_MEDIUM },
+  { telegram: process.env.REACT_APP_TELEGRAM },
+  { mail: process.env.REACT_APP_EMAIL },
 ];
 
 export const Footer = () => {

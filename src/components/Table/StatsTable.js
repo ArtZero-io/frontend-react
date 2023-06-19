@@ -10,7 +10,6 @@ import {
   Heading,
   Flex,
   Text,
-  Box,
   HStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -35,20 +34,20 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
         return (
           <>
             {useAzeroUnit ? (
-              <>
+              <Flex>
                 {formatNumDynamicDecimal(
                   itemObj["nft_count"] * itemObj["floorPrice"]
                 )}
                 <AzeroIcon chainToken={chainToken} />
-              </>
+              </Flex>
             ) : (
-              <>
+              <Flex>
                 ${" "}
                 {formatNumDynamicDecimal(
                   azeroPrice * itemObj["nft_count"] * itemObj["floorPrice"],
                   2
                 )}{" "}
-              </>
+              </Flex>
             )}
           </>
         );
@@ -57,15 +56,15 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
         return (
           <>
             {useAzeroUnit ? (
-              <>
+              <Flex>
                 {formatNumDynamicDecimal(itemObj[headerValue])}
                 <AzeroIcon chainToken={chainToken} />
-              </>
+              </Flex>
             ) : (
-              <>
+              <Flex>
                 ${" "}
                 {formatNumDynamicDecimal(azeroPrice * itemObj[headerValue], 2)}
-              </>
+              </Flex>
             )}
           </>
         );
@@ -104,10 +103,10 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
           <>
             {useAzeroUnit ? (
               <>
-                <Box>
+                <Flex>
                   {formatNumDynamicDecimal(itemObj[headerValue])}{" "}
                   <AzeroIcon chainToken={chainToken} />
-                </Box>
+                </Flex>
 
                 {/* <Box mt="6px" color="#34B979" fontSize="16px">
               +{itemObj[headerValue]["percent"]}%
@@ -115,13 +114,13 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
               </>
             ) : (
               <>
-                <Box>
+                <Flex>
                   ${" "}
                   {formatNumDynamicDecimal(
                     azeroPrice * itemObj[headerValue],
                     2
                   )}
-                </Box>
+                </Flex>
 
                 {/* <Box mt="6px" color="#34B979" fontSize="16px">
               +{itemObj[headerValue]["percent"]}%

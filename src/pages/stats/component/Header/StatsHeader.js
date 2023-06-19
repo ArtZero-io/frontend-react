@@ -12,6 +12,8 @@ import StatsCardContentLoader from "../StatsCardContentLoader";
 import { useSubstrateState } from "@utils/substrate";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
+
 function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
   const { chainToken } = useSubstrateState();
 
@@ -27,8 +29,9 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
             statistics
           </Heading>
           <Text maxW="320px" fontSize={["md", "lg", "lg"]} mx="auto">
-            Payout Rewards will be paid on monthly basis to all staked PMP NFTs
-            owner. Remember to claim your rewards.
+            Payout Rewards will be paid on monthly basis to all staked{" "}
+            {process.env.REACT_APP_MAIN_COLLECTION_SHORT_NAME} NFTs owner.
+            Remember to claim your rewards.
           </Text>
         </Box>
 
@@ -37,14 +40,14 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
           px="16px"
           w="full"
           gap={["15px", "30px"]}
-          maxW="1000px"
+          maxW={isAleph ? "1000px" : "1200px"}
           minH={"120px"}
           templateColumns={{
             base: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
           }}
         >
           {!platformStatistics &&
-            [...Array(6)].map((_, idx) => (
+            [...Array(isAleph ? 6 : 4)].map((_, idx) => (
               <GridItem
                 m="0"
                 bg="brand.grayDark"

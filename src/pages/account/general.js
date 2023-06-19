@@ -504,7 +504,7 @@ function GeneralPage() {
             <Image
               w="full"
               h="full"
-              src="https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH/500"
+              src={process.env.REACT_APP_BANNER_IMAGE_URL}
             />
           </Square>
 
@@ -531,13 +531,13 @@ function GeneralPage() {
               >
                 <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  praying mantis predators
+                  {process.env.REACT_APP_MAIN_COLLECTION_NAME}
                 </span>{" "}
                 <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce your </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
                 <span> and earn </span>
-                <span style={{ color: "#7AE7FF" }}>AZERO</span>
+                <span style={{ color: "#7AE7FF" }}>{chainToken}</span>
               </Box>
 
               <Spacer />

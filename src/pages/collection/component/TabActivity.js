@@ -270,7 +270,6 @@ const NewEventTable = ({
         collectionOwner={collectionOwner}
         tableHeaders={tableHeaders}
         tableData={dataFormatted}
-        ref={ref}
       />
 
       {dataFormatted?.length ? (
