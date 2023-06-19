@@ -101,7 +101,7 @@ import { MAX_BID_COUNT } from "@constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { isMobile } from "react-device-detect";
 import { convertStringToPrice } from "@utils";
-import { resolveDomain } from "../../utils";
+import { resolveDomain, truncateStr } from "@utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -533,7 +533,7 @@ function TokenPage() {
                       textDecoration="underline"
                       as={ReactRouterLink}
                     >
-                      {ownerName}
+                      {ownerName ?? truncateStr(ownerAddress)}
                     </Link>
                   </Text>
                 </Stack>
@@ -816,7 +816,7 @@ function TokenPage() {
                       textDecoration="underline"
                       as={ReactRouterLink}
                     >
-                      {ownerName}
+                      {ownerName ?? truncateStr(ownerAddress)}
                     </Link>
                   </Text>
                 </Stack>
