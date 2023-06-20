@@ -1,0 +1,6 @@
+node_modules/
+.vscode
+**/.DS_Store
+build
+coverage
+src/utils/blockchain/abi/

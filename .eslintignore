@@ -1,0 +1,5 @@
+node_modules/
+build
+generates.ts
+interfaces
+src/utils/blockchain/abi/

@@ -4,7 +4,7 @@ import ContentLoader from "react-content-loader";
 
 const StatsCardContentLoader = (props) => {
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-  
+
   return (
     <Stack m="15px">
       {isBigScreen ? (

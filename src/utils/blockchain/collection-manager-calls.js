@@ -18,7 +18,7 @@ import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import { collection_manager } from "@utils/blockchain/abi";
 import emailjs from "@emailjs/browser";
- 
+
 let contract;
 
 export const setCollectionContract = (api, data) => {

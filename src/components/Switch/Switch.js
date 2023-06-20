@@ -25,7 +25,7 @@ export default function SimpleModeSwitch({
       display="flex"
       fontSize={["md", "lg", "lg"]}
       alignItems="center"
-     >
+    >
       <FormLabel
         mb="0px"
         ml={[0, 1]}

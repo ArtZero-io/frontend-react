@@ -1,0 +1,23 @@
+{
+  "extends": ["prettier"],
+  "parser": "@babel/eslint-parser",
+  "plugins": ["react-hooks", "prettier"],
+
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020,
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  },
+  "rules": {
+    "eqeqeq": 2,
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
+  }
+}

@@ -2,6 +2,6 @@ import {
   SubstrateContextProvider,
   useSubstrate,
   useSubstrateState,
-} from './SubstrateContext'
+} from "./SubstrateContext";
 
-export { SubstrateContextProvider, useSubstrate, useSubstrateState }
+export { SubstrateContextProvider, useSubstrate, useSubstrateState };

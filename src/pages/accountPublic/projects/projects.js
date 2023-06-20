@@ -14,7 +14,7 @@ const MyProjectsPage = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const {address} = useParams()
+  const { address } = useParams();
 
   useEffect(() => {
     const checkIsAdmin = async ({ nftContractAddress, address }) => {
@@ -83,7 +83,6 @@ const MyProjectsPage = () => {
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
-
       </Stack>
 
       {loading ? (

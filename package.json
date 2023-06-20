@@ -17,7 +17,8 @@
     "prettier:write": "prettier -w src/*",
     "deploy": "gh-pages -d build -m '[ci skip] Updates'",
     "postinstall": "patch-package",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "lint": "eslint --fix --ext .js,.jsx ./src ./server"
   },
   "dependencies": {
     "@ajna/pagination": "^1.4.17",
@@ -57,6 +58,7 @@
     "interweave": "^13.0.0",
     "ipfs-http-client": "^52.0.0",
     "jdenticon": "^3.1.1",
+    "loglevel": "^1.8.1",
     "mime": "^3.0.0",
     "moment": "^2.29.4",
     "node-polyfill-webpack-plugin": "^1.1.4",
@@ -94,7 +96,10 @@
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "gh-pages": "^3.2.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "2.5.1",
     "react-app-rewire-alias": "^1.1.7",
@@ -124,6 +129,11 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npm run lint"
     ]
   }
 }

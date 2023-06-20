@@ -38,4 +38,3 @@ export const MINTING_EVENT = "/mint";
 export const MARKETPLACE = "/marketplace";
 export const DOCS = process.env.REACT_APP_DOCS;
 export const STAKE2EARN = "https://a0.inkwhale.net/";
-

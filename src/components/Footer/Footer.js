@@ -96,8 +96,7 @@ export const Footer = () => {
                 zIndex={0}
                 direction={["column", "row"]}
               >
-                <Flex w="full" my={["16px", "0px"]}                 justifyContent="center"
->
+                <Flex w="full" my={["16px", "0px"]} justifyContent="center">
                   <Link
                     mx="20px"
                     textTransform="none"

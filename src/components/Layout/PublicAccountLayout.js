@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   Box,
   HStack,
@@ -9,12 +9,12 @@ import {
   TabPanels,
   Tabs,
   useMediaQuery,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import * as ROUTES from '@constants/routes';
-import Layout from '@components/Layout/Layout';
-import ProfileHeader from '@pages/accountPublic/components/Header';
-import { SCROLLBAR } from '@constants';
+import * as ROUTES from "@constants/routes";
+import Layout from "@components/Layout/Layout";
+import ProfileHeader from "@pages/accountPublic/components/Header";
+import { SCROLLBAR } from "@constants";
 
 const PublicAccountLayout = ({ children, match }) => {
   const history = useHistory();
@@ -33,16 +33,16 @@ const PublicAccountLayout = ({ children, match }) => {
   }, []);
 
   useEffect(() => {
-    const arr = pathname.split('/')
-    setDataUrl({address: arr[arr.length - 1], route: arr[arr.length - 2]})
+    const arr = pathname.split("/");
+    setDataUrl({ address: arr[arr.length - 1], route: arr[arr.length - 2] });
   }, [pathname]);
 
-  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Layout>
       <Box as="section" position="relative" bg="#000" mx="auto">
-        <ProfileHeader address={dataUrl.address}/>
+        <ProfileHeader address={dataUrl.address} />
 
         <Tabs
           isLazy
@@ -62,19 +62,19 @@ const PublicAccountLayout = ({ children, match }) => {
               >
                 {tabsData.map((tab) => (
                   <Tab
-                    minW={['135px', 'auto']}
+                    minW={["135px", "auto"]}
                     px="2.5px"
                     color="#fff"
                     key={tab.label}
                     isDisabled={tab.isDisabled}
-                    py={['8px', '20px']}
-                    fontSize={['md', 'lg', 'lg']}
+                    py={["8px", "20px"]}
+                    fontSize={["md", "lg", "lg"]}
                     fontFamily="Evogria Italic, san serif"
                     _selected={{
                       // color: '#7ae7ff',
-                      color: '#000',
-                      borderBottom: '2px #7ae7ff solid',
-                      bg: '#7ae7ff',
+                      color: "#000",
+                      borderBottom: "2px #7ae7ff solid",
+                      bg: "#7ae7ff",
                     }}
                   >
                     {tab.label}
@@ -89,12 +89,12 @@ const PublicAccountLayout = ({ children, match }) => {
                   color="#fff"
                   key={tab.label}
                   isDisabled={tab.isDisabled}
-                  py={['8px', '20px']}
-                  fontSize={['md', 'lg', 'lg']}
+                  py={["8px", "20px"]}
+                  fontSize={["md", "lg", "lg"]}
                   fontFamily="Evogria Italic, san serif"
                   _selected={{
-                    color: '#7ae7ff',
-                    borderBottom: '2px #7ae7ff solid',
+                    color: "#7ae7ff",
+                    borderBottom: "2px #7ae7ff solid",
                   }}
                 >
                   {tab.label}
@@ -121,14 +121,14 @@ export default PublicAccountLayout;
 
 const tabsList = [
   {
-    label: 'Collections',
+    label: "Collections",
     isDisabled: false,
-    route: '/public-account/collections',
+    route: "/public-account/collections",
   },
   {
-    label: 'NFTS',
+    label: "NFTS",
     isDisabled: false,
-    route: '/public-account/nfts',
+    route: "/public-account/nfts",
   },
   // {
   //   label: 'My Stakes',
@@ -136,8 +136,8 @@ const tabsList = [
   //   route: '/public-account/stakes',
   // },
   {
-    label: 'Projects',
+    label: "Projects",
     isDisabled: false,
-    route: '/public-account/projects',
+    route: "/public-account/projects",
   },
 ];

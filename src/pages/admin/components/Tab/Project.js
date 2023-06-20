@@ -187,7 +187,11 @@ function ProjectAdmin() {
               Collection Contract Owner:{" "}
             </Text>
             <Text color="#fff" ml={2}>
-              <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
+              <AddressCopier
+                address={collectionContractOwner}
+                truncateStr={9}
+                textOnly={true}
+              />
             </Text>
           </Stack>
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>

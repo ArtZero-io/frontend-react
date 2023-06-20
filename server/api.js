@@ -56,7 +56,7 @@ exports.getProjectByAddress = async ({ nftContractAddress }) => {
     where: {
       nftContractAddress,
     },
-  }; 
+  };
 
   const filterEncoded = encodeURI(JSON.stringify(filter));
 

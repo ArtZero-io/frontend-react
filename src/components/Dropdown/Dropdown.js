@@ -32,7 +32,7 @@ function Dropdown({
           minW={minW}
           textAlign="left"
           variant="outline"
-          bg={bg||"brand.grayDark"}
+          bg={bg || "brand.grayDark"}
           fontFamily="Oswald"
           fontSize={["md", "lg"]}
           borderColor="transparent"
@@ -46,7 +46,7 @@ function Dropdown({
 
         <MenuList
           // minW="325px"
-          bg={bg||"brand.grayDark"}
+          bg={bg || "brand.grayDark"}
           borderRadius="0"
           minW={minW}
         >

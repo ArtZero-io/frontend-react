@@ -41,11 +41,12 @@ function MyAzeroDomainsNFTOffer({ nftContractAddress, tokenID, azDomainName }) {
   const publicCurrentAccount = getPublicCurrentAccount();
   useEffect(() => {
     const fetchBidder = async () => {
-      const sale_info = await marketplace_azero_domains_contract_calls.getNftSaleInfo(
-        publicCurrentAccount,
-        nftContractAddress,
-        { bytes: azDomainName }
-      );
+      const sale_info =
+        await marketplace_azero_domains_contract_calls.getNftSaleInfo(
+          publicCurrentAccount,
+          nftContractAddress,
+          { bytes: azDomainName }
+        );
       setSaleInfo(sale_info);
 
       if (sale_info) {
@@ -57,12 +58,13 @@ function MyAzeroDomainsNFTOffer({ nftContractAddress, tokenID, azDomainName }) {
           setIsOwner(true);
         }
 
-        let listBidder = await marketplace_azero_domains_contract_calls.getAllBids(
-          publicCurrentAccount,
-          nftContractAddress,
-          sale_info?.nftOwner,
-          { bytes: azDomainName }
-        );
+        let listBidder =
+          await marketplace_azero_domains_contract_calls.getAllBids(
+            publicCurrentAccount,
+            nftContractAddress,
+            sale_info?.nftOwner,
+            { bytes: azDomainName }
+          );
 
         // map array index to bidId
         listBidder = listBidder?.map((i, idx) => {

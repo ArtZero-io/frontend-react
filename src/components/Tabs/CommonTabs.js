@@ -8,7 +8,8 @@ function CommonTabs(props) {
     <Tabs {...rest} isLazy align="center">
       <TabList bg="black" border="none">
         {tabsData.map((tab, index) => (
-          <Tab color='#fff'
+          <Tab
+            color="#fff"
             mx="25px"
             px="0.5px"
             key={index}

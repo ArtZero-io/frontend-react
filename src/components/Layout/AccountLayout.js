@@ -24,9 +24,8 @@ const AccountLayout = ({ children }) => {
   const [tabsData, setTabsData] = useState(tabsList);
 
   // eslint-disable-next-line no-unused-vars
-  const { loading: loadingForceUpdate } = useForceUpdate(
-    [CREATE_NFT],
-    () => handleForceUpdate()
+  const { loading: loadingForceUpdate } = useForceUpdate([CREATE_NFT], () =>
+    handleForceUpdate()
   );
 
   const handleForceUpdate = async () => {

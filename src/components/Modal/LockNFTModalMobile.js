@@ -60,15 +60,21 @@ function LockNFTModalMobile({
       );
 
       let unsubscribe;
-      let gasLimit ;
+      let gasLimit;
 
       const address = currentAccount?.address;
       const { signer } = await web3FromSource(currentAccount?.meta?.source);
       const value = 0;
 
-      gasLimit = await getEstimatedGas(address, contract, value, "psp34Traits::lock", {
-        u64: tokenID,
-      });
+      gasLimit = await getEstimatedGas(
+        address,
+        contract,
+        value,
+        "psp34Traits::lock",
+        {
+          u64: tokenID,
+        }
+      );
 
       await contract.tx["psp34Traits::lock"](
         { value, gasLimit },

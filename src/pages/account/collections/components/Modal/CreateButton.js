@@ -11,7 +11,7 @@ export const CreateButton = ({ icon, title, data, onClick }) => {
       borderRadius="lg"
       overflow="hidden"
       bg="gray.700"
-      _hover={{ borderColor: "#7ae7ff", }}
+      _hover={{ borderColor: "#7ae7ff" }}
       onClick={onClick}
       cursor="pointer"
     >
@@ -27,7 +27,7 @@ export const CreateButton = ({ icon, title, data, onClick }) => {
       <Heading textAlign={"center"} fontSize={["sm", "md"]} my={3}>
         {title}
       </Heading>
-      <Box  p={1}>
+      <Box p={1}>
         <List minHeight={"150px"} p={2} spacing={1} bg="brand.grayDark">
           {data?.map((el) => (
             <ListItem>

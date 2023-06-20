@@ -1,12 +1,12 @@
-import { chakra } from '@chakra-ui/react'
-import {  motion } from 'framer-motion'
-import * as React from 'react'
+import { chakra } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import * as React from "react";
 
-export const MotionListItem = motion(chakra.li)
+export const MotionListItem = motion(chakra.li);
 
 export const NavListItem = (props) => (
   <MotionListItem variants={variants} {...props} />
-)
+);
 
 const variants = {
   // exit: {
@@ -20,4 +20,4 @@ const variants = {
   //     duration: 0.3,
   //   },
   // },
-}
+};

@@ -40,7 +40,7 @@ const ModalLoader = ({
       <ModalContent shadow="none" bg="transparent">
         <VStack alignItems="center" spacing={2}>
           <AzeroAnimation loadingTime={loadingTime} />
-          
+
           <Heading color="#7ae7ff" size="h6" px={5}>
             {addText}
           </Heading>

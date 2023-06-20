@@ -154,8 +154,8 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Your balance {formatNumDynamicDecimal(contractBalance)} ${chainToken}
-            .
+            Your balance {formatNumDynamicDecimal(contractBalance)} $
+            {chainToken}.
           </Text>
         </ModalHeader>
 
