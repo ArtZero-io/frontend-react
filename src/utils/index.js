@@ -661,7 +661,7 @@ export async function getEstimatedGasBatchTx(
 }
 
 export const switchCollection = ({ contractAddress }) => {
-  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+  if (contractAddress === "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP") {
     return AZERO_DOMAINS_COLLECTION;
   } else if (contractAddress === artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
@@ -670,8 +670,8 @@ export const switchCollection = ({ contractAddress }) => {
   }
 };
 
-export const isAzeroDomainCollection = ({ contractAddress } = {}) => {
-  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+export const isAzeroDomainCollection = (contractAddress = "") => {
+  if (contractAddress === "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP") {
     return true;
   } else {
     return false;
