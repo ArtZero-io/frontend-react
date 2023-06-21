@@ -9,7 +9,6 @@ import {
   Tooltip,
   HStack,
   Stack,
-  Skeleton,
   TagLabel,
   TagRightIcon,
   NumberInput,
@@ -97,7 +96,11 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   const dispatch = useDispatch();
 
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+  const gridSize = useBreakpointValue({
+    base: `8rem`,
+    xl: `10rem`,
+    "2xl": `11rem`,
+  });
 
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
@@ -428,20 +431,18 @@ function MyAzeroDomainsNFTTabInfo(props) {
           </Stack>
 
           <Stack>
-            <Skeleton as="span" isLoaded={ownerName} minW="150px">
-              <Text color="#fff" maxW="max-content">
-                Owned by{" "}
-                <Link
-                  as={ReactRouterLink}
-                  to={`/public-account/collections/${ownerAddress}`}
-                  color="#7AE7FF"
-                  textTransform="capitalize"
-                  textDecoration="underline"
-                >
-                  {ownerName}
-                </Link>
-              </Text>
-            </Skeleton>
+            <Text color="#fff" maxW="max-content">
+              Owned by{" "}
+              <Link
+                as={ReactRouterLink}
+                to={`/public-account/collections/${ownerAddress}`}
+                color="#7AE7FF"
+                textTransform="capitalize"
+                textDecoration="underline"
+              >
+                {ownerName ?? truncateStr(ownerAddress)}
+              </Link>
+            </Text>
           </Stack>
 
           <Stack w="full" flexGrow="1">
@@ -461,7 +462,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   mb={2}
                   w="full"
                   pr={"22px"}
-                  gap="30px"
+                  gap={{ base: "10px", xl: "30px" }}
                   sx={SCROLLBAR}
                   id="grid-attrs"
                   overflowY="auto"

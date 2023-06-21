@@ -82,7 +82,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
-import { resolveDomain } from "../../../../utils";
+import { resolveDomain, truncateStr } from "../../../../utils";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -108,8 +108,11 @@ const NFTTabCollectible = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-
+  const gridSize = useBreakpointValue({
+    base: `8rem`,
+    xl: `10rem`,
+    "2xl": `11rem`,
+  });
   const [doOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(1);
 
@@ -547,7 +550,7 @@ const NFTTabCollectible = (props) => {
                   textTransform="none"
                   textDecoration="underline"
                 >
-                  {ownerName}
+                  {ownerName ?? truncateStr(ownerAddress)}{" "}
                 </Link>
               </Text>
             </Skeleton>
@@ -854,7 +857,7 @@ const NFTTabCollectible = (props) => {
                       maxH="232px"
                       id="grid-attrs"
                       w="full"
-                      gap="30px"
+                      gap={{ base: "10px", xl: "30px" }}
                       pr="22px"
                       overflowY="auto"
                       sx={SCROLLBAR}
