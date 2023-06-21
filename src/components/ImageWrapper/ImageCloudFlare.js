@@ -1,5 +1,5 @@
 import { Image, Skeleton, Square } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getCloudFlareImage } from "@utils";
 
 export default function ImageCloudFlare({
@@ -10,8 +10,14 @@ export default function ImageCloudFlare({
 }) {
   const [projImage, setProjImage] = useState("");
 
+  const isMp4 = useMemo(() => src?.includes(".mp4"), [src]);
+
   useEffect(() => {
     let isMounted = true;
+
+    if (isMp4) {
+      return setProjImage(src);
+    }
 
     try {
       src &&
@@ -28,14 +34,31 @@ export default function ImageCloudFlare({
 
   return (
     <Square {...props} overflow="hidden">
-      <Image
-        width="full"
-        height="full"
-        src={projImage}
-        objectFit={objectFitContain ? "contain" : "cover"}
-        fallback={<Skeleton />}
-        className="image-cloudflare"
-      />
+      {isMp4 ? (
+        <video
+          loop
+          autoPlay
+          controls={true}
+          playsInline={true}
+          width="100%"
+          height="100%"
+          style={{
+            objectFit: "contain",
+            borderRadius: "initial",
+          }}
+        >
+          <source src={projImage} type="video/mp4" />
+        </video>
+      ) : (
+        <Image
+          width="full"
+          height="full"
+          src={projImage}
+          objectFit={objectFitContain ? "contain" : "cover"}
+          fallback={<Skeleton />}
+          className="image-cloudflare"
+        />
+      )}
     </Square>
   );
 }

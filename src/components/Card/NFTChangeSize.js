@@ -14,8 +14,9 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { getCloudFlareImage } from "@utils/index";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSubstrateState } from "@utils/substrate";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 export const CommonCard = (props) => {
   const {
@@ -29,10 +30,15 @@ export const CommonCard = (props) => {
     bigCardNew,
   } = props;
   const { chainToken, chainDecimal } = useSubstrateState();
+  const isMp4 = useMemo(() => avatar?.includes(".mp4"), [avatar]);
 
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
+    if (isMp4) {
+      return setProjImage(avatar);
+    }
+
     avatar &&
       getCloudFlareImage(avatar, 500).then((res) => {
         setProjImage(res);
@@ -62,15 +68,32 @@ export const CommonCard = (props) => {
     >
       <Stack borderColor="#fff0" bg="#222" spacing={stackSpacing}>
         <Flex direction="column" align="center" textAlign="left">
-          <Image
-            alt={nftName}
-            objectFit="contain"
-            objectPosition="center"
-            width={cardWidth}
-            height={cardWidth}
-            fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
-            src={projImage}
-          />
+          {isMp4 ? (
+            <video
+              loop
+              autoPlay
+              controls={true}
+              playsInline={true}
+              width="100%"
+              height="100%"
+              style={{
+                objectFit: "contain",
+                borderRadius: "initial",
+              }}
+            >
+              <source src={projImage} type="video/mp4" />
+            </video>
+          ) : (
+            <Image
+              alt={nftName}
+              objectFit="contain"
+              objectPosition="center"
+              width={cardWidth}
+              height={cardWidth}
+              fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
+              src={projImage}
+            />
+          )}
         </Flex>
 
         <Stack

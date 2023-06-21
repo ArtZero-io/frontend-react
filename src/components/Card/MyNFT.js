@@ -46,6 +46,7 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -198,23 +199,6 @@ function MyNFTCard({
 
     if (stakeStatus === 3) getRequestTime();
   }, [currentAccount, stakeStatus, tokenID]);
-
-  const [projImage, setProjImage] = useState("");
-
-  useEffect(() => {
-    let isMounted = true;
-
-    avatar &&
-      getCloudFlareImage(avatar, 500).then((res) => {
-        if (isMounted) {
-          setProjImage(res);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [avatar]);
 
   // BULK LISTING=============================================================
   const [isMultiListCheckbox, setIsMultiListCheckbox] = useState(false);
@@ -468,13 +452,13 @@ function MyNFTCard({
           shadow="lg"
         >
           <Square h={imgCardSize} w={imgCardSize}>
-            <Image
-              alt={nftName}
+            <ImageCloudFlare
               w="full"
               h="full"
-              src={projImage}
+              src={avatar}
               objectFit="contain"
               fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
+              alt={`header-img-${nftName}`}
             />
           </Square>
 
