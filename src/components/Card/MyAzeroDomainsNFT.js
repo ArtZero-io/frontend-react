@@ -45,6 +45,7 @@ import {
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { MAX_ITEM_BULK_LISTING, MAX_ITEM_BULK_TRANSFER } from "../../constants";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -160,23 +161,6 @@ function MyAzeroDomainsNFTCard({
 
     if (stakeStatus === 3) getRequestTime();
   }, [currentAccount, stakeStatus, tokenID, azDomainName]);
-
-  const [projImage, setProjImage] = useState("");
-
-  useEffect(() => {
-    let isMounted = true;
-
-    avatar &&
-      getCloudFlareImage(avatar, 500).then((res) => {
-        if (isMounted) {
-          setProjImage(res);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [avatar]);
 
   // BULK LISTING=============================================================
   const [isMultiListCheckbox, setIsMultiListCheckbox] = useState(false);
@@ -398,11 +382,11 @@ function MyAzeroDomainsNFTCard({
           shadow="lg"
         >
           <Square h={imgCardSize} w={imgCardSize}>
-            <Image
+            <ImageCloudFlare
               alt={nftName}
               w="full"
               h="full"
-              src={projImage}
+              src={avatar}
               objectFit="contain"
               fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
             />
