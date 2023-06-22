@@ -11,11 +11,12 @@ export default function ImageCloudFlare({
   const [projImage, setProjImage] = useState("");
 
   const isMp4 = useMemo(() => src?.includes(".mp4"), [src]);
+  const isZeroId = useMemo(() => src?.includes("zero.id"), [src]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (isMp4) {
+    if (isMp4 || isZeroId) {
       return setProjImage(src);
     }
 

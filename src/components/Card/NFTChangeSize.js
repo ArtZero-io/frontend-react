@@ -31,11 +31,12 @@ export const CommonCard = (props) => {
   } = props;
   const { chainToken, chainDecimal } = useSubstrateState();
   const isMp4 = useMemo(() => avatar?.includes(".mp4"), [avatar]);
+  const isZeroId = useMemo(() => avatar?.includes("zero.id"), [avatar]);
 
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
-    if (isMp4) {
+    if (isMp4 || isZeroId) {
       return setProjImage(avatar);
     }
 
