@@ -35,7 +35,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   useEffect(() => {
     step === FINALIZED && onClose();
   }, [step, onClose]);
-  console.log('useEffect::rest', rest);
+
   let tabData = [];
   if (isAzeroDomainCollection(rest.nftContractAddress)) {
     tabData = [

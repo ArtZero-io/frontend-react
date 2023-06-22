@@ -65,7 +65,7 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
-  console.log('ret data', rest);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
