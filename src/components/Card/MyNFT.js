@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Heading,
-  Image,
   Skeleton,
   Tag,
   TagLabel,
@@ -18,11 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import {
-  getCloudFlareImage,
-  secondsToTime,
-  formatNumDynamicDecimal,
-} from "@utils";
+import { secondsToTime, formatNumDynamicDecimal } from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
@@ -47,7 +42,7 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
-
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 // Stake Status
 // 0 not show, 1 not staked,
 // 2 staked ,  3 pending unstake
@@ -198,23 +193,6 @@ function MyNFTCard({
 
     if (stakeStatus === 3) getRequestTime();
   }, [currentAccount, stakeStatus, tokenID]);
-
-  const [projImage, setProjImage] = useState("");
-
-  useEffect(() => {
-    let isMounted = true;
-
-    avatar &&
-      getCloudFlareImage(avatar, 500).then((res) => {
-        if (isMounted) {
-          setProjImage(res);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [avatar]);
 
   // BULK LISTING=============================================================
   const [isMultiListCheckbox, setIsMultiListCheckbox] = useState(false);
@@ -468,11 +446,11 @@ function MyNFTCard({
           shadow="lg"
         >
           <Square h={imgCardSize} w={imgCardSize}>
-            <Image
+            <ImageCloudFlare
               alt={nftName}
               w="full"
               h="full"
-              src={projImage}
+              src={avatar}
               objectFit="contain"
               fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
             />

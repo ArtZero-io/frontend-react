@@ -1,5 +1,5 @@
 import { Image, Skeleton, Square } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getCloudFlareImage } from "@utils";
 
 export default function ImageCloudFlare({
@@ -9,10 +9,14 @@ export default function ImageCloudFlare({
   ...props
 }) {
   const [projImage, setProjImage] = useState("");
+  const isMp4 = useMemo(() => src?.includes(".mp4"), [src]);
+  const isZeroId = useMemo(() => src?.includes("zero.id"), [src]);
 
   useEffect(() => {
     let isMounted = true;
-
+    if (isMp4 || isZeroId) {
+      return setProjImage(src);
+    }
     try {
       src &&
         getCloudFlareImage(src, size).then((res) => {
@@ -24,18 +28,35 @@ export default function ImageCloudFlare({
       console.log("err", error);
     }
     return () => (isMounted = false);
-  }, [size, src]);
+  }, [isMp4, isZeroId, size, src]);
 
   return (
     <Square {...props} overflow="hidden">
-      <Image
-        width="full"
-        height="full"
-        src={projImage}
-        objectFit={objectFitContain ? "contain" : "cover"}
-        fallback={<Skeleton />}
-        className="image-cloudflare"
-      />
+      {isMp4 ? (
+        <video
+          loop
+          autoPlay
+          controls={true}
+          playsInline={true}
+          width="100%"
+          height="100%"
+          style={{
+            objectFit: "contain",
+            borderRadius: "initial",
+          }}
+        >
+          <source src={projImage} type="video/mp4" />
+        </video>
+      ) : (
+        <Image
+          width="full"
+          height="full"
+          src={projImage}
+          objectFit={objectFitContain ? "contain" : "cover"}
+          fallback={<Skeleton />}
+          className="image-cloudflare"
+        />
+      )}
     </Square>
   );
 }
