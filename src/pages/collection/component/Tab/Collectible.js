@@ -542,7 +542,7 @@ const NFTTabCollectible = (props) => {
           <Stack w="full">
             <Skeleton isLoaded={!loading}>
               <Text color="#fff" maxW="max-content">
-                Owned by{" "}
+                Owned by 1123{" "}
                 <Link
                   as={ReactRouterLink}
                   to={`/public-account/collections/${ownerAddress}`}

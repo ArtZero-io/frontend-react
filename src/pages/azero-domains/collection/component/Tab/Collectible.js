@@ -89,7 +89,6 @@ const AzeroDomainsNFTTabCollectible = (props) => {
     owner,
     is_for_sale,
     avatar,
-    tokenID,
     price,
     is_locked,
     showOnChainMetadata,
@@ -256,7 +255,6 @@ const AzeroDomainsNFTTabCollectible = (props) => {
   };
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
-
   const path = `${window.location.href.replace(
     "#/collection/",
     "#/nft/"
@@ -376,7 +374,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
           <HStack w="full">
             <Link
               as={ReactRouterLink}
-              to={`/nft/${nftContractAddress}/${tokenID}`}
+              to={`/nft/${nftContractAddress}/${azDomainName}`}
             >
               <Heading
                 color="#fff"
