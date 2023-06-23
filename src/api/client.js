@@ -450,18 +450,22 @@ export const APICall = {
     return await client("GET", "/getTotalVolume", {});
   },
 
-  getNFTByID: async ({ collection_address, token_id }) => {
+  getNFTByID: async (options) => {
+    let formatTokenId;
+
     try {
-      if (typeof token_id === "string" && token_id?.includes(",")) {
-        token_id?.replaceAll(",", "");
+      if (
+        typeof options?.token_id === "string" &&
+        options?.token_id?.includes(",")
+      ) {
+        formatTokenId = options?.token_id?.replaceAll(",", "");
+
+        options.token_id = formatTokenId;
       }
     } catch (error) {
       console.log("error", error);
     }
-    return await client("POST", "/getNFTByID", {
-      collection_address,
-      token_id,
-    });
+    return await client("POST", "/getNFTByID", options);
   },
 
   getOwnershipHistoryOfNFT: async ({ owner, collection_address, token_id }) => {
@@ -594,7 +598,11 @@ export const APICall = {
     return { ret };
   },
 
-  askBeUpdateAzeroDomainsBidsData: async ({ collection_address, seller, azDomainName }) => {
+  askBeUpdateAzeroDomainsBidsData: async ({
+    collection_address,
+    seller,
+    azDomainName,
+  }) => {
     return await client("POST", "/updateBids", {
       collection_address,
       seller,
@@ -602,7 +610,10 @@ export const APICall = {
     });
   },
 
-  askBeUpdateAzeroDomainsNftData: async ({ collection_address, azDomainName }) => {
+  askBeUpdateAzeroDomainsNftData: async ({
+    collection_address,
+    azDomainName,
+  }) => {
     console.log({ collection_address, azDomainName });
     return await client("POST", "/updateNFT", {
       collection_address,

@@ -22,6 +22,7 @@ import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
 import { resolveDomain } from "@utils";
 import moment from "moment/moment";
+import azero_domains_nft from "../../../utils/blockchain/azero-domains-nft";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
@@ -200,10 +201,19 @@ const NewEventTable = ({
       if (eventsList?.length > 0) {
         eventsList = await Promise.all(
           eventsList?.map(async ({ nftContractAddress, tokenID, ...rest }) => {
-            const { status, ret } = await APICall.getNFTByID({
-              token_id: tokenID,
+            let options = {
               collection_address: nftContractAddress,
-            });
+            };
+
+            if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+              // const azDomainNameInHex = rest?.azDomainName?.slice(2);
+              // options.azDomainName = hexToAscii(azDomainNameInHex);
+              options.azDomainName = rest?.azDomainName;
+            } else {
+              options.token_id = tokenID;
+            }
+
+            const { status, ret } = await APICall.getNFTByID(options);
 
             const buyerDomain = await resolveDomain(rest?.buyer);
             const sellerDomain = await resolveDomain(rest?.seller);
