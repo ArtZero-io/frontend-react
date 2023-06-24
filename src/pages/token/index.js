@@ -47,11 +47,11 @@ import {
   getPublicCurrentAccount,
   getTraitCount,
 } from "@utils";
-import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
+import { getNFTDetails, getAzeroDomainNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
-// import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
@@ -151,6 +151,7 @@ function TokenPage() {
     async function () {
       try {
         setLoading(true);
+        console.log('Start fetchData');
         if (currentAccount) {
           const stakedCount = await fetchMyPMPStakedCount(
             currentAccount,
@@ -164,23 +165,39 @@ function TokenPage() {
 
           setMyTradingFee(myTradingFeeData);
         }
-
+        console.log('After get tradding fee and staked count');
         const {
           ret: [collectionDetails],
         } = await APICall.getCollectionByAddress({
           collection_address,
         });
-        const tokenDetails = await getNFTDetails(
-          api,
-          currentAccount || getPublicCurrentAccount(),
-          collection_address,
-          token_id,
-          collectionDetails?.contractType
-        );
-
+        console.log('After get collection by address');
+        let tokenDetails = {};
+        
+        if (collection_address == azero_domains_nft.CONTRACT_ADDRESS) {
+          console.log('This is Azero Domain Contract');
+          tokenDetails = await getAzeroDomainNFTDetails(
+            api,
+            currentAccount || getPublicCurrentAccount(),
+            collection_address,
+            token_id,
+            collectionDetails?.contractType
+          );
+        } else {
+          tokenDetails = await getNFTDetails(
+            api,
+            currentAccount || getPublicCurrentAccount(),
+            collection_address,
+            token_id,
+            collectionDetails?.contractType
+          );
+        }
+        console.log('tokenDetails', tokenDetails);
+        
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
           : tokenDetails?.owner;
+        
         tokenDetails.attrsList = !tokenDetails?.traits
           ? {}
           : Object.entries(tokenDetails?.traits).map(([k, v]) => {
@@ -198,14 +215,24 @@ function TokenPage() {
         }
 
         let listBidder;
-
+        console.log('Start get list bidder');
         if (tokenDetails?.is_for_sale) {
-          listBidder = await marketplace_contract_calls.getAllBids(
-            currentAccount || getPublicCurrentAccount(),
-            collection_address,
-            ownerAddress,
-            { u64: token_id }
-          );
+          if (collection_address == azero_domains_nft.CONTRACT_ADDRESS) {
+            listBidder = await marketplace_contract_calls.getAllBids(
+              currentAccount || getPublicCurrentAccount(),
+              collection_address,
+              ownerAddress,
+              { bytes: token_id }
+            );
+          } else {
+            listBidder = await marketplace_contract_calls.getAllBids(
+              currentAccount || getPublicCurrentAccount(),
+              collection_address,
+              ownerAddress,
+              { u64: token_id }
+            );
+          }
+          console.log('listBidder', listBidder);
           setBidderCount(listBidder?.length || 0);
           if (listBidder?.length) {
             //sort highest price first
@@ -248,6 +275,7 @@ function TokenPage() {
         setCollection(collectionDetails);
 
         setLoading(false);
+        console.log('End fetchData');
       } catch (error) {
         console.error(error);
         toast.error(error.message);
@@ -293,17 +321,31 @@ function TokenPage() {
     }
 
     try {
-      await placeBid(
-        api,
-        currentAccount,
-        isOwner,
-        token?.price,
-        bidPrice,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        await placeAzeroDomainsBid(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          bidPrice,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await placeBid(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          bidPrice,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -313,14 +355,25 @@ function TokenPage() {
 
   const handleRemoveBidAction = async () => {
     try {
-      await removeBid(
-        api,
-        currentAccount,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        await removeAzeroDomainsBid(
+          api,
+          currentAccount,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await removeBid(
+          api,
+          currentAccount,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -330,18 +383,31 @@ function TokenPage() {
 
   const handleListTokenAction = async () => {
     try {
-      await listToken(
-        api,
-        currentAccount,
-        isOwner,
-        askPrice,
-        token?.nftContractAddress,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nft721_psp34_standard_calls,
-        marketplace.CONTRACT_ADDRESS,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        await listAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          askPrice,
+          token?.nftContractAddress,
+          marketplace.CONTRACT_ADDRESS,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await listToken(
+          api,
+          currentAccount,
+          isOwner,
+          askPrice,
+          token?.nftContractAddress,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nft721_psp34_standard_calls,
+          marketplace.CONTRACT_ADDRESS,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -351,14 +417,26 @@ function TokenPage() {
 
   const handleUnlistTokenAction = async () => {
     try {
-      await unlistToken(
-        api,
-        currentAccount,
-        isOwner,
-        token?.nftContractAddress,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        await unlistAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.nftContractAddress,
+          token?.azDomainName,
+          dispatch
+        );  
+      } else {
+        await unlistToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.nftContractAddress,
+          token?.tokenID,
+          dispatch
+        );        
+      }
+
       setAskPrice(1);
     } catch (error) {
       console.error(error);
