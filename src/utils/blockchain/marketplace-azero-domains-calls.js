@@ -120,7 +120,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
-
+    
     return output.toHuman().Ok;
   }
   return null;

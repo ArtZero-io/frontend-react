@@ -102,6 +102,7 @@ import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import { MAX_BID_COUNT } from "../../constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
+import useEditAzeroDomainsBidPrice from "@hooks/useEditAzeroDomainsBidPrice";
 import { isMobile } from "react-device-detect";
 
 import { resolveDomain, truncateStr } from "../../utils";
@@ -297,16 +298,30 @@ function TokenPage() {
 
   const handleBuyAction = async () => {
     try {
-      await buyToken(
-        api,
-        currentAccount,
-        isOwner,
-        token?.price,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        await buyAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await buyToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
+      
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -1121,7 +1136,7 @@ function TokenPage() {
                                 actionType && actionType !== REMOVE_BID
                               }
                             />
-
+                            {console.log('MobileEditBidPriceModal', token)}
                             <MobileEditBidPriceModal {...token} />
                           </Flex>
 
@@ -1606,6 +1621,7 @@ function MobileEditBidPriceModal({
   price,
   owner,
   is_for_sale,
+  azDomainName
 }) {
   const { api, currentAccount } = useSubstrateState();
 
@@ -1613,13 +1629,21 @@ function MobileEditBidPriceModal({
 
   const [newBidPrice, setNewBidPrice] = useState("");
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
-
+  console.log('MobileEditBidPriceModal::azDomainName', azDomainName);
+  console.log('MobileEditBidPriceModal::tokenID', tokenID);
   const { doUpdateBidPrice } = useEditBidPrice({
     newBidPrice,
     tokenID,
     nftContractAddress,
     sellerAddress: nft_owner,
   });
+
+  const { doUpdateAzeroDomainsBidPrice } = useEditAzeroDomainsBidPrice({
+    newBidPrice,
+    azDomainName,
+    nftContractAddress,
+    sellerAddress: nft_owner,
+  }); 
 
   const handleUpdateBidPrice = async () => {
     // check wallet connected
@@ -1652,8 +1676,12 @@ function MobileEditBidPriceModal({
       toast.error(`Bid amount must be less than current price!`);
       return;
     }
-
-    doUpdateBidPrice();
+    if (nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+      doUpdateAzeroDomainsBidPrice();
+    } else {
+      doUpdateBidPrice();
+    }
+    
   };
 
   useEffect(() => {
