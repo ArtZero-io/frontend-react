@@ -100,6 +100,7 @@ import CommonTabs from "@components/Tabs/CommonTabs";
 import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
 import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+import MyAzeroDomainsNFTOffer from '@pages/account/azero-domains/components/Tabs/MyNFTOffers';
 import { MAX_BID_COUNT } from "../../constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import useEditAzeroDomainsBidPrice from "@hooks/useEditAzeroDomainsBidPrice";
@@ -499,24 +500,44 @@ function TokenPage() {
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
   const gridSize = useBreakpointValue({ base: `8rem`, md: `11rem` });
-
-  const tabsData = [
-    {
-      label: "offers",
-      component: <MyNFTOffer {...token} {...collection} />,
-      isDisabled: actionType || !token?.is_for_sale,
-    },
-    {
-      label: "owner history",
-      component: <OwnershipHistory {...token} {...collection} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "tx history",
-      component: <TxHistory {...token} {...collection} />,
-      isDisabled: actionType,
-    },
-  ];
+  let tabsData = [];
+  if (token?.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+    tabsData = [
+      {
+        label: "offers",
+        component: <MyAzeroDomainsNFTOffer {...token} {...collection} />,
+        isDisabled: actionType || !token?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        component: <OwnershipHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        component: <TxHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+    ];
+  } else {
+    tabsData = [
+      {
+        label: "offers",
+        component: <MyNFTOffer {...token} {...collection} />,
+        isDisabled: actionType || !token?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        component: <OwnershipHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        component: <TxHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+    ];
+  }
 
   return (
     <NftLayout>
