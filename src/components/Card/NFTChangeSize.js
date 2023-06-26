@@ -30,18 +30,24 @@ export const CommonCard = (props) => {
   } = props;
 
   const [projImage, setProjImage] = useState("");
-  const isMp4 = useMemo(() => avatar?.includes(".mp4"), [avatar]);
+  const [isMp4, setIsMp4] = useState(false);
+  
   const isZeroId = useMemo(() => avatar?.includes("zero.id"), [avatar]);
 
   useEffect(() => {
-    if (isMp4 || isZeroId) {
-      return setProjImage(avatar);
-    }
+    try {
+      if (isZeroId) {
+        return setProjImage(avatar);
+      }
 
-    avatar &&
-      getCloudFlareImage(avatar, 500).then((res) => {
-        setProjImage(res);
-      });
+      avatar &&
+        getCloudFlareImage(avatar, 500).then((res) => {
+          setIsMp4(res?.includes(".mp4"));
+          setProjImage(res);
+        });
+    } catch (error) {
+      console.log("error", error);
+    }
   }, [avatar, isMp4, isZeroId]);
 
   const fontSizeHeading = useBreakpointValue({
@@ -68,20 +74,22 @@ export const CommonCard = (props) => {
       <Stack borderColor="#fff0" bg="#222" spacing={stackSpacing}>
         <Flex direction="column" align="center" textAlign="left">
           {isMp4 ? (
-            <video
-              loop
-              autoPlay
-              controls={true}
-              playsInline={true}
-              width="100%"
-              height="100%"
-              style={{
-                objectFit: "contain",
-                borderRadius: "initial",
-              }}
-            >
-              <source src={projImage} type="video/mp4" />
-            </video>
+            <Flex minH={cardWidthRes}>
+              <video
+                loop
+                autoPlay
+                controls={true}
+                playsInline={true}
+                width="100%"
+                height="100%"
+                style={{
+                  objectFit: "contain",
+                  borderRadius: "initial",
+                }}
+              >
+                <source src={projImage} type="video/mp4" />
+              </video>
+            </Flex>
           ) : (
             <Image
               alt={nftName}
