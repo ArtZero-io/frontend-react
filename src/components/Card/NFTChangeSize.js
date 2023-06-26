@@ -31,7 +31,7 @@ export const CommonCard = (props) => {
 
   const [projImage, setProjImage] = useState("");
   const [isMp4, setIsMp4] = useState(false);
-  
+
   const isZeroId = useMemo(() => avatar?.includes("zero.id"), [avatar]);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const CommonCard = (props) => {
               <video
                 loop
                 autoPlay
-                controls={true}
+                controls={false}
                 playsInline={true}
                 width="100%"
                 height="100%"

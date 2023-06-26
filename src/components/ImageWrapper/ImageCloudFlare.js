@@ -39,7 +39,7 @@ export default function ImageCloudFlare({
           <video
             loop
             autoPlay
-            controls={true}
+            controls={false}
             playsInline={true}
             width="100%"
             height="100%"
