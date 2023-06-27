@@ -160,6 +160,80 @@ export const APICall = {
     return ret;
   },
 
+  // USER Event API Calls
+  getUserPurchaseEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    buyer,
+  }) => {
+    return clientWithGetParams("GET", "/api/purchase-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          buyer,
+        },
+      },
+    });
+  },
+
+  getUserBidWinEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    seller,
+  }) => {
+    return clientWithGetParams("GET", "/api/bid-win-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          seller,
+        },
+      },
+    });
+  },
+
+  getUserNewListEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/new-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+
+  getUserUnlistEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/un-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+  // END USER Event API Calls
+
   // Event API Calls
   getPurchaseEvents: async ({
     collection_address,

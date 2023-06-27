@@ -29,6 +29,7 @@ import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
 import MyMintingProjectPage from "@pages/account/projects/minting";
 import NftDetailPage from "../pages/token/";
 import PublicAccountLayout from "./Layout/PublicAccountLayout";
+import ActivitiesPage from "../pages/account/activities/activities";
 // import NotFound from "./NotFound/NotFound";
 
 const Router = () => {
@@ -55,6 +56,11 @@ const Router = () => {
               exact
               path={ROUTES.ACCOUNT_MY_PROJECTS}
               component={MyProjectsPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_ACTIVITIES}
+              component={ActivitiesPage}
             />
             <Route
               exact
