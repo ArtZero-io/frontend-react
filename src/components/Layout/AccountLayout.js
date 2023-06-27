@@ -148,4 +148,9 @@ const tabsList = [
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_PROJECTS,
   },
+  {
+    label: "My Activities",
+    isDisabled: false,
+    route: ROUTES.ACCOUNT_MY_ACTIVITIES,
+  },
 ];

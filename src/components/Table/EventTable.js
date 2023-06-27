@@ -23,7 +23,7 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 
-function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+function EventTable({ tableHeaders, tableData }) {
   const { chainToken } = useSubstrateState();
 
   return (
