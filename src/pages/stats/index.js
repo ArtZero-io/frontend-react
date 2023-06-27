@@ -82,12 +82,31 @@ function StatsPage() {
 
       const chainDecimals = api?.registry?.chainDecimals;
 
+      // payout INW reveser order Temp hard set
       const INWPayout1 =
         120 * data[0]?.totalStakedAmount * 10 ** chainDecimals[0];
       const INWPayout2 =
-        150 * data[1]?.totalStakedAmount * 10 ** chainDecimals[0];
+        150 * data[1]?.totalStakedAmount * 10 ** chainDecimals[0]; // 150INW x 3387 = 508050
+      const INWPayout3 =
+        120 * data[2]?.totalStakedAmount * 10 ** chainDecimals[0];
 
-      const totalINWPayout = INWPayout1 + INWPayout2;
+      const totalINWPayout = INWPayout1 + INWPayout2 + INWPayout3;
+
+      process.env.NODE_ENV === "development" &&
+        console.table({
+          INWPayout1: {
+            INWPayout: INWPayout1,
+            nftCount: data[0]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+          INWPayout2: {
+            INWPayout: INWPayout2,
+            nftCount: data[1]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+          INWPayout3: {
+            INWPayout: INWPayout3,
+            nftCount: data[2]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+        });
 
       let remainRewardPool = 0;
       let isRewardStarted = await staking_calls.getRewardStarted(
