@@ -20,7 +20,7 @@ import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import { formatBalance } from "@polkadot/util";
 
-import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
+import { artzero_nft } from "@utils/blockchain/abi";
 import { BigInt } from "@polkadot/x-bigint";
 import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
 

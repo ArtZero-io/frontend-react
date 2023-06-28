@@ -1,10 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function ThumbnailImage({
-  color = "#7ae7ff",
-  width = "64px",
-  height = "64px",
-}) {
+export default function ThumbnailImage({ width = "64px", height = "64px" }) {
   return (
     <Icon
       className="LeftArrowIcon"

@@ -44,7 +44,7 @@ export const CommonCard = (props) => {
       getCloudFlareImage(avatar, 500).then((res) => {
         setProjImage(res);
       });
-  }, [avatar]);
+  }, [avatar, isMp4, isZeroId]);
 
   const fontSizeHeading = useBreakpointValue({
     base: "12px",

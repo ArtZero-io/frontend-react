@@ -29,7 +29,6 @@ import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import moment from "moment/moment";
-import AddressCopier from "@components/AddressCopier/AddressCopier";
 import { SCROLLBAR } from "@constants";
 
 function ProjectAdmin() {
@@ -42,6 +41,7 @@ function ProjectAdmin() {
   // const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [isLPAdmin, setIsLPAdmin] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate } = useForceUpdate(
@@ -49,7 +49,7 @@ function ProjectAdmin() {
     () => {},
     true
   );
-  const onGetCollectionContractOwner = async (e) => {
+  const onGetCollectionContractOwner = async () => {
     let res = await launchpad_contract_calls.owner(currentAccount);
 
     // console.log("res", res);
@@ -59,7 +59,7 @@ function ProjectAdmin() {
 
   const isOwner = collectionContractOwner === currentAccount?.address;
 
-  const onGetCollectionContractAdmin = async (e) => {
+  const onGetCollectionContractAdmin = async () => {
     const checkIsAdmin = async ({ address }) => {
       if (!api) return;
 

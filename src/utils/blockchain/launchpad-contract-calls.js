@@ -213,14 +213,7 @@ async function getProjectByNftAddress(caller_account, nft_address) {
   return null;
 }
 
-async function addNewProject(
-  caller_account,
-  data,
-  dispatch,
-  txType,
-  api,
-  createNewCollection
-) {
+async function addNewProject(caller_account, data, dispatch, txType, api) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
   }
@@ -281,42 +274,39 @@ async function addNewProject(
         });
 
         if (status.isInBlock) {
-          events.forEach(
-            async ({ event: { data, method, section }, phase }) => {
-              if (section === "contracts" && method === "ContractEmitted") {
-                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+          events.forEach(async ({ event: { data, method, section } }) => {
+            if (section === "contracts" && method === "ContractEmitted") {
+              const [accId, bytes] = data.map((data) => data).slice(0, 2);
 
-                const contract_address = accId.toString();
+              const contract_address = accId.toString();
 
-                if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
-                  const abi_launchpad_contract = new Abi(
-                    launchpad_manager.CONTRACT_ABI
-                  );
+              if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
+                const abi_launchpad_contract = new Abi(
+                  launchpad_manager.CONTRACT_ABI
+                );
 
-                  const decodedEvent =
-                    abi_launchpad_contract.decodeEvent(bytes);
+                const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
 
-                  let event_name = decodedEvent.event.identifier;
+                let event_name = decodedEvent.event.identifier;
 
-                  if (event_name === "AddNewProjectEvent") {
-                    const eventValues = [];
+                if (event_name === "AddNewProjectEvent") {
+                  const eventValues = [];
 
-                    for (let i = 0; i < decodedEvent.args.length; i++) {
-                      const value = decodedEvent.args[i];
-                      eventValues.push(value.toString());
-                    }
-
-                    const nft_address = eventValues[1];
-
-                    const res = await APICall.askBeUpdateProjectData({
-                      project_address: nft_address,
-                    });
-                    console.log("askBeUpdateProjectData res", res);
+                  for (let i = 0; i < decodedEvent.args.length; i++) {
+                    const value = decodedEvent.args[i];
+                    eventValues.push(value.toString());
                   }
+
+                  const nft_address = eventValues[1];
+
+                  const res = await APICall.askBeUpdateProjectData({
+                    project_address: nft_address,
+                  });
+                  console.log("askBeUpdateProjectData res", res);
                 }
               }
             }
-          );
+          });
         }
       }
     )

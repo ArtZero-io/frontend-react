@@ -272,7 +272,7 @@ const SubstrateContextProvider = (props) => {
 
     await Promise.all(
       accArr.map((item) => Keyring.forgetAccount(item.address))
-    ).then((result) => {
+    ).then(() => {
       dispatch({ type: "LOG_OUT" });
 
       window.localStorage.setItem("currentAccount", JSON.stringify(""));

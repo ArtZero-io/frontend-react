@@ -1,10 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function TransferIcon({
-  color = "#7ae7ff",
-  width = "21px",
-  height = "21px",
-}) {
+export default function TransferIcon({ width = "21px", height = "21px" }) {
   return (
     <Icon
       className="transfer-icon"

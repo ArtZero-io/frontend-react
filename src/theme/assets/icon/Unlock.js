@@ -1,10 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function UnlockIcon({
-  color = "#7ae7ff",
-  width = "21px",
-  height = "21px",
-}) {
+export default function UnlockIcon({ width = "21px", height = "21px" }) {
   return (
     <Icon
       className="lock-icon"

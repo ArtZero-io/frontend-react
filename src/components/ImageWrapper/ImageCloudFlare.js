@@ -31,7 +31,7 @@ export default function ImageCloudFlare({
       console.log("err", error);
     }
     return () => (isMounted = false);
-  }, [size, src]);
+  }, [isMp4, isZeroId, size, src]);
 
   return (
     <Square {...props} overflow="hidden">

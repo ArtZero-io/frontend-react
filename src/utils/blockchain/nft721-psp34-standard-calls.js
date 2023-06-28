@@ -81,28 +81,24 @@ async function mint(caller_account) {
 
   contract.tx
     .mint({ gasLimit, value })
-    .signAndSend(
-      address,
-      { signer },
-      async ({ status, dispatchError, output }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman().Ok)[0];
-          toast.success(
-            `Public Minting ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(`There is some error with your request`);
+        } else {
+          console.log("dispatchError", dispatchError.toString());
         }
       }
-    )
+
+      if (status) {
+        const statusText = Object.keys(status.toHuman().Ok)[0];
+        toast.success(
+          `Public Minting ${
+            statusText === "0" ? "started" : statusText.toLowerCase()
+          }.`
+        );
+      }
+    })
     .then((unsub) => {
       unsubscribe = unsub;
     })

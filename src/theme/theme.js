@@ -91,7 +91,7 @@ const theme = extendTheme({
         },
       },
       variants: {
-        outline: (props) => ({
+        outline: () => ({
           border: "2px solid #333",
           bg: "transparent",
           color: "#7AE7FF",
@@ -116,7 +116,7 @@ const theme = extendTheme({
             border: "2px solid #333",
           },
         }),
-        solid: (props) => ({
+        solid: () => ({
           bg: "#7AE7FF",
           color: "#000",
           _hover: {
@@ -140,7 +140,7 @@ const theme = extendTheme({
         //     color: "black",
         //   },
         // }),
-        iconSolid: (props) => ({
+        iconSolid: () => ({
           bg: "#222",
           color: "#fff",
           _hover: {
@@ -160,7 +160,7 @@ const theme = extendTheme({
             filter: "none",
           },
         }),
-        iconOutline: (props) => ({
+        iconOutline: () => ({
           bg: "#000",
           border: "2px solid #333",
           color: "#fff",
@@ -298,7 +298,7 @@ const theme = extendTheme({
         },
       },
       variants: {
-        outline: (props) => ({
+        outline: () => ({
           container: {
             backgroundColor: "transparent",
             borderColor: "#7AE7FF",
@@ -309,7 +309,7 @@ const theme = extendTheme({
             color: "#7AE7FF",
           },
         }),
-        grayBg: (props) => ({
+        grayBg: () => ({
           container: {
             backgroundColor: "#222",
           },
@@ -319,7 +319,7 @@ const theme = extendTheme({
             fontSize: "lg",
           },
         }),
-        active: (props) => ({
+        active: () => ({
           container: {
             backgroundColor: "transparent",
             borderColor: "#7AE7FF",
@@ -330,7 +330,7 @@ const theme = extendTheme({
             color: "#7AE7FF",
           },
         }),
-        inActive: (props) => ({
+        inActive: () => ({
           container: {
             backgroundColor: "transparent",
             borderColor: "#7AE7FF",

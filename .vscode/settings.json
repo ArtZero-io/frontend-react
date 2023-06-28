@@ -21,5 +21,13 @@
     "wojtekmaj"
   ],
   "editor.fontSize": 15.5,
-  "editor.fontFamily": "Consolas, Monaco, 'Haskplex Nerd' ,'Droid Sans Mono', 'monospace'"
+  "editor.fontFamily": "Consolas, Monaco, 'Haskplex Nerd' ,'Droid Sans Mono', 'monospace'",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.format": true
+  },
+  "prettier.configPath": ".prettierrc.js"
 }

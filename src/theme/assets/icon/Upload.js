@@ -1,10 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function UploadIcon({
-  color = "#7ae7ff",
-  width = "20px",
-  height = "20px",
-}) {
+export default function UploadIcon({ width = "20px", height = "20px" }) {
   return (
     <Icon
       className="UploadIcon"

@@ -433,7 +433,7 @@ function TokenPage() {
 
         {/* <!-- Google / Search Engine Tags --> */}
 
-        <meta itemprop="image" content={imageUrl} />
+        <meta itemProp="image" content={imageUrl} />
 
         {/* <!-- Facebook Meta Tags --> */}
 

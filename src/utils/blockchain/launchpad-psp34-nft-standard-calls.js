@@ -812,8 +812,7 @@ async function grantAdminRoleToAddress(
   adminAddress,
   dispatch,
   txType,
-  api,
-  collection_address
+  api
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
