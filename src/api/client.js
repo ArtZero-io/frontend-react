@@ -561,12 +561,8 @@ export const APICall = {
     return await client("POST", "/getNFTByID", options);
   },
 
-  getOwnershipHistoryOfNFT: async ({ owner, collection_address, token_id }) => {
-    const ret = await client("POST", "/getOwnershipHistory", {
-      owner,
-      collection_address,
-      token_id,
-    });
+  getOwnershipHistoryOfNFT: async (options) => {
+    const ret = await client("POST", "/getOwnershipHistory", options);
 
     return ret;
   },

@@ -58,7 +58,6 @@ import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
 import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
-import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
 import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
 
 function MyAzeroDomainsNFTTabInfo(props) {
@@ -70,10 +69,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
     is_for_sale,
     price,
     filterSelected,
-    tokenID,
     owner,
     nftContractAddress,
-    contractType,
     is_locked,
     showOnChainMetadata,
     royaltyFee,
@@ -91,8 +88,6 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
-  const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
-    useState(false);
 
   const dispatch = useDispatch();
 
@@ -167,31 +162,6 @@ function MyAzeroDomainsNFTTabInfo(props) {
   useEffect(() => {
     doLoad();
   }, [doLoad]);
-
-  useEffect(() => {
-    const checkAllowMarketplaceContract = async () => {
-      const isAllowance = await azero_domains_nft_contract_calls.allowance(
-        currentAccount,
-        currentAccount?.address,
-        marketplace_contract,
-        { bytes: azDomainName },
-        dispatch
-      );
-
-      setIsAllowanceMarketplaceContract(isAllowance);
-    };
-
-    checkAllowMarketplaceContract();
-  }, [
-    isAllowanceMarketplaceContract,
-    currentAccount,
-    contractType,
-    api,
-    nftContractAddress,
-    tokenID,
-    azDomainName,
-    dispatch,
-  ]);
 
   const handleListTokenAction = async () => {
     if (!isActive) return toast.error("This collection is inactive!");
