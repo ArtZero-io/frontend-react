@@ -20,10 +20,9 @@ import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import { formatBalance } from "@polkadot/util";
 
-import { artzero_nft } from "@utils/blockchain/abi";
+import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
 import { BigInt } from "@polkadot/x-bigint";
 import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
-import azero_domains_nft from "./blockchain/abi/alephzero/azero-domains-nft";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 

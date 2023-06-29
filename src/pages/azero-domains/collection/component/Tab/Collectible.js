@@ -376,7 +376,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
           <HStack w="full">
             <Link
               as={ReactRouterLink}
-              to={`/nft/${nftContractAddress}/${tokenID}`}
+              to={`/nft/${nftContractAddress}/${azDomainName}`}
             >
               <Heading
                 color="#fff"
