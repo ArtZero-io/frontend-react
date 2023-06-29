@@ -182,15 +182,19 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   useEffect(() => {
     const checkAllowMarketplaceContract = async () => {
-      const isAllowance = await azero_domains_nft_contract_calls.allowance(
-        currentAccount,
-        currentAccount?.address,
-        marketplace,
-        { bytes: azDomainName },
-        dispatch
-      );
+      try {
+        const isAllowance = await azero_domains_nft_contract_calls.allowance(
+          currentAccount,
+          currentAccount?.address,
+          marketplace?.CONTRACT_ADDRESS,
+          { bytes: azDomainName },
+          dispatch
+        );
 
-      setIsAllowanceMarketplaceContract(isAllowance);
+        setIsAllowanceMarketplaceContract(isAllowance);
+      } catch (error) {
+        console.log("error", error);
+      }
     };
 
     checkAllowMarketplaceContract();

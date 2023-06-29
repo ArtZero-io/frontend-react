@@ -37,6 +37,7 @@ export default function ResponsivelySizedModal({
   useEffect(() => {
     step === FINALIZED && onClose();
   }, [step, onClose]);
+
   let tabData = [];
 
   if (rest.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
@@ -53,6 +54,16 @@ export default function ResponsivelySizedModal({
         content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled:
           filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        content: <OwnershipHistory {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        content: <TxHistory {...rest} />,
+        isDisabled: actionType,
       },
     ];
   } else {
