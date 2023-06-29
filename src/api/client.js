@@ -524,6 +524,25 @@ export const APICall = {
     return await client("GET", "/getTotalVolume", {});
   },
 
+  getAzeroDomainNFTByName: async (options) => {
+    let formatTokenId;
+
+    try {
+      if (
+        typeof options?.azDomainName === "string" &&
+        options?.azDomainName?.includes(",")
+      ) {
+        formatTokenId = options?.azDomainName?.replaceAll(",", "");
+
+        options.azDomainName = formatTokenId;
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+    console.log("getAzeroDomainNFTByName::options", options);
+    return await client("POST", "/getNFTByID", options);
+  },
+
   getNFTByID: async (options) => {
     let formatTokenId;
 

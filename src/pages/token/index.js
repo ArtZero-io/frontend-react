@@ -46,8 +46,15 @@ import {
   getPublicCurrentAccount,
   getTraitCount,
 } from "@utils";
-import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
-import { marketplace, nft721_psp34_standard } from "@utils/blockchain/abi";
+import {
+  getNFTDetails,
+  getAzeroDomainNFTDetails,
+} from "@utils/blockchain/nft721-psp34-standard-calls";
+import {
+  marketplace,
+  nft721_psp34_standard,
+  azero_domains_nft,
+} from "@utils/blockchain/abi";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
 import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
@@ -99,9 +106,11 @@ import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import { MAX_BID_COUNT } from "@constants";
 import useEditBidPrice from "@hooks/useEditBidPrice";
+import useEditAzeroDomainsBidPrice from "@hooks/useEditAzeroDomainsBidPrice";
 import { isMobile } from "react-device-detect";
 import { convertStringToPrice } from "@utils";
 import { resolveDomain, truncateStr } from "@utils";
+import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -167,13 +176,26 @@ function TokenPage() {
         } = await APICall.getCollectionByAddress({
           collection_address,
         });
-        const tokenDetails = await getNFTDetails(
-          api,
-          currentAccount || getPublicCurrentAccount(),
-          collection_address,
-          token_id,
-          collectionDetails?.contractType
-        );
+        let tokenDetails = {};
+
+        if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
+          tokenDetails = await getAzeroDomainNFTDetails(
+            api,
+            getPublicCurrentAccount(),
+            collection_address,
+            token_id,
+            collectionDetails?.contractType
+          );
+          console.log("tokenDetails", tokenDetails);
+        } else {
+          tokenDetails = await getNFTDetails(
+            api,
+            getPublicCurrentAccount(),
+            collection_address,
+            token_id,
+            collectionDetails?.contractType
+          );
+        }
 
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
@@ -197,12 +219,22 @@ function TokenPage() {
         let listBidder;
 
         if (tokenDetails?.is_for_sale) {
-          listBidder = await marketplace_contract_calls.getAllBids(
-            currentAccount || getPublicCurrentAccount(),
-            collection_address,
-            ownerAddress,
-            { u64: token_id }
-          );
+          if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
+            listBidder = await marketplace_contract_calls.getAllBids(
+              currentAccount || getPublicCurrentAccount(),
+              collection_address,
+              ownerAddress,
+              { bytes: token_id }
+            );
+          } else {
+            listBidder = await marketplace_contract_calls.getAllBids(
+              currentAccount || getPublicCurrentAccount(),
+              collection_address,
+              ownerAddress,
+              { u64: token_id }
+            );
+          }
+
           setBidderCount(listBidder?.length || 0);
           if (listBidder?.length) {
             //sort highest price first
@@ -269,16 +301,29 @@ function TokenPage() {
 
   const handleBuyAction = async () => {
     try {
-      await buyToken(
-        api,
-        currentAccount,
-        isOwner,
-        token?.price,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        await buyAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await buyToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -293,17 +338,31 @@ function TokenPage() {
     }
 
     try {
-      await placeBid(
-        api,
-        currentAccount,
-        isOwner,
-        token?.price,
-        bidPrice,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        await placeAzeroDomainsBid(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          bidPrice,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await placeBid(
+          api,
+          currentAccount,
+          isOwner,
+          token?.price,
+          bidPrice,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -313,14 +372,25 @@ function TokenPage() {
 
   const handleRemoveBidAction = async () => {
     try {
-      await removeBid(
-        api,
-        currentAccount,
-        token?.nftContractAddress,
-        token?.is_for_sale ? token?.nft_owner : token?.owner,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        await removeAzeroDomainsBid(
+          api,
+          currentAccount,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await removeBid(
+          api,
+          currentAccount,
+          token?.nftContractAddress,
+          token?.is_for_sale ? token?.nft_owner : token?.owner,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -330,18 +400,31 @@ function TokenPage() {
 
   const handleListTokenAction = async () => {
     try {
-      await listToken(
-        api,
-        currentAccount,
-        isOwner,
-        askPrice,
-        token?.nftContractAddress,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nft721_psp34_standard_calls,
-        marketplace.CONTRACT_ADDRESS,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        await listAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          askPrice,
+          token?.nftContractAddress,
+          marketplace.CONTRACT_ADDRESS,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await listToken(
+          api,
+          currentAccount,
+          isOwner,
+          askPrice,
+          token?.nftContractAddress,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nft721_psp34_standard_calls,
+          marketplace.CONTRACT_ADDRESS,
+          token?.tokenID,
+          dispatch
+        );
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -351,14 +434,25 @@ function TokenPage() {
 
   const handleUnlistTokenAction = async () => {
     try {
-      await unlistToken(
-        api,
-        currentAccount,
-        isOwner,
-        token?.nftContractAddress,
-        token?.tokenID,
-        dispatch
-      );
+      if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        await unlistAzeroDomainsToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.nftContractAddress,
+          token?.azDomainName,
+          dispatch
+        );
+      } else {
+        await unlistToken(
+          api,
+          currentAccount,
+          isOwner,
+          token?.nftContractAddress,
+          token?.tokenID,
+          dispatch
+        );
+      }
       setAskPrice(1);
     } catch (error) {
       console.error(error);
@@ -408,23 +502,44 @@ function TokenPage() {
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
   const gridSize = useBreakpointValue({ base: `8rem`, md: `11rem` });
 
-  const tabsData = [
-    {
-      label: "offers",
-      component: <MyNFTOffer {...token} {...collection} />,
-      isDisabled: actionType || !token?.is_for_sale,
-    },
-    {
-      label: "owner history",
-      component: <OwnershipHistory {...token} {...collection} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "tx history",
-      component: <TxHistory {...token} {...collection} />,
-      isDisabled: actionType,
-    },
-  ];
+  let tabsData = [];
+  if (token?.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+    tabsData = [
+      {
+        label: "offers",
+        component: <MyAzeroDomainsNFTOffer {...token} {...collection} />,
+        isDisabled: actionType || !token?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        component: <OwnershipHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        component: <TxHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+    ];
+  } else {
+    tabsData = [
+      {
+        label: "offers",
+        component: <MyNFTOffer {...token} {...collection} />,
+        isDisabled: actionType || !token?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        component: <OwnershipHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        component: <TxHistory {...token} {...collection} />,
+        isDisabled: actionType,
+      },
+    ];
+  }
 
   return (
     <NftLayout>
@@ -1542,6 +1657,7 @@ function MobileEditBidPriceModal({
   price,
   owner,
   is_for_sale,
+  azDomainName,
 }) {
   const { api, currentAccount, chainToken } = useSubstrateState();
 
@@ -1553,6 +1669,13 @@ function MobileEditBidPriceModal({
   const { doUpdateBidPrice } = useEditBidPrice({
     newBidPrice,
     tokenID,
+    nftContractAddress,
+    sellerAddress: nft_owner,
+  });
+
+  const { doUpdateAzeroDomainsBidPrice } = useEditAzeroDomainsBidPrice({
+    newBidPrice,
+    azDomainName,
     nftContractAddress,
     sellerAddress: nft_owner,
   });
@@ -1591,7 +1714,11 @@ function MobileEditBidPriceModal({
       return;
     }
 
-    doUpdateBidPrice();
+    if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+      doUpdateAzeroDomainsBidPrice();
+    } else {
+      doUpdateBidPrice();
+    }
   };
 
   useEffect(() => {
