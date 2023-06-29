@@ -21,7 +21,7 @@ import { useMemo } from "react";
 import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
 import { resolveDomain, getTimestamp } from "@utils";
-import azero_domains_nft from "../../../utils/blockchain/azero-domains-nft";
+import { azero_domains_nft } from "@utils/blockchain/abi";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
