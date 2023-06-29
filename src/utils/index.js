@@ -698,3 +698,21 @@ export const fetchValidatorProfit = async ({
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }
 };
+
+export const getTimestamp = async (api, blockNumber) => {
+  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+
+  let ret = null;
+
+  const signedBlock = await api.rpc.chain.getBlock(blockHash);
+
+  signedBlock?.block?.extrinsics?.forEach(
+    ({ method: { args, section, method: extrinsicsMethod } }) => {
+      if (section === "timestamp" && extrinsicsMethod === "set") {
+        ret = args[0].toString();
+      }
+    }
+  );
+
+  return moment(parseInt(ret)).format("DD/MM/YY, H:mm");
+};

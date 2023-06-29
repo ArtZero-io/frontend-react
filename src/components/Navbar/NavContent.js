@@ -150,7 +150,7 @@ const DesktopNavContent = (props) => {
           md: "space-between",
           xl: "center",
         }}
-        spacing={{ xl: "35px", "2xl": "55px" }}
+        spacing={{ xl: "35px", "2xl": "50px" }}
         pl={{ base: "8px", md: "32px", xl: "50px" }}
         pr="10px"
         {...props}
@@ -192,6 +192,7 @@ const myAccountList = [
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
   { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
+  { label: "My Activities", href: ROUTES.ACCOUNT_MY_ACTIVITIES },
 ];
 
 const MyAccountDropdown = () => {
@@ -664,6 +665,10 @@ const NAV_ITEMS = [
       {
         label: "my projects",
         href: ROUTES.ACCOUNT_MY_PROJECTS,
+      },
+      {
+        label: "my activities",
+        href: ROUTES.ACCOUNT_MY_ACTIVITIES,
       },
     ],
   },

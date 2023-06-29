@@ -24,6 +24,8 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
 
 function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+  //  const { chainToken } = useSubstrateState();
+
   return (
     <>
       {tableData?.length === 0 ? (
