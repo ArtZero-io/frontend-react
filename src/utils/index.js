@@ -23,6 +23,7 @@ import { formatBalance } from "@polkadot/util";
 import { artzero_nft } from "@utils/blockchain/abi";
 import { BigInt } from "@polkadot/x-bigint";
 import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
+import azero_domains_nft from "./blockchain/abi/alephzero/azero-domains-nft";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -661,7 +662,7 @@ export async function getEstimatedGasBatchTx(
 }
 
 export const switchCollection = ({ contractAddress }) => {
-  if (contractAddress === "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP") {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return AZERO_DOMAINS_COLLECTION;
   } else if (contractAddress === artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
@@ -671,7 +672,7 @@ export const switchCollection = ({ contractAddress }) => {
 };
 
 export const isAzeroDomainCollection = (contractAddress = "") => {
-  if (contractAddress === "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP") {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {
     return false;
