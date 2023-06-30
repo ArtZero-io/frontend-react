@@ -88,7 +88,7 @@ function GeneralPage() {
     [CLAIM_REWARDS],
     () => {
       checkRewardStatus();
-      getRewardHistory();
+      getRewardHistory(true);
     }
   );
 
