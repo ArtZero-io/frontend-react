@@ -185,6 +185,16 @@ function RewardDistribution() {
       return toast.error("Only Admin allowed");
     }
 
+    if (rewardStarted) {
+      return toast.error(
+        "Please stop reward distribution before do this action!"
+      );
+    }
+
+    if (!isLocked) {
+      return toast.error("Please lock staking before do this action!");
+    }
+
     try {
       dispatch(
         setTxStatus({
