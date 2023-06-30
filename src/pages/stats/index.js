@@ -212,7 +212,10 @@ function StatsPage() {
         platformStatistics: [
           {
             title: `Total Payout (${chainToken})`,
-            value: (totalPayouts - remainRewardPool)?.toFixed(2),
+            value:
+              totalPayouts - remainRewardPool > 0
+                ? (totalPayouts - remainRewardPool)?.toFixed(2)
+                : 0,
             unit: "azero",
           },
           {
