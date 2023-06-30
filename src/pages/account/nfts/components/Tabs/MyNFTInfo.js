@@ -99,8 +99,12 @@ function MyNFTTabInfo(props) {
 
   const dispatch = useDispatch();
 
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-
+  const gridSize = useBreakpointValue({
+    base: `10rem`,
+    xl: `10rem`,
+    "2xl": `11rem`,
+  });
+  
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
@@ -530,7 +534,7 @@ function MyNFTTabInfo(props) {
                   mb={2}
                   w="full"
                   pr={"22px"}
-                  gap="30px"
+                  gap={{ base: "16px", xl: "30px" }}
                   sx={SCROLLBAR}
                   id="grid-attrs"
                   overflowY="auto"
