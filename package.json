@@ -56,7 +56,7 @@
     "interweave": "^13.0.0",
     "ipfs-http-client": "^52.0.0",
     "jdenticon": "^3.1.1",
-    "mime": "^3.0.0",
+    "loglevel": "^1.8.1",
     "moment": "^2.29.4",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "numeral": "^2.0.6",
