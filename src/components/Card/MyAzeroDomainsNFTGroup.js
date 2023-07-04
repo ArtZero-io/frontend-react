@@ -49,6 +49,7 @@ import { CloseButton } from "@chakra-ui/react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
 import { isMobile } from "react-device-detect";
+import { formatNumDynamicDecimal } from "../../utils";
 
 function MyAzeroDomainsNFTGroupCard({
   name,
@@ -546,18 +547,16 @@ function GridNftA({
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
-                  {`Your are listing ${collectionName} NFT ID`}
-                  {multiListingData?.listInfo?.map((item) => {
-                    return ` #${item?.info?.azDomainName} at ${
-                      item.price || 0
-                    } $${chainToken},`;
-                  })}
-
+                  {`Your are listing ${multiListingData?.listInfo?.length} NFT${
+                    multiListingData?.listInfo?.length > 1 ? "s" : ""
+                  } ${collectionName}.`}{" "}
                   <>
                     {` Total sale:
-                      ${multiListingData?.listInfo?.reduce((a, b) => {
-                        return a + parseInt(b?.price || 0);
-                      }, 0)}
+                      ${formatNumDynamicDecimal(
+                        multiListingData?.listInfo?.reduce((a, b) => {
+                          return a + parseInt(b?.price || 0);
+                        }, 0)
+                      )}
                       $${chainToken}`}
                   </>
                 </Flex>
@@ -652,11 +651,12 @@ function GridNftA({
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
-                  {`Your are transfer ${collectionName} NFT ID`}
-                  {multiTransferData?.listInfo?.map((item) => {
-                    return ` #${item?.info?.azDomainName},`;
-                  })}{" "}
-                  to receiver address:
+                  {`Your are transfer ${
+                    multiTransferData?.listInfo?.length
+                  } NFT${
+                    multiTransferData?.listInfo?.length > 1 ? "s" : ""
+                  } ${collectionName}`}{" "}
+                  to address:{" "}
                 </Flex>
                 <Flex alignItems="center">
                   <Input
