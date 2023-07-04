@@ -160,7 +160,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 
       if (type === "LIST") {
         const { ret } = await APICall.getUserNewListEvents({
-          seller: currentAccount?.address,
+          trader: currentAccount?.address,
           offset: pageParam,
           limit: NUMBER_NFT_PER_PAGE,
         });
@@ -178,7 +178,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 
       if (type === "BID ACCEPTED") {
         const { ret } = await APICall.getUserBidWinEvents({
-          trader: currentAccount?.address,
+          seller: currentAccount?.address,
           offset: pageParam,
           limit: NUMBER_NFT_PER_PAGE,
         });
