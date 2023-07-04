@@ -51,6 +51,7 @@ import useBulkTransfer from "../../hooks/useBulkTransfer";
 import { isMobile } from "react-device-detect";
 import useBulkDelist from "../../hooks/useBulkDelist";
 import useBulkRemoveBids from "../../hooks/useBulkRemoveBids";
+import { formatNumDynamicDecimal } from "../../utils";
 
 function MyNFTGroupCard({
   name,
@@ -526,8 +527,12 @@ function GridNftA({
             py="20px"
             text={
               <>
-                Delist ID# <br />
-                {`${multiDelistData?.list?.toString()}`}
+                Delist
+                {` ${multiDelistData?.list?.length} NFT${
+                  multiDelistData?.listInfo?.length > 1 ? "s" : ""
+                }`}
+                <br />
+                {`${collectionName}`}
               </>
             }
             onClick={() => doBulkDelist()}
@@ -607,17 +612,17 @@ function GridNftA({
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
-                  {`Your are listing ${collectionName} NFT ID`}
-                  {multiListingData?.listInfo?.map((item) => {
-                    return ` #${item?.info?.tokenID} at ${item.price || 0} A,`;
-                  })}
-
+                  {`Your are listing ${multiListingData?.listInfo?.length} NFT${
+                    multiListingData?.listInfo?.length > 1 ? "s" : ""
+                  } ${collectionName}.`}{" "}
                   <>
                     {` Total sale:
-                    ${multiListingData?.listInfo?.reduce((a, b) => {
-                      return a + parseInt(b?.price || 0);
-                    }, 0)}
-                    A`}
+                    ${formatNumDynamicDecimal(
+                      multiListingData?.listInfo?.reduce((a, b) => {
+                        return a + parseInt(b?.price || 0);
+                      }, 0)
+                    )}
+                    $AZERO`}
                   </>
                 </Flex>
 
@@ -712,12 +717,14 @@ function GridNftA({
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
-                  {`Your are transfer ${collectionName} NFT ID`}
-                  {multiTransferData?.listInfo?.map((item) => {
-                    return ` #${item?.info?.tokenID},`;
-                  })}{" "}
-                  to receiver address:
+                  {`Your are transfer ${
+                    multiTransferData?.listInfo?.length
+                  } NFT${
+                    multiTransferData?.listInfo?.length > 1 ? "s" : ""
+                  } ${collectionName}`}{" "}
+                  to address:
                 </Flex>
+                
                 <Flex alignItems="center">
                   <Input
                     h={["25px", "40px"]}
