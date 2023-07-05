@@ -160,6 +160,18 @@ export const APICall = {
     return ret;
   },
 
+  // top nft trades API Calls
+  getTopNftTrades: async ({ limit = 20, order = ["price DESC"] }) => {
+    return clientWithGetParams("GET", "/api/top-nft-trades", {
+      filter: {
+        limit,
+        order,
+      },
+    });
+  },
+
+  // END top nft trades API Calls
+
   // USER Event API Calls
   getUserPurchaseEvents: async ({
     limit = 5,
