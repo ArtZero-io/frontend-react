@@ -77,26 +77,39 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
                   )}
                 </Flex>
 
-                <Flex
-                  h="full"
-                  w="full"
-                  alignItems="center"
-                  justifyContent="end"
-                >
-                  <Text bg="transparent" fontSize={["24px", "40px"]}>
-                    {formatNumDynamicDecimal(item.value)}
-                  </Text>
+                {item.unit === "TBD" ? (
+                  <Flex
+                    h="full"
+                    w="full"
+                    alignItems="center"
+                    justifyContent="end"
+                  >
+                    <Text bg="transparent" fontSize={["24px", "40px"]}>
+                      TBD
+                    </Text>
+                  </Flex>
+                ) : (
+                  <Flex
+                    h="full"
+                    w="full"
+                    alignItems="center"
+                    justifyContent="end"
+                  >
+                    <Text bg="transparent" fontSize={["24px", "40px"]}>
+                      {formatNumDynamicDecimal(item.value)}
+                    </Text>
 
-                  {item.unit === "azero" ? (
-                    <AzeroIcon ml="6px" w="20px" />
-                  ) : (
-                    <>
-                      <Text ml="6px" color="brand.blue">
-                        {item.unit}
-                      </Text>
-                    </>
-                  )}
-                </Flex>
+                    {item.unit === "azero" ? (
+                      <AzeroIcon ml="6px" w="20px" />
+                    ) : (
+                      <>
+                        <Text ml="6px" color="brand.blue">
+                          {item.unit}
+                        </Text>
+                      </>
+                    )}
+                  </Flex>
+                )}
               </Box>
             </GridItem>
           ))}
