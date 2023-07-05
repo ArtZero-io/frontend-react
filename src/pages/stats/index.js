@@ -242,7 +242,7 @@ function StatsPage() {
           {
             title: "Next Payout (INW)",
             value: platformTotalStaked * INW_RATE,
-            unit: "TBD",
+            unit: "INWTBD",
           },
         ],
         topCollections: dataListWithFP,
@@ -252,7 +252,7 @@ function StatsPage() {
         ret = {
           ...ret,
           platformStatistics: ret.platformStatistics.filter(
-            (item) => item.unit !== "INW"
+            (item) => !item.unit.includes("INW")
           ),
         };
       }

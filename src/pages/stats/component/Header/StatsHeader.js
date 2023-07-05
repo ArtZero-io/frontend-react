@@ -83,7 +83,7 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
                   )}
                 </Flex>
 
-                {item.unit === "TBD" ? (
+                {item.unit === "INWTBD" ? (
                   <Flex
                     h="full"
                     w="full"
