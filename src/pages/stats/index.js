@@ -16,6 +16,7 @@ import { launchpad_manager, collection_manager } from "@utils/blockchain/abi";
 
 import { fetchUserBalance } from "@utils";
 import toast from "react-hot-toast";
+import TopNftTradesTab from "./Tab/TopNftTradesTab";
 
 const INW_RATE = 120;
 const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
@@ -292,6 +293,10 @@ function StatsPage() {
           azeroPrice={azeroPrice}
         />
       ),
+    },
+    {
+      label: "top nft trades",
+      content: <TopNftTradesTab />,
     },
     // {
     //   label: "payout history",
