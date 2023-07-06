@@ -66,6 +66,7 @@ function MyAzeroDomainsNFTCard({
   handleSelectMultiListing,
   multiTransferData,
   handleSelectAzeroDomainsMultiTransfer,
+  expiration_timestamp
 }) {
   const { currentAccount } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -443,8 +444,10 @@ function MyAzeroDomainsNFTCard({
                 />
               </Flex>
             ) : null}
-
-            {(is_for_sale || isBid) && (
+            {(expiration_timestamp < Date.now()) && (
+              <>This domain is expired</>
+            )}
+            {((is_for_sale || isBid) && expiration_timestamp > Date.now()) && (
               <>
                 <Flex align="center" justify="start" w="full">
                   <VStack align="start">
