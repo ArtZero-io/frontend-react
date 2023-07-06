@@ -739,8 +739,8 @@ const LaunchpadDetailPage = () => {
                         <Text as="span" color="#888" fontSize={["sm", "md"]}>
                           {(
                             (currentPhase?.claimedAmount * 100) /
-                            currentPhase?.totalAmount
-                          ).toFixed(2) || 0}
+                              currentPhase?.totalAmount || 0
+                          ).toFixed(2)}
                           % ({currentPhase?.claimedAmount}/
                           {currentPhase?.totalAmount})
                         </Text>
