@@ -71,6 +71,9 @@ function MyAzeroDomainsNFTCard({
   multiTransferData,
   handleSelectAzeroDomainsMultiTransfer,
   expiration_timestamp,
+  filterSelected,
+  multiDelistData,
+  handleSelectMultiDelist,
 }) {
   const { currentAccount, chainToken, chainDecimal } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -112,6 +115,40 @@ function MyAzeroDomainsNFTCard({
 
     return toast.error("Please select same action!");
   };
+
+  // BULK DELIST=============================================================
+  const [isMultiDelistCheckbox, setIsMultiDelistCheckbox] = useState(false);
+
+  const handleOnChangeMultiDelistCheckbox = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.cancelBubble = true;
+
+    const target = !multiDelistData?.list?.includes(azDomainName ?? tokenID);
+
+    if (target && multiDelistData?.list?.length >= MAX_ITEM_BULK_LISTING) {
+      !multiDelistData?.list?.includes(tokenID) &&
+        setIsMultiDelistCheckbox(false);
+
+      return toast.error(
+        `Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`
+      );
+    }
+
+    target ? setIsMultiDelistCheckbox(true) : setIsMultiDelistCheckbox(false);
+
+    if (
+      !multiDelistData?.action ||
+      multiDelistData?.action === "MULTI_DELIST"
+    ) {
+      handleSelectMultiDelist(azDomainName ?? tokenID, "MULTI_DELIST", target);
+      return;
+    }
+
+    return toast.error("Please select same action!");
+  };
+
+  //END  BULK DELIST=============================================================
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -343,7 +380,46 @@ function MyAzeroDomainsNFTCard({
             )}
           </Square>
         )}
-        {/*END Check Box for multi listing*/}
+        {/*END Check Box for multi transfer*/}
+        {/* ++++++++++++++++++++++++++++++++++++++++ */}
+        {/* Check Box for multi DE-LISTING */}
+        {location?.pathname === "/account/nfts" &&
+          filterSelected === "LISTING" &&
+          is_for_sale && (
+            <Square
+              borderColor="#333"
+              onClick={(e) => handleOnChangeMultiDelistCheckbox(e)}
+              cursor="pointer"
+              h="40px"
+              display={
+                !(
+                  bulkTxMode &&
+                  bulkTxMode === "MULTI_DELIST" &&
+                  nftContractAddress === selectedCollectionAddress
+                ) && "none"
+              }
+              px="8px"
+              top="0px"
+              zIndex="1"
+              minW="40px"
+              right="0px"
+              pos="absolute"
+              lineHeight="36px"
+              color="#7ae7ff"
+              sx={{
+                ".my-nft-card-wrapper:hover &": {
+                  display: !bulkTxMode && "inline-flex",
+                },
+              }}
+            >
+              {isMultiDelistCheckbox ? (
+                <Icon as={RiMoneyDollarBoxFill} w={8} h={8} />
+              ) : (
+                <Icon as={RiMoneyDollarBoxLine} w={8} h={8} />
+              )}
+            </Square>
+          )}
+        {/*END Check Box for multi DE-LISTING*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi stake */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (

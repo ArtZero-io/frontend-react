@@ -131,11 +131,8 @@ export const APICall = {
     });
   },
 
-  askBeUpdateNftData: async ({ collection_address, token_id }) => {
-    return await client("POST", "/updateNFT", {
-      collection_address,
-      token_id,
-    });
+  askBeUpdateNftData: async (options) => {
+    return await client("POST", "/updateNFT", options);
   },
 
   askBeUpdateCollectionData: async ({ collection_address }) => {

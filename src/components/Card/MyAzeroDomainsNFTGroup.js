@@ -50,6 +50,8 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import useBulkAzeroDomainsTransfer from "../../hooks/useBulkAzeroDomainsTransfer";
 import { isMobile } from "react-device-detect";
 import { formatNumDynamicDecimal } from "../../utils";
+import useBulkDelist from "../../hooks/useBulkDelist";
+import useBulkRemoveBids from "../../hooks/useBulkRemoveBids";
 
 function MyAzeroDomainsNFTGroupCard({
   name,
@@ -86,6 +88,8 @@ function MyAzeroDomainsNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.azDomainName}`);
     }
   }
+  const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
+  const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
 
   return (
     <Box my={10} position="relative">
@@ -149,7 +153,23 @@ function MyAzeroDomainsNFTGroupCard({
               {listNFT?.length > 1 ? "s" : ""}
             </Text>
           </VStack>
+          {!isMobile && filterSelected === "BIDS" && (
+            <CommonButton
+              size="sm"
+              {...restStatus}
+              text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
+              onClick={() => doBulkRemoveBids()}
+            />
+          )}
         </Flex>
+        {isMobile && filterSelected === "BIDS" && (
+          <CommonButton
+            size="sm"
+            {...restStatus}
+            text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
+            onClick={() => doBulkRemoveBids()}
+          />
+        )}
       </motion.div>
 
       {!listNFT?.length ? (
@@ -173,6 +193,7 @@ function MyAzeroDomainsNFTGroupCard({
             onClickHandler={onClickHandler}
             collectionName={name}
             nftContractAddress={nftContractAddress}
+            filterSelected={filterSelected}
           />
         </Box>
       )}
@@ -190,6 +211,7 @@ function GridNftA({
   nftContractAddress,
   variant = "my-collection",
   isActive,
+  filterSelected,
 }) {
   const { chainToken } = useSubstrateState();
 
@@ -422,6 +444,15 @@ function GridNftA({
     listNFTFormatted,
   });
 
+  const {
+    multiDelistData,
+    showSlideMultiDelist,
+    doBulkDelist,
+    handleSelectMultiDelist,
+  } = useBulkDelist({
+    listNFTFormatted,
+  });
+
   // eslint-disable-next-line no-unused-vars
   const { loading: _loadingForceUpdate } = useForceUpdate(
     ["MULTI_TRANSFER", "MULTI_LISTING"],
@@ -475,6 +506,49 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
+
+      {/* MULTI DE-LISTING */}
+      {showSlideMultiDelist ? (
+        <motion.div
+          style={{
+            width: "100%",
+            position: "fixed",
+            bottom: "30px",
+            right: "0px",
+            zIndex: "10",
+          }}
+          animate={{
+            y: [0, 1.5, 0],
+            rotate: 0,
+            scale: [1, 1, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            curve: [0.42, 0, 0.58, 1],
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <CommonButton
+            {...rest}
+            minH="content"
+            py="20px"
+            text={
+              <>
+                Delist
+                {` ${multiDelistData?.list?.length} NFT${
+                  multiDelistData?.listInfo?.length > 1 ? "s" : ""
+                }`}
+                <br />
+                {`${collectionName}`}
+              </>
+            }
+            onClick={() => doBulkDelist()}
+          />
+        </motion.div>
+      ) : null}
+      {/*END MULTI DE-LISTING */}
+
       {/* MULTI LISTING */}
       <Slide
         direction="bottom"
@@ -741,6 +815,9 @@ function GridNftA({
                 handleSelectAzeroDomainsMultiTransfer={
                   handleSelectAzeroDomainsMultiTransfer
                 }
+                filterSelected={filterSelected}
+                multiDelistData={multiDelistData}
+                handleSelectMultiDelist={handleSelectMultiDelist}
               />
             </GridItemA>
           ))}
