@@ -479,19 +479,15 @@ function LaunchpadDetailHeader({
           </HStack>
 
           {/* project ended? */}
-          {/* {isLastPhaseEnded && <CountDownTimer status="mint ended" />} */}
-          {/* <CountDownTimer status="mint ended" /> */}
+          {isLastPhaseEnded && <CountDownTimer status="mint ended" />}
           {/* project not started? */}
-          {/* {!isLastPhaseEnded && (
+          {!isLastPhaseEnded && (
             <CountDownTimer
               countDownTimer={countDownTimer}
               status={`phase ${!activePhaseId ? "start" : "end"} in`}
             />
-          )} */}
-          <CountDownTimer
-            countDownTimer={countDownTimer}
-            status={`phase ${!activePhaseId ? "start" : "end"} in`}
-          />
+          )}
+
           <Skeleton
             pt="22px"
             display="flex"
