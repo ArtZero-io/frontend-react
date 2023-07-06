@@ -242,7 +242,7 @@ export default function useBulkDelist({ listNFTFormatted }) {
   };
 }
 
-function getTokenID(info) {
+export function getTokenID(info) {
   let tokenID;
 
   if (azero_domains_nft.CONTRACT_ADDRESS === info?.nftContractAddress) {

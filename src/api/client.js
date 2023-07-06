@@ -123,12 +123,8 @@ export const APICall = {
     });
   },
 
-  askBeUpdateBidsData: async ({ collection_address, seller, token_id }) => {
-    return await client("POST", "/updateBids", {
-      collection_address,
-      seller,
-      token_id,
-    });
+  askBeUpdateBidsData: async (options) => {
+    return await client("POST", "/updateBids", options);
   },
 
   askBeUpdateNftData: async (options) => {
