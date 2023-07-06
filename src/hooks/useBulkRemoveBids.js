@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { getTokenID } from "./useBulkDelist";
 
 export default function useBulkRemoveBids({ listNFTFormatted }) {
   const dispatch = useDispatch();
@@ -40,21 +41,25 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
       marketplace.CONTRACT_ADDRESS
     );
 
+    let tokenID = getTokenID(listNFTFormatted[0]);
+
     gasLimit = await getEstimatedGasBatchTx(
       address,
       marketplaceContract,
       value,
       "removeBid",
       listNFTFormatted[0]?.nftContractAddress,
-      { u64: listNFTFormatted[0]?.tokenID }
+      tokenID
     );
 
     await Promise.all(
       listNFTFormatted?.map(async (item) => {
+        let tokenID = getTokenID(item);
+
         const ret = marketplaceContract.tx["removeBid"](
           { gasLimit, value },
           item?.nftContractAddress,
-          { u64: item?.tokenID }
+          tokenID
         );
 
         return ret;
@@ -90,15 +95,24 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
             });
 
             await listNFTFormatted?.map(async (item) => {
-              await APICall.askBeUpdateBidsData({
-                collection_address: item?.nftContractAddress,
-                seller: item?.nft_owner,
-                token_id: item?.tokenID,
-              });
-              await APICall.askBeUpdateNftData({
-                collection_address: item?.nftContractAddress,
-                token_id: item?.tokenID,
-              });
+              try {
+                const options = item?.azDomainName
+                  ? { azDomainName: item?.azDomainName }
+                  : { token_id: item?.tokenID };
+
+                await APICall.askBeUpdateBidsData({
+                  collection_address: item?.nftContractAddress,
+                  seller: item?.nft_owner,
+                  ...options,
+                });
+
+                await APICall.askBeUpdateNftData({
+                  collection_address: item?.nftContractAddress,
+                  ...options,
+                });
+              } catch (error) {
+                console.log("error", error);
+              }
             });
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
