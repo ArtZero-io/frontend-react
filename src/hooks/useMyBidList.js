@@ -13,7 +13,7 @@ async function fetchMyBidList(bidderAddress) {
     };
 
     let { ret: bidList } = await APICall.getBidsByBidderAddress(options);
-    console.log('bidList', bidList);
+
     let length = bidList.length;
     let collections = [];
 
@@ -23,26 +23,24 @@ async function fetchMyBidList(bidderAddress) {
       let { ret: collection } = await APICall.getCollectionByAddress({
         collection_address: bid.nftContractAddress,
       });
-      console.log('collection', collection);
+
       if (!collection) return;
 
       let options = {};
-      console.log('bid.tokenID', bid.tokenID);
-      if (bid.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+
+      if (bid.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
         options = {
           collection_address: bid.nftContractAddress,
           azDomainName: bid.azDomainName,
         };
-        
       } else {
-        
         options = {
           collection_address: bid.nftContractAddress,
           token_id: bid.tokenID,
         };
       }
       let { ret: dataList } = await APICall.getNFTByID(options);
-      console.log('dataList', dataList);
+
       if (!dataList) return;
 
       let data = dataList?.map((item) => {

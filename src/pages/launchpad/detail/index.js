@@ -68,7 +68,7 @@ import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
 import FadeIn from "react-fade-in";
 
-import { getPublicCurrentAccount } from "@utils";
+import { getPublicCurrentAccount, formatNumDynamicDecimal } from "@utils";
 import { isValidAddressPolkadotAddress } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { delay } from "@utils";
@@ -1031,7 +1031,9 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Public mint price:{" "}
                           <Text as="span" color="#fff">
-                            {item?.publicMintingFee / 10 ** 12}{" "}
+                            {formatNumDynamicDecimal(
+                              item?.publicMintingFee / 10 ** 12
+                            )}{" "}
                             <AzeroIcon
                               mb="5px"
                               w={["14px", "16px"]}

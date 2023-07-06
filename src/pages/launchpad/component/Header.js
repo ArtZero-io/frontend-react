@@ -50,6 +50,7 @@ import WithdrawHistoryModal from "./Modal/WithdrawHistoryModal";
 import OwnerMintModal from "../../account/projects/components/OwnerMintModal";
 import WhitelistManagerModal from "../../account/projects/components/WhitelistManagerModal";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { formatNumDynamicDecimal } from "@utils";
 
 function LaunchpadDetailHeader({
   loading,
@@ -383,11 +384,13 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee / 10 ** 12 ||
-                            nextPhaseWhenNoCurrPhaseId?.phase
-                              ?.publicMintingFee /
-                              10 ** 12 ||
-                            0}{" "}
+                          {formatNumDynamicDecimal(
+                            currentPhase?.publicMintingFee / 10 ** 12 ||
+                              nextPhaseWhenNoCurrPhaseId?.phase
+                                ?.publicMintingFee /
+                                10 ** 12 ||
+                              0
+                          )}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
@@ -414,11 +417,13 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 12 ||
-                                nextPhaseWhenNoCurrPhaseId?.phase
-                                  ?.publicMintingFee /
-                                  10 ** 12 ||
-                                0}{" "}
+                              {formatNumDynamicDecimal(
+                                currentPhase?.publicMintingFee / 10 ** 12 ||
+                                  nextPhaseWhenNoCurrPhaseId?.phase
+                                    ?.publicMintingFee /
+                                    10 ** 12 ||
+                                  0
+                              )}{" "}
                               <AzeroIcon
                                 mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
@@ -439,8 +444,10 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {userWLInfo[currentPhase?.id - 1]?.mintingFee /
-                            10 ** 12}{" "}
+                          {formatNumDynamicDecimal(
+                            userWLInfo[currentPhase?.id - 1]?.mintingFee /
+                              10 ** 12
+                          )}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
@@ -469,19 +476,16 @@ function LaunchpadDetailHeader({
           </HStack>
 
           {/* project ended? */}
-          {/* {isLastPhaseEnded && <CountDownTimer status="mint ended" />} */}
-          {/* <CountDownTimer status="mint ended" /> */}
+          {isLastPhaseEnded && <CountDownTimer status="mint ended" />}
+
           {/* project not started? */}
-          {/* {!isLastPhaseEnded && (
+          {!isLastPhaseEnded && (
             <CountDownTimer
               countDownTimer={countDownTimer}
               status={`phase ${!activePhaseId ? "start" : "end"} in`}
             />
-          )} */}
-          <CountDownTimer
-            countDownTimer={countDownTimer}
-            status={`phase ${!activePhaseId ? "start" : "end"} in`}
-          />
+          )}
+
           <Skeleton
             pt="22px"
             display="flex"
