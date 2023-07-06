@@ -620,7 +620,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                         mx="0"
                         px="2px"
                         {...rest}
-                        text="remove xxx bid"
+                        text="remove bid"
                         onClick={handleRemoveBidAction}
                         isDisabled={
                           isUpdateBidPriceMode ||
