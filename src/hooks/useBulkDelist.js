@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
+
 
 export default function useBulkDelist({ listNFTFormatted }) {
   const dispatch = useDispatch();
@@ -53,21 +55,25 @@ export default function useBulkDelist({ listNFTFormatted }) {
       marketplace.CONTRACT_ADDRESS
     );
 
+    let tokenID = getTokenID(listInfo[0].info);
+
     gasLimit = await getEstimatedGasBatchTx(
       address,
       marketplaceContract,
       value,
       "unlist",
       listInfo[0].info?.nftContractAddress,
-      { u64: listInfo[0].info?.tokenID }
+      tokenID
     );
 
     await Promise.all(
       listInfo.map(async ({ info }) => {
+        let tokenID = getTokenID(info);
+
         const ret = marketplaceContract.tx["unlist"](
           { gasLimit, value },
           info?.nftContractAddress,
-          { u64: info?.tokenID }
+          tokenID
         );
 
         return ret;
@@ -101,13 +107,23 @@ export default function useBulkDelist({ listNFTFormatted }) {
               }
             });
 
-            await listInfo.map(
-              async ({ info }) =>
-                await APICall.askBeUpdateNftData({
+            await listInfo.map(async ({ info }) => {
+              try {
+                let options = {
                   collection_address: info?.nftContractAddress,
-                  token_id: info?.tokenID,
-                })
-            );
+                };
+
+                if (info?.azDomainName) {
+                  options.azDomainName = info?.azDomainName;
+                } else {
+                  options.token_id = info?.tokenID;
+                }
+
+                await APICall.askBeUpdateNftData(options);
+              } catch (error) {
+                console.log("error", error);
+              }
+            });
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
@@ -164,7 +180,10 @@ export default function useBulkDelist({ listNFTFormatted }) {
 
   function handleSelectMultiDelist(tokenID, action, isChecked) {
     let newData = { ...multiDelistData };
-    let info = listNFTFormatted?.find((item) => item.tokenID === tokenID);
+
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === tokenID || item.tokenID === tokenID
+    );
 
     // Initial data is empty
     if (multiDelistData?.action === null) {
@@ -222,4 +241,15 @@ export default function useBulkDelist({ listNFTFormatted }) {
     doBulkDelist,
     handleSelectMultiDelist,
   };
+}
+
+function getTokenID(info) {
+  let tokenID;
+
+  if (azero_domains_nft.CONTRACT_ADDRESS === info?.nftContractAddress) {
+    tokenID = { bytes: info?.azDomainName };
+  } else {
+    tokenID = { u64: info?.tokenID };
+  }
+  return tokenID;
 }

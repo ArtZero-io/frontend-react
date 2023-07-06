@@ -499,7 +499,7 @@ function GridNftA({
         </motion.div>
       ) : null}
 
-      {/* MULTI LISTING */}
+      {/* MULTI DE-LISTING */}
       {showSlideMultiDelist ? (
         <motion.div
           style={{
@@ -535,7 +535,7 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
-      {/*END MULTI LISTING */}
+      {/*END MULTI DE-LISTING */}
 
       {/* MULTI LISTING */}
       <Slide
