@@ -15,6 +15,7 @@ import {
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
+  Box,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
@@ -59,6 +60,10 @@ import LevelCard from "@components/Card/LevelCard";
 import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
 import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
+import useEditBidPrice from "@hooks/useEditBidPrice";
+import { fetchUserBalance } from "@utils";
+import SocialShare from "@components/SocialShare/SocialShare";
+import { SUB_DOMAIN } from "@constants";
 
 function MyAzeroDomainsNFTTabInfo(props) {
   const {
@@ -69,6 +74,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
     is_for_sale,
     price,
     filterSelected,
+    tokenID,
     owner,
     nftContractAddress,
     is_locked,
@@ -78,6 +84,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
     rarityTable,
     isActive,
     azDomainName,
+    nft_owner,
   } = props;
 
   const attrsList = !traits
@@ -252,6 +259,53 @@ function MyAzeroDomainsNFTTabInfo(props) {
   }, [currentAccount]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${azDomainName}`;
+
+  // ==============================================
+  const [isUpdateBidPriceMode, setIsUpdateBidPriceMode] = useState(false);
+  const [newBidPrice, setNewBidPrice] = useState("");
+
+  const { doUpdateBidPrice } = useEditBidPrice({
+    newBidPrice,
+    tokenID: azDomainName ?? tokenID,
+    nftContractAddress,
+    sellerAddress: nft_owner,
+  });
+
+  const handleUpdateBidPrice = async () => {
+    // check wallet connected
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+
+    //check owner of the NFT
+    if (isOwner) {
+      toast.error(`Can not bid your own NFT!`);
+      return;
+    }
+
+    // check balance
+    const { balance } = await fetchUserBalance({ currentAccount, api });
+
+    if (balance < newBidPrice) {
+      toast.error(`Not enough balance!`);
+      return;
+    }
+
+    //check bidPrice
+    if (parseFloat(newBidPrice) <= 0) {
+      toast.error(`Bid price must greater than zero!`);
+      return;
+    }
+
+    if (parseFloat(newBidPrice) >= price / 10 ** 12) {
+      toast.error(`Bid amount must be less than current price!`);
+      return;
+    }
+
+    doUpdateBidPrice();
+  };
 
   return (
     <>
@@ -371,8 +425,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-              {console.log("isAzeroDomainCollection", isAzeroDomain)}
-              {console.log("nftContractAddress", props)}
+
               {ownerAddress === currentAccount?.address && !isAzeroDomain && (
                 <TransferNFTModal
                   {...props}
@@ -385,6 +438,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
+              <SocialShare title={nftName} shareUrl={path} />
             </HStack>
           </HStack>
 
@@ -515,10 +569,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
                 />
               </Flex>
             )}
-            {console.log(filterSelected)}
-            {console.log(owner)}
-            {console.log(marketplace_contract.CONTRACT_ADDRESS)}
-            {console.log(is_for_sale)}
+
             {filterSelected !== "BIDS" &&
               owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
@@ -562,23 +613,111 @@ function MyAzeroDomainsNFTTabInfo(props) {
                   alignItems="center"
                   justifyContent="start"
                 >
-                  <CommonButton
-                    mx="0"
-                    px="2px"
-                    {...rest}
-                    text="remove bid"
-                    onClick={handleRemoveBidAction}
-                    isDisabled={actionType && actionType !== REMOVE_BID}
-                  />
-                  <Flex textAlign="right" color="brand.grayLight">
-                    <Text ml={4} mr={1} my="auto">
-                      Your current offer is
-                    </Text>
-                    <Flex color="#fff" h="full" alignItems="center" px={1}>
-                      <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
+                  {/* Remove bid button */}
+                  {!isUpdateBidPriceMode && (
+                    <>
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="remove xxx bid"
+                        onClick={handleRemoveBidAction}
+                        isDisabled={
+                          isUpdateBidPriceMode ||
+                          (actionType && actionType !== REMOVE_BID)
+                        }
+                      />{" "}
+                      <Box w={"8px"} />
+                    </>
+                  )}
+                  {/* END Remove bid button */}
+
+                  {!isUpdateBidPriceMode ? (
+                    <CommonButton
+                      mx="0"
+                      px="2px"
+                      {...rest}
+                      text="edit price"
+                      onClick={() => setIsUpdateBidPriceMode(true)}
+                      isDisabled={
+                        actionType && actionType !== "UPDATE_BID_PRICE"
+                      }
+                    />
+                  ) : (
+                    <>
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="submit"
+                        onClick={handleUpdateBidPrice}
+                        isDisabled={
+                          !newBidPrice ||
+                          (actionType && actionType !== "UPDATE_BID_PRICE")
+                        }
+                      />
+                      <Box w={"8px"} />
+
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="cancel"
+                        onClick={() => {
+                          setNewBidPrice("");
+                          setIsUpdateBidPriceMode(false);
+                        }}
+                        isDisabled={actionType && actionType !== REMOVE_BID}
+                      />
+                    </>
+                  )}
+
+                  {isUpdateBidPriceMode ? (
+                    <Flex textAlign="right" color="brand.grayLight">
+                      <Text ml={4} mr={1} my="auto">
+                        New bid price
+                      </Text>
+                      <NumberInput
+                        ml="8px"
+                        maxW={"120px"}
+                        isDisabled={!isActive || actionType}
+                        bg="black"
+                        max={999000000}
+                        min={0.1}
+                        precision={6}
+                        onChange={(v) => {
+                          console.log("v", v);
+                          if (/[eE+-]/.test(v)) return;
+
+                          setNewBidPrice(v);
+                        }}
+                        value={newBidPrice}
+                        h="52px"
+                      >
+                        <NumberInputField
+                          textAlign="right"
+                          h="52px"
+                          borderRadius={0}
+                          borderWidth={0}
+                          color="#fff"
+                          placeholder="0"
+                        />
+                        <InputRightElement bg="transparent" h={"52px"} w="32px">
+                          <AzeroIcon w="12px" />
+                        </InputRightElement>
+                      </NumberInput>
                     </Flex>
-                  </Flex>
+                  ) : (
+                    <Flex textAlign="right" color="brand.grayLight">
+                      <Text ml={4} mr={1} my="auto">
+                        Your current offer is
+                      </Text>
+                      <Flex color="#fff" h="full" alignItems="center" px={1}>
+                        <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                        <TagRightIcon as={AzeroIcon} />
+                      </Flex>
+                    </Flex>
+                  )}
                 </Flex>
               </>
             )}

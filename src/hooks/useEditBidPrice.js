@@ -15,6 +15,7 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
+import { getTokenID } from "./useBulkDelist";
 
 export default function useEditBidPrice({
   newBidPrice,
@@ -42,19 +43,25 @@ export default function useEditBidPrice({
       marketplace.CONTRACT_ADDRESS
     );
 
+    const tokenIdFound = getTokenID({
+      nftContractAddress,
+      azDomainName: tokenID,
+      tokenID,
+    });
+
     gasLimit = await getEstimatedGasBatchTx(
       address,
       marketplaceContract,
       value,
       "removeBid",
       nftContractAddress,
-      { u64: tokenID }
+      tokenIdFound
     );
 
     const removeBidTx = marketplaceContract.tx["removeBid"](
       { gasLimit, value },
       nftContractAddress,
-      { u64: tokenID }
+      tokenIdFound
     );
 
     // ============================================
@@ -68,13 +75,13 @@ export default function useEditBidPrice({
       bidValue,
       "bid",
       nftContractAddress,
-      { u64: tokenID }
+      tokenIdFound
     );
 
     const newBidTx = marketplaceContract.tx["bid"](
       { gasLimit: bidGasLimit, value: bidValue },
       nftContractAddress,
-      { u64: tokenID }
+      tokenIdFound
     );
 
     dispatch(
@@ -102,16 +109,24 @@ export default function useEditBidPrice({
                 toast.success("Bid price have been updated successfully");
               }
             });
+            const options = tokenIdFound.bytes
+              ? { azDomainName: tokenIdFound?.bytes }
+              : { token_id: tokenIdFound?.u64 };
 
-            await APICall.askBeUpdateBidsData({
-              collection_address: nftContractAddress,
-              seller: sellerAddress,
-              token_id: tokenID,
-            });
-            await APICall.askBeUpdateNftData({
-              collection_address: nftContractAddress,
-              token_id: tokenID,
-            });
+            try {
+              await APICall.askBeUpdateBidsData({
+                collection_address: nftContractAddress,
+                seller: sellerAddress,
+                ...options,
+              });
+
+              await APICall.askBeUpdateNftData({
+                collection_address: nftContractAddress,
+                ...options,
+              });
+            } catch (error) {
+              console.log("error", error);
+            }
 
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
