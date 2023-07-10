@@ -265,7 +265,7 @@ const NFTTabCollectible = (props) => {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
-  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;
+  const path = `${window?.location?.origin}/nft/${nftContractAddress}/${tokenID}`;
 
   const [askPrice, setAskPrice] = useState(1);
 

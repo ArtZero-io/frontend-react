@@ -305,7 +305,8 @@ function MyAzeroDomainsNFTTabInfo(props) {
   }, [currentAccount]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
-  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${azDomainName}`;
+  const path = `${window?.location?.origin}/nft/${nftContractAddress}/${azDomainName}`;
+  console.log("window.location?.origin", window?.location?.origin);
 
   // ==============================================
   const [isUpdateBidPriceMode, setIsUpdateBidPriceMode] = useState(false);
