@@ -391,11 +391,13 @@ async function list(
     "list",
     nft_contract_address,
     token_id,
-    sale_price
+    sale_price,
+    [97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107]
   );
 
   contract.tx
-    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price, 
+      [97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107])
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
