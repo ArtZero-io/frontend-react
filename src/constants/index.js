@@ -85,7 +85,7 @@ export const MAX_ITEM_BULK_TRANSFER = 12;
 export const MAX_BID_COUNT = 30;
 export const ADMIN_ROLE_CODE = 3739740293;
 
-export const SUB_DOMAIN = "https://a0.artzero.io";
+export const SUB_DOMAIN = "https://a0-test.artzero.io";
 
 export const ArtZero_TOS = `${SUB_DOMAIN}/assets/ArtZero_Terms_Of_Service.pdf`;
 export const ArtZero_Cookies = `${SUB_DOMAIN}/assets/ArtZero_Cookies_Policy.pdf`;
