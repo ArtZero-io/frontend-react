@@ -352,6 +352,16 @@ function GeneralPage() {
     );
   }, []);
 
+  const [isStakingLocked, setIsStakingLocked] = useState(false);
+  useEffect(() => {
+    const fetchStakingContractStatus = async () => {
+      const isLocked = await staking_calls.getIsLocked(currentAccount);
+      setIsStakingLocked(isLocked);
+    };
+
+    fetchStakingContractStatus();
+  }, [currentAccount]);
+
   return (
     <CommonContainer>
       <>
@@ -623,7 +633,19 @@ function GeneralPage() {
               <Button
                 variant="solid"
                 w={{ base: "full", md: "auto" }}
-                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+                onClick={() => {
+                  if (rewardStarted) {
+                    toast.error("Reward distribution started!");
+                    return;
+                  }
+
+                  if (isStakingLocked) {
+                    toast.error("Staking contract is locked!");
+                    return;
+                  }
+
+                  history.push(ROUTES.ACCOUNT_MY_STAKES);
+                }}
               >
                 stake now
               </Button>
