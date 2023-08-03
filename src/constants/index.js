@@ -139,19 +139,27 @@ export const SUPPORTED_WALLET_LIST = [
     installUrlFirefox:
       "https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/",
   },
-  // {
-  //   extensionName: "polkadot-js",
-  //   title: "Nova Wallet",
-  //   logo: "nova.jpg",
-  //   isMobile: true,
-  //   noExtensionMessage:
-  //     "You can use any Polkadot compatible wallet but we recommend using Polkadot{.js}",
-  //   },
+  {
+    extensionName: "aleph-zero-signer",
+    title: "Azero Signer",
+    noExtensionMessage:
+      "You can use any Polkadot compatible wallet but we recommend using Aleph Zero Signer",
+    installUrlChrome:
+      "https://chrome.google.com/webstore/detail/opbinaebpmphpefcimknblieddamhmol",
+    installUrlEdge:
+      "https://chrome.google.com/webstore/detail/opbinaebpmphpefcimknblieddamhmol",
+    installUrlFirefox:
+      "https://addons.mozilla.org/en-US/firefox/addon/aleph-zero-signer/",
+    installUrlOpera:
+      "https://chrome.google.com/webstore/detail/opbinaebpmphpefcimknblieddamhmol",
+    installUrlBrave:
+      "https://chrome.google.com/webstore/detail/opbinaebpmphpefcimknblieddamhmol",
+  },
 ];
 
 export const MESSAGE_SIGN = "Sign message to report";
 
 // Name of Contract
-export const AZERO_DOMAINS_COLLECTION = 'azeroDomains';
-export const ARTZERO_COLLECTION = 'artzero';
-export const OTHER_COLLECTION = 'other';
+export const AZERO_DOMAINS_COLLECTION = "azeroDomains";
+export const ARTZERO_COLLECTION = "artzero";
+export const OTHER_COLLECTION = "other";
