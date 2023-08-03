@@ -15,7 +15,7 @@ import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
-import NovaLogo from "@utils/wallets/nova.jpg";
+import AzeroSignerLogo from "@utils/wallets/AzeroSignerLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
@@ -140,8 +140,11 @@ function WalletNotConnected(props) {
                               alt={wallet.extensionName}
                             />
                           )}
-                          {wallet.title === "Nova Wallet" && (
-                            <Image src={NovaLogo} alt={wallet.extensionName} />
+                          {wallet.title === "Azero Signer" && (
+                            <Image
+                              src={AzeroSignerLogo}
+                              alt={wallet.extensionName}
+                            />
                           )}
                         </Box>
                         <Text fontSize="15px" pl="16px" mr="2">
