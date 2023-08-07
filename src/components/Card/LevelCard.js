@@ -46,9 +46,11 @@ export default function LevelCard({
           <Flex w="full" fontSize={["sm", "md"]} color="#fff">
             <Spacer />
 
-            <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
-              {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
-            </Text>
+            {traitCount > 0 ? (
+              <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
+                {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
+              </Text>
+            ) : null}
           </Flex>
         )}
       </Flex>

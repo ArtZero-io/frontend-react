@@ -44,9 +44,11 @@ export default function PropCard({
           <Flex w="full" fontSize={["sm", "md"]} color="#fff">
             <Spacer />
 
-            <Text fontSize={["sm", "sm"]} isTruncated pr={1}>
-              {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
-            </Text>
+            {traitCount > 0 ? (
+              <Text fontSize={["sm", "sm"]} isTruncated pr={1}>
+                {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
+              </Text>
+            ) : null}
           </Flex>
         )}
       </Flex>

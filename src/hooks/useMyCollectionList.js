@@ -3,6 +3,13 @@ import { APICall } from "@api/client";
 
 const queryKeys = { myCollectionList: "myCollectionList" };
 
+// Hard code to remove azero domain collection inactive on testnet
+const azeroDomainInactive = [
+  "5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn",
+  "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP",
+];
+// End hard code to remove azero domain collection inactive on testnet
+
 async function fetchCollectionList(filterSelected, ownerAddress) {
   try {
     const collectionList = await APICall.getCollectionList();
@@ -22,6 +29,12 @@ async function fetchCollectionList(filterSelected, ownerAddress) {
           let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
             options
           );
+
+          // Hard code to remove azero domain collection inactive on testnet
+          dataList = dataList?.filter(
+            (item) => !azeroDomainInactive.includes(item.nftContractAddress)
+          );
+          // Hard code to remove azero domain collection inactive on testnet
 
           if (filterSelected === "COLLECTED") {
             dataList = dataList?.filter((item) => item.is_for_sale !== true);

@@ -388,6 +388,9 @@ async function list(
   const value = 0;
 
   const sale_price = convertToBNString(price, getChainDecimal(contract));
+  const azDomainData = [
+    97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107,
+  ];
 
   gasLimit = await getEstimatedGas(
     address,
@@ -396,11 +399,18 @@ async function list(
     "list",
     nft_contract_address,
     token_id,
-    sale_price
+    sale_price,
+    azDomainData
   );
 
   contract.tx
-    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .list(
+      { gasLimit, value },
+      nft_contract_address,
+      token_id,
+      sale_price,
+      azDomainData
+    )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
