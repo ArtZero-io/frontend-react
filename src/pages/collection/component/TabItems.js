@@ -523,7 +523,9 @@ const CollectionGridNew = ({
     } else {
       history.push({
         state: { selectedItem, ...location },
-        pathname: `/nft/${item.nftContractAddress}/${item.tokenID}`,
+        pathname: `/nft/${item.nftContractAddress}/${
+          item.azDomainName ?? item.tokenID
+        }`,
       });
     }
   }
