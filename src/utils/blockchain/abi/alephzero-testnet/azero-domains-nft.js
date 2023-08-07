@@ -1,5 +1,5 @@
 const azero_domains_nft = {
-    CONTRACT_ADDRESS: "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP",
+    CONTRACT_ADDRESS: "5FsB91tXSEuMj6akzdPczAtmBaVKToqHmtAwSUzXh49AYzaD",
     CONTRACT_ABI: {
         "source": {
           "hash": "0x893e955c2405089bef26b5904ed2b3f400b2c27b54a9b6c8230ec10e0e0410a6",
