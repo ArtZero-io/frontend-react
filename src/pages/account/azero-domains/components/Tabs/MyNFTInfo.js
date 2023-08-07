@@ -69,7 +69,6 @@ import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketpl
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { fetchUserBalance } from "@utils";
 import SocialShare from "@components/SocialShare/SocialShare";
-import { SUB_DOMAIN } from "@constants";
 
 function MyAzeroDomainsNFTTabInfo(props) {
   const {

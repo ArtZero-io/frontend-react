@@ -43,7 +43,7 @@ import { useSubstrateState } from "@utils/substrate";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import { formMode, SUB_DOMAIN } from "@constants";
+import { formMode } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 

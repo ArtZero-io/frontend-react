@@ -3,7 +3,6 @@ import { useClipboard, Flex, Tooltip, IconButton } from "@chakra-ui/react";
 import { truncateStr, resolveDomain } from "@utils";
 import toast from "react-hot-toast";
 import { CopyIcon, LinkIcon } from "@chakra-ui/icons";
-import { SUB_DOMAIN } from "../../constants";
 import { useEffect, useState } from "react";
 
 export default function AddressCopier({
@@ -51,7 +50,7 @@ export default function AddressCopier({
 }
 
 export function PublicProfileLinkCopier({ tabPath = "nfts", accountAddress }) {
-  const link = `${SUB_DOMAIN}/public-account/${tabPath}/${accountAddress}`;
+  const link = `${window?.location?.origin}/public-account/${tabPath}/${accountAddress}`;
 
   const { onCopy } = useClipboard(link);
 

@@ -33,7 +33,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { truncateStr, getTraitCount } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
-import { formMode, SUB_DOMAIN } from "@constants";
+import { formMode } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 import TransferNFTModal from "@components/Modal/TransferNFTModal";

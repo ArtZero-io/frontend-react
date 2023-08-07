@@ -257,10 +257,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
-  const path = `${window.location.href.replace(
-    "#/collection/",
-    "#/nft/"
-  )}/${azDomainName}`;
+  const path = `${window?.location?.origin}/nft/${nftContractAddress}/${azDomainName}`;
 
   const [askPrice, setAskPrice] = useState(1);
 
