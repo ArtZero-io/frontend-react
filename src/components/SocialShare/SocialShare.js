@@ -23,6 +23,7 @@ import {
   EmailIcon,
 } from "react-share/";
 import { BsShare } from "react-icons/bs";
+import { UrlCopier } from "../AddressCopier/AddressCopier";
 
 function SocialShare({
   width = "50px",
@@ -84,6 +85,19 @@ function SocialShare({
                   <EmailShareButton url={shareUrl} subject={title}>
                     <EmailIcon size={32} round />
                   </EmailShareButton>
+                </Button>
+
+                <Button variant="ghost" px="9px">
+                  <Flex
+                    w="32px"
+                    h="32px"
+                    align="center"
+                    justify="center"
+                    borderRadius="full"
+                    bg="green"
+                  >
+                    <UrlCopier url={shareUrl} />
+                  </Flex>
                 </Button>
               </HStack>
             </PopoverBody>

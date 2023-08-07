@@ -49,6 +49,21 @@ export default function AddressCopier({
   );
 }
 
+export function UrlCopier({ url }) {
+  const { onCopy } = useClipboard(url);
+
+  const handleCopy = () => {
+    toast.success("Link copied!");
+    onCopy();
+  };
+
+  return (
+    <Flex cursor="pointer" onClick={handleCopy} alignItems="center">
+      <CopyIcon />
+    </Flex>
+  );
+}
+
 export function PublicProfileLinkCopier({ tabPath = "nfts", accountAddress }) {
   const link = `${window?.location?.origin}/public-account/${tabPath}/${accountAddress}`;
 
