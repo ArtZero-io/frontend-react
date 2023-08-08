@@ -206,6 +206,10 @@ export default function useBulkAzeroDomainsListing({
           .mul(new BN(10 ** 6))
           .toString();
 
+        const azDomainData = [
+          97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107,
+        ];
+
         gasLimit = await getEstimatedGasBatchTx(
           address,
           marketplaceContract,
@@ -213,14 +217,16 @@ export default function useBulkAzeroDomainsListing({
           "list",
           info?.nftContractAddress,
           { bytes: info?.azDomainName },
-          salePrice
+          salePrice,
+          azDomainData
         );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },
           info?.nftContractAddress,
           { bytes: info?.azDomainName },
-          salePrice
+          salePrice,
+          azDomainData
         );
 
         return ret;
@@ -258,10 +264,9 @@ export default function useBulkAzeroDomainsListing({
 
             await listInfo.map(
               async ({ info }) =>
-
                 await APICall.askBeUpdateAzeroDomainsNftData({
-                    collection_address: info?.nftContractAddress,
-                    azDomainName: info?.azDomainName
+                  collection_address: info?.nftContractAddress,
+                  azDomainName: info?.azDomainName,
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
@@ -321,11 +326,18 @@ export default function useBulkAzeroDomainsListing({
         },
       });
     }
-  }, [dispatch, multiListingActionMode, multiListingData?.action, nftContractAddress]);
+  }, [
+    dispatch,
+    multiListingActionMode,
+    multiListingData?.action,
+    nftContractAddress,
+  ]);
 
   function handleSelectMultiListing(azDomainName, action, isChecked) {
     let newData = { ...multiListingData };
-    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
     // Initial data is empty
     if (multiListingData?.action === null) {
       if (!isChecked) return;
@@ -360,7 +372,9 @@ export default function useBulkAzeroDomainsListing({
     } else {
       if (!isExisted) return toast.error("This item is not add yet!");
 
-      newData.list = multiListingData?.list?.filter((item) => item !== azDomainName);
+      newData.list = multiListingData?.list?.filter(
+        (item) => item !== azDomainName
+      );
 
       const idxFound = multiListingData?.list?.indexOf(azDomainName);
       newData.listInfo = multiListingData?.listInfo?.filter(
