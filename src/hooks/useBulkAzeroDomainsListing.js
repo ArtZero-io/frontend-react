@@ -207,6 +207,10 @@ export default function useBulkAzeroDomainsListing({
           getChainDecimal(marketplaceContract)
         );
 
+        const azDomainData = [
+          97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107,
+        ];
+
         gasLimit = await getEstimatedGasBatchTx(
           address,
           marketplaceContract,
@@ -214,14 +218,16 @@ export default function useBulkAzeroDomainsListing({
           "list",
           info?.nftContractAddress,
           { bytes: info?.azDomainName },
-          salePrice
+          salePrice,
+          azDomainData
         );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },
           info?.nftContractAddress,
           { bytes: info?.azDomainName },
-          salePrice
+          salePrice,
+          azDomainData
         );
 
         return ret;

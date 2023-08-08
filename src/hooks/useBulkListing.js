@@ -238,7 +238,11 @@ export default function useBulkListing({
       "list",
       listInfo[0].info?.nftContractAddress,
       { u64: listInfo[0].info?.tokenID },
-      convertToBNString(listInfo[0].price, getChainDecimal(marketplaceContract))
+      convertToBNString(
+        listInfo[0].price,
+        getChainDecimal(marketplaceContract)
+      ),
+      []
     );
     // TODOS: monitor gas is ok for different price above
 
@@ -253,7 +257,8 @@ export default function useBulkListing({
           { gasLimit, value },
           info?.nftContractAddress,
           { u64: info?.tokenID },
-          salePrice
+          salePrice,
+          []
         );
 
         return ret;
