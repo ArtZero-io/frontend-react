@@ -2,6 +2,7 @@ node_modules
 package-lock.json
 yarn.lock
 build
+/.idea
 
 # dependencies
 /node_modules
@@ -17,16 +18,25 @@ build
 # misc
 .DS_Store
 .env
+.env*
 .env.local
 .env.internal
 .env.public
 .env.development.local
 .env.test.local
 .env.production.local
-.env.*
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/.idea
+# #contract abi and contract address files
+# src/utils/blockchain/artzero-nft.js
+# src/utils/blockchain/collection-manager.js
+# src/utils/blockchain/launchpad-manager.js
+# src/utils/blockchain/launchpad-psp34-nft-standard.js
+# src/utils/blockchain/marketplace.js
+# src/utils/blockchain/nft721-psp34-standard.js
+# src/utils/blockchain/profile.js
+# src/utils/blockchain/staking.js
+# src/utils/blockchain/azero-domains-nft.js

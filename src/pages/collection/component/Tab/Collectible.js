@@ -63,7 +63,6 @@ import {
   unlistToken,
 } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { truncateStr } from "@utils";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
@@ -71,7 +70,7 @@ import LevelCard from "@components/Card/LevelCard";
 import { Fragment } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
-import { MAX_BID_COUNT } from "../../../../constants";
+import { MAX_BID_COUNT } from "@constants";
 import NFTReportModal from "../Modal/NFTReport";
 import marketplace from "@utils/blockchain/marketplace";
 
@@ -83,6 +82,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
+import { resolveDomain, truncateStr } from "@utils";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -109,7 +109,7 @@ const NFTTabCollectible = (props) => {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const gridSize = useBreakpointValue({
-    base: `10rem`,
+    base: `8rem`,
     xl: `10rem`,
     "2xl": `11rem`,
   });
@@ -167,7 +167,7 @@ const NFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = truncateStr(accountAddress);
+      const name = await resolveDomain(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -547,10 +547,10 @@ const NFTTabCollectible = (props) => {
                   as={ReactRouterLink}
                   to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
-                  textTransform="capitalize"
+                  textTransform="none"
                   textDecoration="underline"
                 >
-                  {ownerName}
+                  {ownerName ?? truncateStr(ownerAddress)}{" "}
                 </Link>
               </Text>
             </Skeleton>
@@ -857,7 +857,7 @@ const NFTTabCollectible = (props) => {
                       maxH="232px"
                       id="grid-attrs"
                       w="full"
-                      gap={{ base: "16px", xl: "30px" }}
+                      gap={{ base: "10px", xl: "30px" }}
                       pr="22px"
                       overflowY="auto"
                       sx={SCROLLBAR}

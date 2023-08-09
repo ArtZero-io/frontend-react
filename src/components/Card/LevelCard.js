@@ -45,10 +45,10 @@ export default function LevelCard({
         {variant !== "add-nft" && (
           <Flex w="full" fontSize={["sm", "md"]} color="#fff">
             <Spacer />
-
-            <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
+            {traitCount > 0 ? (<Text fontSize={["sm", "sm"]} isTruncated pt="2px">
               {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
-            </Text>
+            </Text>) : ''}
+            
           </Flex>
         )}
       </Flex>

@@ -1,5 +1,5 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { hexToU8a, isHex } from "@polkadot/util";
+import { formatBalance, hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
@@ -10,10 +10,18 @@ import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit, { getGasLimitBulkAction } from "../utils/blockchain/dryRun";
 import { execContractQuery } from "../pages/account/nfts/nfts";
-import { ADMIN_ROLE_CODE } from "../constants";
+import {
+  ADMIN_ROLE_CODE,
+  AZERO_DOMAINS_COLLECTION,
+  ARTZERO_COLLECTION,
+  OTHER_COLLECTION,
+} from "../constants";
 import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
-import { formatBalance } from "@polkadot/util";
+import azero_domains_nft from "./blockchain/azero-domains-nft";
+import artzero_nft from "./blockchain/artzero-nft";
+import { BigInt } from "@polkadot/x-bigint";
+import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -586,7 +594,7 @@ export function formatOutput(o) {
 export function formatNumberOutput(o) {
   const frmtRet = o?.toHuman().Ok;
 
-  return parseInt(frmtRet?.replaceAll(",", ""));
+  return !frmtRet ? 0 : parseInt(frmtRet?.replaceAll(",", ""));
 }
 
 export function isValidAddress(address) {
@@ -659,15 +667,41 @@ export async function getEstimatedGasBatchTx(
   return ret;
 }
 
+export const switchCollection = ({ contractAddress }) => {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+    return AZERO_DOMAINS_COLLECTION;
+  } else if (contractAddress === artzero_nft.CONTRACT_ADDRESS) {
+    return ARTZERO_COLLECTION;
+  } else {
+    return OTHER_COLLECTION;
+  }
+};
+
+export const isAzeroDomainCollection = (contractAddress) => {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const getChainDecimal = (contract) => {
   const chainDecimals = contract?.registry.chainDecimals;
   return chainDecimals[0];
 };
 
 export const convertToBNString = (value, decimal = 12) => {
-  return new BN(value / 10 ** decimal).mul(new BN(10 ** decimal)).toString();
+  try {
+    const valueBigInt = BigInt(value * 10 ** decimal);
+
+    return valueBigInt.toString(10);
+  } catch (error) {
+    console.log("error convertToBNString", error);
+    return 0;
+  }
 };
 
+// ONLY USER FOR Validator Profit
 export const fetchValidatorProfit = async ({
   currentAccount,
   api,
@@ -685,6 +719,8 @@ export const fetchValidatorProfit = async ({
       forceUnit: "-",
       chainDecimal,
     });
+
+    // get reserved
     const formattedStrBalReserved = formatBalance(reserved, {
       withSi: false,
       forceUnit: "-",
@@ -698,6 +734,60 @@ export const fetchValidatorProfit = async ({
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }
 };
+
+export const fetchUserBalance = async ({ currentAccount, api, address }) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, miscFrozen },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimal] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+    // get miscFrozen
+    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 -
+      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** chainDecimal };
+  }
+};
+
+export const resolveDomain = async (address) => {
+  if (
+    process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
+    process.env.REACT_APP_NETWORK === "alephzero"
+  ) {
+    try {
+      const domains = await resolveAddressToDomain(address, {
+        chainId: SupportedChainId.AlephZero,
+      });
+
+      return domains[0];
+    } catch (error) {
+      console.log("resolveDomain error", error);
+    }
+  }
+};
+
+export function hexToAscii(str1) {
+  var hex = str1?.toString();
+  var str = "";
+  for (var n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+  }
+  return str;
+}
 
 export const getTimestamp = async (api, blockNumber) => {
   const blockHash = await api.rpc.chain.getBlockHash(blockNumber);

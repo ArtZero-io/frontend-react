@@ -20,7 +20,8 @@ import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
-import { getTimestamp } from "@utils";
+import azero_domains_nft from "../../../utils/blockchain/azero-domains-nft";
+import { resolveDomain, getTimestamp } from "@utils";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
@@ -199,15 +200,29 @@ const NewEventTable = ({
       if (eventsList?.length > 0) {
         eventsList = await Promise.all(
           eventsList?.map(async ({ nftContractAddress, tokenID, ...rest }) => {
-            const { status, ret } = await APICall.getNFTByID({
-              token_id: tokenID,
+            let options = {
               collection_address: nftContractAddress,
-            });
+            };
+
+            if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+              options.azDomainName = rest?.azDomainName;
+            } else {
+              options.token_id = tokenID;
+            }
+
+            const { status, ret } = await APICall.getNFTByID(options);
+
+            const buyerDomain = await resolveDomain(rest?.buyer);
+            const sellerDomain = await resolveDomain(rest?.seller);
+            const traderDomain = await resolveDomain(rest?.trader);
 
             const eventFormatted = {
               nftContractAddress,
               tokenID,
               ...rest,
+              buyerDomain,
+              sellerDomain,
+              traderDomain,
             };
 
             const timestamp = await getTimestamp(api, rest?.blockNumber);

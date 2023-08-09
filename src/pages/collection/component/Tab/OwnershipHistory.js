@@ -4,6 +4,7 @@ import { Text } from "@chakra-ui/react";
 
 import { APICall } from "@api/client";
 import HistoryTable from "@components/Table/HistoryTable";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 function OwnershipHistory({
   nftContractAddress,
@@ -11,6 +12,7 @@ function OwnershipHistory({
   is_for_sale,
   nft_owner,
   owner,
+  azDomainName,
 }) {
   const { currentAccount } = useSubstrateState();
 
@@ -26,10 +28,17 @@ function OwnershipHistory({
 
   useEffect(() => {
     const fetchData = async () => {
-      const { ret: historyListData } = await APICall.getOwnershipHistoryOfNFT({
-        token_id: tokenID,
-        collection_address: nftContractAddress,
-      });
+      const options = { collection_address: nftContractAddress, owner };
+
+      if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        options.azDomainName = azDomainName;
+      } else {
+        options.token_id = tokenID;
+      }
+
+      const { ret: historyListData } = await APICall.getOwnershipHistoryOfNFT(
+        options
+      );
 
       const data = historyListData.filter((item) => {
         return !!item.seller;
@@ -40,6 +49,7 @@ function OwnershipHistory({
 
     fetchData();
   }, [
+    azDomainName,
     currentAccount,
     is_for_sale,
     nftContractAddress,

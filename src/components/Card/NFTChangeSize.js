@@ -15,7 +15,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { getCloudFlareImage } from "@utils/index";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export const CommonCard = (props) => {
   const {
@@ -30,13 +30,25 @@ export const CommonCard = (props) => {
   } = props;
 
   const [projImage, setProjImage] = useState("");
+  const [isMp4, setIsMp4] = useState(false);
+
+  const isZeroId = useMemo(() => avatar?.includes("zero.id"), [avatar]);
 
   useEffect(() => {
-    avatar &&
-      getCloudFlareImage(avatar, 500).then((res) => {
-        setProjImage(res);
-      });
-  }, [avatar]);
+    try {
+      if (isZeroId) {
+        return setProjImage(avatar);
+      }
+
+      avatar &&
+        getCloudFlareImage(avatar, 500).then((res) => {
+          setIsMp4(res?.includes(".mp4"));
+          setProjImage(res);
+        });
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, [avatar, isMp4, isZeroId]);
 
   const fontSizeHeading = useBreakpointValue({
     base: "12px",
@@ -61,15 +73,34 @@ export const CommonCard = (props) => {
     >
       <Stack borderColor="#fff0" bg="#222" spacing={stackSpacing}>
         <Flex direction="column" align="center" textAlign="left">
-          <Image
-            alt={nftName}
-            objectFit="contain"
-            objectPosition="center"
-            width={cardWidth}
-            height={cardWidth}
-            fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
-            src={projImage}
-          />
+          {isMp4 ? (
+            <Flex minH={cardWidthRes}>
+              <video
+                loop
+                autoPlay
+                controls={false}
+                playsInline={true}
+                width="100%"
+                height="100%"
+                style={{
+                  objectFit: "contain",
+                  borderRadius: "initial",
+                }}
+              >
+                <source src={projImage} type="video/mp4" />
+              </video>
+            </Flex>
+          ) : (
+            <Image
+              alt={nftName}
+              objectFit="contain"
+              objectPosition="center"
+              width={cardWidth}
+              height={cardWidth}
+              fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
+              src={projImage}
+            />
+          )}
         </Flex>
 
         <Stack

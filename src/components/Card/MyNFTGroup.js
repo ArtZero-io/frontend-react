@@ -66,6 +66,7 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -499,7 +500,7 @@ function GridNftA({
         </motion.div>
       ) : null}
 
-      {/* MULTI LISTING */}
+      {/* MULTI DE-LISTING */}
       {showSlideMultiDelist ? (
         <motion.div
           style={{
@@ -539,7 +540,7 @@ function GridNftA({
           />
         </motion.div>
       ) : null}
-      {/*END MULTI LISTING */}
+      {/*END MULTI DE-LISTING */}
 
       {/* MULTI LISTING */}
       <Slide

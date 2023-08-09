@@ -570,6 +570,22 @@ const getNftAttrsType1 = async function (
   }
 };
 
+export const getAzeroDomainNFTDetails = async function (
+  api,
+  currentAccount,
+  collection_address,
+  azDomainName,
+  contractType
+) {
+  let {
+    ret: [tokenDetails],
+  } = await APICall.getAzeroDomainNFTByName({
+    collection_address,
+    azDomainName,
+  });
+  return tokenDetails;
+};
+
 export const getNFTDetails = async function (
   api,
   currentAccount,

@@ -43,10 +43,9 @@ export default function PropCard({
         {variant !== "add-nft" && (
           <Flex w="full" fontSize={["sm", "md"]} color="#fff">
             <Spacer />
-
-            <Text fontSize={["sm", "sm"]} isTruncated pr={1}>
+            {traitCount > 0 ? (<Text fontSize={["sm", "sm"]} isTruncated pt="2px">
               {formatNumDynamicDecimal((100 * traitCount) / totalNftCount)}%
-            </Text>
+            </Text>) : ''}
           </Flex>
         )}
       </Flex>

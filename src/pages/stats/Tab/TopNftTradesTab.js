@@ -6,7 +6,7 @@ import { useSubstrateState } from "@utils/substrate";
 // import AzeroIcon from "@theme/assets/icon/Azero.js";
 // import { FaDollarSign } from "react-icons/fa";
 import EventTable from "@components/Table/EventTable";
-import { getTimestamp } from "@utils";
+import { getTimestamp, resolveDomain } from "@utils";
 import { BeatLoader } from "react-spinners";
 
 function TopNftTradesTab() {
@@ -24,20 +24,17 @@ function TopNftTradesTab() {
         if (ret?.length > 0) {
           ret = await Promise.all(
             ret?.map(async (event, idx) => {
-              const {
-                blockNumber,
-                //  buyer, seller, trader
-              } = event;
+              const { blockNumber, buyer, seller, trader } = event;
 
-              // const buyerDomain = await resolveDomain(buyer);
-              // const sellerDomain = await resolveDomain(seller);
-              // const traderDomain = await resolveDomain(trader);
+              const buyerDomain = await resolveDomain(buyer);
+              const sellerDomain = await resolveDomain(seller);
+              const traderDomain = await resolveDomain(trader);
 
               const eventFormatted = {
                 ...event,
-                // buyerDomain,
-                // sellerDomain,
-                // traderDomain,
+                buyerDomain,
+                sellerDomain,
+                traderDomain,
                 rank: idx + 1,
               };
 

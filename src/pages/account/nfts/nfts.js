@@ -10,6 +10,7 @@ import {
 
 import React, { useState } from "react";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
+import MyAzeroDomainsNFTGroupCard from "@components/Card/MyAzeroDomainsNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import AnimationLoader from "@components/Loader/AnimationLoader";
@@ -20,7 +21,6 @@ import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { formatBalance } from "@polkadot/util";
 import { web3FromSource } from "@utils/wallets/extension-dapp";
 import { getEstimatedGas } from "@utils/";
-
 import {
   REMOVE_BID,
   UNLIST_TOKEN,
@@ -38,6 +38,7 @@ import {
 } from "@store/actions/txStatus";
 import { useMyCollectionList } from "@hooks/useMyCollectionList";
 import { useMyBidList } from "@hooks/useMyBidList";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -313,10 +314,13 @@ function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
           </Text>
         </HStack>
       )}
-
-      {list?.map((item, idx) => (
-        <MyNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />
-      ))}
+      {list?.map((item, idx) => {
+        if (item.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+          return (<MyAzeroDomainsNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
+        } else {
+          return (<MyNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
+        }
+      })}
     </>
   );
 }

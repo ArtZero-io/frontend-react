@@ -10,7 +10,7 @@ import {
 
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -19,7 +19,7 @@ import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
 
-export default function useBulkListing({
+export default function useBulkAzeroDomainsListing({
   listNFTFormatted,
   nftContractAddress,
 }) {
@@ -56,12 +56,12 @@ export default function useBulkListing({
         const queryResult = await execContractQuery(
           currentAccount?.address,
           api,
-          nft721_psp34_standard.CONTRACT_ABI,
+          azero_domains_nft.CONTRACT_ABI,
           info?.nftContractAddress,
           "psp34::allowance",
           currentAccount?.address,
           marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.tokenID }
+          { bytes: info?.azDomainName }
         );
 
         return queryResult.toHuman().Ok;
@@ -90,51 +90,31 @@ export default function useBulkListing({
 
     toast("Estimated transaction fee...");
 
-    // Change to get gasEst for every single tx to 1 for all
-    const value = 0;
-    let gasLimit;
-
-    const nftPsp34Contract = new ContractPromise(
-      api,
-      nft721_psp34_standard.CONTRACT_ABI,
-      listInfo[0].info?.nftContractAddress
-    );
-
-    gasLimit = await getEstimatedGasBatchTx(
-      address,
-      nftPsp34Contract,
-      value,
-      "psp34::approve",
-      marketplace.CONTRACT_ADDRESS, //   operator_address
-      { u64: listInfo[0].info?.tokenID },
-      true
-    );
-
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        // const value = 0;
-        // let gasLimit;
+        const value = 0;
+        let gasLimit;
 
-        // const nftPsp34Contract = new ContractPromise(
-        //   api,
-        //   nft721_psp34_standard.CONTRACT_ABI,
-        //   info?.nftContractAddress
-        // );
+        const nftPsp34Contract = new ContractPromise(
+          api,
+          azero_domains_nft.CONTRACT_ABI,
+          azero_domains_nft.CONTRACT_ADDRESS
+        );
 
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   nftPsp34Contract,
-        //   value,
-        //   "psp34::approve",
-        //   marketplace.CONTRACT_ADDRESS, //   operator_address
-        //   { u64: info?.tokenID },
-        //   true
-        // );
+        gasLimit = await getEstimatedGasBatchTx(
+          address,
+          nftPsp34Contract,
+          value,
+          "psp34::approve",
+          marketplace.CONTRACT_ADDRESS, //   operator_address
+          { bytes: info?.azDomainName },
+          true
+        );
 
         return nftPsp34Contract.tx["psp34::approve"](
           { gasLimit, value },
           marketplace.CONTRACT_ADDRESS, //   operator_address
-          { u64: info?.tokenID },
+          { bytes: info?.azDomainName },
           true
         );
       })
@@ -162,11 +142,7 @@ export default function useBulkListing({
 
               if (api.events.utility?.BatchCompleted.is(event)) {
                 totalSuccessTxCount = list?.length;
-                toast.success(
-                  totalSuccessTxCount === 1
-                    ? "NFT have been approved successfully"
-                    : "All NFTs have been approved successfully"
-                );
+                toast.success("Approval TXs are fully completed");
               }
             }
           );
@@ -174,9 +150,7 @@ export default function useBulkListing({
           // eslint-disable-next-line no-extra-boolean-cast
           if (totalSuccessTxCount !== list?.length) {
             toast.error(
-              list?.length === 1
-                ? "Approval is not successful!"
-                : `Approval are not fully successful! ${totalSuccessTxCount} approvals completed successfully.`
+              `Approval TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
             );
 
             dispatch(clearTxStatus());
@@ -207,11 +181,7 @@ export default function useBulkListing({
       return;
     }
 
-    toast(
-      listInfo?.length === 1
-        ? "Listing on marketplace... "
-        : `Bulk listing on marketplace...`
-    );
+    toast(`Bulk listing on marketplace...`);
 
     let unsubscribe;
     let listingTxALL;
@@ -221,59 +191,42 @@ export default function useBulkListing({
 
     toast("Estimated transaction fee...");
 
-    // Change to get gasEst for every single tx to 1 for all
-    const value = 0;
-    let gasLimit;
-
-    const marketplaceContract = new ContractPromise(
-      api,
-      marketplace.CONTRACT_ABI,
-      marketplace.CONTRACT_ADDRESS
-    );
-
-    gasLimit = await getEstimatedGasBatchTx(
-      address,
-      marketplaceContract,
-      value,
-      "list",
-      listInfo[0].info?.nftContractAddress,
-      { u64: listInfo[0].info?.tokenID },
-      new BN(listInfo[0].price * 10 ** 6).mul(new BN(10 ** 6)).toString(),
-      []
-    );
-    // TODOS: monitor gas is ok for different price above
-
     await Promise.all(
       listInfo.map(async ({ price, info }) => {
-        // const value = 0;
-        // let gasLimit;
+        const value = 0;
+        let gasLimit;
 
-        // const marketplaceContract = new ContractPromise(
-        //   api,
-        //   marketplace.CONTRACT_ABI,
-        //   marketplace.CONTRACT_ADDRESS
-        // );
+        const marketplaceContract = new ContractPromise(
+          api,
+          marketplace.CONTRACT_ABI,
+          marketplace.CONTRACT_ADDRESS
+        );
 
         const salePrice = new BN(price * 10 ** 6)
           .mul(new BN(10 ** 6))
           .toString();
 
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   marketplaceContract,
-        //   value,
-        //   "list",
-        //   info?.nftContractAddress,
-        //   { u64: info?.tokenID },
-        //   salePrice
-        // );
+        const azDomainData = [
+          97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107,
+        ];
+
+        gasLimit = await getEstimatedGasBatchTx(
+          address,
+          marketplaceContract,
+          value,
+          "list",
+          info?.nftContractAddress,
+          { bytes: info?.azDomainName },
+          salePrice,
+          azDomainData
+        );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },
           info?.nftContractAddress,
-          { u64: info?.tokenID },
+          { bytes: info?.azDomainName },
           salePrice,
-          []
+          azDomainData
         );
 
         return ret;
@@ -304,28 +257,22 @@ export default function useBulkListing({
                 }
 
                 if (api.events.utility?.BatchCompleted.is(event)) {
-                  toast.success(
-                    listInfo?.length === 1
-                      ? "NFT has been listed successfully                  "
-                      : "All NFTs have been listed successfully"
-                  );
+                  toast.success("Bulk listing TXs are fully completed");
                 }
               }
             );
 
             await listInfo.map(
               async ({ info }) =>
-                await APICall.askBeUpdateNftData({
+                await APICall.askBeUpdateAzeroDomainsNftData({
                   collection_address: info?.nftContractAddress,
-                  token_id: info?.tokenID,
+                  azDomainName: info?.azDomainName,
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                listInfo?.length === 1
-                  ? "The listings is not fully successful!                "
-                  : `Bulk listings are not fully successful! ${totalSuccessTxCount} listings completed successfully.`
+                `Bulk listing TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
               );
 
               dispatch(clearTxStatus());
@@ -386,15 +333,17 @@ export default function useBulkListing({
     nftContractAddress,
   ]);
 
-  function handleSelectMultiListing(tokenID, action, isChecked) {
+  function handleSelectMultiListing(azDomainName, action, isChecked) {
     let newData = { ...multiListingData };
-    let info = listNFTFormatted?.find((item) => item.tokenID === tokenID);
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
     // Initial data is empty
     if (multiListingData?.action === null) {
       if (!isChecked) return;
 
       newData.action = action;
-      newData.list = [tokenID];
+      newData.list = [azDomainName];
       newData.listInfo = [{ price: null, info }];
       setMultiListingData(newData);
       setMultiListingActionMode(action);
@@ -405,7 +354,7 @@ export default function useBulkListing({
       return toast.error("Please select same action!");
     }
 
-    const isExisted = multiListingData?.list.includes(tokenID);
+    const isExisted = multiListingData?.list.includes(azDomainName);
 
     if (isChecked) {
       if (isExisted) return toast.error("This item is already added!");
@@ -413,7 +362,7 @@ export default function useBulkListing({
       const newList = multiListingData?.list;
       const newListInfo = multiListingData?.listInfo;
 
-      newData.list = [...newList, tokenID];
+      newData.list = [...newList, azDomainName];
       newData.listInfo = [...newListInfo, { price: null, info }];
 
       setMultiListingData(newData);
@@ -423,9 +372,11 @@ export default function useBulkListing({
     } else {
       if (!isExisted) return toast.error("This item is not add yet!");
 
-      newData.list = multiListingData?.list?.filter((item) => item !== tokenID);
+      newData.list = multiListingData?.list?.filter(
+        (item) => item !== azDomainName
+      );
 
-      const idxFound = multiListingData?.list?.indexOf(tokenID);
+      const idxFound = multiListingData?.list?.indexOf(azDomainName);
       newData.listInfo = multiListingData?.listInfo?.filter(
         (_, idx) => idx !== idxFound
       );
