@@ -6,19 +6,20 @@ import {
   batchTxResponseErrorHandler,
   setTxStatus,
 } from "@store/actions/txStatus";
-
-import { START } from "@constants";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { stringToU8a } from "@polkadot/util";
+import { START } from "@constants";  
+import { APICall } from "../api/client";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { APICall } from "../api/client";
+
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
 import { isValidAddress } from "../utils";
-import { stringToU8a } from "@polkadot/util";
 
-export default function useBulkTransfer({ listNFTFormatted }) {
+
+export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const [multiTransferData, setMultiTransferData] = useState({
@@ -60,49 +61,31 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     // Change to get gasEst for every single tx to 1 for all
     const value = 0;
     let gasLimit;
-
-    const nftPsp34Contract = new ContractPromise(
+    let additionalData = '';
+    const azeroDomainsNftContract = new ContractPromise(
       api,
-      nft721_psp34_standard.CONTRACT_ABI,
-      listInfo[0].info?.nftContractAddress
+      azero_domains_nft.CONTRACT_ABI,
+      azero_domains_nft.CONTRACT_ADDRESS
     );
 
     gasLimit = await getEstimatedGasBatchTx(
       address,
-      nftPsp34Contract,
+      azeroDomainsNftContract,
       value,
       "psp34::transfer",
       receiverAddress,
-      { u64: listInfo[0].info?.tokenID },
+      { bytes: listInfo[0].info?.azDomainName },
       stringToU8a("")
     );
 
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        // const value = 0;
-        // let gasLimit;
 
-        // const nftPsp34Contract = new ContractPromise(
-        //   api,
-        //   nft721_psp34_standard.CONTRACT_ABI,
-        //   info?.nftContractAddress
-        // );
-
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   nftPsp34Contract,
-        //   value,
-        //   "psp34::transfer",
-        //   receiverAddress,
-        //   { u64: info?.tokenID },
-        //   stringToU8a("")
-        // );
-
-        const ret = nftPsp34Contract.tx["psp34::transfer"](
+        const ret = azeroDomainsNftContract.tx["psp34::transfer"](
           { gasLimit, value },
           receiverAddress,
-          { u64: info?.tokenID },
-          stringToU8a("")
+          { bytes: info?.azDomainName },
+          stringToU8a(additionalData)
         );
 
         return ret;
@@ -145,9 +128,9 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
             await listInfo.map(
               async ({ info }) =>
-                await APICall.askBeUpdateNftData({
+                await APICall.askBeUpdateAzeroDomainsNftData({
                   collection_address: info?.nftContractAddress,
-                  token_id: info?.tokenID,
+                  azDomainName: info?.azDomainName
                 })
             );
             // eslint-disable-next-line no-extra-boolean-cast
@@ -204,70 +187,9 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     selectedCollectionAddress,
   ]);
 
-  function handleSelectMultiTransfer(tokenID, action, isChecked) {
+  function handleSelectMultiTransfer(azDomainName, action, isChecked) {
     let newData = { ...multiTransferData };
-
-    let info = listNFTFormatted?.find((item) => item.tokenID === tokenID);
-
-    // Initial data is empty
-    if (multiTransferData?.action === null) {
-      if (!isChecked) return;
-
-      newData.action = action;
-      newData.selectedCollectionAddress = info?.nftContractAddress;
-      newData.list = [tokenID];
-      newData.listInfo = [{ price: null, info }];
-      setMultiTransferData(newData);
-      setMultiTransferActionMode(action);
-      return;
-    }
-
-    if (multiTransferData?.action !== action) {
-      return toast.error("Please select same action!");
-    }
-
-    const isExisted = multiTransferData?.list.includes(tokenID);
-
-    if (isChecked) {
-      if (isExisted) return toast.error("This item is already added!");
-
-      const newList = multiTransferData?.list;
-      const newListInfo = multiTransferData?.listInfo;
-
-      newData.list = [...newList, tokenID];
-      newData.listInfo = [...newListInfo, { price: null, info }];
-
-      setMultiTransferData(newData);
-      setMultiTransferActionMode(action);
-
-      return;
-    } else {
-      if (!isExisted) return toast.error("This item is not add yet!");
-
-      newData.list = multiTransferData?.list?.filter(
-        (item) => item !== tokenID
-      );
-
-      const idxFound = multiTransferData?.list?.indexOf(tokenID);
-      newData.listInfo = multiTransferData?.listInfo?.filter(
-        (_, idx) => idx !== idxFound
-      );
-      if (newData?.list?.length === 0) {
-        newData.action = null;
-      }
-
-      setMultiTransferData(newData);
-      setMultiTransferActionMode(action);
-    }
-  }
-
-  /**
-   * Azero Domains Functions
-   */
-  function handleSelectAzeroDomainsMultiTransfer(azDomainName, action, isChecked) {
-    let newData = { ...multiTransferData };
-    console.log('handleSelectAzeroDomainsMultiTransfer::listNFTFormatted', listNFTFormatted);
-    console.log('azDomainName', azDomainName);
+    console.log('handleSelectMultiTransfer::listNFTFormatted', listNFTFormatted);
     let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
 
     // Initial data is empty
@@ -322,10 +244,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     }
   }
 
-  /**
-   * End Azero Domains Functions
-   */
-
   function handleInputChangeReceiverAddress(address) {
     setMultiTransferData((prev) => {
       return { ...prev, receiverAddress: address };
@@ -337,6 +255,71 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     setMultiTransferActionMode(null);
     dispatch(clearTxStatus());
   }
+
+  /**
+   * Azero Domains Functions
+   */
+  function handleSelectAzeroDomainsMultiTransfer(azDomainName, action, isChecked) {
+    let newData = { ...multiTransferData };
+    console.log('handleSelectAzeroDomainsMultiTransfer111::listNFTFormatted', listNFTFormatted);
+    console.log('azDomainName', azDomainName);
+    let info = listNFTFormatted?.find((item) => item.azDomainName === azDomainName);
+    console.log(azDomainName, action, isChecked);
+    // Initial data is empty
+    if (multiTransferData?.action === null) {
+      if (!isChecked) return;
+
+      newData.action = action;
+      newData.selectedCollectionAddress = info?.nftContractAddress;
+      newData.list = [azDomainName];
+      newData.listInfo = [{ price: null, info }];
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+      return;
+    }
+
+    if (multiTransferData?.action !== action) {
+      return toast.error("Please select same action!");
+    }
+
+    const isExisted = multiTransferData?.list.includes(azDomainName);
+
+    if (isChecked) {
+      if (isExisted) return toast.error("This item is already added!");
+
+      const newList = multiTransferData?.list;
+      const newListInfo = multiTransferData?.listInfo;
+
+      newData.list = [...newList, azDomainName];
+      newData.listInfo = [...newListInfo, { price: null, info }];
+      console.log('newData', newData);
+      console.log('action', action);
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+
+      return;
+    } else {
+      if (!isExisted) return toast.error("This item is not add yet!");
+
+      newData.list = multiTransferData?.list?.filter(
+        (item) => item !== azDomainName
+      );
+
+      const idxFound = multiTransferData?.list?.indexOf(azDomainName);
+      newData.listInfo = multiTransferData?.listInfo?.filter(
+        (_, idx) => idx !== idxFound
+      );
+      if (newData?.list?.length === 0) {
+        newData.action = null;
+      }
+
+      setMultiTransferData(newData);
+      setMultiTransferActionMode(action);
+    }
+  }
+  /**
+   * End Azero Domains Functions
+   */
 
   return {
     receiverAddress,
@@ -351,3 +334,21 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     handleSelectAzeroDomainsMultiTransfer
   };
 }
+
+// function handleInputChangeMultiListing(price, idx) {
+//   let newData = { ...multiTransferData };
+
+//   let newListInfo = newData.listInfo;
+
+//   newListInfo.map((item, index) => {
+//     if (index === idx) {
+//       return (item.price = price);
+//     }
+
+//     return item;
+//   });
+
+//   setMultiTransferData((prev) => {
+//     return { ...prev, listInfo: newListInfo };
+//   });
+// }

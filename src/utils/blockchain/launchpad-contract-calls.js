@@ -393,6 +393,7 @@ async function getProjectAddingFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
+    
     return formatOutput(output);
   }
 

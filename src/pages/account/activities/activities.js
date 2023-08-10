@@ -19,7 +19,7 @@ import CommonContainer from "@components/Container/CommonContainer";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { SCROLLBAR } from "@constants";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getTimestamp } from "@utils";
+import { getTimestamp, resolveDomain } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 import { useCallback, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
@@ -188,20 +188,17 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
       if (eventsList?.length > 0) {
         eventsList = await Promise.all(
           eventsList?.map(async (event) => {
-            const {
-              blockNumber,
-              // buyer, seller, trader
-            } = event;
+            const { blockNumber, buyer, seller, trader } = event;
 
-            // const buyerDomain = await resolveDomain(buyer);
-            // const sellerDomain = await resolveDomain(seller);
-            // const traderDomain = await resolveDomain(trader);
+            const buyerDomain = await resolveDomain(buyer);
+            const sellerDomain = await resolveDomain(seller);
+            const traderDomain = await resolveDomain(trader);
 
             const eventFormatted = {
               ...event,
-              // buyerDomain,
-              // sellerDomain,
-              // traderDomain,
+              buyerDomain,
+              sellerDomain,
+              traderDomain,
             };
 
             const timestamp = await getTimestamp(api, blockNumber);

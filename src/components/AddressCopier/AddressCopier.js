@@ -1,9 +1,10 @@
 import React from "react";
 import { useClipboard, Flex, Tooltip, IconButton } from "@chakra-ui/react";
-import { truncateStr } from "@utils";
+import { truncateStr, resolveDomain } from "@utils";
 import toast from "react-hot-toast";
 import { CopyIcon, LinkIcon } from "@chakra-ui/icons";
 import { SUB_DOMAIN } from "../../constants";
+import { useEffect, useState } from "react";
 
 export default function AddressCopier({
   address,
@@ -17,6 +18,22 @@ export default function AddressCopier({
     onCopy();
   };
 
+  const [domains, setDomains] = useState();
+
+  useEffect(() => {
+    try {
+      const fetchDomain = async () => {
+        const addressDomain = await resolveDomain(address);
+        setDomains(addressDomain);
+        return;
+      };
+
+      fetchDomain();
+    } catch (error) {
+      console.log("error", error);
+    }
+  }, [address]);
+
   return (
     <>
       <Flex
@@ -25,10 +42,26 @@ export default function AddressCopier({
         onClick={handleCopy}
         alignItems="center"
       >
-        {truncateStr(address, truncateStrNum)}{" "}
+        {" "}
+        {domains ?? truncateStr(address, truncateStrNum)}{" "}
         {address && hasIcon && <CopyIcon ml="8px" />}
       </Flex>
     </>
+  );
+}
+
+export function UrlCopier({ url }) {
+  const { onCopy } = useClipboard(url);
+
+  const handleCopy = () => {
+    toast.success("Link copied!");
+    onCopy();
+  };
+
+  return (
+    <Flex cursor="pointer" onClick={handleCopy} alignItems="center">
+      <CopyIcon />
+    </Flex>
   );
 }
 

@@ -26,21 +26,18 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract from "@utils/blockchain/marketplace";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
 
 import { useSubstrateState } from "@utils/substrate";
-import { ContractPromise } from "@polkadot/api-contract";
 import { truncateStr, getTraitCount, resolveDomain } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
-import { formMode, SUB_DOMAIN } from "@constants";
+import { formMode } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 import TransferNFTModal from "@components/Modal/TransferNFTModal";
-
+import TransferAzeroDomainsNFTModal from "@components/Modal/TransferAzeroDomainsNFTModal";
 import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
 import {
   fetchMyPMPStakedCount,
@@ -51,17 +48,24 @@ import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { listToken, unlistToken, removeBid } from "@pages/token";
+import {
+  listAzeroDomainsToken,
+  removeAzeroDomainsBid,
+  unlistAzeroDomainsToken,
+} from "@pages/token";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
-import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
-import SocialShare from "@components/SocialShare/SocialShare";
+import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
+import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
 import useEditBidPrice from "@hooks/useEditBidPrice";
 import { fetchUserBalance } from "@utils";
+import SocialShare from "@components/SocialShare/SocialShare";
+import { SUB_DOMAIN } from "@constants";
 
-function MyNFTTabInfo(props) {
+function MyAzeroDomainsNFTTabInfo(props) {
   const {
     avatar,
     nftName,
@@ -73,14 +77,13 @@ function MyNFTTabInfo(props) {
     tokenID,
     owner,
     nftContractAddress,
-    contractType,
     is_locked,
     showOnChainMetadata,
     royaltyFee,
     nft_count,
     rarityTable,
     isActive,
-    maxTotalSupply,
+    azDomainName,
     nft_owner,
   } = props;
 
@@ -92,8 +95,6 @@ function MyNFTTabInfo(props) {
 
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
-  const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
-    useState(false);
 
   const dispatch = useDispatch();
 
@@ -111,30 +112,29 @@ function MyNFTTabInfo(props) {
   const [isOwner, setIsOwner] = useState(false);
   const [ownerAddress, setOwnerAddress] = useState("");
   const [, setLoading] = useState(false);
-
+  const [isAzeroDomain, setIsAzeroDomain] = useState(true);
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const doLoad = useCallback(async () => {
     setLoading(true);
-
+    console.log(nftContractAddress);
+    console.log(currentAccount);
     try {
       // remove publicCurrentAccount due to private route
-      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
-        currentAccount,
-        nftContractAddress,
-        { u64: tokenID }
-      );
-
+      const sale_info =
+        await marketplace_azero_domains_contract_calls.getNftSaleInfo(
+          currentAccount,
+          nftContractAddress,
+          { bytes: azDomainName }
+        );
       setSaleInfo(sale_info);
-
       let accountAddress = owner;
-
       if (sale_info) {
         const listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
           nftContractAddress,
           sale_info?.nftOwner,
-          { u64: tokenID }
+          { bytes: azDomainName }
         );
 
         accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
@@ -148,16 +148,15 @@ function MyNFTTabInfo(props) {
           }
         }
       }
-
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }
-
       const name = await resolveDomain(accountAddress);
-
       setOwnerAddress(accountAddress);
       setOwnerName(name);
-
+      setIsAzeroDomain(
+        nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -165,60 +164,24 @@ function MyNFTTabInfo(props) {
 
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [azDomainName, currentAccount, is_for_sale, nftContractAddress, owner]);
 
   useEffect(() => {
     doLoad();
   }, [doLoad]);
 
-  useEffect(() => {
-    const checkAllowMarketplaceContract = async () => {
-      if (contractType === "Psp34Auto") {
-        const nft721_psp34_standard_contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          nftContractAddress
-        );
-
-        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-
-        const isAllowance = await nft721_psp34_standard_calls.allowance(
-          currentAccount,
-          currentAccount?.address,
-          marketplace_contract.CONTRACT_ADDRESS,
-          { u64: tokenID },
-          dispatch
-        );
-
-        setIsAllowanceMarketplaceContract(isAllowance);
-      }
-    };
-
-    checkAllowMarketplaceContract();
-  }, [
-    isAllowanceMarketplaceContract,
-    currentAccount,
-    contractType,
-    api,
-    nftContractAddress,
-    tokenID,
-    dispatch,
-  ]);
-
   const handleListTokenAction = async () => {
     if (!isActive) return toast.error("This collection is inactive!");
 
     try {
-      await listToken(
+      await listAzeroDomainsToken(
         api,
         currentAccount,
         isOwner,
         askPrice,
         nftContractAddress,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nft721_psp34_standard_calls,
         marketplace.CONTRACT_ADDRESS,
-        tokenID,
+        azDomainName,
         dispatch
       );
     } catch (error) {
@@ -232,12 +195,12 @@ function MyNFTTabInfo(props) {
     if (!isActive) return toast.error("This collection is inactive!");
 
     try {
-      await unlistToken(
+      await unlistAzeroDomainsToken(
         api,
         currentAccount,
         isOwner,
         nftContractAddress,
-        tokenID,
+        azDomainName,
         dispatch
       );
       setAskPrice(1);
@@ -250,12 +213,12 @@ function MyNFTTabInfo(props) {
 
   const handleRemoveBidAction = async () => {
     try {
-      await removeBid(
+      await removeAzeroDomainsBid(
         api,
         currentAccount,
         nftContractAddress,
         ownerAddress,
-        tokenID,
+        azDomainName,
         dispatch
       );
     } catch (error) {
@@ -296,7 +259,7 @@ function MyNFTTabInfo(props) {
   }, [currentAccount]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
-  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;
+  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${azDomainName}`;
 
   // ==============================================
   const [isUpdateBidPriceMode, setIsUpdateBidPriceMode] = useState(false);
@@ -304,7 +267,7 @@ function MyNFTTabInfo(props) {
 
   const { doUpdateBidPrice } = useEditBidPrice({
     newBidPrice,
-    tokenID,
+    tokenID: azDomainName ?? tokenID,
     nftContractAddress,
     sellerAddress: nft_owner,
   });
@@ -343,6 +306,7 @@ function MyNFTTabInfo(props) {
 
     doUpdateBidPrice();
   };
+
   return (
     <>
       <HStack alignItems="stretch" spacing={{ base: "20px", xl: "45px" }}>
@@ -356,7 +320,11 @@ function MyNFTTabInfo(props) {
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">
-            <Heading color="#fff" size="h4" fontSize="24px">
+            <Heading
+              color="#fff"
+              size="h4"
+              fontSize={{ base: "28px", "2xl": "28px" }}
+            >
               {nftName}
             </Heading>
 
@@ -454,14 +422,20 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={is_for_sale || actionType}
+                    isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
 
-              {ownerAddress === currentAccount?.address && (
+              {ownerAddress === currentAccount?.address && !isAzeroDomain && (
                 <TransferNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
+                />
+              )}
+              {ownerAddress === currentAccount?.address && isAzeroDomain && (
+                <TransferAzeroDomainsNFTModal
+                  {...props}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
               <SocialShare title={nftName} shareUrl={path} />
@@ -469,24 +443,15 @@ function MyNFTTabInfo(props) {
           </HStack>
 
           <Stack>
-            <Tooltip
-              cursor="pointer"
-              hasArrow
-              bg="#333"
-              color="#fff"
-              borderRadius="0"
-              label={description}
+            <Text
+              isTruncated
+              fontSize="lg"
+              color="brand.grayLight"
+              lineHeight="1.35"
+              maxW={{ base: "500px", "2xl": "610px" }}
             >
-              <Text
-                isTruncated
-                fontSize="lg"
-                color="brand.grayLight"
-                lineHeight="1.35"
-                maxW={{ base: "500px", "2xl": "610px" }}
-              >
-                {description}
-              </Text>
-            </Tooltip>
+              {description}
+            </Text>
           </Stack>
 
           <Stack>
@@ -496,7 +461,7 @@ function MyNFTTabInfo(props) {
                 as={ReactRouterLink}
                 to={`/public-account/collections/${ownerAddress}`}
                 color="#7AE7FF"
-                textTransform="none"
+                textTransform="capitalize"
                 textDecoration="underline"
               >
                 {ownerName ?? truncateStr(ownerAddress)}
@@ -538,7 +503,7 @@ function MyNFTTabInfo(props) {
                             <PropCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={maxTotalSupply || nft_count}
+                              totalNftCount={nft_count}
                             />
                           </GridItem>
                         ))
@@ -554,7 +519,7 @@ function MyNFTTabInfo(props) {
                             <LevelCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={maxTotalSupply || nft_count}
+                              totalNftCount={nft_count}
                             />
                           </GridItem>
                         ))
@@ -575,7 +540,7 @@ function MyNFTTabInfo(props) {
                 <Spacer />
                 <NumberInput
                   // maxW={32}
-                  isDisabled={!isActive || actionType}
+                  isDisabled={actionType}
                   bg="black"
                   max={999000000}
                   min={1}
@@ -600,15 +565,13 @@ function MyNFTTabInfo(props) {
                   {...rest}
                   text="push for sale"
                   onClick={handleListTokenAction}
-                  isDisabled={
-                    !isActive || (actionType && actionType !== LIST_TOKEN)
-                  }
+                  isDisabled={actionType && actionType !== LIST_TOKEN}
                 />
               </Flex>
             )}
 
             {filterSelected !== "BIDS" &&
-              // owner === marketplace_contract.CONTRACT_ADDRESS &&
+              owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
                   w="full"
@@ -760,7 +723,7 @@ function MyNFTTabInfo(props) {
             )}
           </Stack>
 
-          {isActive && filterSelected === "COLLECTED" ? (
+          {filterSelected === "COLLECTED" ? (
             <HStack
               w="full"
               pt="10px"
@@ -796,7 +759,7 @@ function MyNFTTabInfo(props) {
             </HStack>
           ) : null}
 
-          {isActive && filterSelected === "LISTING" ? (
+          {filterSelected === "LISTING" ? (
             <HStack
               w="full"
               pt="10px"
@@ -838,4 +801,4 @@ function MyNFTTabInfo(props) {
   );
 }
 
-export default MyNFTTabInfo;
+export default MyAzeroDomainsNFTTabInfo;

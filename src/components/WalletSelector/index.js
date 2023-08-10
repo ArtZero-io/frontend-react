@@ -33,18 +33,27 @@ function WalletSelector({ display }) {
   const { setCurrentAccount, doLogOut, state } = useSubstrate();
   const { keyring, currentAccount } = state;
 
-  const keyringOptions = keyring.getPairs().map((account) => ({
-    key: account.address,
-    address: account.address,
-    name: account.meta.name,
-  }));
+  const keyringOptions = keyring.getPairs().map((account) => {
+    return {
+      ...account,
+      key: account.address,
+      address: account.address,
+      name: account.meta.name,
+      addressDomain: account.meta.addressDomain,
+    };
+  });
 
   const initialAddress =
     keyringOptions?.length > 0 ? keyringOptions[0].address : "";
 
   useEffect(() => {
     if (!currentAccount && initialAddress?.length > 0) {
-      setCurrentAccount(keyring.getPair(initialAddress));
+      const currAccount = keyringOptions.find(
+        (item) => item.address === initialAddress
+      );
+
+      setCurrentAccount(currAccount);
+
       dispatch({
         type: AccountActionTypes.SET_ACTIVE_ADDRESS,
         payload: initialAddress,
@@ -59,10 +68,13 @@ function WalletSelector({ display }) {
     setCurrentAccount,
     keyring,
     initialAddress,
+    keyringOptions,
   ]);
 
   function selectAccountHandler(address) {
-    setCurrentAccount(keyring.getPair(address));
+    const currAccount = keyringOptions.find((item) => item.address === address);
+
+    setCurrentAccount(currAccount);
     dispatch({
       type: AccountActionTypes.SET_ACTIVE_ADDRESS,
       payload: address,
@@ -92,7 +104,7 @@ function WalletSelector({ display }) {
         mb={{ base: "20px", md: "auto" }}
         flexDirection={{ md: "colum" }}
       >
-        <Menu autoSelect={false} placement="bottom-end" offset={[-0.5, -1]}>
+        <Menu autoSelect={false} placement="bottom-end" offset={[-0, -1]}>
           <MenuButton
             _hover={{ bg: "brand.grayDark" }}
             _active={{ bg: "black", borderBottom: 0 }}
@@ -106,23 +118,28 @@ function WalletSelector({ display }) {
             mx={"10px"}
             p="0"
             pl="15px"
-            w="226px"
+            w="180px"
             h="50px"
             as={Button}
             rightIcon={<ChevronDownIcon fontSize="3xl" w="30px" m="0" />}
             fontSize="lg"
-            textTransform="capitalize"
+            textTransform="none"
             lineHeight="38px"
           >
             <Flex justifyContent="start" w="full">
-              <Text w="54px" isTruncated mr="2px" textAlign="left">
+              {/* <Text w="54px" isTruncated mr="2px" textAlign="left">
                 {currentAccount?.meta?.name}
               </Text>
-              <Text> - {truncateStr(currentAccount?.address, 6)}</Text>
+              <Text> - {truncateStr(currentAccount?.address, 6)}</Text> */}
+              <Text>
+                {currentAccount?.addressDomain ??
+                  truncateStr(currentAccount?.address, 6)}
+              </Text>
             </Flex>
           </MenuButton>
           <MenuList
-            w="226px"
+            minW="180px"
+            w="180px"
             borderRadius="0"
             borderWidth="2px"
             borderColor="brand.blue"
@@ -132,11 +149,12 @@ function WalletSelector({ display }) {
             py="0"
             // ml={{ base: "5px", lg: "auto" }}
           >
-            {keyringOptions.map(({ address, name }) => (
+            {keyringOptions.map(({ address, name, addressDomain }) => (
               <MenuItem
+                w="160px"
                 key={address}
                 fontFamily="Oswald"
-                textTransform="capitalize"
+                textTransform="none"
                 onClick={() => selectAccountHandler(address)}
                 display={currentAccount?.address === address ? "none" : ""}
                 p="0"
@@ -150,10 +168,11 @@ function WalletSelector({ display }) {
                   color="#888"
                   lineHeight="38px"
                 >
-                  <Text w="54px" isTruncated mr="2px" textAlign="left">
+                  {/* <Text w="54px" isTruncated mr="2px" textAlign="left">
                     {name}
                   </Text>
-                  <Text> - {truncateStr(address, 6)}</Text>
+                  <Text> - {addressDomain ?? truncateStr(address, 6)}</Text> */}
+                  <Text>{addressDomain ?? truncateStr(address, 6)}</Text>
                 </Flex>
               </MenuItem>
             ))}
@@ -188,7 +207,6 @@ function WalletSelector({ display }) {
 export default function AccountSelector(props) {
   const { keyring, api } = useSubstrateState();
 
- 
   const isWalletConnect = useMemo(() => {
     const walletPairs = keyring?.getPairs();
 

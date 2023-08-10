@@ -123,19 +123,12 @@ export const APICall = {
     });
   },
 
-  askBeUpdateBidsData: async ({ collection_address, seller, token_id }) => {
-    return await client("POST", "/updateBids", {
-      collection_address,
-      seller,
-      token_id,
-    });
+  askBeUpdateBidsData: async (options) => {
+    return await client("POST", "/updateBids", options);
   },
 
-  askBeUpdateNftData: async ({ collection_address, token_id }) => {
-    return await client("POST", "/updateNFT", {
-      collection_address,
-      token_id,
-    });
+  askBeUpdateNftData: async (options) => {
+    return await client("POST", "/updateNFT", options);
   },
 
   askBeUpdateCollectionData: async ({ collection_address }) => {
@@ -536,26 +529,44 @@ export const APICall = {
     return await client("GET", "/getTotalVolume", {});
   },
 
-  getNFTByID: async ({ collection_address, token_id }) => {
+  getAzeroDomainNFTByName: async (options) => {
+    let formatTokenId;
+
     try {
-      if (typeof token_id === "string" && token_id?.includes(",")) {
-        token_id?.replaceAll(",", "");
+      if (
+        typeof options?.azDomainName === "string" &&
+        options?.azDomainName?.includes(",")
+      ) {
+        formatTokenId = options?.azDomainName?.replaceAll(",", "");
+
+        options.azDomainName = formatTokenId;
       }
     } catch (error) {
       console.log("error", error);
     }
-    return await client("POST", "/getNFTByID", {
-      collection_address,
-      token_id,
-    });
+    return await client("POST", "/getNFTByID", options);
   },
 
-  getOwnershipHistoryOfNFT: async ({ owner, collection_address, token_id }) => {
-    const ret = await client("POST", "/getOwnershipHistory", {
-      owner,
-      collection_address,
-      token_id,
-    });
+  getNFTByID: async (options) => {
+    let formatTokenId;
+
+    try {
+      if (
+        typeof options?.token_id === "string" &&
+        options?.token_id?.includes(",")
+      ) {
+        formatTokenId = options?.token_id?.replaceAll(",", "");
+
+        options.token_id = formatTokenId;
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+    return await client("POST", "/getNFTByID", options);
+  },
+
+  getOwnershipHistoryOfNFT: async (options) => {
+    const ret = await client("POST", "/getOwnershipHistory", options);
 
     return ret;
   },
@@ -678,6 +689,29 @@ export const APICall = {
     );
     // TEMP format to match current return format
     return { ret };
+  },
+
+  askBeUpdateAzeroDomainsBidsData: async ({
+    collection_address,
+    seller,
+    azDomainName,
+  }) => {
+    return await client("POST", "/updateBids", {
+      collection_address,
+      seller,
+      azDomainName,
+    });
+  },
+
+  askBeUpdateAzeroDomainsNftData: async ({
+    collection_address,
+    azDomainName,
+  }) => {
+    console.log({ collection_address, azDomainName });
+    return await client("POST", "/updateNFT", {
+      collection_address,
+      azDomainName,
+    });
   },
 };
 

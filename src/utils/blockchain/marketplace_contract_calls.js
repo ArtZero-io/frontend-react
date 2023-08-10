@@ -120,6 +120,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
+    
     return output.toHuman().Ok;
   }
   return null;
@@ -390,11 +391,12 @@ async function list(
     "list",
     nft_contract_address,
     token_id,
-    sale_price
+    sale_price,
+    []
   );
 
   contract.tx
-    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price, [])
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,

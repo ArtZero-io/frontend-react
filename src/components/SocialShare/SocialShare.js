@@ -8,7 +8,7 @@ import {
   Button,
   Flex,
   HStack,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 import {
   FacebookShareButton,
@@ -21,14 +21,15 @@ import {
   TwitterIcon,
   TelegramIcon,
   EmailIcon,
-} from 'react-share/';
-import { BsShare } from 'react-icons/bs';
+} from "react-share/";
+import { BsShare } from "react-icons/bs";
+import { UrlCopier } from "../AddressCopier/AddressCopier";
 
 function SocialShare({
-  width = '50px',
-  height = '50px',
-  shareUrl = 'https://artzero.io/',
-  title = 'ArtZero.io - NFT Marketplace for Aleph Zero Blockchain',
+  width = "50px",
+  height = "50px",
+  shareUrl = "https://artzero.io/",
+  title = "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
 }) {
   return (
     <>
@@ -47,7 +48,7 @@ function SocialShare({
           <PopoverContent
             borderRadius={0}
             w="fit-content"
-            _focus={{ boxShadow: 'none' }}
+            _focus={{ boxShadow: "none" }}
           >
             <PopoverArrow />
 
@@ -56,7 +57,7 @@ function SocialShare({
                 <Button variant="ghost" px="9px">
                   <FacebookShareButton url={shareUrl} quote={title}>
                     <FacebookIcon size={32} round />
-                  </FacebookShareButton>{' '}
+                  </FacebookShareButton>
                 </Button>
 
                 <Button variant="ghost" px="9px">
@@ -84,6 +85,19 @@ function SocialShare({
                   <EmailShareButton url={shareUrl} subject={title}>
                     <EmailIcon size={32} round />
                   </EmailShareButton>
+                </Button>
+
+                <Button variant="ghost" px="9px">
+                  <Flex
+                    w="32px"
+                    h="32px"
+                    align="center"
+                    justify="center"
+                    borderRadius="full"
+                    bg="green"
+                  >
+                    <UrlCopier url={shareUrl} />
+                  </Flex>
                 </Button>
               </HStack>
             </PopoverBody>

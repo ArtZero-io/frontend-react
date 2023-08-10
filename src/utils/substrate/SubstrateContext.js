@@ -8,6 +8,7 @@ import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
+import { resolveDomain } from "..";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -150,11 +151,24 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       await web3Enable(config.APP_NAME, [], wallet);
 
       let allAccounts = await web3Accounts();
-
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
         meta: { ...meta, name: `${meta.name}` },
       }));
+
+      allAccounts = await Promise.all(
+        allAccounts.map(async (item) => {
+          const addressDomain = await resolveDomain(item.address);
+
+          return {
+            ...item,
+            meta: {
+              ...item.meta,
+              addressDomain,
+            },
+          };
+        })
+      );
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);

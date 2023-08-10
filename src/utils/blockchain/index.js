@@ -1,4 +1,5 @@
 import artzeroNft from "./artzero-nft";
+import azeroDomainsNft from "./azero-domains-nft";
 import collection from "./collection-manager";
 import marketplace from "./marketplace";
 import profile from "./profile";
@@ -9,6 +10,7 @@ import psp22_contract from "./psp22_contract";
 
 const contractData = {
   artzeroNft,
+  azeroDomainsNft,
   collection,
   marketplace,
   profile,

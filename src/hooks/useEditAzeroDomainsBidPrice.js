@@ -15,20 +15,19 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
-import { getTokenID } from "./useBulkDelist";
 
-export default function useEditBidPrice({
+export default function useEditAzeroDomainsBidPrice({
   newBidPrice,
   nftContractAddress,
-  tokenID,
+  azDomainName,
   sellerAddress,
 } = {}) {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
-  const doUpdateBidPrice = async () => {
-    toast(`Update bid price...`);
-
+  const doUpdateAzeroDomainsBidPrice = async () => {
+    toast(`Update Azero Domains bid price...`);
+    console.log('Update Azero Domains bid price...', azDomainName);
     let unsubscribe;
 
     const address = currentAccount?.address;
@@ -43,25 +42,19 @@ export default function useEditBidPrice({
       marketplace.CONTRACT_ADDRESS
     );
 
-    const tokenIdFound = getTokenID({
-      nftContractAddress,
-      azDomainName: tokenID,
-      tokenID,
-    });
-
     gasLimit = await getEstimatedGasBatchTx(
       address,
       marketplaceContract,
       value,
       "removeBid",
       nftContractAddress,
-      tokenIdFound
+      { bytes: azDomainName }
     );
 
     const removeBidTx = marketplaceContract.tx["removeBid"](
       { gasLimit, value },
       nftContractAddress,
-      tokenIdFound
+      { bytes: azDomainName }
     );
 
     // ============================================
@@ -75,13 +68,13 @@ export default function useEditBidPrice({
       bidValue,
       "bid",
       nftContractAddress,
-      tokenIdFound
+      { bytes: azDomainName }
     );
 
     const newBidTx = marketplaceContract.tx["bid"](
       { gasLimit: bidGasLimit, value: bidValue },
       nftContractAddress,
-      tokenIdFound
+      { bytes: azDomainName }
     );
 
     dispatch(
@@ -109,25 +102,16 @@ export default function useEditBidPrice({
                 toast.success("Bid price have been updated successfully");
               }
             });
-            
-            const options = tokenIdFound.bytes
-              ? { azDomainName: tokenIdFound?.bytes }
-              : { token_id: tokenIdFound?.u64 };
 
-            try {
-              await APICall.askBeUpdateBidsData({
-                collection_address: nftContractAddress,
-                seller: sellerAddress,
-                ...options,
-              });
-
-              await APICall.askBeUpdateNftData({
-                collection_address: nftContractAddress,
-                ...options,
-              });
-            } catch (error) {
-              console.log("error", error);
-            }
+            await APICall.askBeUpdateAzeroDomainsBidsData({
+              collection_address: nftContractAddress,
+              seller: sellerAddress,
+              azDomainName: azDomainName,
+            });
+            await APICall.askBeUpdateAzeroDomainsNftData({
+              collection_address: nftContractAddress,
+              azDomainName: azDomainName,
+            });
 
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
@@ -154,5 +138,5 @@ export default function useEditBidPrice({
 
     return unsubscribe;
   };
-  return { doUpdateBidPrice };
+  return { doUpdateAzeroDomainsBidPrice };
 }

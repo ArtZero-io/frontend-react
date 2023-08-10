@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -14,13 +13,11 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
-import { getPublicCurrentAccount, formatNumberOutput } from "@utils";
-import psp22_contract from "@utils/blockchain/psp22_contract";
+import { getPublicCurrentAccount } from "@utils";
 
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
-import { execContractQuery } from "@pages/account/nfts/nfts";
-import {formatBalance} from "@polkadot/util";
+import { formatBalance } from "@polkadot/util";
 import TopNftTradesTab from "./Tab/TopNftTradesTab";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
@@ -215,7 +212,10 @@ function StatsPage() {
         platformStatistics: [
           {
             title: "Total Payout (AZERO)",
-            value: (totalPayouts - remainRewardPool)?.toFixed(2),
+            value:
+              totalPayouts - remainRewardPool > 0
+                ? (totalPayouts - remainRewardPool)?.toFixed(2)
+                : 0,
             unit: "azero",
           },
           {

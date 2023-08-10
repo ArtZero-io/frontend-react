@@ -11,12 +11,14 @@ import {
 } from "@chakra-ui/react";
 import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+import MyAzeroDomainsNFTTabInfo from "@pages/account/azero-domains/components/Tabs/MyNFTInfo";
+import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
 import { useEffect } from "react";
-
 import { FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import OwnershipHistory from "@pages/collection/component/Tab/OwnershipHistory";
 import TxHistory from "@pages/collection/component/Tab/TxHistory";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 export default function ResponsivelySizedModal({
   onClose,
@@ -36,29 +38,59 @@ export default function ResponsivelySizedModal({
     step === FINALIZED && onClose();
   }, [step, onClose]);
 
-  const tabData = [
-    {
-      label: "detail",
-      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "offers",
-      content: <MyNFTTabOffers {...rest} />,
-      isDisabled:
-        filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
-    },
-    {
-      label: "owner history",
-      content: <OwnershipHistory {...rest} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "tx history",
-      content: <TxHistory {...rest} />,
-      isDisabled: actionType,
-    },
-  ];
+  let tabData = [];
+
+  if (rest.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+    tabData = [
+      {
+        label: "detail",
+        content: (
+          <MyAzeroDomainsNFTTabInfo filterSelected={filterSelected} {...rest} />
+        ),
+        isDisabled: actionType,
+      },
+      {
+        label: "offers",
+        content: <MyAzeroDomainsNFTOffer {...rest} />,
+        isDisabled:
+          filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        content: <OwnershipHistory {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        content: <TxHistory {...rest} />,
+        isDisabled: actionType,
+      },
+    ];
+  } else {
+    tabData = [
+      {
+        label: "detail",
+        content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "offers",
+        content: <MyNFTTabOffers {...rest} />,
+        isDisabled:
+          filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        content: <OwnershipHistory {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        content: <TxHistory {...rest} />,
+        isDisabled: actionType,
+      },
+    ];
+  }
 
   return (
     <Modal

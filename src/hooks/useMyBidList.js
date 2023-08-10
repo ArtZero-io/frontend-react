@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { APICall } from "@api/client";
-
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 const queryKeys = { myBidList: "myBidList" };
 
 async function fetchMyBidList(bidderAddress) {
@@ -26,11 +26,20 @@ async function fetchMyBidList(bidderAddress) {
 
       if (!collection) return;
 
-      const options = {
-        collection_address: bid.nftContractAddress,
-        token_id: bid.tokenID,
-      };
+      let options = {};
 
+      if (bid.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+        options = {
+          collection_address: bid.nftContractAddress,
+          azDomainName: bid.azDomainName,
+        };
+      } else {
+        options = {
+          collection_address: bid.nftContractAddress,
+          token_id: bid.tokenID,
+        };
+      }
+      
       let { ret: dataList } = await APICall.getNFTByID(options);
 
       if (!dataList) return;
