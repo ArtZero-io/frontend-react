@@ -6,7 +6,7 @@ const marketplace = {
       language: "ink! 4.0.1",
       compiler: "rustc 1.70.0-nightly",
       build_info: {
-        build_mode: "Release",
+        build_mode: "Debug",
         cargo_contract_version: "2.1.0",
         rust_toolchain: "nightly-x86_64-unknown-linux-gnu",
         wasm_opt_settings: {
@@ -66,7 +66,7 @@ const marketplace = {
               label: "trader",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -75,7 +75,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -108,7 +108,7 @@ const marketplace = {
               label: "trader",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -117,7 +117,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -141,7 +141,7 @@ const marketplace = {
               label: "buyer",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -150,7 +150,7 @@ const marketplace = {
               label: "seller",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -159,7 +159,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -210,7 +210,7 @@ const marketplace = {
               label: "bidder",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -219,7 +219,7 @@ const marketplace = {
               label: "seller",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -228,7 +228,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -279,7 +279,7 @@ const marketplace = {
               label: "bidder",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -288,7 +288,7 @@ const marketplace = {
               label: "seller",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -297,7 +297,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -339,7 +339,7 @@ const marketplace = {
               label: "bidder",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -348,7 +348,7 @@ const marketplace = {
               label: "seller",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -357,7 +357,7 @@ const marketplace = {
               label: "nft_contract_address",
               type: {
                 displayName: ["Option"],
-                type: 33,
+                type: 42,
               },
             },
             {
@@ -443,6 +443,13 @@ const marketplace = {
               type: {
                 displayName: ["Balance"],
                 type: 6,
+              },
+            },
+            {
+              label: "data",
+              type: {
+                displayName: ["Vec"],
+                type: 9,
               },
             },
           ],
@@ -670,6 +677,35 @@ const marketplace = {
         {
           args: [
             {
+              label: "value",
+              type: {
+                displayName: ["admintrait_external", "WithdrawFeeInput1"],
+                type: 6,
+              },
+            },
+            {
+              label: "receiver",
+              type: {
+                displayName: ["admintrait_external", "WithdrawFeeInput2"],
+                type: 0,
+              },
+            },
+          ],
+          docs: [
+            " This function allows contract owner to withdraw contract balance to his account.",
+          ],
+          label: "AdminTrait::withdraw_fee",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0x07573e99",
+        },
+        {
+          args: [
+            {
               label: "nft_contract_address",
               type: {
                 displayName: ["admintrait_external", "TranferNftInput1"],
@@ -742,35 +778,6 @@ const marketplace = {
         {
           args: [
             {
-              label: "value",
-              type: {
-                displayName: ["admintrait_external", "WithdrawFeeInput1"],
-                type: 6,
-              },
-            },
-            {
-              label: "receiver",
-              type: {
-                displayName: ["admintrait_external", "WithdrawFeeInput2"],
-                type: 0,
-              },
-            },
-          ],
-          docs: [
-            " This function allows contract owner to withdraw contract balance to his account.",
-          ],
-          label: "AdminTrait::withdraw_fee",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0x07573e99",
-        },
-        {
-          args: [
-            {
               label: "code_hash",
               type: {
                 displayName: ["upgradabletrait_external", "SetCodeInput1"],
@@ -789,6 +796,65 @@ const marketplace = {
             type: 15,
           },
           selector: "0xa9e46760",
+        },
+        {
+          args: [
+            {
+              label: "bidder",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetHoldAmountOfBidderInput1",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [" Get hold amount of bidder"],
+          label: "ArtZeroMarketplaceTrait::get_hold_amount_of_bidder",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 27,
+          },
+          selector: "0x3122a567",
+        },
+        {
+          args: [],
+          docs: [" Get platform fee"],
+          label: "ArtZeroMarketplaceTrait::get_platform_fee",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 29,
+          },
+          selector: "0x51c22618",
+        },
+        {
+          args: [],
+          docs: [" Get Staking Discount Criteria"],
+          label: "ArtZeroMarketplaceTrait::get_staking_discount_criteria",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 30,
+          },
+          selector: "0x983d74fd",
+        },
+        {
+          args: [],
+          docs: [" Get Staking Discount Rates"],
+          label: "ArtZeroMarketplaceTrait::get_staking_discount_rate",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 31,
+          },
+          selector: "0x5db8b1aa",
         },
         {
           args: [
@@ -821,388 +887,9 @@ const marketplace = {
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
-            type: 27,
-          },
-          selector: "0x8de4d038",
-        },
-        {
-          args: [
-            {
-              label: "staking_contract_address",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "SetStakingContractAddressInput1",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [],
-          label: "ArtZeroMarketplaceTrait::set_staking_contract_address",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0x22eea22c",
-        },
-        {
-          args: [
-            {
-              label: "nft_contract_address",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetForSaleTokenIdInput1",
-                ],
-                type: 0,
-              },
-            },
-            {
-              label: "user_account",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetForSaleTokenIdInput2",
-                ],
-                type: 0,
-              },
-            },
-            {
-              label: "index",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetForSaleTokenIdInput3",
-                ],
-                type: 6,
-              },
-            },
-          ],
-          docs: [
-            " Get all token ids currently for sale for a collection (nft_contract_address,user_account)",
-          ],
-          label: "ArtZeroMarketplaceTrait::get_for_sale_token_id",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 30,
-          },
-          selector: "0xa725c933",
-        },
-        {
-          args: [
-            {
-              label: "index",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetHoldBiddersByIndexInput1",
-                ],
-                type: 5,
-              },
-            },
-          ],
-          docs: [" Get Hold Bidders by Index"],
-          label: "ArtZeroMarketplaceTrait::get_hold_bidders_by_index",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
             type: 32,
           },
-          selector: "0xdf67943a",
-        },
-        {
-          args: [
-            {
-              label: "criteria",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "SetDiscountInput1",
-                ],
-                type: 9,
-              },
-            },
-            {
-              label: "rates",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "SetDiscountInput2",
-                ],
-                type: 12,
-              },
-            },
-          ],
-          docs: [],
-          label: "ArtZeroMarketplaceTrait::set_discount",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0x020c0a97",
-        },
-        {
-          args: [],
-          docs: [" Get platform fee"],
-          label: "ArtZeroMarketplaceTrait::get_platform_fee",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 34,
-          },
-          selector: "0x51c22618",
-        },
-        {
-          args: [],
-          docs: [" Get staking contract address"],
-          label: "ArtZeroMarketplaceTrait::get_staking_contract_address",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 24,
-          },
-          selector: "0x460816fa",
-        },
-        {
-          args: [],
-          docs: [" Get total platform volume"],
-          label: "ArtZeroMarketplaceTrait::get_total_volume",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 35,
-          },
-          selector: "0xc15d33d5",
-        },
-        {
-          args: [],
-          docs: [" Get platform total Profit"],
-          label: "ArtZeroMarketplaceTrait::get_total_profit",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 35,
-          },
-          selector: "0x026733c6",
-        },
-        {
-          args: [
-            {
-              label: "bidder",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetHoldAmountOfBidderInput1",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [" Get hold amount of bidder"],
-          label: "ArtZeroMarketplaceTrait::get_hold_amount_of_bidder",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 36,
-          },
-          selector: "0x3122a567",
-        },
-        {
-          args: [],
-          docs: [" Get Hold Bidder Count"],
-          label: "ArtZeroMarketplaceTrait::get_hold_bidder_count",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 38,
-          },
-          selector: "0xe54b6b05",
-        },
-        {
-          args: [
-            {
-              label: "nft_contract_address",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetSaleTokensIdsCountInput1",
-                ],
-                type: 0,
-              },
-            },
-            {
-              label: "user_account",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetSaleTokensIdsCountInput2",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [" Get get total sale token ids of user account in a contract"],
-          label: "ArtZeroMarketplaceTrait::get_sale_tokens_ids_count",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 35,
-          },
-          selector: "0x91440fa8",
-        },
-        {
-          args: [
-            {
-              label: "value",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "WithdrawProfitInput1",
-                ],
-                type: 6,
-              },
-            },
-            {
-              label: "reciever",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "WithdrawProfitInput2",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [" Withdraw Profit - only Contract Owner."],
-          label: "ArtZeroMarketplaceTrait::withdraw_profit",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0xf232bfe4",
-        },
-        {
-          args: [
-            {
-              label: "receiver",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "ReceiveHoldAmountInput1",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [],
-          label: "ArtZeroMarketplaceTrait::receive_hold_amount",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0xc1c21add",
-        },
-        {
-          args: [],
-          docs: [" Get Staking Discount Criteria"],
-          label: "ArtZeroMarketplaceTrait::get_staking_discount_criteria",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 39,
-          },
-          selector: "0x983d74fd",
-        },
-        {
-          args: [
-            {
-              label: "collection_contract_address",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "SetCollectionContractAddressInput1",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [],
-          label: "ArtZeroMarketplaceTrait::set_collection_contract_address",
-          mutates: true,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 15,
-          },
-          selector: "0x6c657127",
-        },
-        {
-          args: [],
-          docs: [" Get collection contract address"],
-          label: "ArtZeroMarketplaceTrait::get_collection_contract_address",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 24,
-          },
-          selector: "0x93955560",
-        },
-        {
-          args: [],
-          docs: [" Get Staking Discount Rates"],
-          label: "ArtZeroMarketplaceTrait::get_staking_discount_rate",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 40,
-          },
-          selector: "0x5db8b1aa",
-        },
-        {
-          args: [
-            {
-              label: "collection_contract_address",
-              type: {
-                displayName: [
-                  "artzeromarketplacetrait_external",
-                  "GetListedTokenCountByCollectionAddressInput1",
-                ],
-                type: 0,
-              },
-            },
-          ],
-          docs: [" Get listed token count by collection address"],
-          label:
-            "ArtZeroMarketplaceTrait::get_listed_token_count_by_collection_address",
-          mutates: false,
-          payable: false,
-          returnType: {
-            displayName: ["ink", "MessageResult"],
-            type: 38,
-          },
-          selector: "0xb5b56273",
+          selector: "0x8de4d038",
         },
         {
           args: [
@@ -1245,44 +932,44 @@ const marketplace = {
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
-            type: 41,
+            type: 35,
           },
           selector: "0xd6bc3156",
         },
         {
           args: [],
-          docs: [" Get platform current available profit"],
-          label: "ArtZeroMarketplaceTrait::get_current_profit",
+          docs: [" Get staking contract address"],
+          label: "ArtZeroMarketplaceTrait::get_staking_contract_address",
           mutates: false,
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
-            type: 35,
+            type: 24,
           },
-          selector: "0x50427ba8",
+          selector: "0x460816fa",
         },
         {
           args: [
             {
-              label: "platform_fee",
+              label: "collection_contract_address",
               type: {
                 displayName: [
                   "artzeromarketplacetrait_external",
-                  "SetPlatformFeeInput1",
+                  "SetCollectionContractAddressInput1",
                 ],
-                type: 4,
+                type: 0,
               },
             },
           ],
           docs: [],
-          label: "ArtZeroMarketplaceTrait::set_platform_fee",
+          label: "ArtZeroMarketplaceTrait::set_collection_contract_address",
           mutates: true,
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
             type: 15,
           },
-          selector: "0x8be523fb",
+          selector: "0x6c657127",
         },
         {
           args: [
@@ -1303,9 +990,66 @@ const marketplace = {
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
-            type: 35,
+            type: 37,
           },
           selector: "0xe15e7a95",
+        },
+        {
+          args: [],
+          docs: [" Get total platform volume"],
+          label: "ArtZeroMarketplaceTrait::get_total_volume",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 37,
+          },
+          selector: "0xc15d33d5",
+        },
+        {
+          args: [
+            {
+              label: "nft_contract_address",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput1",
+                ],
+                type: 0,
+              },
+            },
+            {
+              label: "user_account",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput2",
+                ],
+                type: 0,
+              },
+            },
+            {
+              label: "index",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput3",
+                ],
+                type: 6,
+              },
+            },
+          ],
+          docs: [
+            " Get all token ids currently for sale for a collection (nft_contract_address,user_account)",
+          ],
+          label: "ArtZeroMarketplaceTrait::get_for_sale_token_id",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 38,
+          },
+          selector: "0xa725c933",
         },
         {
           args: [
@@ -1338,9 +1082,313 @@ const marketplace = {
           payable: false,
           returnType: {
             displayName: ["ink", "MessageResult"],
-            type: 35,
+            type: 37,
           },
           selector: "0xf686aa21",
+        },
+        {
+          args: [],
+          docs: [" Get platform total Profit"],
+          label: "ArtZeroMarketplaceTrait::get_total_profit",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 37,
+          },
+          selector: "0x026733c6",
+        },
+        {
+          args: [
+            {
+              label: "collection_contract_address",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetListedTokenCountByCollectionAddressInput1",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [" Get listed token count by collection address"],
+          label:
+            "ArtZeroMarketplaceTrait::get_listed_token_count_by_collection_address",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 40,
+          },
+          selector: "0xb5b56273",
+        },
+        {
+          args: [
+            {
+              label: "nft_contract_address",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetSaleTokensIdsCountInput1",
+                ],
+                type: 0,
+              },
+            },
+            {
+              label: "user_account",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetSaleTokensIdsCountInput2",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [" Get get total sale token ids of user account in a contract"],
+          label: "ArtZeroMarketplaceTrait::get_sale_tokens_ids_count",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 37,
+          },
+          selector: "0x91440fa8",
+        },
+        {
+          args: [
+            {
+              label: "index",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "GetHoldBiddersByIndexInput1",
+                ],
+                type: 5,
+              },
+            },
+          ],
+          docs: [" Get Hold Bidders by Index"],
+          label: "ArtZeroMarketplaceTrait::get_hold_bidders_by_index",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 41,
+          },
+          selector: "0xdf67943a",
+        },
+        {
+          args: [],
+          docs: [" Get Hold Bidder Count"],
+          label: "ArtZeroMarketplaceTrait::get_hold_bidder_count",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 40,
+          },
+          selector: "0xe54b6b05",
+        },
+        {
+          args: [
+            {
+              label: "platform_fee",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "SetPlatformFeeInput1",
+                ],
+                type: 4,
+              },
+            },
+          ],
+          docs: [],
+          label: "ArtZeroMarketplaceTrait::set_platform_fee",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0x8be523fb",
+        },
+        {
+          args: [],
+          docs: [" Get platform current available profit"],
+          label: "ArtZeroMarketplaceTrait::get_current_profit",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 37,
+          },
+          selector: "0x50427ba8",
+        },
+        {
+          args: [
+            {
+              label: "staking_contract_address",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "SetStakingContractAddressInput1",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [],
+          label: "ArtZeroMarketplaceTrait::set_staking_contract_address",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0x22eea22c",
+        },
+        {
+          args: [
+            {
+              label: "criteria",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "SetDiscountInput1",
+                ],
+                type: 9,
+              },
+            },
+            {
+              label: "rates",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "SetDiscountInput2",
+                ],
+                type: 12,
+              },
+            },
+          ],
+          docs: [],
+          label: "ArtZeroMarketplaceTrait::set_discount",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0x020c0a97",
+        },
+        {
+          args: [
+            {
+              label: "receiver",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "ReceiveHoldAmountInput1",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [],
+          label: "ArtZeroMarketplaceTrait::receive_hold_amount",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0xc1c21add",
+        },
+        {
+          args: [],
+          docs: [" Get collection contract address"],
+          label: "ArtZeroMarketplaceTrait::get_collection_contract_address",
+          mutates: false,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 24,
+          },
+          selector: "0x93955560",
+        },
+        {
+          args: [
+            {
+              label: "value",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "WithdrawProfitInput1",
+                ],
+                type: 6,
+              },
+            },
+            {
+              label: "reciever",
+              type: {
+                displayName: [
+                  "artzeromarketplacetrait_external",
+                  "WithdrawProfitInput2",
+                ],
+                type: 0,
+              },
+            },
+          ],
+          docs: [" Withdraw Profit - only Contract Owner."],
+          label: "ArtZeroMarketplaceTrait::withdraw_profit",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 15,
+          },
+          selector: "0xf232bfe4",
+        },
+        {
+          args: [
+            {
+              label: "operator",
+              type: {
+                displayName: ["psp34receiver_external", "BeforeReceivedInput1"],
+                type: 0,
+              },
+            },
+            {
+              label: "from",
+              type: {
+                displayName: ["psp34receiver_external", "BeforeReceivedInput2"],
+                type: 0,
+              },
+            },
+            {
+              label: "id",
+              type: {
+                displayName: ["psp34receiver_external", "BeforeReceivedInput3"],
+                type: 23,
+              },
+            },
+            {
+              label: "data",
+              type: {
+                displayName: ["psp34receiver_external", "BeforeReceivedInput4"],
+                type: 9,
+              },
+            },
+          ],
+          docs: [],
+          label: "PSP34Receiver::before_received",
+          mutates: true,
+          payable: false,
+          returnType: {
+            displayName: ["ink", "MessageResult"],
+            type: 43,
+          },
+          selector: "0xbb7df780",
         },
       ],
     },
@@ -2805,7 +2853,7 @@ const marketplace = {
                 {
                   fields: [
                     {
-                      type: 29,
+                      type: 6,
                     },
                   ],
                   index: 1,
@@ -2817,7 +2865,7 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 29,
+              type: 6,
             },
           ],
           path: ["Option"],
@@ -2827,55 +2875,12 @@ const marketplace = {
         id: 29,
         type: {
           def: {
-            composite: {
-              fields: [
-                {
-                  name: "nft_owner",
-                  type: 0,
-                  typeName: "AccountId",
-                },
-                {
-                  name: "listed_date",
-                  type: 5,
-                  typeName: "u64",
-                },
-                {
-                  name: "price",
-                  type: 6,
-                  typeName: "Balance",
-                },
-                {
-                  name: "is_for_sale",
-                  type: 7,
-                  typeName: "bool",
-                },
-                {
-                  name: "royalty_fee_at_listing",
-                  type: 4,
-                  typeName: "u32",
-                },
-              ],
-            },
-          },
-          path: [
-            "artzero_project",
-            "impls",
-            "marketplace",
-            "data",
-            "ForSaleItem",
-          ],
-        },
-      },
-      {
-        id: 30,
-        type: {
-          def: {
             variant: {
               variants: [
                 {
                   fields: [
                     {
-                      type: 31,
+                      type: 4,
                     },
                   ],
                   index: 0,
@@ -2896,7 +2901,47 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 31,
+              type: 4,
+            },
+            {
+              name: "E",
+              type: 14,
+            },
+          ],
+          path: ["Result"],
+        },
+      },
+      {
+        id: 30,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 9,
+                    },
+                  ],
+                  index: 0,
+                  name: "Ok",
+                },
+                {
+                  fields: [
+                    {
+                      type: 14,
+                    },
+                  ],
+                  index: 1,
+                  name: "Err",
+                },
+              ],
+            },
+          },
+          params: [
+            {
+              name: "T",
+              type: 9,
             },
             {
               name: "E",
@@ -2913,17 +2958,22 @@ const marketplace = {
             variant: {
               variants: [
                 {
+                  fields: [
+                    {
+                      type: 12,
+                    },
+                  ],
                   index: 0,
-                  name: "None",
+                  name: "Ok",
                 },
                 {
                   fields: [
                     {
-                      type: 23,
+                      type: 14,
                     },
                   ],
                   index: 1,
-                  name: "Some",
+                  name: "Err",
                 },
               ],
             },
@@ -2931,10 +2981,14 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 23,
+              type: 12,
+            },
+            {
+              name: "E",
+              type: 14,
             },
           ],
-          path: ["Option"],
+          path: ["Result"],
         },
       },
       {
@@ -2990,7 +3044,7 @@ const marketplace = {
                 {
                   fields: [
                     {
-                      type: 0,
+                      type: 34,
                     },
                   ],
                   index: 1,
@@ -3002,7 +3056,7 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 0,
+              type: 34,
             },
           ],
           path: ["Option"],
@@ -3012,40 +3066,43 @@ const marketplace = {
         id: 34,
         type: {
           def: {
-            variant: {
-              variants: [
+            composite: {
+              fields: [
                 {
-                  fields: [
-                    {
-                      type: 4,
-                    },
-                  ],
-                  index: 0,
-                  name: "Ok",
+                  name: "nft_owner",
+                  type: 0,
+                  typeName: "AccountId",
                 },
                 {
-                  fields: [
-                    {
-                      type: 14,
-                    },
-                  ],
-                  index: 1,
-                  name: "Err",
+                  name: "listed_date",
+                  type: 5,
+                  typeName: "u64",
+                },
+                {
+                  name: "price",
+                  type: 6,
+                  typeName: "Balance",
+                },
+                {
+                  name: "is_for_sale",
+                  type: 7,
+                  typeName: "bool",
+                },
+                {
+                  name: "royalty_fee_at_listing",
+                  type: 4,
+                  typeName: "u32",
                 },
               ],
             },
           },
-          params: [
-            {
-              name: "T",
-              type: 4,
-            },
-            {
-              name: "E",
-              type: 14,
-            },
+          path: [
+            "artzero_project",
+            "impls",
+            "marketplace",
+            "data",
+            "ForSaleItem",
           ],
-          path: ["Result"],
         },
       },
       {
@@ -3057,7 +3114,7 @@ const marketplace = {
                 {
                   fields: [
                     {
-                      type: 6,
+                      type: 36,
                     },
                   ],
                   index: 0,
@@ -3078,7 +3135,7 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 6,
+              type: 36,
             },
             {
               name: "E",
@@ -3095,9 +3152,40 @@ const marketplace = {
             variant: {
               variants: [
                 {
+                  index: 0,
+                  name: "None",
+                },
+                {
                   fields: [
                     {
-                      type: 37,
+                      type: 10,
+                    },
+                  ],
+                  index: 1,
+                  name: "Some",
+                },
+              ],
+            },
+          },
+          params: [
+            {
+              name: "T",
+              type: 10,
+            },
+          ],
+          path: ["Option"],
+        },
+      },
+      {
+        id: 37,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 6,
                     },
                   ],
                   index: 0,
@@ -3118,7 +3206,7 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 37,
+              type: 6,
             },
             {
               name: "E",
@@ -3129,7 +3217,47 @@ const marketplace = {
         },
       },
       {
-        id: 37,
+        id: 38,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 39,
+                    },
+                  ],
+                  index: 0,
+                  name: "Ok",
+                },
+                {
+                  fields: [
+                    {
+                      type: 14,
+                    },
+                  ],
+                  index: 1,
+                  name: "Err",
+                },
+              ],
+            },
+          },
+          params: [
+            {
+              name: "T",
+              type: 39,
+            },
+            {
+              name: "E",
+              type: 14,
+            },
+          ],
+          path: ["Result"],
+        },
+      },
+      {
+        id: 39,
         type: {
           def: {
             variant: {
@@ -3141,7 +3269,7 @@ const marketplace = {
                 {
                   fields: [
                     {
-                      type: 6,
+                      type: 23,
                     },
                   ],
                   index: 1,
@@ -3153,14 +3281,14 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 6,
+              type: 23,
             },
           ],
           path: ["Option"],
         },
       },
       {
-        id: 38,
+        id: 40,
         type: {
           def: {
             variant: {
@@ -3190,86 +3318,6 @@ const marketplace = {
             {
               name: "T",
               type: 5,
-            },
-            {
-              name: "E",
-              type: 14,
-            },
-          ],
-          path: ["Result"],
-        },
-      },
-      {
-        id: 39,
-        type: {
-          def: {
-            variant: {
-              variants: [
-                {
-                  fields: [
-                    {
-                      type: 9,
-                    },
-                  ],
-                  index: 0,
-                  name: "Ok",
-                },
-                {
-                  fields: [
-                    {
-                      type: 14,
-                    },
-                  ],
-                  index: 1,
-                  name: "Err",
-                },
-              ],
-            },
-          },
-          params: [
-            {
-              name: "T",
-              type: 9,
-            },
-            {
-              name: "E",
-              type: 14,
-            },
-          ],
-          path: ["Result"],
-        },
-      },
-      {
-        id: 40,
-        type: {
-          def: {
-            variant: {
-              variants: [
-                {
-                  fields: [
-                    {
-                      type: 12,
-                    },
-                  ],
-                  index: 0,
-                  name: "Ok",
-                },
-                {
-                  fields: [
-                    {
-                      type: 14,
-                    },
-                  ],
-                  index: 1,
-                  name: "Err",
-                },
-              ],
-            },
-          },
-          params: [
-            {
-              name: "T",
-              type: 12,
             },
             {
               name: "E",
@@ -3332,7 +3380,7 @@ const marketplace = {
                 {
                   fields: [
                     {
-                      type: 10,
+                      type: 0,
                     },
                   ],
                   index: 1,
@@ -3344,10 +3392,118 @@ const marketplace = {
           params: [
             {
               name: "T",
-              type: 10,
+              type: 0,
             },
           ],
           path: ["Option"],
+        },
+      },
+      {
+        id: 43,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 44,
+                    },
+                  ],
+                  index: 0,
+                  name: "Ok",
+                },
+                {
+                  fields: [
+                    {
+                      type: 14,
+                    },
+                  ],
+                  index: 1,
+                  name: "Err",
+                },
+              ],
+            },
+          },
+          params: [
+            {
+              name: "T",
+              type: 44,
+            },
+            {
+              name: "E",
+              type: 14,
+            },
+          ],
+          path: ["Result"],
+        },
+      },
+      {
+        id: 44,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 3,
+                    },
+                  ],
+                  index: 0,
+                  name: "Ok",
+                },
+                {
+                  fields: [
+                    {
+                      type: 45,
+                    },
+                  ],
+                  index: 1,
+                  name: "Err",
+                },
+              ],
+            },
+          },
+          params: [
+            {
+              name: "T",
+              type: 3,
+            },
+            {
+              name: "E",
+              type: 45,
+            },
+          ],
+          path: ["Result"],
+        },
+      },
+      {
+        id: 45,
+        type: {
+          def: {
+            variant: {
+              variants: [
+                {
+                  fields: [
+                    {
+                      type: 9,
+                      typeName: "String",
+                    },
+                  ],
+                  index: 0,
+                  name: "TransferRejected",
+                },
+              ],
+            },
+          },
+          path: [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34ReceiverError",
+          ],
         },
       },
     ],
