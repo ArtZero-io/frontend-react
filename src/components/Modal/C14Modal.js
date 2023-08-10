@@ -38,7 +38,7 @@ export default function C14Modal() {
           borderBottomWidth="2px"
           borderBottomColor="transparent"
         >
-          <Text>Buy Azero</Text>
+          <Text>buy azero</Text>
         </Button>
       )}
 
@@ -62,7 +62,7 @@ export default function C14Modal() {
           color={isOpen ? "#7ae7ff" : "#fff"}
           onClick={() => onOpen()}
         >
-          Buy Azero
+          buy azero
         </Text>
       )}
 
