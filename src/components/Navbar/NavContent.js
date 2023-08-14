@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -170,9 +171,9 @@ const DesktopNavContent = (props) => {
         } */}
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
-        <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
+        {/* <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} /> */}
 
-        {currentAccount?.address && <MyAccountDropdown />}
+        {/* {currentAccount?.address && <MyAccountDropdown />} */}
 
         <C14Modal />
       </HStack>
@@ -383,7 +384,7 @@ const MobileNav = ({ onClose, isOpen }) => {
           h="var(--doc-height)"
         >
           <DrawerHeader bg="transparent">
-            <Flex minH="30px" justifyContent="center" alignItems="center" >
+            <Flex minH="30px" justifyContent="center" alignItems="center">
               <DrawerCloseButton
                 left="14px"
                 top="18px"
@@ -492,7 +493,7 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
           >
             {label}
           </Text>
-          {label === "stake2earn" ? <InkWhale /> : "null"}
+          {label === "stake2earn" ? <InkWhale /> : null}
         </Link>
       </Stack>
     );
@@ -650,38 +651,34 @@ const NAV_ITEMS = [
     label: "stats",
     href: ROUTES.STATS,
   },
-  {
-    label: "docs",
-    href: ROUTES.DOCS,
-    isExternal: true,
-  },
-  {
-    label: "my account",
-    children: [
-      {
-        label: "general",
-        href: ROUTES.ACCOUNT,
-      },
-      {
-        label: "my collections",
-        href: ROUTES.ACCOUNT_MY_COLLECTIONS,
-      },
-      {
-        label: "my NFTs",
-        href: ROUTES.ACCOUNT_MY_NFTS,
-      },
-      {
-        label: "my stakes",
-        href: ROUTES.ACCOUNT_MY_STAKES,
-      },
-      {
-        label: "my projects",
-        href: ROUTES.ACCOUNT_MY_PROJECTS,
-      },
-      {
-        label: "my activities",
-        href: ROUTES.ACCOUNT_MY_ACTIVITIES,
-      },
-    ],
-  },
+
+  // {
+  //   label: "my account",
+  //   children: [
+  //     {
+  //       label: "general",
+  //       href: ROUTES.ACCOUNT,
+  //     },
+  //     {
+  //       label: "my collections",
+  //       href: ROUTES.ACCOUNT_MY_COLLECTIONS,
+  //     },
+  //     {
+  //       label: "my NFTs",
+  //       href: ROUTES.ACCOUNT_MY_NFTS,
+  //     },
+  //     {
+  //       label: "my stakes",
+  //       href: ROUTES.ACCOUNT_MY_STAKES,
+  //     },
+  //     {
+  //       label: "my projects",
+  //       href: ROUTES.ACCOUNT_MY_PROJECTS,
+  //     },
+  //     {
+  //       label: "my activities",
+  //       href: ROUTES.ACCOUNT_MY_ACTIVITIES,
+  //     },
+  //   ],
+  // },
 ];

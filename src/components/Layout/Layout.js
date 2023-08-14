@@ -66,6 +66,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
         backgroundImage:
           "linear-gradient(180deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 56.2%);",
       }}
+      backgroundColor="black"
     >
       {variant === "marketplace" && (
         <Particles

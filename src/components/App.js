@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Toaster } from "react-hot-toast";
 import { PuffLoader } from "react-spinners";
 
@@ -31,12 +32,13 @@ import { setProfileContract } from "@utils/blockchain/profile_calls";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { setMarketplaceAzeroDomainsContract } from "@utils/blockchain/marketplace-azero-domains-calls";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { ArtZero_Privacy, START } from "../constants";
 import { Helmet } from "react-helmet";
+import useInterval from "use-interval";
 // import { useHistory } from "react-router-dom";
 // import bannerImg from "@theme/assets/banner.jpg";
 
@@ -48,16 +50,19 @@ import { Helmet } from "react-helmet";
 
 export default function App() {
   const { apiState } = useSubstrateState();
+  console.log("apiState", apiState);
 
   return (
     <ChakraProvider theme={theme}>
-      {apiState === "ERROR" ? (
-        <InitModal apiState={apiState} loadingErrorMess={`...`} />
+      {/* {apiState === "ERROR" ? (
+        <InitModal apiState={apiState} loadingErrorMess={`... A`} />
       ) : apiState !== "READY" ? (
-        <InitModal apiState={apiState} loadingErrorMess={`to network...`} />
+        <InitModal apiState={apiState} loadingErrorMess={`to network...B`} />
       ) : (
         <Main />
-      )}
+      )} */}
+
+      <Main />
     </ChakraProvider>
   );
 }
@@ -107,24 +112,38 @@ const Main = () => {
   } = contractData;
   const [loadContractDone, setLoadContractDone] = useState(false);
 
-  useEffect(() => {
-    const initContract = async () => {
-      try {
-        if (apiState === "READY") {
-          await setCollectionContract(api, collection);
-          await setMarketplaceContract(api, marketplace);
-          await setProfileContract(api, profile);
-          await setStakingContract(api, staking);
-          await setAZNFTContract(api, artzeroNft);
-          await setAzeroDomainsNFTContract(api, azeroDomainsNft);
-          await setLaunchPadContract(api, launchpad_manager);
-          await setMarketplaceAzeroDomainsContract(api, marketplace);
-          setLoadContractDone(true);
-        }
-      } catch (e) {
-        return console.log("err iniContract", e);
+  const initContract = useCallback(async () => {
+    try {
+      console.log("initContract apiState", apiState);
+       if (apiState === "READY") {
+      await setCollectionContract(api, collection);
+      await setMarketplaceContract(api, marketplace);
+      await setProfileContract(api, profile);
+      await setStakingContract(api, staking);
+      await setAZNFTContract(api, artzeroNft);
+      await setAzeroDomainsNFTContract(api, azeroDomainsNft);
+      await setLaunchPadContract(api, launchpad_manager);
+      await setMarketplaceAzeroDomainsContract(api, marketplace);
+      setLoadContractDone(true);
+      console.log("setLoadContractDone apiState DONE", apiState);
+
       }
-    };
+    } catch (e) {
+      return console.log("err iniContract", e);
+    }
+  }, [
+    api,
+    apiState,
+    artzeroNft,
+    azeroDomainsNft,
+    collection,
+    launchpad_manager,
+    marketplace,
+    profile,
+    staking,
+  ]);
+
+  useEffect(() => {
     initContract();
   }, [
     api,
@@ -136,7 +155,25 @@ const Main = () => {
     profile,
     staking,
     launchpad_manager,
+    loadContractDone,
   ]);
+
+  useEffect(() => {
+    console.log("apiStateapiState", apiState);
+    toast(apiState, { position: "bottom-right" });
+  }, [apiState]);
+
+  useInterval(() => {
+    console.log("useInterval", apiState);
+
+    // if (apiState !== "READY") {
+    //   console.log("A useInterval apiState READY", apiState);
+    //   toast("Trying again in 3s... ", { position: "bottom-right" });
+    // } else {
+    //   console.log("B useInterval apiState READY", apiState);
+    //   initContract();
+    // }
+  }, 3000);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
@@ -239,24 +276,24 @@ const Main = () => {
 
       <AlertCookiesAccepted />
 
-      {loadContractDone && (
-        <Fragment>
-          <Toaster
-            position="bottom-left"
-            reverseOrder={true}
-            toastOptions={{
-              style: {
-                borderRadius: 0,
-                padding: "8px",
-                color: "#000",
-                background: "#7AE7FF",
-              },
-            }}
-          />
+      {/* {loadContractDone && ( */}
+      <Fragment>
+        <Toaster
+          position="bottom-left"
+          reverseOrder={true}
+          toastOptions={{
+            style: {
+              borderRadius: 0,
+              padding: "8px",
+              color: "#000",
+              background: "#7AE7FF",
+            },
+          }}
+        />
 
-          <Router />
-        </Fragment>
-      )}
+        <Router />
+      </Fragment>
+      {/* )} */}
     </>
   );
 };
