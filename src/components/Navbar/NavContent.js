@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -172,7 +173,7 @@ const DesktopNavContent = (props) => {
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
 
-        {currentAccount?.address && <MyAccountDropdown />}
+        {/* {currentAccount?.address && <MyAccountDropdown />} */}
 
         <C14Modal />
       </HStack>
@@ -650,33 +651,33 @@ const NAV_ITEMS = [
     href: ROUTES.STATS,
   },
 
-  {
-    label: "my account",
-    children: [
-      {
-        label: "general",
-        href: ROUTES.ACCOUNT,
-      },
-      {
-        label: "my collections",
-        href: ROUTES.ACCOUNT_MY_COLLECTIONS,
-      },
-      {
-        label: "my NFTs",
-        href: ROUTES.ACCOUNT_MY_NFTS,
-      },
-      {
-        label: "my stakes",
-        href: ROUTES.ACCOUNT_MY_STAKES,
-      },
-      {
-        label: "my projects",
-        href: ROUTES.ACCOUNT_MY_PROJECTS,
-      },
-      {
-        label: "my activities",
-        href: ROUTES.ACCOUNT_MY_ACTIVITIES,
-      },
-    ],
-  },
+  // {
+  //   label: "my account",
+  //   children: [
+  //     {
+  //       label: "general",
+  //       href: ROUTES.ACCOUNT,
+  //     },
+  //     {
+  //       label: "my collections",
+  //       href: ROUTES.ACCOUNT_MY_COLLECTIONS,
+  //     },
+  //     {
+  //       label: "my NFTs",
+  //       href: ROUTES.ACCOUNT_MY_NFTS,
+  //     },
+  //     {
+  //       label: "my stakes",
+  //       href: ROUTES.ACCOUNT_MY_STAKES,
+  //     },
+  //     {
+  //       label: "my projects",
+  //       href: ROUTES.ACCOUNT_MY_PROJECTS,
+  //     },
+  //     {
+  //       label: "my activities",
+  //       href: ROUTES.ACCOUNT_MY_ACTIVITIES,
+  //     },
+  //   ],
+  // },
 ];

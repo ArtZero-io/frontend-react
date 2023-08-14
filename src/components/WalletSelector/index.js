@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState, useMemo } from "react";
 
 import {
   useSubstrate,
@@ -9,6 +10,10 @@ import WalletNotConnected from "./WalletNotConnected";
 import WalletMenu from "./WalletMenu";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  TagRightIcon,
+  TagLabel,
+  Tag,
+  Image,
   Menu,
   MenuButton,
   MenuList,
@@ -17,6 +22,8 @@ import {
   Flex,
   Spacer,
   Text,
+  IconButton,
+  useClipboard,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
@@ -24,6 +31,32 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
+import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
+import AzeroSignerLogo from "@utils/wallets/AzeroSignerLogo.svg";
+import AzeroChain from "@theme/assets/icon/AzeroChain";
+import toast from "react-hot-toast";
+import { PiCopy } from "react-icons/pi";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
+
+import { useSelector } from "react-redux";
+import BN from "bn.js";
+import { shortenNumber } from "@utils";
+import { motion } from "framer-motion";
+// import toast from 'react-hot-toast';
+import { CopyIcon } from "@chakra-ui/icons";
+import * as ROUTES from "@constants/routes";
+import { formMode } from "@constants";
+import { Link as ReactRouterLink } from "react-router-dom";
+import AddNewCollectionModal from "@pages/account/collections/components/Modal/AddNew";
+import MenuGeneralIcon from "@theme/assets/icon/MenuGeneral.js";
+import MenuCollectionIcon from "@theme/assets/icon/MenuCollection.js";
+import MenuNftIcon from "@theme/assets/icon/MenuNft.js";
+import MenuStakeIcon from "@theme/assets/icon/MenuStake.js";
+import MenuProjectIcon from "@theme/assets/icon/MenuProject.js";
+import MenuActivityIcon from "@theme/assets/icon/MenuActivity.js";
+import MenuDisconnectIcon from "@theme/assets/icon/MenuDisconnect.js";
+import MenuSwitchIcon from "@theme/assets/icon/MenuSwitch.js";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();
@@ -31,7 +64,7 @@ function WalletSelector({ display }) {
   const history = useHistory();
   const [, setActiveAddressLocal] = useLocalStorage("activeAddress");
   const { setCurrentAccount, doLogOut, state } = useSubstrate();
-  const { keyring, currentAccount } = state;
+  const { api, keyring, currentAccount } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => {
     return {
@@ -92,6 +125,45 @@ function WalletSelector({ display }) {
     history.push(path);
   }
 
+  const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
+
+  useEffect(() => {
+    hasCopied && toast.success("Copied to clipboard!");
+  }, [hasCopied]);
+
+  const [accountBalance, setAccountBalance] = useState(0);
+
+  useEffect(() => {
+    let unsubscribe;
+
+    currentAccount &&
+      api?.query.system
+        .account(currentAccount.address, (balance) => {
+          let oneSZERO = new BN(10 ** 12);
+          let balSZERO = new BN(balance.data.free, 10, "le");
+          let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, "le");
+          // console.log(balance?.data.toHuman());
+          if (balSZERO.gt(oneSZERO)) {
+            balSZERO =
+              balSZERO.div(new BN(10 ** 12)).toNumber() -
+              miscFrozenBalSZERO.div(new BN(10 ** 12)).toNumber();
+          } else {
+            balSZERO = balSZERO.toNumber() / 10 ** 12;
+          }
+          // console.log('balSZERO - freeze', balSZERO);
+          if (balSZERO >= 1) {
+            balSZERO = shortenNumber(balSZERO);
+          } else {
+            balSZERO = parseFloat(balSZERO).toFixed(3);
+          }
+          setAccountBalance(balSZERO);
+        })
+        .then((unsub) => (unsubscribe = unsub))
+        .catch(console.error);
+
+    return () => unsubscribe && unsubscribe();
+  }, [currentAccount?.address, api, currentAccount]);
+
   return (
     <>
       <Flex
@@ -104,7 +176,6 @@ function WalletSelector({ display }) {
         mb={{ base: "20px", md: "auto" }}
         ml={{ base: "10px", md: "auto" }}
         flexDirection={{ md: "colum" }}
-
       >
         <Menu autoSelect={false} placement="bottom-end" offset={[0, 25]}>
           <MenuButton
@@ -134,7 +205,7 @@ function WalletSelector({ display }) {
             >
               <Text
                 isTruncated
-                maxW='120px'
+                maxW="120px"
                 color="#fff"
                 fontSize="15px"
                 textAlign="left"
@@ -155,66 +226,171 @@ function WalletSelector({ display }) {
             </Flex>
           </MenuButton>
           <MenuList
-            minW="180px"
-            w="180px"
+            minW="260px"
+            display="flex"
+            flexDirection="column"
             borderRadius="0"
             borderWidth="2px"
             borderColor="brand.blue"
-            bg="black"
-
-            px="15px"
-            py="0"
-            // ml={{ base: "5px", lg: "auto" }}
+            bg="#222"
           >
-            {keyringOptions.map(({ address, name, addressDomain }) => (
-              <MenuItem
-                w="160px"
-                key={address}
-                fontFamily="Oswald"
-                textTransform="none"
-                onClick={() => selectAccountHandler(address)}
-                display={currentAccount?.address === address ? "none" : ""}
-                p="0"
-                lineHeight="38px"
-              >
+            <Flex borderBottom="2px #303030 solid" p="20px" pt="12px" pb="18px">
+              <Flex alignItems="center">
                 <Flex
-                  _hover={{ color: "#fff" }}
-                  w="full"
-                  fontSize="lg"
-                  justifyContent="start"
-                  color="#888"
-                  lineHeight="38px"
+                  width="40px"
+                  height="40px"
+                  alignItems="center"
+                  justifyContent="center"
+                  mr="12px"
                 >
-                  {/* <Text w="54px" isTruncated mr="2px" textAlign="left">
-                    {name}
-                  </Text>
-                  <Text> - {addressDomain ?? truncateStr(address, 6)}</Text> */}
-                  <Text>{addressDomain ?? truncateStr(address, 6)}</Text>
+                  {console.log(currentAccount?.meta?.source)}
+                  {currentAccount?.meta?.source === "subwallet-js" && (
+                    <Image
+                      src={SubwalletLogo}
+                      alt={currentAccount?.meta?.source}
+                    />
+                  )}
+                  {currentAccount?.meta?.source === "polkadot-js" && (
+                    <Image
+                      src={PolkadotjsLogo}
+                      alt={currentAccount?.meta?.source}
+                    />
+                  )}
+                  {currentAccount?.meta?.source === "aleph-zero-signer" && (
+                    <AzeroChain />
+                  )}
                 </Flex>
+                <Flex
+                  w="full"
+                  h="48px"
+                  alignItems="start"
+                  flexDirection="column"
+                  justifyContent="start"
+                >
+                  <Flex>
+                    <Text
+                      pr="12px"
+                      isTruncated
+                      maxW="120px"
+                      color="#fff"
+                      fontSize="15px"
+                      textAlign="left"
+                      lineHeight="20px"
+                      textTransform="lowercase"
+                      fontFamily="Evogria,sans-serif"
+                    >
+                      {currentAccount?.meta?.name}
+                    </Text>{" "}
+                    <PiCopy
+                      onClick={onCopy}
+                      w="18px"
+                      h="18px"
+                      color="#999999"
+                      cursor="pointer"
+                    />
+                  </Flex>
+
+                  <Flex
+                    alignItems="center"
+                    variant="grayBg"
+                    height="28px"
+                    minW="fit-content"
+                    bg="transparent"
+                  >
+                    <TagLabel color="#7ae7ff" fontSize="18px">
+                      {accountBalance}
+                    </TagLabel>
+                    <TagRightIcon as={AzeroIcon} />
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+
+            <Flex borderBottom="2px #303030 solid" p="20px" pt="12px" pb="18px">
+              <WalletSubmenu
+                keyringOptions={keyringOptions}
+                selectAccountHandler={selectAccountHandler}
+              />
+            </Flex>
+
+            <Flex p="20px" pb="12px" display="flex" flexDirection="column">
+              {myAccountList?.slice(0, 1)?.map((item, idx) => (
+                <MenuItem
+                  to="#"
+                  key={idx}
+                  ml={["20px", "auto"]}
+                  py={["4px", "12px"]}
+                  p={["4px", "10px"]}
+                  as={ReactRouterLink}
+                  fontFamily="Evogria, sans-serif"
+                  fontSize={{ base: "18px", md: "15px" }}
+                  _hover={{ color: "brand.blue", bg: "black" }}
+                  onClick={() =>
+                    item?.isExternal
+                      ? window.open(item.href, "_blank")
+                      : history.push(item.href)
+                  }
+                >
+                  {item.icon}
+                  <Text ml="10px">{item.label}</Text>
+                </MenuItem>
+              ))}
+
+              {currentAccount?.address && (
+                <AddNewCollectionModal mode={formMode.ADD} variant="navbar" />
+              )}
+
+              {myAccountList
+                ?.slice(1, myAccountList?.length)
+                ?.map((item, idx) => (
+                  <MenuItem
+                    to="#"
+                    key={idx}
+                    ml={["20px", "auto"]}
+                    py={["4px", "12px"]}
+                    px={["4px", "10px"]}
+                    _hover={{ color: "brand.blue", bg: "black" }}
+                    as={ReactRouterLink}
+                    fontFamily="Evogria, sans-serif"
+                    fontSize={{ base: "18px", md: "15px" }}
+                    onClick={() =>
+                      item?.isExternal
+                        ? window.open(item.href, "_blank")
+                        : history.push(item.href)
+                    }
+                  >
+                    {item.icon}
+                    <Text ml="10px">{item.label}</Text>
+                  </MenuItem>
+                ))}
+              <MenuItem
+                _hover={{ color: "brand.blue", bg: "black" }}
+                color="white"
+                onClick={() => logoutHandler()}
+                fontSize={{ base: "18px", md: "15px" }}
+                ml={["20px", "auto"]}
+                py={["4px", "12px"]}
+                px={["4px", "10px"]}
+              >
+                <MenuDisconnectIcon />
+                <Text ml="10px">Disconnect Wallet</Text>
               </MenuItem>
-            ))}
-            <Spacer display={{ base: "none", md: "flex" }} />
-            <MenuItem
-              _hover={{ color: "brand.blue", bg: "black" }}
-              color="white"
-              textDecoration="underline"
-              fontFamily="Oswald"
-              onClick={() => logoutHandler()}
-              fontSize="lg"
-              p="0"
-              textTransform="capitalize"
-              lineHeight="26.68px"
-              bg="black"
-            >
-              <Text as="span" my="18px">
-                Disconnect Wallet
-              </Text>
-            </MenuItem>
+            </Flex>
           </MenuList>
         </Menu>
 
-        <Spacer />
+        {/* <MenuList
+          px={["0", "15px"]}
+          py={["0", "15px"]}
+          minW="250px"
+          borderWidth={["0px", "2px"]}
+          borderRadius="0"
+          bg={["black", "brand.grayDark"]}
+          borderColor="brand.blue"
+          // ml={{ base: "20px", lg: "auto" }}
+        >
 
+        </MenuList> */}
         <WalletMenu address={currentAccount?.address} />
       </Flex>
     </>
@@ -234,5 +410,106 @@ export default function AccountSelector(props) {
     <WalletSelector {...props} />
   ) : (
     <WalletNotConnected {...props} />
+  );
+}
+const myAccountList = [
+  { label: "General", href: ROUTES.ACCOUNT, icon: <MenuGeneralIcon /> },
+  {
+    label: "My Collections",
+    href: ROUTES.ACCOUNT_MY_COLLECTIONS,
+    icon: <MenuCollectionIcon />,
+  },
+  { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS, icon: <MenuNftIcon /> },
+  {
+    label: "My Stakes",
+    href: ROUTES.ACCOUNT_MY_STAKES,
+    icon: <MenuStakeIcon />,
+  },
+  {
+    label: "My Projects",
+    href: ROUTES.ACCOUNT_MY_PROJECTS,
+    icon: <MenuProjectIcon />,
+  },
+  {
+    label: "My Activities",
+    href: ROUTES.ACCOUNT_MY_ACTIVITIES,
+    icon: <MenuActivityIcon />,
+  },
+];
+
+function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
+  const { currentAccount } = useSubstrateState();
+
+  return (
+    <Menu placement="left-start" offset={[0, 30]}>
+      <MenuButton
+        disabled={keyringOptions?.length === 1}
+        _hover={{ color: "brand.blue", bg: "black" }}
+        w="full"
+        h="48px"
+      >
+        <MenuItem
+          isDisabled={keyringOptions?.length === 1}
+          color="white"
+          ml={["20px", "auto"]}
+          py={["4px", "12px"]}
+          px={["4px", "10px"]}
+          fontSize={{ base: "18px", md: "15px" }}
+        >
+          <MenuSwitchIcon />
+          <Text ml="10px">Switch Account</Text>
+        </MenuItem>
+      </MenuButton>
+      <MenuList
+        minW="260px"
+        display="flex"
+        bg="#222"
+        flexDirection="column"
+        borderRadius="0"
+        borderWidth="2px"
+        borderColor="brand.blue"
+        px={["4px", "10px"]}
+      >
+        {keyringOptions?.map(({ address, name, addressDomain }) => (
+          <MenuItem
+            to="#"
+            key={address}
+            ml={["20px", "auto"]}
+            px={["4px", "10px"]}
+            py={["4px"]}
+            as={ReactRouterLink}
+            fontFamily="Evogria, sans-serif"
+            fontSize={{ base: "18px", md: "15px" }}
+            _hover={{ color: "brand.blue", bg: "black" }}
+            onClick={() => selectAccountHandler(address)}
+            display={currentAccount?.address === address ? "none" : ""}
+          >
+            <Flex w="full" h="40px" justifyContent="start" alignItems="center">
+              <Text
+                isTruncated
+                maxW="120px"
+                minW="120px"
+                mr="10px"
+                color="#fff"
+                fontSize="15px"
+                textAlign="left"
+                lineHeight="20px"
+                textTransform="lowercase"
+                fontFamily="Evogria,sans-serif"
+              >
+                {name}
+              </Text>
+              <Text
+                fontSize="15px"
+                lineHeight="20px"
+                fontFamily="Oswald, sans-serif"
+              >
+                {addressDomain ?? truncateStr(address, 5)}
+              </Text>
+            </Flex>
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Menu>
   );
 }
