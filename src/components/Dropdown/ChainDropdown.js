@@ -17,13 +17,13 @@ import FireChain from "@theme/assets/icon/FireChain.js";
 const netList = [
   {
     id: "AZERO_MAINNET",
-    code: "azero mainnet",
+    code: "alephzero mainnet",
     icon: <AzeroChain />,
     url: "https://a0.artzero.io/",
   },
   {
     id: "AZERO_TESTNET",
-    code: "azero testnet",
+    code: "alephzero testnet",
     icon: <AzeroChain />,
     url: "https://a0-test.artzero.io/",
   },
