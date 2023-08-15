@@ -96,61 +96,44 @@ function WalletSelector({ display }) {
     <>
       <Flex
         display={display}
-        maxH="55px"
-        height="full"
         align="center"
         justify="space-between"
-        pl={{ base: "10px", md: "auto" }}
+        height="full"
+        maxH="55px"
+        px={{ base: "10px", md: "auto" }}
         mb={{ base: "20px", md: "auto" }}
-        ml={{ base: "10px", md: "auto" }}
         flexDirection={{ md: "colum" }}
-
       >
-        <Menu autoSelect={false} placement="bottom-end" offset={[0, 25]}>
+        <Menu autoSelect={false} placement="bottom-end" offset={[-0, -1]}>
           <MenuButton
-            _hover={{ bg: "transparent", border: 0 }}
-            _active={{ bg: "transparent", border: 0 }}
-            _focus={{ bg: "transparent", border: 0 }}
-            ring={0}
-            p="0"
-            w="160px"
-            h="40px"
+            _hover={{ bg: "brand.grayDark" }}
+            _active={{ bg: "black", borderBottom: 0 }}
             bg="black"
-            as={Button}
             borderRadius="0"
+            border="2px #7ae7ff solid"
+            fontFamily="Oswald, sans-serif"
             color="brand.blue"
-            border="0px #7ae7ff solid"
-            fontSize="lg"
-            lineHeight="38px"
-            textTransform="none"
+            ring={0}
+            // mx={{ base: "15px", md: "10px" }}
+            mx={"10px"}
+            p="0"
+            pl="15px"
+            w="180px"
+            h="50px"
+            as={Button}
             rightIcon={<ChevronDownIcon fontSize="3xl" w="30px" m="0" />}
+            fontSize="lg"
+            textTransform="none"
+            lineHeight="38px"
           >
-            <Flex
-              w="full"
-              h="40px"
-              alignItems="start"
-              flexDirection="column"
-              justifyContent="start"
-            >
-              <Text
-                isTruncated
-                maxW='120px'
-                color="#fff"
-                fontSize="15px"
-                textAlign="left"
-                lineHeight="20px"
-                textTransform="lowercase"
-                fontFamily="Evogria,sans-serif"
-              >
+            <Flex justifyContent="start" w="full">
+              {/* <Text w="54px" isTruncated mr="2px" textAlign="left">
                 {currentAccount?.meta?.name}
               </Text>
-              <Text
-                fontSize="15px"
-                lineHeight="20px"
-                fontFamily="Oswald, sans-serif"
-              >
+              <Text> - {truncateStr(currentAccount?.address, 6)}</Text> */}
+              <Text>
                 {currentAccount?.addressDomain ??
-                  truncateStr(currentAccount?.address, 5)}
+                  truncateStr(currentAccount?.address, 6)}
               </Text>
             </Flex>
           </MenuButton>
@@ -161,7 +144,7 @@ function WalletSelector({ display }) {
             borderWidth="2px"
             borderColor="brand.blue"
             bg="black"
-
+            borderTop="0"
             px="15px"
             py="0"
             // ml={{ base: "5px", lg: "auto" }}
