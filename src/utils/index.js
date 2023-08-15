@@ -230,7 +230,9 @@ export const twoDigitTime = (time) => {
 export const truncateStr = (str, n = 6) => {
   if (!str) return "";
   return str.length > n
-    ? str.substr(0, n - 1) + " ... " + str.substr(str.length - n, str.length - 1)
+    ? str.substr(0, n - 1) +
+        " ... " +
+        str.substr(str.length - n, str.length - 1)
     : str;
 };
 
@@ -769,11 +771,17 @@ export const resolveDomain = async (address) => {
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
     try {
-      const domains = await resolveAddressToDomain(address, {
+      const { primaryDomain, error } = await resolveAddressToDomain(address, {
         chainId: SupportedChainId.AlephZeroTestnet,
       });
 
-      return domains[0];
+      if (error?.name) {
+        console.log("address", address);
+        console.log("error?.message", error?.message);
+        return undefined;
+      }
+
+      return primaryDomain;
     } catch (error) {
       console.log("resolveDomain error", error);
     }

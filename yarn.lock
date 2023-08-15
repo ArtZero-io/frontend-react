@@ -141,15 +141,17 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@azns/resolver-core@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@azns/resolver-core/-/resolver-core-0.0.5.tgz#c232792b2e7e143261afb6a290282c33f5b97728"
-  integrity sha512-qY2/n/nW0RBZjmVVL+ULzclstrsmXeZthgBGaYIp54Rj3ha3ANR/O3JCe6uwFZhEnt6Y0EYK0Hg1Ok9/gMy3Nw==
+"@azns/resolver-core@1.3.1", "@azns/resolver-core@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@azns/resolver-core/-/resolver-core-1.3.1.tgz#c568706c3788d631c86362dd7a69fa85cb10d0df"
+  integrity sha512-551mf8C44Yk12nSHAJ2BBFbTiMDxygWswl3E5qTUWv8sNVWhPW3cFHt7L7YX8WdijS4u74BW1vxcoWnj3iABCA==
 
-"@azns/resolver-react@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@azns/resolver-react/-/resolver-react-0.0.5.tgz#b7ffbdb587c6cde8ca261ad7339d7325aebae282"
-  integrity sha512-Tf4l01sUNgtQDU8o/dNpD6pL6nOy1D4Qjx7Vbc3cif6HaICWjttNADEOwlbYO8CNNUtNfqPfvF53XJuJsjXpyQ==
+"@azns/resolver-react@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@azns/resolver-react/-/resolver-react-1.3.1.tgz#f0b526cb58620783cc0cd540fe45903be9f083ec"
+  integrity sha512-f3y1RGYDvUnjJI+Co/erZPCYxIcpYW4Zkrhmv9dYRF/SdGNvMAFU/JLlgkIE4HPNJwv1OFBt6JYAiinUaI5rCg==
+  dependencies:
+    "@azns/resolver-core" "1.3.1"
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
