@@ -774,11 +774,12 @@ export const resolveDomain = async (address) => {
       });
 
       if (error?.name) {
+        console.log("address", address);
         console.log("error.message", error?.message);
-        return address;
+        return undefined;
       }
 
-      return primaryDomain ?? address;
+      return primaryDomain;
     } catch (error) {
       console.log("resolveDomain error", error);
     }
