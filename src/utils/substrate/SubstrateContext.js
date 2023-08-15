@@ -156,10 +156,11 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         meta: { ...meta, name: `${meta.name}` },
       }));
 
+      console.log("allAccounts", allAccounts);
       allAccounts = await Promise.all(
         allAccounts.map(async (item) => {
           const addressDomain = await resolveDomain(item.address);
-
+          console.log("addressDomain", addressDomain);
           return {
             ...item,
             meta: {

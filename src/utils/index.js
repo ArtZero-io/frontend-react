@@ -769,11 +769,16 @@ export const resolveDomain = async (address) => {
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
     try {
-      const domains = await resolveAddressToDomain(address, {
+      const { primaryDomain, error } = await resolveAddressToDomain(address, {
         chainId: SupportedChainId.AlephZero,
       });
 
-      return domains[0];
+      if (error?.name) {
+        console.log("error.message", error?.message);
+        return address;
+      }
+
+      return primaryDomain ?? address;
     } catch (error) {
       console.log("resolveDomain error", error);
     }
