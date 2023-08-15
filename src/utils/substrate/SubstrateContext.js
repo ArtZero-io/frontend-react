@@ -177,7 +177,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
 
         allAccounts = await Promise.allSettled(
           allAccounts.map(async (item) => {
-            const addressDomain = await resolveDomain(item.address);
+            const addressDomain = await resolveDomain(item.address, api);
             console.log(
               "asyncLoadAccounts A4 addressDomain",
               addressDomain,
