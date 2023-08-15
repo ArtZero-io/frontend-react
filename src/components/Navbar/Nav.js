@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { Box, Flex, Link, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
-import ChainDropdown from "../Dropdown/ChainDropdown";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 function Nav() {
   return (
@@ -36,11 +37,6 @@ function Nav() {
               alt="ArtZeroLogo"
             />
           </Link>
-
-          <Flex display={{ base: "none", md: "flex" }}>
-            <ChainDropdown />
-          </Flex>
-
           <NavContent.Mobile />
           <NavContent.Desktop />
         </Flex>

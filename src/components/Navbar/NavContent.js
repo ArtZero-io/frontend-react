@@ -48,7 +48,6 @@ import {
 } from "@chakra-ui/icons";
 import C14Modal from "../Modal/C14Modal";
 import InkWhale from "@theme/assets/icon/InkWhale";
-import ChainDropdown from "../Dropdown/ChainDropdown";
 
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -110,14 +109,13 @@ const MobileNavContent = (props) => {
             />
           </Flex>
 
-          <Flex justify={{ base: "center", md: "start" }} alignItems="center">
-            {/* <ArtZeroLogo
+          <Flex justify={{ base: "center", md: "start" }}>
+            <ArtZeroLogo
               height="20px"
               width="138px"
               alt="ArtZeroLogo"
               display={{ base: "flex", md: "none" }}
-            /> */}
-            <ChainDropdown />
+            />
           </Flex>
 
           <SearchDrawer
