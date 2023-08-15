@@ -747,7 +747,6 @@ function GeneralPage() {
                     ) : (
                       rewardHistory.map((reward, index) => (
                         <Tr key={index} color="#fff">
-                          {console.log("reward", reward)}
                           {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
                           <Td textAlign="left" py={7}>
                             {reward.blockNumber}

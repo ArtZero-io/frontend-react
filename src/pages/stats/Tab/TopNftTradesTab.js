@@ -47,10 +47,9 @@ function TopNftTradesTab() {
               return eventFormatted;
             })
           );
+          setTopNftTradesList(ret);
+          setLoading(false);
         }
-
-        setTopNftTradesList(ret);
-        setLoading(false);
       } catch (error) {
         setTopNftTradesList([]);
         setLoading(false);
@@ -129,7 +128,7 @@ function TopNftTradesTab() {
           </HStack> */}
         </Stack>
         {loading ? (
-          <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+          <HStack pt="80px" pb="20px" justifyContent="center" w="full">
             <BeatLoader color="#7ae7ff" size="10px" />
           </HStack>
         ) : (

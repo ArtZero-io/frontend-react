@@ -3,6 +3,7 @@
 import { u8aEq } from "@polkadot/util";
 import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import { u8aUnwrapBytes, u8aWrapBytes } from "@polkadot/util";
+import { toast } from "react-hot-toast";
 
 const unwrapBytes = u8aUnwrapBytes;
 const wrapBytes = u8aWrapBytes;
@@ -65,8 +66,9 @@ function getWindowExtensions(originName, wallet) {
             version,
           }),
           enable(originName).catch((error) => {
-            console.error(`Error initializing ${name}: ${error.message}`);
-            throw new Error(`Error initializing ${name}: ${error.message}`)
+            toast(`${name} wallet: ${error.message}`);
+            console.log(`Error initializing ${name}: ${error.message}`);
+            throw new Error(`Error initializing ${name}: ${error.message}`);
           }),
         ])
       )
@@ -79,10 +81,12 @@ export function web3Enable(originName, compatInits = [], wallet) {
       "You must pass a name for your app to the web3Enable function"
     );
   }
-
+  console.log("web3Enable wallet", wallet);
   const initCompat = compatInits.length
     ? Promise.all(compatInits.map((c) => c().catch(() => false)))
     : Promise.resolve([true]);
+  console.log("web3Enable initCompat", initCompat);
+
   web3EnablePromise = documentReadyPromise(() =>
     initCompat.then(() =>
       getWindowExtensions(originName, wallet)
@@ -101,8 +105,8 @@ export function web3Enable(originName, compatInits = [], wallet) {
             })
         )
         .catch((error) => {
-          console.log(error);
-          throw new Error(error)
+          console.log("web3Enable error", error);
+          throw new Error(error);
         })
         .then((values) => {
           const names = values.map(({ name, version }) => `${name}/${version}`);
@@ -116,6 +120,7 @@ export function web3Enable(originName, compatInits = [], wallet) {
         })
     )
   );
+
   return web3EnablePromise;
 }
 
@@ -126,10 +131,13 @@ export async function web3Accounts({ accountType, ss58Format } = {}) {
 
   const accounts = [];
   const injected = await web3EnablePromise;
+  console.log("web3Accounts injected", injected);
   const retrieved = await Promise.all(
     injected.map(async ({ accounts, name: source }) => {
       try {
         const list = await accounts.get();
+        console.log("web3Accounts list", list);
+
         return mapAccounts(
           source,
           list.filter(({ type }) =>

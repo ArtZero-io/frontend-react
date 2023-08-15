@@ -23,7 +23,7 @@ const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 
 function StatsPage() {
-  const { api } = useSubstrateState();
+  const { api, apiState } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -212,6 +212,8 @@ function StatsPage() {
 
   useEffect(() => {
     if (!platformStatistics || !topCollections) {
+      if (apiState !== "READY") return;
+
       setIsLoading(true);
       fetchAzeroPrice();
       prepareStats().then((data) => {
@@ -220,13 +222,13 @@ function StatsPage() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiState]);
 
   useInterval(() => {
     fetchAzeroPrice();
     prepareStats().then((data) => {
-      setPlatformStatistics(data.platformStatistics);
-      setTopCollections(data.topCollections);
+      setPlatformStatistics(data?.platformStatistics);
+      setTopCollections(data?.topCollections);
     });
   }, 60000);
 

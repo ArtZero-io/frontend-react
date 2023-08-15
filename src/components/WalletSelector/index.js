@@ -373,24 +373,13 @@ function WalletSelector({ display }) {
                 px={["4px", "10px"]}
               >
                 <MenuDisconnectIcon />
-                <Text ml="10px">Disconnect Wallet</Text>
+                <Text ml="10px">disconnect wallet</Text>
               </MenuItem>
             </Flex>
           </MenuList>
         </Menu>
 
-        {/* <MenuList
-          px={["0", "15px"]}
-          py={["0", "15px"]}
-          minW="250px"
-          borderWidth={["0px", "2px"]}
-          borderRadius="0"
-          bg={["black", "brand.grayDark"]}
-          borderColor="brand.blue"
-          // ml={{ base: "20px", lg: "auto" }}
-        >
 
-        </MenuList> */}
         <WalletMenu address={currentAccount?.address} />
       </Flex>
     </>
