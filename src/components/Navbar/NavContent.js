@@ -383,21 +383,15 @@ const MobileNav = ({ onClose, isOpen }) => {
           id="drawer-content"
           h="var(--doc-height)"
         >
-          <DrawerHeader bg="transparent">
-            <Flex minH="30px" justifyContent="center" alignItems="center">
+          <DrawerHeader pl="18px" bg="transparent">
+            <Flex minH="30px" justifyContent="start" alignItems="center">
               <DrawerCloseButton
-                left="14px"
-                top="18px"
+                right="14px"
+                top="16px"
                 borderRadius="0"
                 color="#fff"
               />
 
-              {/* <ArtZeroLogo
-                alt="ArtZeroLogo"
-                height="20px"
-                width="138px"
-                display={{ base: "flex", md: "none" }}
-              /> */}
               <ChainDropdown />
             </Flex>
           </DrawerHeader>
