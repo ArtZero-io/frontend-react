@@ -190,9 +190,9 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
           eventsList?.map(async (event) => {
             const { blockNumber, buyer, seller, trader } = event;
 
-            const buyerDomain = await resolveDomain(buyer);
-            const sellerDomain = await resolveDomain(seller);
-            const traderDomain = await resolveDomain(trader);
+            const buyerDomain = await resolveDomain(buyer, api);
+            const sellerDomain = await resolveDomain(seller, api);
+            const traderDomain = await resolveDomain(trader, api);
 
             const eventFormatted = {
               ...event,

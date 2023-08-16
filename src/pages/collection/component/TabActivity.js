@@ -214,9 +214,9 @@ const NewEventTable = ({
 
             const { status, ret } = await APICall.getNFTByID(options);
 
-            const buyerDomain = await resolveDomain(rest?.buyer);
-            const sellerDomain = await resolveDomain(rest?.seller);
-            const traderDomain = await resolveDomain(rest?.trader);
+            const buyerDomain = await resolveDomain(rest?.buyer, api);
+            const sellerDomain = await resolveDomain(rest?.seller, api);
+            const traderDomain = await resolveDomain(rest?.trader, api);
 
             const eventFormatted = {
               nftContractAddress,

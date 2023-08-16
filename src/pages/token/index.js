@@ -209,7 +209,7 @@ function TokenPage() {
               return { [k]: v };
             });
         // get username onchain if any
-        const name = await resolveDomain(ownerAddress);
+        const name = await resolveDomain(ownerAddress, api);
 
         setOwnerName(name);
         setOwnerAddress(ownerAddress);
