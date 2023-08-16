@@ -10,6 +10,7 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { formatNumDynamicDecimal } from "@utils";
 import StatsCardContentLoader from "../StatsCardContentLoader";
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
 
 function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
   return (
@@ -34,14 +35,14 @@ function StatsHeader({ platformStatistics, isLoading = true, azeroPrice }) {
           px="16px"
           w="full"
           gap={["15px", "30px"]}
-          maxW="1000px"
+          maxW={isAleph ? "1000px" : "1200px"}
           minH={"120px"}
           templateColumns={{
             base: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
           }}
         >
           {!platformStatistics &&
-            [...Array(6)].map((_, idx) => (
+            [...Array(isAleph ? 6 : 4)].map((_, idx) => (
               <GridItem
                 m="0"
                 bg="brand.grayDark"

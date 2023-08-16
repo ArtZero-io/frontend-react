@@ -21,6 +21,7 @@ import TopNftTradesTab from "./Tab/TopNftTradesTab";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
 
 function StatsPage() {
   const { api, apiState } = useSubstrateState();
@@ -164,7 +165,7 @@ function StatsPage() {
 
       setIsLoading(false);
 
-      const ret = {
+      let ret = {
         platformStatistics: [
           {
             title: "Total Payout (AZERO)",
@@ -202,7 +203,14 @@ function StatsPage() {
         ],
         topCollections: dataListWithFP,
       };
-
+      if (!isAleph) {
+        ret = {
+          ...ret,
+          platformStatistics: ret.platformStatistics.filter(
+            (item) => !item.unit.includes("INW")
+          ),
+        };
+      }
       return ret;
     } catch (err) {
       console.log("err", err);
