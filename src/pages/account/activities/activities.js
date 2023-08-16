@@ -134,7 +134,7 @@ export default ActivityPages;
 
 const EventTableWrapper = ({ type, tableHeaders }) => {
   const { ref, inView } = useInView();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   useEffect(() => {
     if (inView) {
@@ -145,7 +145,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 
   const fetchEvents = useCallback(
     async ({ pageParam }) => {
-      if (pageParam === undefined) return;
+      if (pageParam === undefined || apiState !== "READY") return;
 
       let eventsList = [];
 
@@ -217,12 +217,12 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
         nextId: pageParam + NUMBER_NFT_PER_PAGE,
       };
     },
-    [api, type, currentAccount?.address]
+    [api, apiState, type, currentAccount?.address]
   );
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteQuery(
-      [`getEvents${type}`, currentAccount?.address],
+      [`getEvents${type}`, currentAccount?.address, apiState],
       ({ pageParam = 0 }) => fetchEvents({ pageParam }),
       {
         getNextPageParam: (lastPage) => {

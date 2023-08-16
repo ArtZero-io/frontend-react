@@ -52,7 +52,7 @@ async function tokenUri(caller_account, token_id) {
       value: azero_value,
       gasLimit,
     },
-    {bytes: token_id}
+    { bytes: token_id }
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -79,7 +79,7 @@ async function allowance(
     { value: azero_value, gasLimit },
     owner_address,
     operator_address,
-    {bytes: domain_name}
+    { bytes: domain_name }
   );
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -95,6 +95,7 @@ async function approve(
   dispatch
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -105,21 +106,21 @@ async function approve(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
-  console.log('approve::domain_name', domain_name);
+
   gasLimit = await getEstimatedGas(
     address,
     contract,
     value,
     "psp34::approve",
     operator_address,
-    {bytes: domain_name},
+    { bytes: domain_name },
     is_approve
   );
 
   await contract.tx["psp34::approve"](
     { gasLimit, value },
     operator_address,
-    {bytes: domain_name},
+    { bytes: domain_name },
     is_approve
   )
     .signAndSend(address, { signer }, ({ dispatchError, status }) => {
@@ -156,6 +157,7 @@ async function transfer(
   dispatch
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -172,14 +174,14 @@ async function transfer(
     value,
     "psp34::transfer",
     receiver,
-    {bytes: domain_name},
+    { bytes: domain_name },
     additionalData
   );
 
   await contract.tx["psp34::transfer"](
     { gasLimit, value },
     receiver,
-    {bytes: domain_name},
+    { bytes: domain_name },
     additionalData
   )
     .signAndSend(address, { signer }, ({ dispatchError, status }) => {
@@ -213,7 +215,7 @@ const azero_domains_nft_contract_calls = {
   approve,
   tokenUri,
   balanceOf,
-  transfer
+  transfer,
 };
 
 export default azero_domains_nft_contract_calls;

@@ -47,7 +47,7 @@ export default function UpdateAdminAddressModal({
   const dispatch = useDispatch();
 
   const [newAdminAddress, setNewAdminAddress] = useState("");
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const { loading: loadingForceUpdate } = useForceUpdate(
@@ -156,8 +156,10 @@ export default function UpdateAdminAddressModal({
   }, [api, collection_address, currentAccount]);
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     fetchMyAdminList();
-  }, [fetchMyAdminList]);
+  }, [fetchMyAdminList, apiState]);
 
   const onRemoveHandler = async (adminAddress) => {
     if (!api || !currentAccount) return;
