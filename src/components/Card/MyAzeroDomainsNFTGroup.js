@@ -618,7 +618,7 @@ function GridNftA({
                 <Heading size="h6" fontSize="14px">
                   Bulk Listing
                 </Heading>
-                {console.log("multiListingData", multiListingData)}
+
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
                   {`Your are listing ${collectionName} NFT ID`}
                   {multiListingData?.listInfo?.map((item) => {
@@ -898,7 +898,6 @@ function formatSelectedNFT(
   actionType,
   onChange
 ) {
-  console.log(listNFT);
   const selectedNFT = listNFT?.filter((item) => item.azDomainName === id);
   const { avatar, nftName, azDomainName } = selectedNFT[0];
 

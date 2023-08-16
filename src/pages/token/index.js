@@ -154,10 +154,9 @@ function TokenPage() {
 
   const fetchData = useCallback(
     async function () {
-
       try {
         setLoading(true);
-        console.log("Start fetchData");
+
         if (currentAccount) {
           const stakedCount = await fetchMyPMPStakedCount(
             currentAccount,
@@ -171,17 +170,16 @@ function TokenPage() {
 
           setMyTradingFee(myTradingFeeData);
         }
-        console.log("After get tradding fee and staked count");
+
         const {
           ret: [collectionDetails],
         } = await APICall.getCollectionByAddress({
           collection_address,
         });
-        console.log("After get collection by address");
+
         let tokenDetails = {};
 
         if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
-          console.log("This is Azero Domain Contract");
           tokenDetails = await getAzeroDomainNFTDetails(
             api,
             currentAccount || getPublicCurrentAccount(),
@@ -198,7 +196,6 @@ function TokenPage() {
             collectionDetails?.contractType
           );
         }
-        console.log("tokenDetails", tokenDetails);
 
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
@@ -221,7 +218,7 @@ function TokenPage() {
         }
 
         let listBidder;
-        console.log("Start get list bidder");
+
         if (tokenDetails?.is_for_sale) {
           if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
             listBidder = await marketplace_contract_calls.getAllBids(
@@ -238,7 +235,7 @@ function TokenPage() {
               { u64: token_id }
             );
           }
-          console.log("listBidder", listBidder);
+
           setBidderCount(listBidder?.length || 0);
           if (listBidder?.length) {
             //sort highest price first
@@ -281,7 +278,6 @@ function TokenPage() {
         setCollection(collectionDetails);
 
         setLoading(false);
-        console.log("End fetchData");
       } catch (error) {
         console.error(error);
         toast.error(error.message);
@@ -1164,7 +1160,7 @@ function TokenPage() {
                                 actionType && actionType !== REMOVE_BID
                               }
                             />
-                            {console.log("MobileEditBidPriceModal", token)}
+
                             <MobileEditBidPriceModal {...token} />
                           </Flex>
 
@@ -1657,8 +1653,7 @@ function MobileEditBidPriceModal({
 
   const [newBidPrice, setNewBidPrice] = useState("");
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
-  console.log("MobileEditBidPriceModal::azDomainName", azDomainName);
-  console.log("MobileEditBidPriceModal::tokenID", tokenID);
+
   const { doUpdateBidPrice } = useEditBidPrice({
     newBidPrice,
     tokenID,
@@ -1770,7 +1765,6 @@ function MobileEditBidPriceModal({
                 min={0}
                 precision={6}
                 onChange={(v) => {
-                  console.log("v", v);
                   if (/[eE+-]/.test(v)) return;
 
                   setNewBidPrice(v);

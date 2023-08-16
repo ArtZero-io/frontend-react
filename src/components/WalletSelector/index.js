@@ -154,7 +154,7 @@ function WalletSelector({ display }) {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, "le");
           let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, "le");
-          // console.log(balance?.data.toHuman());
+
           if (balSZERO.gt(oneSZERO)) {
             balSZERO =
               balSZERO.div(new BN(10 ** 12)).toNumber() -
@@ -162,7 +162,7 @@ function WalletSelector({ display }) {
           } else {
             balSZERO = balSZERO.toNumber() / 10 ** 12;
           }
-          // console.log('balSZERO - freeze', balSZERO);
+
           if (balSZERO >= 1) {
             balSZERO = shortenNumber(balSZERO);
           } else {
@@ -257,7 +257,6 @@ function WalletSelector({ display }) {
                 justifyContent="center"
                 mr="12px"
               >
-                {console.log(currentAccount?.meta?.source)}
                 {currentAccount?.meta?.source === "subwallet-js" && (
                   <Image
                     src={SubwalletLogo}

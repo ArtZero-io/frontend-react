@@ -152,18 +152,6 @@ const Main = () => {
     initContract();
   }, [api, apiState, initContract]);
 
-  // useInterval(() => {
-  //   console.log("useInterval", apiState);
-
-  // if (apiState !== "READY") {
-  //   console.log("A useInterval apiState READY", apiState);
-  //   toast("Trying again in 3s... ", { position: "bottom-right" });
-  // } else {
-  //   console.log("B useInterval apiState READY", apiState);
-  //   initContract();
-  // }
-  // }, 3000);
-
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );

@@ -180,14 +180,6 @@ function GeneralPage() {
               (platformTotalStaked * 1)
             : 0;
 
-        // console.log("rewardPoolData", rewardPoolData);
-        // console.log(
-        //   "rewardPoolData SUM",
-        //   totalProfit * 0.3 +
-        //     validatorProfit * 0.5 +
-        //     (rewardStarted ? 0 : rewardPoolData)
-        // );
-
         if (!isMounted) return;
 
         setEstimatedEarning(estimatedEarning);
@@ -330,7 +322,7 @@ function GeneralPage() {
 
     return () => (isMounted = false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
   const lastDay = useMemo(() => {

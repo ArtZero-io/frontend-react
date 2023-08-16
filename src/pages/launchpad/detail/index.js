@@ -219,7 +219,7 @@ const LaunchpadDetailPage = () => {
     []
   );
   const [phasesInfo, setPhasesInfo] = useState([]);
-  console.log("phasesInfo", phasesInfo);
+
   const [loadingPhaseInfo, setLoadingPhaseInfo] = useState(false);
 
   const fetchPublicPhasesInfoData = useCallback(
@@ -243,7 +243,7 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getLastPhaseId(
             getPublicCurrentAccount()
           );
-        console.log("totalPhase", totalPhase);
+
         const allPhases = await Promise.all(
           [...new Array(totalPhase)].map(async (_, index) => {
             const totalCountWLAddress =
@@ -283,7 +283,6 @@ const LaunchpadDetailPage = () => {
             return formattedData;
           })
         );
-        console.log("allPhases", allPhases);
 
         if (isUnmounted) return;
         setPhasesInfoWithDisablePhase(allPhases);

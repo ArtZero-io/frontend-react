@@ -117,8 +117,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   const doLoad = useCallback(async () => {
     setLoading(true);
-    console.log(nftContractAddress);
-    console.log(currentAccount);
+
     try {
       // remove publicCurrentAccount due to private route
       const sale_info =
@@ -693,7 +692,6 @@ function MyAzeroDomainsNFTTabInfo(props) {
                         min={0.1}
                         precision={6}
                         onChange={(v) => {
-                          console.log("v", v);
                           if (/[eE+-]/.test(v)) return;
 
                           setNewBidPrice(v);

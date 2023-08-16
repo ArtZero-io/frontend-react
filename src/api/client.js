@@ -531,7 +531,7 @@ export const APICall = {
 
   getAzeroDomainNFTByName: async (options) => {
     let formatTokenId;
-    
+
     try {
       if (
         typeof options?.azDomainName === "string" &&
@@ -544,7 +544,7 @@ export const APICall = {
     } catch (error) {
       console.log("error", error);
     }
-    console.log('getAzeroDomainNFTByName::options', options);
+
     return await client("POST", "/getNFTByID", options);
   },
 
@@ -708,7 +708,6 @@ export const APICall = {
     collection_address,
     azDomainName,
   }) => {
-    console.log({ collection_address, azDomainName });
     return await client("POST", "/updateNFT", {
       collection_address,
       azDomainName,

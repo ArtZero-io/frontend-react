@@ -487,7 +487,7 @@ export const getMyPendingPMP = async ({
           collection_address: PMPContractAddress,
           token_id,
         });
-        console.log("token_id token_id", token_id);
+
         if (status === "OK") {
           token_info = ret[0];
         }

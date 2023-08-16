@@ -125,7 +125,7 @@ function RewardDistribution() {
         ),
         isClaimed: await staking_calls.isClaimed(currentAccount, staker),
       };
-      // console.log(i + 1 + "," + staker_info.address + "," + staker_info.amount);
+
       stakers.push(staker_info);
     }
     setStakers(stakers);

@@ -8,11 +8,6 @@ import { APICall } from "@api/client";
 const queryKeys = { project: "project" };
 
 async function fetchProjectList() {
-  // if (!isValidAddress(address)) {
-  //   toast.error("error: Contract address is not valid!");
-  //   return {};
-  // }
-
   const { ret: inactiveProj } = await APICall.getAllProjects({
     isActive: false,
   });
@@ -23,15 +18,6 @@ async function fetchProjectList() {
 
   const projList = inactiveProj.concat(activeProj);
 
-  // const ret = projList.find(
-  //   ({ nftContractAddress }) => nftContractAddress === address
-  // );
-
-  // if (isEmptyObj(ret)) {
-  //   toast.error("error: failed to fetch project info!");
-  //   return {};
-  // }
-  // console.log("ret", ret);
   return projList;
 }
 
