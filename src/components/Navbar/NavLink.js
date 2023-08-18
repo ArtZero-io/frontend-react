@@ -1,7 +1,8 @@
-import { Link } from "@chakra-ui/react";
+import { Link, Text } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import InkWhale from "@theme/assets/icon/InkWhale";
 
 const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
   const { pathname } = useLocation();
@@ -38,7 +39,8 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
           }}
           color={path === to ? "brand.blue" : "#fff"}
         >
-          {label}
+          {label === "Stake2Earn" ? <InkWhale /> : null}
+          <Text ml="8px">{label}</Text>
         </Link>
       )}
       {!isExternal && (

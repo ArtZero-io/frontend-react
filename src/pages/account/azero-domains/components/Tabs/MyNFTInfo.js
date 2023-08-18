@@ -117,8 +117,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
   const doLoad = useCallback(async () => {
     setLoading(true);
-    console.log(nftContractAddress);
-    console.log(currentAccount);
+
     try {
       // remove publicCurrentAccount due to private route
       const sale_info =
@@ -151,7 +150,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }
-      const name = await resolveDomain(accountAddress);
+      const name = await resolveDomain(accountAddress, api);
       setOwnerAddress(accountAddress);
       setOwnerName(name);
       setIsAzeroDomain(
@@ -164,7 +163,14 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
       console.log("error", error);
     }
-  }, [azDomainName, currentAccount, is_for_sale, nftContractAddress, owner]);
+  }, [
+    api,
+    azDomainName,
+    currentAccount,
+    is_for_sale,
+    nftContractAddress,
+    owner,
+  ]);
 
   useEffect(() => {
     doLoad();
@@ -232,13 +238,13 @@ function MyAzeroDomainsNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const username = await resolveDomain(accountAddress);
+      const username = await resolveDomain(accountAddress, api);
 
       return setOwnerName(username || truncateStr(accountAddress, 6));
     };
 
     ownerName();
-  }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
+  }, [api, currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
 
   useEffect(() => {
     const fetchTradeFee = async () => {
@@ -686,7 +692,6 @@ function MyAzeroDomainsNFTTabInfo(props) {
                         min={0.1}
                         precision={6}
                         onChange={(v) => {
-                          console.log("v", v);
                           if (/[eE+-]/.test(v)) return;
 
                           setNewBidPrice(v);

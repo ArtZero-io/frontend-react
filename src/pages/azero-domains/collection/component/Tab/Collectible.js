@@ -164,7 +164,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = await resolveDomain(accountAddress);
+      const name = await resolveDomain(accountAddress, api);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -175,7 +175,14 @@ const AzeroDomainsNFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, azDomainName]);
+  }, [
+    api,
+    currentAccount,
+    is_for_sale,
+    nftContractAddress,
+    owner,
+    azDomainName,
+  ]);
 
   const attrsList = !traits
     ? {}

@@ -27,7 +27,7 @@ export default function useEditAzeroDomainsBidPrice({
 
   const doUpdateAzeroDomainsBidPrice = async () => {
     toast(`Update Azero Domains bid price...`);
-    console.log('Update Azero Domains bid price...', azDomainName);
+
     let unsubscribe;
 
     const address = currentAccount?.address;

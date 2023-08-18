@@ -167,7 +167,7 @@ const NFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = await resolveDomain(accountAddress);
+      const name = await resolveDomain(accountAddress, api);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -178,7 +178,7 @@ const NFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [api, currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
   const attrsList = !traits
     ? {}

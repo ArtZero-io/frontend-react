@@ -37,12 +37,14 @@ export default function UpdateURIModal({
 
   const [newURI, setNewURI] = useState("");
   const [currentURI, setCurrentURI] = useState("");
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const publicCurrentAccount = getPublicCurrentAccount();
 
   useEffect(() => {
-    const getTokenUri = async () => {
+    let isUnmounted = false;
+
+    const getTokenUri = async (isUnmounted) => {
       let token_uri = "";
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -60,10 +62,15 @@ export default function UpdateURIModal({
       if (!token_uri) toast.error("No token_uri!");
 
       let base_uri = token_uri.replace("1.json", "");
+      if (isUnmounted) return;
+
       setCurrentURI(base_uri);
     };
-    getTokenUri();
-  }, [collection_address, api, publicCurrentAccount]);
+    if (apiState !== "READY") return;
+
+    getTokenUri(isUnmounted);
+    return () => (isUnmounted = true);
+  }, [collection_address, apiState, api, publicCurrentAccount]);
 
   useEffect(() => {
     if (rest.step === FINALIZED) {

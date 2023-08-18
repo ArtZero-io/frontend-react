@@ -120,7 +120,6 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
-    
     return output.toHuman().Ok;
   }
   return null;
@@ -797,6 +796,7 @@ export const withdrawMarketplaceContract = async (
   receiver_address
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

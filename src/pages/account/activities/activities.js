@@ -134,7 +134,7 @@ export default ActivityPages;
 
 const EventTableWrapper = ({ type, tableHeaders }) => {
   const { ref, inView } = useInView();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   useEffect(() => {
     if (inView) {
@@ -145,7 +145,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 
   const fetchEvents = useCallback(
     async ({ pageParam }) => {
-      if (pageParam === undefined) return;
+      if (pageParam === undefined || apiState !== "READY") return;
 
       let eventsList = [];
 
@@ -190,9 +190,9 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
           eventsList?.map(async (event) => {
             const { blockNumber, buyer, seller, trader } = event;
 
-            const buyerDomain = await resolveDomain(buyer);
-            const sellerDomain = await resolveDomain(seller);
-            const traderDomain = await resolveDomain(trader);
+            const buyerDomain = await resolveDomain(buyer, api);
+            const sellerDomain = await resolveDomain(seller, api);
+            const traderDomain = await resolveDomain(trader, api);
 
             const eventFormatted = {
               ...event,
@@ -217,12 +217,12 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
         nextId: pageParam + NUMBER_NFT_PER_PAGE,
       };
     },
-    [api, type, currentAccount?.address]
+    [api, apiState, type, currentAccount?.address]
   );
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteQuery(
-      [`getEvents${type}`, currentAccount?.address],
+      [`getEvents${type}`, currentAccount?.address, apiState],
       ({ pageParam = 0 }) => fetchEvents({ pageParam }),
       {
         getNextPageParam: (lastPage) => {
@@ -245,7 +245,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
   return (
     <>
       {isLoading ? (
-        <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <BeatLoader color="#7ae7ff" size="10px" />
         </HStack>
       ) : (
@@ -257,7 +257,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
       )}
 
       {dataFormatted?.length ? (
-        <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <Text ref={ref}>
             {isFetchingNextPage ? (
               <BeatLoader color="#7ae7ff" size="10px" />

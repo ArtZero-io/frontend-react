@@ -33,12 +33,7 @@ function CheckCollection() {
   const { api } = useSubstrateState();
   const publicCurrentAccount = getPublicCurrentAccount();
 
-  // useEffect(async () => {
-
-  // }, [currentAccount]);
-
   const onCheck = async () => {
-    // console.log(collectionAddress);
     if (!isValidAddressPolkadotAddress(collectionAddress)) {
       toast.error("Wrong Address Format");
       return;
@@ -80,7 +75,6 @@ function CheckCollection() {
       1
     );
     // }
-    console.log("token_uri", token_uri);
 
     if (!token_uri) toast.error("No token_uri!");
 
@@ -89,7 +83,7 @@ function CheckCollection() {
     setImageUri(metadata.image);
 
     let base_uri = token_uri.replace("1.json", "");
-    // console.log("base_uri", base_uri);
+
     setTokenUri(base_uri);
 
     let json_count = 0;

@@ -42,11 +42,13 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
+import contractData from "@utils/blockchain/";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
 
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [profile, setProfile] = useState(null);
@@ -58,8 +60,10 @@ function ProfileHeader() {
   }, []);
 
   useEffect(() => {
+
     const fetchProfile = async () => {
-      if (!api) return;
+      if (!api || !contract) return;
+      await setProfileContract(api, contractData?.profile);
 
       const res = await dispatch(getProfile(currentAccount));
       if (res?.status === "OK") {
@@ -74,14 +78,14 @@ function ProfileHeader() {
           };
         });
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     };
 
     if (!profile?.address || profile?.address !== currentAccount?.address) {
       fetchProfile();
     }
-  }, [api, currentAccount, dispatch, profile]);
+  }, [api, currentAccount, dispatch, profile, apiState]);
 
   // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate } = useForceUpdate(
@@ -100,7 +104,7 @@ function ProfileHeader() {
           };
         });
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     }
   );
@@ -108,7 +112,7 @@ function ProfileHeader() {
   const [claimAmount, setClaimAmount] = useState(0);
 
   const fetchMyBidHoldInfo = useCallback(async () => {
-    if (!api) return;
+    if (!api || apiState !== "READY") return;
 
     const queryResult = await execContractQuery(
       currentAccount?.address,
@@ -122,7 +126,7 @@ function ProfileHeader() {
     const amount = formatQueryResultToNumber(queryResult);
 
     setClaimAmount(amount);
-  }, [api, currentAccount?.address]);
+  }, [api, currentAccount?.address, apiState]);
 
   useEffect(() => {
     fetchMyBidHoldInfo();
