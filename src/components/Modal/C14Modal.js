@@ -7,15 +7,16 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { isMobile } from "react-device-detect";
 
 export default function C14Modal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <>
-      {!isMobile && (
+      {isBigScreen ? (
         <Button
           _hover={{
             borderBottomColor: "brand.blue",
@@ -39,11 +40,9 @@ export default function C14Modal() {
           borderBottomColor="transparent"
           h={"42px"}
         >
-          <Text>Buy Azero</Text>
+          <Text>buy azero</Text>
         </Button>
-      )}
-
-      {isMobile && (
+      ) : (
         <Text
           _hover={{
             textDecoration: "none",
@@ -63,7 +62,7 @@ export default function C14Modal() {
           color={isOpen ? "#7ae7ff" : "#fff"}
           onClick={() => onOpen()}
         >
-          Buy Azero
+          buy azero
         </Text>
       )}
 

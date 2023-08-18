@@ -8,7 +8,9 @@ import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
+// eslint-disable-next-line no-unused-vars
 import { resolveDomain } from "..";
+import { toast } from "react-hot-toast";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -72,8 +74,7 @@ const reducer = (state, action) => {
         keyring: null,
         currentAccount: null,
         keyringState: null,
-        apiState: null,
-        apiStateState: null,
+        // apiState: null,
       };
     default:
       throw new Error(`Unknown type: ${action.type}`);
@@ -85,6 +86,7 @@ const reducer = (state, action) => {
 
 const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
+  console.log("connect apiState", apiState);
 
   if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
@@ -107,6 +109,9 @@ const connect = (state, dispatch) => {
       },
     },
   });
+
+  console.log("connect _api", _api);
+
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -114,14 +119,17 @@ const connect = (state, dispatch) => {
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
+  console.log("connect _api connected");
 
   _api.on("ready", () => {
     dispatch({ type: "CONNECT_SUCCESS" });
   });
+  console.log("connect _api ready");
 
   _api.on("error", (err) => {
     dispatch({ type: "CONNECT_ERROR", payload: err });
   });
+  console.log("connect _api error");
 };
 
 const retrieveChainInfo = async (api) => {
@@ -151,26 +159,43 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       await web3Enable(config.APP_NAME, [], wallet);
 
       let allAccounts = await web3Accounts();
+
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
         meta: { ...meta, name: `${meta.name}` },
       }));
 
-      console.log("allAccounts", allAccounts);
-      allAccounts = await Promise.all(
-        allAccounts.map(async (item) => {
-          console.log("resolveDomain api", api);
-          const addressDomain = await resolveDomain(item.address, api);
-          console.log("addressDomain", addressDomain);
-          return {
-            ...item,
-            meta: {
-              ...item.meta,
-              addressDomain,
-            },
-          };
-        })
-      );
+      try {
+        toast(`Loading ${allAccounts?.length} accounts domain...`, {
+          style: {
+            minWidth: "180px",
+          },
+        });
+
+        console.log("allAccounts", allAccounts);
+        allAccounts = await Promise.all(
+          allAccounts.map(async (item) => {
+            console.log("resolveDomain api", api);
+            const addressDomain = await resolveDomain(item.address, api);
+            console.log("addressDomain", addressDomain);
+            return {
+              ...item,
+              meta: {
+                ...item.meta,
+                addressDomain,
+              },
+            };
+          })
+        );
+
+        toast(`Load accounts domain...done!`, {
+          style: {
+            minWidth: "180px",
+          },
+        });
+      } catch (error) {
+        console.log("resolveDomain error", error);
+      }
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);
@@ -183,6 +208,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
+          console.log("meta", meta);
           Keyring.saveAddress(address, meta);
         });
       }
@@ -193,6 +219,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       dispatch({ type: "KEYRING_ERROR" });
     }
   };
+  console.log("asyncLoadAccounts B");
 
   await asyncLoadAccounts();
 };

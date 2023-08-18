@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { CopyIcon, LinkIcon } from "@chakra-ui/icons";
 import { SUB_DOMAIN } from "../../constants";
 import { useEffect, useState } from "react";
+import { useSubstrateState } from "@utils/substrate";
 
 export default function AddressCopier({
   address,
@@ -12,6 +13,7 @@ export default function AddressCopier({
   hasIcon = false,
 }) {
   const { onCopy } = useClipboard(address);
+  const { api, apiState } = useSubstrateState();
 
   const handleCopy = () => {
     toast.success("Address copied!");
@@ -21,9 +23,11 @@ export default function AddressCopier({
   const [domains, setDomains] = useState();
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     try {
       const fetchDomain = async () => {
-        const addressDomain = await resolveDomain(address);
+        const addressDomain = await resolveDomain(address, api);
         setDomains(addressDomain);
         return;
       };
@@ -32,7 +36,8 @@ export default function AddressCopier({
     } catch (error) {
       console.log("error", error);
     }
-  }, [address]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, apiState]);
 
   return (
     <>

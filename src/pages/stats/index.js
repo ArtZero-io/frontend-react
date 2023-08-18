@@ -22,9 +22,10 @@ import TopNftTradesTab from "./Tab/TopNftTradesTab";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
+const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
 
 function StatsPage() {
-  const { api } = useSubstrateState();
+  const { api, apiState } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -208,7 +209,7 @@ function StatsPage() {
 
       setIsLoading(false);
 
-      const ret = {
+      let ret = {
         platformStatistics: [
           {
             title: "Total Payout (AZERO)",
@@ -246,7 +247,14 @@ function StatsPage() {
         ],
         topCollections: dataListWithFP,
       };
-
+      if (!isAleph) {
+        ret = {
+          ...ret,
+          platformStatistics: ret.platformStatistics.filter(
+            (item) => !item.unit.includes("INW")
+          ),
+        };
+      }
       return ret;
     } catch (err) {
       console.log("err", err);
@@ -256,6 +264,8 @@ function StatsPage() {
 
   useEffect(() => {
     if (!platformStatistics || !topCollections) {
+      if (apiState !== "READY") return;
+
       setIsLoading(true);
       fetchAzeroPrice();
       prepareStats().then((data) => {
@@ -264,13 +274,13 @@ function StatsPage() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiState]);
 
   useInterval(() => {
     fetchAzeroPrice();
     prepareStats().then((data) => {
-      setPlatformStatistics(data.platformStatistics);
-      setTopCollections(data.topCollections);
+      setPlatformStatistics(data?.platformStatistics);
+      setTopCollections(data?.topCollections);
     });
   }, 60000);
 

@@ -264,8 +264,6 @@ function CollectionAdmin() {
       isDuplicationChecked,
     } = selectedCollection;
 
-    // console.log("selectedCollection", selectedCollection);
-
     let { path: metadataHash } = await ipfsClient.add(
       JSON.stringify({
         name,
@@ -282,7 +280,6 @@ function CollectionAdmin() {
       })
     );
 
-    // console.log("setDoxxedHandler metadataHash", metadataHash);
     if (!metadataHash) {
       toast.error("There is an error with metadata hash!");
       return;
@@ -452,7 +449,11 @@ function CollectionAdmin() {
                 color="#fff"
                 isLoaded={collectionContractOwner}
               >
-                <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
+                <AddressCopier
+                  address={collectionContractOwner}
+                  truncateStr={9}
+                  textOnly={true}
+                />
               </Skeleton>
             </Flex>
 

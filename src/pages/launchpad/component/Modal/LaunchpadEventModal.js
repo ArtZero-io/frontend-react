@@ -44,8 +44,7 @@ export default function LaunchpadEventModal({
   isOpen,
   onClose,
 }) {
-  // const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, apiState } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [totalCount, setTotalCount] = useState(0);
   const [, setLoading] = useState(false);
@@ -110,6 +109,8 @@ export default function LaunchpadEventModal({
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     fetchEvents(isMounted);
@@ -117,7 +118,7 @@ export default function LaunchpadEventModal({
     return () => {
       isMounted = false;
     };
-  }, [currentAccount, fetchEvents]);
+  }, [currentAccount, fetchEvents, apiState]);
 
   const searchAddressRef = useRef(null);
 

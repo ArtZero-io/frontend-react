@@ -113,7 +113,7 @@ import { resolveDomain, truncateStr } from "../../utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -205,7 +205,7 @@ function TokenPage() {
               return { [k]: v };
             });
         // get username onchain if any
-        const name = await resolveDomain(ownerAddress);
+        const name = await resolveDomain(ownerAddress, api);
 
         setOwnerName(name);
         setOwnerAddress(ownerAddress);
@@ -282,17 +282,20 @@ function TokenPage() {
         setLoading(false);
       }
     },
-    [api, collection_address, currentAccount, token_id]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api, apiState, collection_address, currentAccount, token_id]
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     if (!currentAccount) {
       toast.error("Please connect wallet for full-function using!");
     }
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, currentAccount, token_id]);
+  }, [apiState, collection_address, currentAccount, token_id]);
 
   const handleBuyAction = async () => {
     try {
@@ -1759,7 +1762,6 @@ function MobileEditBidPriceModal({
                 min={0}
                 precision={6}
                 onChange={(v) => {
-                  console.log("v", v);
                   if (/[eE+-]/.test(v)) return;
 
                   setNewBidPrice(v);

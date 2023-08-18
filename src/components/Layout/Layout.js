@@ -54,7 +54,9 @@ const Layout = ({ backdrop, children, variant = null }) => {
           ? linerGradient
           : variant === "launchpad-detail"
           ? linerGradientLaunchpad
-          : ""
+          : variant === "marketplace"
+          ? 'black'
+          : ''
       }
       _before={{
         content: '""',

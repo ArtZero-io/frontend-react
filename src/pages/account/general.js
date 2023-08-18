@@ -65,7 +65,7 @@ import {
 
 function GeneralPage() {
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -114,7 +114,7 @@ function GeneralPage() {
         staker_address: currentAccount.address,
       });
 
-      const stakerDomain = await resolveDomain(currentAccount.address);
+      const stakerDomain = await resolveDomain(currentAccount?.address, api);
 
       rewards = rewards.map((item) => ({ ...item, stakerDomain }));
 
@@ -122,7 +122,7 @@ function GeneralPage() {
 
       rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
     },
-    [currentAccount]
+    [currentAccount, api]
   );
 
   const fetchAllNfts = useCallback(
@@ -179,14 +179,6 @@ function GeneralPage() {
                 totalStakedPromise) /
               (platformTotalStaked * 1)
             : 0;
-
-        // console.log("rewardPoolData", rewardPoolData);
-        // console.log(
-        //   "rewardPoolData SUM",
-        //   totalProfit * 0.3 +
-        //     validatorProfit * 0.5 +
-        //     (rewardStarted ? 0 : rewardPoolData)
-        // );
 
         if (!isMounted) return;
 
@@ -296,6 +288,8 @@ function GeneralPage() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     const fetch = async () => {
@@ -326,11 +320,10 @@ function GeneralPage() {
 
     fetch();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => (isMounted = false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
+  }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
   const lastDay = useMemo(() => {
     const now = new Date();

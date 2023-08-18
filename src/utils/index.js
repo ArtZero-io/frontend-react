@@ -230,7 +230,9 @@ export const twoDigitTime = (time) => {
 export const truncateStr = (str, n = 6) => {
   if (!str) return "";
   return str.length > n
-    ? str.substr(0, n - 1) + "..." + str.substr(str.length - n, str.length - 1)
+    ? str.substr(0, n - 1) +
+        " ... " +
+        str.substr(str.length - n, str.length - 1)
     : str;
 };
 
@@ -775,7 +777,7 @@ export const resolveDomain = async (address, api) => {
   console.log("address", address);
   console.log("option", option);
 
-  if (
+    if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
