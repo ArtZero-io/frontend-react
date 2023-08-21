@@ -37,7 +37,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   }, [step, onClose]);
   console.log('useEffect::rest', rest);
   let tabData = [];
-  if (rest.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+  if (rest.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     tabData = [
       {
         label: 'detail',

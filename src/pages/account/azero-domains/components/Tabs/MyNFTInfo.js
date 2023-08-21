@@ -153,7 +153,7 @@ import {
         console.log('4');
         setOwnerAddress(accountAddress);
         setOwnerName(name);
-        setIsAzeroDomain(nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS);
+        setIsAzeroDomain(nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS);
         setLoading(false);
         console.log('5');
       } catch (error) {
@@ -169,7 +169,7 @@ import {
     }, [doLoad]);
 
     useEffect(() => {
-      const checkAllowMarketplaceContract = async () => {    
+      const checkAllowMarketplaceContract = async () => {
 
         const isAllowance = await azero_domains_nft_contract_calls.allowance(
             currentAccount,

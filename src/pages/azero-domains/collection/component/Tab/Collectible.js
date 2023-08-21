@@ -24,28 +24,28 @@ import {
     VStack,
   } from "@chakra-ui/react";
   import AzeroIcon from "@theme/assets/icon/Azero.js";
-  
+
   import { Link as ReactRouterLink } from "react-router-dom";
   import { useDispatch } from "react-redux";
   import React, { useCallback, useEffect, useState } from "react";
-  
+
   import toast from "react-hot-toast";
   import { motion } from "framer-motion";
   import { BsFlag } from "react-icons/bs";
-  
+
   import {
     convertStringToPrice,
     getPublicCurrentAccount,
     formatNumDynamicDecimal,
     getTraitCount,
   } from "@utils";
-  
+
   import { useSubstrateState } from "@utils/substrate";
-  
+
   import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-  
+
   import { formMode } from "@constants";
-  
+
   import LockNFTModal from "@components/Modal/LockNFTModal";
   import { SCROLLBAR } from "@constants";
   import CommonButton from "@components/Button/CommonButton";
@@ -74,12 +74,12 @@ import {
   } from "../../../../token";
   import marketplace from "@utils/blockchain/marketplace";
   import staking_calls from "@utils/blockchain/staking_calls";
-  
+
   import {
     fetchMyPMPStakedCount,
     fetchMyTradingFee,
   } from "@pages/account/stakes";
-  
+
   const AzeroDomainsNFTTabCollectible = (props) => {
     const {
       nftContractAddress,
@@ -105,22 +105,22 @@ import {
     const dispatch = useDispatch();
     const { api, currentAccount } = useSubstrateState();
     const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-  
+
     const [doOffer] = useState(false);
     const [bidPrice, setBidPrice] = useState(1);
-  
+
     const [isBided, setIsBided] = useState(false);
     const [saleInfo, setSaleInfo] = useState(null);
-  
+
     const [ownerName, setOwnerName] = useState("");
     const [ownerAddress, setOwnerAddress] = useState("");
     const [isOwner, setIsOwner] = useState(false);
-  
+
     const [loading, setLoading] = useState(false);
     const { actionType, tokenIDArray, ...rest } = useTxStatus();
-  
+
     const [bidderCount, setBidderCount] = useState(0);
-  
+
     const fetchSaleInfo = useCallback(async () => {
       setLoading(true);
       try {
@@ -129,11 +129,11 @@ import {
           nftContractAddress,
           { bytes: azDomainName }
         );
-  
+
         setSaleInfo(sale_info);
-  
+
         let accountAddress = owner;
-  
+
         if (sale_info) {
           const listBidder = await marketplace_contract_calls.getAllBids(
             currentAccount || getPublicCurrentAccount(),
@@ -141,11 +141,11 @@ import {
             sale_info?.nftOwner,
             { bytes: azDomainName }
           );
-  
+
           setBidderCount(listBidder?.length || 0);
-  
+
           accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
-  
+
           if (listBidder) {
             for (const item of listBidder) {
               if (item.bidder === currentAccount?.address) {
@@ -155,37 +155,37 @@ import {
             }
           }
         }
-  
+
         if (accountAddress === currentAccount?.address) {
           setIsOwner(true);
         }
-  
+
         const name = truncateStr(accountAddress);
-  
+
         setOwnerAddress(accountAddress);
         setOwnerName(name);
-  
+
         setLoading(false);
       } catch (error) {
         setLoading(false);
         toast.error("There is some error when fetching sale info!");
         console.log("error", error);
       }
-    }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID, azDomainName]);
-  
+    }, [currentAccount, is_for_sale, nftContractAddress, owner, azDomainName]);
+
     const attrsList = !traits
       ? {}
       : Object.entries(traits).map(([k, v]) => {
           return { [k]: v };
         });
-  
+
     useEffect(() => {
       fetchSaleInfo();
     }, [fetchSaleInfo]);
-  
+
     const handleBuyAction = async () => {
       if (!isActive) return toast.error("This collection is inactive!");
-  
+
       try {
         await buyAzeroDomainsToken(
           api,
@@ -203,10 +203,10 @@ import {
         dispatch(clearTxStatus());
       }
     };
-  
+
     const handleRemoveBidAction = async () => {
       if (!isActive) return toast.error("This collection is inactive!");
-  
+
       try {
         await removeAzeroDomainsBid(
           api,
@@ -222,15 +222,15 @@ import {
         dispatch(clearTxStatus());
       }
     };
-  
+
     const handleBidAction = async () => {
       if (!isActive) return toast.error("This collection is inactive!");
-  
+
       if (bidderCount > MAX_BID_COUNT) {
         toast.error(`This NFT had reached max ${MAX_BID_COUNT} bids!`);
         return;
       }
-  
+
       try {
         await placeAzeroDomainsBid(
           api,
@@ -249,19 +249,19 @@ import {
         dispatch(clearTxStatus());
       }
     };
-  
+
     const iconWidth = useBreakpointValue(["40px", "50px"]);
-  
+
     const path = `${window.location.href.replace(
       "#/collection/",
       "#/nft/"
     )}/${azDomainName}`;
-  
+
     const [askPrice, setAskPrice] = useState(1);
-  
+
     const handleListTokenAction = async () => {
       if (!isActive) return toast.error("This collection is inactive!");
-  
+
       try {
         await listAzeroDomainsToken(
           api,
@@ -279,10 +279,10 @@ import {
         dispatch(clearTxStatus());
       }
     };
-  
+
     const handleUnlistTokenAction = async () => {
       if (!isActive) return toast.error("This collection is inactive!");
-  
+
       try {
         await unlistAzeroDomainsToken(
           api,
@@ -299,9 +299,9 @@ import {
         dispatch(clearTxStatus());
       }
     };
-  
+
     const [myTradingFee, setMyTradingFee] = useState(null);
-  
+
     const fetchData = useCallback(
       async function () {
         try {
@@ -316,43 +316,43 @@ import {
               currentAccount,
               marketplace_contract_calls
             );
-  
+
             setMyTradingFee(myTradingFeeData);
           }
-  
+
           setLoading(false);
         } catch (error) {
           console.error(error);
           toast.error(error.message);
-  
+
           setLoading(false);
         }
       },
       [currentAccount]
     );
-  
+
     useEffect(() => {
       if (!currentAccount) {
         toast.error("Please connect wallet for full-function using!");
       }
-  
+
       fetchData();
     }, [currentAccount, fetchData]);
-  
+
     const [feeCalculated, setFeeCalculated] = useState(null);
-  
+
     useEffect(() => {
       let p = askPrice;
-  
+
       if (is_for_sale) {
         p = price / 10 ** 18;
       }
-  
+
       const info = calculateFee(p, royaltyFee, myTradingFee);
-  
+
       setFeeCalculated(info);
     }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
-  
+
     return (
       <>
         <Stack
@@ -366,7 +366,7 @@ import {
             objectFitContain={true}
             w={{ base: "404px", xl: "484px" }}
           />
-  
+
           <Stack alignItems="flex-start" w="full">
             <HStack w="full">
               <Link
@@ -381,9 +381,9 @@ import {
                   {nftName}
                 </Heading>
               </Link>
-  
+
               <Spacer />
-  
+
               <HStack>
                 {!is_locked && showOnChainMetadata && (collectionOwner === currentAccount?.address) && (
                   <AddNewNFTModal
@@ -392,14 +392,14 @@ import {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-  
+
                 {!is_locked && isOwner && (
                   <LockNFTModal
                     {...props}
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-  
+
                 {!is_locked && showOnChainMetadata && !isOwner && (
                   <Tooltip
                     cursor="pointer"
@@ -426,7 +426,7 @@ import {
                     </span>
                   </Tooltip>
                 )}
-  
+
                 {!is_locked && !showOnChainMetadata && (
                   <Tooltip
                     hasArrow
@@ -452,7 +452,7 @@ import {
                     </span>
                   </Tooltip>
                 )}
-  
+
                 {is_locked && showOnChainMetadata && (
                   <Tooltip
                     hasArrow
@@ -508,7 +508,7 @@ import {
                 </Tooltip>
               </HStack>
             </HStack>
-  
+
             <Stack>
               <Text
                 isTruncated
@@ -520,7 +520,7 @@ import {
                 {description}
               </Text>
             </Stack>
-  
+
             <Stack w="full">
               <Skeleton isLoaded={!loading}>
                 <Text color="#fff" maxW="max-content">
@@ -537,7 +537,7 @@ import {
                 </Text>
               </Skeleton>
             </Stack>
-  
+
             <Skeleton h="full" w="full" isLoaded={!loading}>
               <Stack
                 mt={isOwner ? "4px" : "20px"}
@@ -566,7 +566,7 @@ import {
                         <Heading size="h6">Not for sale</Heading>
                       </Flex>
                     ) : null}
-  
+
                     {/* Not for sale & owner  */}
                     {!is_for_sale && isOwner && (
                       <>
@@ -582,7 +582,7 @@ import {
                                 min={1}
                                 onChange={(v) => {
                                   if (/[eE+-]/.test(v)) return;
-  
+
                                   setAskPrice(v);
                                 }}
                                 value={format(askPrice)}
@@ -603,7 +603,7 @@ import {
                                   <AzeroIcon w="14px" h="14px" />
                                 </InputRightElement>
                               </NumberInput>
-  
+
                               <CommonButton
                                 minW="200px"
                                 w="50%"
@@ -618,7 +618,7 @@ import {
                             </HStack>
                           </Stack>
                         </>
-  
+
                         {/* <Stack w="full" pl="8px" bg="green">
                           <FeeCalculatedBar feeCalculated={feeCalculated} />
                         </Stack> */}
@@ -645,7 +645,7 @@ import {
                                 <Text color="#888" w="100px">
                                   Current price
                                 </Text>
-  
+
                                 <Tag minH="20px" pr={0} bg="transparent">
                                   <TagLabel bg="transparent">
                                     {formatNumDynamicDecimal(price / 10 ** 18)}
@@ -656,13 +656,13 @@ import {
                             </HStack>
                           </>
                         </>
-  
+
                         {/* <Stack w="full" pl="8px">
                           <FeeCalculatedBar feeCalculated={feeCalculated} />
                         </Stack> */}
                       </>
                     )}
-  
+
                     <Stack
                       display={
                         saleInfo && is_for_sale && !isOwner ? "flex" : "none"
@@ -692,12 +692,12 @@ import {
                               onClick={handleBuyAction}
                               isDisabled={actionType && actionType !== BUY}
                             />
-  
+
                             <Spacer />
-  
+
                             <Flex w="full">
                               <Spacer />
-  
+
                               <Flex w="full">
                                 <Spacer />
                                 <Box
@@ -729,7 +729,7 @@ import {
                               </Flex>
                             </Flex>
                           </Flex>
-                        
+
                           {!doOffer && is_for_sale && (
                             <Flex
                               py={1}
@@ -753,7 +753,7 @@ import {
                                     onClick={handleBidAction}
                                     isDisabled={actionType && actionType !== BID}
                                   />
-  
+
                                   <NumberInput
                                     min={0.01}
                                     ml={3}
@@ -782,7 +782,7 @@ import {
                                   </NumberInput>
                                 </>
                               )}
-  
+
                               {isBided && (
                                 <>
                                   <CommonButton
@@ -796,7 +796,7 @@ import {
                                       actionType && actionType !== REMOVE_BID
                                     }
                                   />
-  
+
                                   <Spacer />
                                   <Box
                                     h="52px"
@@ -820,7 +820,7 @@ import {
                     </Stack>
                   </motion.div>
                 </Stack>
-  
+
                 <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
                   {attrsList?.length === 0 ? (
                     <Stack>
@@ -867,7 +867,7 @@ import {
                                 );
                               })
                           : ""}
-  
+
                         {attrsList?.length
                           ? attrsList
                               .filter((i) =>
@@ -892,7 +892,7 @@ import {
                     </>
                   )}
                 </Stack>
-  
+
                 {isOwner && (
                   <>
                     <Stack w="full" pl="8px">
@@ -914,12 +914,11 @@ import {
       </>
     );
   };
-  
+
   export default AzeroDomainsNFTTabCollectible;
-  
+
   const format = (val) => {
     if (val?.toString().slice(-1) === ".") return val;
-  
+
     return formatNumDynamicDecimal(val, 6);
   };
-  
