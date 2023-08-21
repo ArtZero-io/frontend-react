@@ -33,12 +33,6 @@ const netList = [
     url: "https://astar.artzero.io/",
   },
   {
-    id: "SHIBUYA_MAINNET",
-    code: "shibuya network",
-    icon: <Astar />,
-    url: "https://shibuya.artzero.io/",
-  },
-  {
     id: "5IRECHAIN_TESTNET",
     code: "5irechain testnet",
     icon: <FireChain />,
