@@ -47,6 +47,8 @@ function CollectionAdmin() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const getCollectionContractBalance = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     const { data: balance } = await api.query.system.account(
       collection_manager.CONTRACT_ADDRESS
     );
@@ -55,13 +57,15 @@ function CollectionAdmin() {
         new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
           10 ** 6
     );
-  }, [api.query.system]);
+  }, [api, apiState]);
 
   const onGetCollectionContractOwner = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     let res = await collection_manager_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
-  }, [currentAccount]);
+  }, [api, apiState, currentAccount]);
 
   const isOwner = collectionContractOwner === currentAccount?.address;
 
@@ -91,13 +95,15 @@ function CollectionAdmin() {
   }, [api, apiState, currentAccount?.address]);
 
   const onGetCollectionCount = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
 
     if (res) {
       collection_count = res;
       setCollectionCount(res);
     } else setCollectionCount(0);
-  }, [currentAccount]);
+  }, [api, apiState, currentAccount]);
 
   const getAllCollections = useCallback(async () => {
     const options_active = {
@@ -150,7 +156,7 @@ function CollectionAdmin() {
       setLoading(false);
     }
   }, [
-    api.query.system,
+    api?.query?.system,
     currentAccount,
     getAllCollections,
     getCollectionContractBalance,
