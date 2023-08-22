@@ -170,7 +170,7 @@ const DesktopNavContent = (props) => {
         } */}
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
-        {/* <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} /> */}
+        <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
 
         {/* {currentAccount?.address && <MyAccountDropdown />} */}
 
@@ -640,7 +640,11 @@ const NAV_ITEMS = [
     label: "stats",
     href: ROUTES.STATS,
   },
-
+  {
+    label: "docs",
+    href: ROUTES.DOCS,
+    isExternal: true,
+  },
   // {
   //   label: "my account",
   //   children: [
