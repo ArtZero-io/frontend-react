@@ -33,7 +33,7 @@ import { ipfsClient } from "@api/client";
 let collection_count = 0;
 
 function CollectionAdmin() {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   const [collectionCount, setCollectionCount] = useState(null);
 
@@ -67,7 +67,7 @@ function CollectionAdmin() {
 
   const onGetCollectionContractAdmin = useCallback(async () => {
     const checkIsAdmin = async ({ address }) => {
-      if (!api) return;
+      if (!api || apiState !== "READY") return;
 
       const queryResult1 = await execContractQuery(
         currentAccount?.address,
@@ -79,7 +79,7 @@ function CollectionAdmin() {
         address
       );
 
-      return queryResult1.toHuman().Ok;
+      return queryResult1?.toHuman()?.Ok;
     };
 
     const isCollectionAdmin = await checkIsAdmin({
@@ -88,7 +88,7 @@ function CollectionAdmin() {
 
     setIsCollectionAdmin(isCollectionAdmin);
     return;
-  }, [api, currentAccount?.address]);
+  }, [api, apiState, currentAccount?.address]);
 
   const onGetCollectionCount = useCallback(async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
