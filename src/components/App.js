@@ -52,11 +52,12 @@ export default function App() {
   const { apiState } = useSubstrateState();
 
   useEffect(() => {
-    toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
-      style: {
-        minWidth: "180px",
-      },
-    });
+    (apiState === "READY" || apiState === "CONNECT_INIT") &&
+      toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
+        style: {
+          minWidth: "180px",
+        },
+      });
   }, [apiState]);
 
   return (

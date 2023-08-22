@@ -174,7 +174,7 @@ const DesktopNavContent = (props) => {
 
         {/* {currentAccount?.address && <MyAccountDropdown />} */}
 
-        <C14Modal />
+        {/* <C14Modal /> */}
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -407,7 +407,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               />
             ))}
 
-            <C14Modal />
+            {/* <C14Modal /> */}
 
           </DrawerBody>
 

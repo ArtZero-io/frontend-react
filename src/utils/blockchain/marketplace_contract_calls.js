@@ -795,6 +795,7 @@ export const withdrawMarketplaceContract = async (
   receiver_address
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
