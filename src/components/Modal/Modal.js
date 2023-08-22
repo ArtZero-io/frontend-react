@@ -38,8 +38,8 @@ export default function ResponsivelySizedModal({
     step === FINALIZED && onClose();
   }, [step, onClose]);
   let tabData = [];
-  {console.log('rest Data', rest)}
-  if (rest.nfCONTRACT_ADDRESStContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+
+  if (rest.nfCONTRACT_ADDRESStContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     tabData = [
       {
         label: 'detail',

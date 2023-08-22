@@ -15,19 +15,20 @@ import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
-import NovaLogo from "@utils/wallets/nova.jpg";
+import AzeroSignerLogo from "@utils/wallets/AzeroSignerLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
 import { browserName, isMobile } from "react-device-detect";
 import { isEmptyObj } from "@utils";
+import { toast } from "react-hot-toast";
 const win = window || {};
 
 function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
   const [, setSelectedExtensionLocal] = useLocalStorage("selectedExtension");
 
-  const { keyring } = state;
+  const { keyring, apiState } = state;
   const buttonVariants = {
     initial: {
       scale: 1,
@@ -63,6 +64,11 @@ function WalletNotConnected(props) {
   }
 
   function handleConnect(wallet) {
+    if (apiState !== "READY") {
+      toast.error("Please wait a monent, network is not ready!");
+      return;
+    }
+
     if (!keyring) {
       setSelectedExtensionLocal(wallet);
       loadAccounts(state, dispatch, wallet);
@@ -140,8 +146,11 @@ function WalletNotConnected(props) {
                               alt={wallet.extensionName}
                             />
                           )}
-                          {wallet.title === "Nova Wallet" && (
-                            <Image src={NovaLogo} alt={wallet.extensionName} />
+                          {wallet.title === "Azero Signer" && (
+                            <Image
+                              src={AzeroSignerLogo}
+                              alt={wallet.extensionName}
+                            />
                           )}
                         </Box>
                         <Text fontSize="15px" pl="16px" mr="2">

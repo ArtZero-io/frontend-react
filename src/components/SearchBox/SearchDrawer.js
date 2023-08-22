@@ -74,11 +74,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
         _hover={{ borderWidth: "0", color: "#7ae7ff" }}
         _focus={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
         _active={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
-      >
-        <Text display={{ base: "none", xl: "flex" }} as="span">
-          Search
-        </Text>
-      </Button>
+      ></Button>
 
       <Drawer
         isOpen={isOpen}

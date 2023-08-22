@@ -266,7 +266,7 @@ const NewEventTable = ({
       />
 
       {dataFormatted?.length ? (
-        <HStack pt="80px" pb="20px" justifyContent="center" w="" full>
+        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <Text ref={ref}>
             {isFetchingNextPage ? (
               <BeatLoader color="#7ae7ff" size="10px" />

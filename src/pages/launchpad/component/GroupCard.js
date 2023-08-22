@@ -48,14 +48,13 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
         alignItems="center"
         direction={{ base: "column", xl: "row" }}
       >
-        <Heading fontSize={["xl", "3xl-mid"]} mb="10px">
+        <Heading fontSize={["xl", "3xl-mid"]} mb="10px" h='50px'>
           {variant} projects
         </Heading>
 
         <Spacer />
         {currentAccount && variant === "live" && (
           <Button
-            my="20px"
             variant="outline"
             onClick={() =>
               history.push({

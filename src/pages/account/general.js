@@ -62,7 +62,7 @@ import { fetchValidatorProfit } from "../stats";
 
 function GeneralPage() {
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -287,6 +287,8 @@ function GeneralPage() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     const fetch = async () => {
@@ -317,11 +319,10 @@ function GeneralPage() {
 
     fetch();
 
-    return () => {
-      isMounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
+    return () => (isMounted = false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
   const lastDay = useMemo(() => {
     const now = new Date();

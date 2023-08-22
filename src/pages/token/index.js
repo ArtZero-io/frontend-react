@@ -107,7 +107,7 @@ import { isMobile } from "react-device-detect";
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -148,6 +148,7 @@ function TokenPage() {
 
   const fetchData = useCallback(
     async function () {
+
       try {
         setLoading(true);
         if (currentAccount) {
@@ -253,17 +254,20 @@ function TokenPage() {
         setLoading(false);
       }
     },
-    [api, collection_address, currentAccount, token_id]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api, apiState, collection_address, currentAccount, token_id]
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     if (!currentAccount) {
       toast.error("Please connect wallet for full-function using!");
     }
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, currentAccount, token_id]);
+  }, [apiState, collection_address, currentAccount, token_id]);
 
   const handleBuyAction = async () => {
     try {

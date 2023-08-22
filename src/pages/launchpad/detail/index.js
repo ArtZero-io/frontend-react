@@ -84,7 +84,7 @@ const NUMBER_PER_PAGE = 6;
 
 const LaunchpadDetailPage = () => {
   const { collection_address } = useParams();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, currentAccount, apiState } = useSubstrateState();
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
@@ -179,6 +179,8 @@ const LaunchpadDetailPage = () => {
   const [activePhaseId, setActivePhaseId] = useState(null);
 
   useEffect(() => {
+    if (apiState) return;
+
     let isUnmounted = false;
 
     const fetchCurrentPhaseIdData = async () => {
@@ -211,24 +213,37 @@ const LaunchpadDetailPage = () => {
 
     fetchCurrentPhaseIdData();
     return () => (isUnmounted = true);
-  }, [api, collection_address]);
+  }, [apiState, api, collection_address]);
 
   const [phasesInfoWithDisablePhase, setPhasesInfoWithDisablePhase] = useState(
     []
   );
   const [phasesInfo, setPhasesInfo] = useState([]);
+  console.log("phasesInfo", phasesInfo);
   const [loadingPhaseInfo, setLoadingPhaseInfo] = useState(false);
 
   const fetchPublicPhasesInfoData = useCallback(
     async (isUnmounted) => {
+      if (apiState !== "READY") return;
+
       setLoadingPhaseInfo(true);
 
       try {
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          collection_address
+        );
+
+        launchpad_psp34_nft_standard_calls.setContract(
+          launchpad_psp34_nft_standard_contract
+        );
+
         const totalPhase =
           await launchpad_psp34_nft_standard_calls.getLastPhaseId(
             getPublicCurrentAccount()
           );
-
+        console.log("totalPhase", totalPhase);
         const allPhases = await Promise.all(
           [...new Array(totalPhase)].map(async (_, index) => {
             const totalCountWLAddress =
@@ -268,6 +283,7 @@ const LaunchpadDetailPage = () => {
             return formattedData;
           })
         );
+        console.log("allPhases", allPhases);
 
         if (isUnmounted) return;
         setPhasesInfoWithDisablePhase(allPhases);
@@ -279,8 +295,7 @@ const LaunchpadDetailPage = () => {
         setLoadingPhaseInfo(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [collection_address]
+    [api, collection_address, apiState]
   );
 
   useEffect(() => {
@@ -289,7 +304,7 @@ const LaunchpadDetailPage = () => {
     fetchPublicPhasesInfoData(isUnmounted);
 
     return () => (isUnmounted = true);
-  }, [fetchPublicPhasesInfoData]);
+  }, [fetchPublicPhasesInfoData, apiState]);
 
   const isLastPhaseEnded = useMemo(() => {
     const lastPhase = [...phasesInfo]?.pop();
@@ -655,12 +670,14 @@ const LaunchpadDetailPage = () => {
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isUnmounted = false;
 
     fetchNFTs(isUnmounted);
 
     return () => (isUnmounted = true);
-  }, [fetchNFTs]);
+  }, [fetchNFTs, apiState]);
 
   const pageNFT = useMemo(
     () => myNFTs.slice((currentPage - 1) * pageSize, currentPage * pageSize),

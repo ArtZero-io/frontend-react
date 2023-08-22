@@ -8,6 +8,9 @@ import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
+// eslint-disable-next-line no-unused-vars
+import { resolveDomain } from "..";
+// import { toast } from "react-hot-toast";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -71,8 +74,7 @@ const reducer = (state, action) => {
         keyring: null,
         currentAccount: null,
         keyringState: null,
-        apiState: null,
-        apiStateState: null,
+        // apiState: null,
       };
     default:
       throw new Error(`Unknown type: ${action.type}`);
@@ -84,6 +86,7 @@ const reducer = (state, action) => {
 
 const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
+  console.log("connect apiState", apiState);
 
   if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
@@ -106,6 +109,7 @@ const connect = (state, dispatch) => {
       },
     },
   });
+
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -144,7 +148,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
-
   const asyncLoadAccounts = async () => {
     try {
       await web3Enable(config.APP_NAME, [], wallet);

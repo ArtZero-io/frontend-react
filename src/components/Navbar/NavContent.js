@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -46,6 +47,8 @@ import {
   CloseIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
+import C14Modal from "../Modal/C14Modal";
+import ChainDropdown from "../Dropdown/ChainDropdown";
 
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -107,7 +110,7 @@ const MobileNavContent = (props) => {
             />
           </Flex>
 
-          <Flex justify={{ base: "center", md: "start" }}>
+          <Flex justify={{ base: "center", md: "start" }} alignItems="center">
             <ArtZeroLogo
               height="20px"
               width="138px"
@@ -169,7 +172,9 @@ const DesktopNavContent = (props) => {
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
         <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
 
-        {currentAccount?.address && <MyAccountDropdown />}
+        {/* {currentAccount?.address && <MyAccountDropdown />} */}
+
+        {/* <C14Modal /> */}
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -376,21 +381,16 @@ const MobileNav = ({ onClose, isOpen }) => {
           id="drawer-content"
           h="var(--doc-height)"
         >
-          <DrawerHeader bg="transparent">
-            <Flex minH="30px" justifyContent="center" alignItems="end">
+          <DrawerHeader pl="18px" bg="transparent">
+            <Flex minH="30px" justifyContent="start" alignItems="center">
               <DrawerCloseButton
-                left="14px"
-                top="22px"
+                right="14px"
+                top="16px"
                 borderRadius="0"
                 color="#fff"
               />
 
-              <ArtZeroLogo
-                alt="ArtZeroLogo"
-                height="20px"
-                width="138px"
-                display={{ base: "flex", md: "none" }}
-              />
+              <ChainDropdown />
             </Flex>
           </DrawerHeader>
 
@@ -406,7 +406,9 @@ const MobileNav = ({ onClose, isOpen }) => {
                 {...navItem}
               />
             ))}
-            
+
+            {/* <C14Modal /> */}
+
           </DrawerBody>
 
           <DrawerFooter>
@@ -643,29 +645,33 @@ const NAV_ITEMS = [
     href: ROUTES.DOCS,
     isExternal: true,
   },
-  {
-    label: "my account",
-    children: [
-      {
-        label: "general",
-        href: ROUTES.ACCOUNT,
-      },
-      {
-        label: "my collections",
-        href: ROUTES.ACCOUNT_MY_COLLECTIONS,
-      },
-      {
-        label: "my NFTs",
-        href: ROUTES.ACCOUNT_MY_NFTS,
-      },
-      {
-        label: "my stakes",
-        href: ROUTES.ACCOUNT_MY_STAKES,
-      },
-      {
-        label: "my projects",
-        href: ROUTES.ACCOUNT_MY_PROJECTS,
-      },
-    ],
-  },
+  // {
+  //   label: "my account",
+  //   children: [
+  //     {
+  //       label: "general",
+  //       href: ROUTES.ACCOUNT,
+  //     },
+  //     {
+  //       label: "my collections",
+  //       href: ROUTES.ACCOUNT_MY_COLLECTIONS,
+  //     },
+  //     {
+  //       label: "my NFTs",
+  //       href: ROUTES.ACCOUNT_MY_NFTS,
+  //     },
+  //     {
+  //       label: "my stakes",
+  //       href: ROUTES.ACCOUNT_MY_STAKES,
+  //     },
+  //     {
+  //       label: "my projects",
+  //       href: ROUTES.ACCOUNT_MY_PROJECTS,
+  //     },
+  //     {
+  //       label: "my activities",
+  //       href: ROUTES.ACCOUNT_MY_ACTIVITIES,
+  //     },
+  //   ],
+  // },
 ];

@@ -396,7 +396,8 @@ async function list(
   );
 
   contract.tx
-    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price,
+      [97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107])
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -429,8 +430,8 @@ async function unlist(
   txType,
   api
 ) {
-    console.log('marketplace for azero domains');
-    console.log(token_id);
+  console.log("marketplace for azero domains");
+  console.log(token_id);
   if (
     !contract ||
     !caller_account ||
@@ -470,9 +471,9 @@ async function unlist(
 
       if (status?.isFinalized) {
         console.log({
-            collection_address: nft_contract_address,
-            azDomainName: token_id.bytes,
-          });
+          collection_address: nft_contract_address,
+          azDomainName: token_id.bytes,
+        });
         await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
           azDomainName: token_id.bytes,
@@ -803,6 +804,7 @@ export const withdrawMarketplaceContract = async (
   receiver_address
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
