@@ -663,9 +663,9 @@ export async function getEstimatedGasBatchTx(
 export const switchCollection = async ({
   contractAddress,
 }) => {
-  if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return AZERO_DOMAINS_COLLECTION;
-  } else if(contractAddress == artzero_nft.CONTRACT_ADDRESS) {
+  } else if(contractAddress === artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
   } else {
     return OTHER_COLLECTION;
@@ -675,7 +675,7 @@ export const switchCollection = async ({
 export const isAzeroDomainCollection = async ({
   contractAddress,
 }) => {
-  if (contractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+  if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {
     return false;

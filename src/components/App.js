@@ -50,7 +50,14 @@ import useInterval from "use-interval";
 
 export default function App() {
   const { apiState } = useSubstrateState();
-  console.log("apiState", apiState);
+
+  useEffect(() => {
+    toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
+      style: {
+        minWidth: "180px",
+      },
+    });
+  }, [apiState]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -67,37 +74,37 @@ export default function App() {
   );
 }
 
-const InitModal = ({ apiState, loadingErrorMess }) => {
-  return (
-    <Modal size="full" isCentered isOpen={apiState !== "READY"}>
-      <ModalOverlay
-        bg="#33333330"
-        backdropFilter="blur(50px) hue-rotate(90deg)"
-      />
+// const InitModal = ({ apiState, loadingErrorMess }) => {
+//   return (
+//     <Modal size="full" isCentered isOpen={apiState !== "READY"}>
+//       <ModalOverlay
+//         bg="#33333330"
+//         backdropFilter="blur(50px) hue-rotate(90deg)"
+//       />
 
-      <ModalContent
-        bg="transparent"
-        boxShadow={"none"}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <PuffLoader color="#7ae7ff" />
+//       <ModalContent
+//         bg="transparent"
+//         boxShadow={"none"}
+//         justifyContent="center"
+//         alignItems="center"
+//       >
+//         <PuffLoader color="#7ae7ff" />
 
-        <Heading
-          size="h6"
-          my="30px"
-          mx="auto"
-          maxW="250px"
-          minH="100px"
-          color="#7ae7ff"
-          textAlign="center"
-        >
-          connecting {loadingErrorMess}
-        </Heading>
-      </ModalContent>
-    </Modal>
-  );
-};
+//         <Heading
+//           size="h6"
+//           my="30px"
+//           mx="auto"
+//           maxW="250px"
+//           minH="100px"
+//           color="#7ae7ff"
+//           textAlign="center"
+//         >
+//           connecting {loadingErrorMess}
+//         </Heading>
+//       </ModalContent>
+//     </Modal>
+//   );
+// };
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
@@ -114,19 +121,17 @@ const Main = () => {
 
   const initContract = useCallback(async () => {
     try {
-      console.log("initContract apiState", apiState);
-       if (apiState === "READY") {
-      await setCollectionContract(api, collection);
-      await setMarketplaceContract(api, marketplace);
-      await setProfileContract(api, profile);
-      await setStakingContract(api, staking);
-      await setAZNFTContract(api, artzeroNft);
-      await setAzeroDomainsNFTContract(api, azeroDomainsNft);
-      await setLaunchPadContract(api, launchpad_manager);
-      await setMarketplaceAzeroDomainsContract(api, marketplace);
-      setLoadContractDone(true);
-      console.log("setLoadContractDone apiState DONE", apiState);
-
+      if (apiState === "READY") {
+        await setCollectionContract(api, collection);
+        await setMarketplaceContract(api, marketplace);
+        await setProfileContract(api, profile);
+        await setStakingContract(api, staking);
+        await setAZNFTContract(api, artzeroNft);
+        await setAzeroDomainsNFTContract(api, azeroDomainsNft);
+        await setLaunchPadContract(api, launchpad_manager);
+        await setMarketplaceAzeroDomainsContract(api, marketplace);
+        setLoadContractDone(true);
+        console.log("initContract setLoadContractDone apiState", apiState);
       }
     } catch (e) {
       return console.log("err iniContract", e);
@@ -145,35 +150,19 @@ const Main = () => {
 
   useEffect(() => {
     initContract();
-  }, [
-    api,
-    apiState,
-    artzeroNft,
-    azeroDomainsNft,
-    collection,
-    marketplace,
-    profile,
-    staking,
-    launchpad_manager,
-    loadContractDone,
-  ]);
+  }, [api, apiState, initContract]);
 
-  useEffect(() => {
-    console.log("apiStateapiState", apiState);
-    toast(apiState, { position: "bottom-right" });
-  }, [apiState]);
+  // useInterval(() => {
+  //   console.log("useInterval", apiState);
 
-  useInterval(() => {
-    console.log("useInterval", apiState);
-
-    // if (apiState !== "READY") {
-    //   console.log("A useInterval apiState READY", apiState);
-    //   toast("Trying again in 3s... ", { position: "bottom-right" });
-    // } else {
-    //   console.log("B useInterval apiState READY", apiState);
-    //   initContract();
-    // }
-  }, 3000);
+  // if (apiState !== "READY") {
+  //   console.log("A useInterval apiState READY", apiState);
+  //   toast("Trying again in 3s... ", { position: "bottom-right" });
+  // } else {
+  //   console.log("B useInterval apiState READY", apiState);
+  //   initContract();
+  // }
+  // }, 3000);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders

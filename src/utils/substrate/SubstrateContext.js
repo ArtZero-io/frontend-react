@@ -71,8 +71,7 @@ const reducer = (state, action) => {
         keyring: null,
         currentAccount: null,
         keyringState: null,
-        apiState: null,
-        apiStateState: null,
+        // apiState: null,
       };
     default:
       throw new Error(`Unknown type: ${action.type}`);
@@ -84,6 +83,7 @@ const reducer = (state, action) => {
 
 const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
+  console.log("connect apiState", apiState);
 
   if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
@@ -106,6 +106,9 @@ const connect = (state, dispatch) => {
       },
     },
   });
+
+  console.log("connect _api", _api);
+
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -113,14 +116,17 @@ const connect = (state, dispatch) => {
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
+  console.log("connect _api connected");
 
   _api.on("ready", () => {
     dispatch({ type: "CONNECT_SUCCESS" });
   });
+  console.log("connect _api ready");
 
   _api.on("error", (err) => {
     dispatch({ type: "CONNECT_ERROR", payload: err });
   });
+  console.log("connect _api error");
 };
 
 const retrieveChainInfo = async (api) => {
@@ -144,11 +150,14 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
-
+  console.log("asyncLoadAccounts A", new Date());
   const asyncLoadAccounts = async () => {
     try {
+      console.log("asyncLoadAccounts A1", new Date());
+
       await web3Enable(config.APP_NAME, [], wallet);
 
+      console.log("asyncLoadAccounts A2", new Date());
       let allAccounts = await web3Accounts();
 
       allAccounts = allAccounts.map(({ address, meta }) => ({
@@ -156,6 +165,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         meta: { ...meta, name: `${meta.name}` },
       }));
 
+      console.log("asyncLoadAccounts A5", new Date());
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);
       const isDevelopment =
@@ -163,20 +173,25 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         systemChainType.isLocal ||
         isTestChain(systemChain);
 
+      console.log("asyncLoadAccounts A6", new Date());
       try {
+        console.log("asyncLoadAccounts A7", new Date());
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
           Keyring.saveAddress(address, meta);
         });
       }
+      console.log("asyncLoadAccounts A8", new Date());
 
       dispatch({ type: "SET_KEYRING", payload: Keyring });
+      console.log("asyncLoadAccounts A9", new Date());
     } catch (e) {
       console.error(e);
       dispatch({ type: "KEYRING_ERROR" });
     }
   };
+  console.log("asyncLoadAccounts B");
 
   await asyncLoadAccounts();
 };

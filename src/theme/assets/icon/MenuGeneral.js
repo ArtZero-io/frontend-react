@@ -13,8 +13,8 @@ export default function MenuGeneralIcon(props) {
         d="M2.906 20.25a10.5 10.5 0 0 1 18.188 0"
         stroke="#2FD3DD"
         strokeWidth="2"
-        strokelinecap="round"
-        strokelinejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Icon>
   );

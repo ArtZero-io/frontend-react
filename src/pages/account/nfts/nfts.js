@@ -316,8 +316,8 @@ function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
       )}
       {list?.map((item, idx) => {
         console.log(item.nftContractAddress);
-        console.log(item.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS);
-        if (item.nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+        console.log(item.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS);
+        if (item.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
           return (<MyAzeroDomainsNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
         } else {
           return (<MyNFTGroupCard {...item} key={idx} filterSelected={filterSelected} />);
