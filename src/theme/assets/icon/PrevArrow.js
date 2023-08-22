@@ -13,7 +13,7 @@ export default function PrevArrowIcon({
       viewBox="0 0 14 26"
       fill="none"
     >
-      <path d="M13 1 2 12l11 11" stroke="#fff" stroke-width="2" />
+      <path d="M13 1 2 12l11 11" stroke="#fff" strokeWidth="2" />
     </Icon>
   );
 }
