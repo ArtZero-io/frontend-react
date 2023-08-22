@@ -381,7 +381,10 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
+  const sale_price = new BN(price * 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 6))
+    .toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -511,7 +514,10 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
+  const value = new BN(bid_amount * 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 6))
+    .toString();
 
   gasLimit = await getEstimatedGas(
     address,

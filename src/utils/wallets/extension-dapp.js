@@ -81,11 +81,9 @@ export function web3Enable(originName, compatInits = [], wallet) {
       "You must pass a name for your app to the web3Enable function"
     );
   }
-  console.log("web3Enable wallet", wallet);
   const initCompat = compatInits.length
     ? Promise.all(compatInits.map((c) => c().catch(() => false)))
     : Promise.resolve([true]);
-  console.log("web3Enable initCompat", initCompat);
 
   web3EnablePromise = documentReadyPromise(() =>
     initCompat.then(() =>
@@ -137,7 +135,7 @@ export async function web3Accounts({ accountType, ss58Format } = {}) {
       try {
         const list = await accounts.get();
 
-        
+
         return mapAccounts(
           source,
           list.filter(({ type }) =>

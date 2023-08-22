@@ -85,7 +85,7 @@ function MyNFTTabInfo(props) {
     maxTotalSupply,
     nft_owner,
   } = props;
-  console.log('props', props);
+  console.log("props", props);
   const attrsList = !traits
     ? {}
     : Object.entries(traits).map(([k, v]) => {
@@ -267,14 +267,12 @@ function MyNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const {
-        data: { username },
-      } = await profile_calls.getProfileOnChain({
+      const { data } = await profile_calls.getProfileOnChain({
         callerAccount: currentAccount,
         accountAddress,
       });
 
-      return setOwnerName(username || truncateStr(accountAddress, 6));
+      return setOwnerName(data?.username || truncateStr(accountAddress, 6));
     };
 
     ownerName();
@@ -297,9 +295,8 @@ function MyNFTTabInfo(props) {
       console.log(price / 10 ** 18, royaltyFee, myTradingFeeData);
       const info = calculateFee(price / 10 ** 18, royaltyFee, myTradingFeeData);
       setFeeCalculated(info);
-      console.log('info', info);
-      console.log('feeCalculated', feeCalculated);
-      
+      console.log("info", info);
+      console.log("feeCalculated", feeCalculated);
     };
     fetchTradeFee();
   }, [currentAccount]);
@@ -822,25 +819,24 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {feeCalculated.royaltyFeeAmount}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
+                {feeCalculated.royaltyFeeAmount} <AzeroIcon w="15px" mb="2px" />{" "}
+                ({(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {feeCalculated.tradeFeeAmount}{" "}
-                <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
+                {feeCalculated.tradeFeeAmount} <AzeroIcon w="15px" mb="2px" /> (
+                {myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  You will receive:{" "} 
-                </Text>{feeCalculated.userPortionAmount}{" "}
-                {console.log('price', price)}
-                {console.log('myTradingFee', myTradingFee)}
-                {console.log('myTradingFee', royaltyFee)}
-                {" "}
+                  You will receive:{" "}
+                </Text>
+                {feeCalculated.userPortionAmount} {console.log("price", price)}
+                {console.log("myTradingFee", myTradingFee)}
+                {console.log("myTradingFee", royaltyFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>
             </HStack>
@@ -857,7 +853,7 @@ export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
   // askPrice 99.000000 ~ 99 Azero
   // royaltyFee 450 ~ 4.5%
   // myTradingFee 5.00 ~ 5%
-  console.log('zxczxcz');
+  console.log("zxczxcz");
 
   const royaltyFeePercent = royaltyFee / 100;
   const royaltyFeeAmount = (askPrice * royaltyFeePercent) / 100;

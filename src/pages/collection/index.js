@@ -96,6 +96,8 @@ function CollectionPage() {
           collection_address
         );
 
+      console.log("totalListedCount", totalListedCount);
+
       info.totalListed = totalListedCount || 0;
 
       const { ret: floorPrice } = await APICall.getCollectionFloorPrice({
