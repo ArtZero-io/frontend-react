@@ -541,7 +541,10 @@ const CollectionGridNew = ({
       return toast("This is first item!");
     }
 
-    if (step === 1 && currentIndex === NUMBER_NFT_PER_PAGE - 1) {
+    if (
+      step === 1 &&
+      currentIndex === Math.min(NUMBER_NFT_PER_PAGE, dataList?.length) - 1
+    ) {
       return toast("End of page!");
     }
 
