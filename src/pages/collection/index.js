@@ -38,6 +38,7 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import { delay } from "@utils";
 import toast from "react-hot-toast";
 import { useSubstrateState } from "@utils/substrate";
+import azero_domains_nft from "../../utils/blockchain/azero-domains-nft";
 
 function CollectionPage() {
   const history = useHistory();
@@ -90,11 +91,24 @@ function CollectionPage() {
         info = ret[0];
       }
 
-      const totalListedCount =
-        await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
-          getPublicCurrentAccount(),
-          collection_address
-        );
+      let totalListedCount = 0;
+
+      if (collection_address !== azero_domains_nft.CONTRACT_ADDRESS) {
+        totalListedCount =
+          await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
+            getPublicCurrentAccount(),
+            collection_address
+          );
+      } else {
+        const { ret } = await APICall.searchNFTOfCollectionByTraits({
+          sort: 2,
+          offset: 0,
+          limit: 1,
+          traitFilters: JSON.stringify({ is_for_sale: true }),
+          collectionAddress: collection_address,
+        });
+        totalListedCount = ret?.result?.totalResults || 0;
+      }
 
       info.totalListed = totalListedCount || 0;
 
@@ -212,7 +226,6 @@ function CollectionPage() {
         collectionAddress: collection_address,
       }
     );
-
     if (status === "OK") {
       ret = result;
     }
