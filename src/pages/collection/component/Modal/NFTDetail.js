@@ -46,18 +46,15 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
       },
       {
         label: "offers",
-        label: "offers",
         content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled: actionType || !rest?.is_for_sale,
       },
       {
         label: "owner history",
-        label: "owner history",
         content: <OwnershipHistory {...rest} />,
         isDisabled: actionType,
       },
       {
-        label: "tx history",
         label: "tx history",
         content: <TxHistory {...rest} />,
         isDisabled: actionType,
@@ -201,4 +198,3 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
 }
 
 export default NFTDetailModal;
-
