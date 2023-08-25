@@ -129,17 +129,17 @@ const CollectionItems = ({
           NFTList?.map(async (i) => {
             const sale_info = await marketplace_contract_calls.getNftSaleInfo(
               currentAccount,
-              i.nftContractAddress,
-              { u64: i.tokenID }
+              i?.nftContractAddress,
+              { u64: i?.tokenID }
             );
 
             if (!sale_info) return i;
 
             let listBidder = await marketplace_contract_calls.getAllBids(
               currentAccount,
-              i.nftContractAddress,
+              i?.nftContractAddress,
               sale_info?.nftOwner,
-              { u64: i.tokenID }
+              { u64: i?.tokenID }
             );
 
             // map array index to bidId

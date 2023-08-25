@@ -45,7 +45,7 @@ function ProfileHeader({ address }) {
         callerAccount: getPublicCurrentAccount(),
         accountAddress: address,
       });
-      if (res.status === "OK") {
+      if (res?.status === "OK") {
         if (!res.data.username) {
           res.data.username = truncateStr(address);
         }
