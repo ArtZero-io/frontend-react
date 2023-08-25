@@ -531,7 +531,9 @@ const CollectionGridNew = ({
   }
 
   function handleNav(id, step) {
-    const currentIndex = dataList.findIndex((item) => item.tokenID === id);
+    const currentIndex = dataList.findIndex(
+      (item) => item?.tokenID === id || item?.azDomainName === id
+    );
 
     if (step === -1 && currentIndex === 0) {
       return toast("This is first item!");

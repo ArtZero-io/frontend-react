@@ -46,15 +46,18 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
       },
       {
         label: "offers",
+        label: "offers",
         content: <MyAzeroDomainsNFTOffer {...rest} />,
         isDisabled: actionType || !rest?.is_for_sale,
       },
       {
         label: "owner history",
+        label: "owner history",
         content: <OwnershipHistory {...rest} />,
         isDisabled: actionType,
       },
       {
+        label: "tx history",
         label: "tx history",
         content: <TxHistory {...rest} />,
         isDisabled: actionType,
@@ -120,7 +123,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
               position="absolute"
               left="17px"
               bottom="0"
-              onClick={() => handleNav(rest?.tokenID, -1)}
+              onClick={() => handleNav(rest?.azDomainName || rest?.tokenID, -1)}
             >
               <PrevArrowIcon />
             </Flex>
@@ -137,7 +140,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
               position="absolute"
               right="17px"
               bottom="0"
-              onClick={() => handleNav(rest?.tokenID, 1)}
+              onClick={() => handleNav(rest?.azDomainName || rest?.tokenID, 1)}
             >
               <PrevArrowIcon />
             </Flex>
@@ -198,3 +201,4 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
 }
 
 export default NFTDetailModal;
+
