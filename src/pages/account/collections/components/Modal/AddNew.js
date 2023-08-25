@@ -11,6 +11,7 @@ import {
   Stack,
   useBreakpointValue,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import AdvancedMode from "./AdvancedMode";
 import SimpleMode from "./SimpleMode";
@@ -24,6 +25,7 @@ import { CreateButton } from "./CreateButton";
 import ProjectNFTIcon from "@theme/assets/icon/ProjectNFTIcon";
 import { useHistory } from "react-router-dom";
 import { SCROLLBAR } from "@constants";
+import MenuCreatorIcon from "@theme/assets/icon/MenuCreator.js";
 
 function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,12 +54,13 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           to="#"
           ml={["20px", "auto"]}
           py={["4px", "12px"]}
-          px={["4px", "15px"]}
-          _hover={{ bg: "black" }}
+          px={["4px", "10px"]}
+          _hover={{ color: "brand.blue", bg: "black" }}
           fontFamily="Evogria, sans-serif"
           fontSize={{ base: "18px", md: "15px" }}
         >
-          become a creator
+          <MenuCreatorIcon />
+          <Text ml="10px">become a creator</Text>
         </MenuItem>
       )}
 
