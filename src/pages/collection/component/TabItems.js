@@ -43,7 +43,6 @@ import { CommonCard } from "@components/Card/NFTChangeSize";
 import LeftPanel from "./LeftPanel";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import toast from "react-hot-toast";
-import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { isMobile } from "react-device-detect";
 import { useMemo } from "react";
 import { CloseIcon, Search2Icon } from "@chakra-ui/icons";
@@ -539,7 +538,7 @@ const CollectionGridNew = ({
       return toast("This is first item!");
     }
 
-    if (step === 1 && currentIndex === NUMBER_NFT_PER_PAGE - 1) {
+    if (step === 1 && currentIndex === dataList?.length - 1) {
       return toast("End of page!");
     }
 

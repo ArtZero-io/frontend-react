@@ -179,7 +179,7 @@ const LaunchpadDetailPage = () => {
   const [activePhaseId, setActivePhaseId] = useState(null);
 
   useEffect(() => {
-    if (apiState) return;
+    if (apiState !== "READY") return;
 
     let isUnmounted = false;
 
@@ -198,7 +198,7 @@ const LaunchpadDetailPage = () => {
         const id = await launchpad_psp34_nft_standard_calls.getCurrentPhase(
           getPublicCurrentAccount()
         );
-
+        
         if (isUnmounted) return;
 
         setActivePhaseId(id);
