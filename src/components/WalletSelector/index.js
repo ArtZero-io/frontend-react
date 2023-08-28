@@ -66,7 +66,7 @@ import MenuCollectionIcon from "@theme/assets/icon/MenuCollection.js";
 import MenuNftIcon from "@theme/assets/icon/MenuNft.js";
 import MenuStakeIcon from "@theme/assets/icon/MenuStake.js";
 import MenuProjectIcon from "@theme/assets/icon/MenuProject.js";
-import MenuActivityIcon from "@theme/assets/icon/MenuActivity.js";
+// import MenuActivityIcon from "@theme/assets/icon/MenuActivity.js";
 import MenuDisconnectIcon from "@theme/assets/icon/MenuDisconnect.js";
 import MenuSwitchIcon from "@theme/assets/icon/MenuSwitch.js";
 import ChainDropdown from "../Dropdown/ChainDropdown";
@@ -199,7 +199,7 @@ function WalletSelector({ display }) {
           p="0"
           w="160px"
           h="40px"
-          bg="black"
+          bg="#0000"
           as={Button}
           borderRadius="0"
           color="brand.blue"
@@ -256,7 +256,6 @@ function WalletSelector({ display }) {
                 justifyContent="center"
                 mr="12px"
               >
-                {console.log(currentAccount?.meta?.source)}
                 {currentAccount?.meta?.source === "subwallet-js" && (
                   <Image
                     src={SubwalletLogo}
@@ -436,11 +435,11 @@ const myAccountList = [
     href: ROUTES.ACCOUNT_MY_PROJECTS,
     icon: <MenuProjectIcon />,
   },
-  {
-    label: "My Activities",
-    href: ROUTES.ACCOUNT_MY_ACTIVITIES,
-    icon: <MenuActivityIcon />,
-  },
+  // {
+  //   label: "My Activities",
+  //   href: ROUTES.ACCOUNT_MY_ACTIVITIES,
+  //   icon: <MenuActivityIcon />,
+  // },
 ];
 
 function WalletSubmenu({ keyringOptions, selectAccountHandler }) {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 
@@ -74,6 +75,8 @@ function CollectionPage() {
           getPublicCurrentAccount(),
           collection_address
         );
+
+      console.log("totalListedCount", totalListedCount);
 
       info.totalListed = totalListedCount || 0;
 

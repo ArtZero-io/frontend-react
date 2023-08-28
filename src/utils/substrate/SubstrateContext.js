@@ -119,8 +119,6 @@ const connect = (state, dispatch) => {
     },
   });
 
-  console.log("connect _api", _api);
-
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -128,17 +126,14 @@ const connect = (state, dispatch) => {
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
-  console.log("connect _api connected");
 
   _api.on("ready", () => {
     dispatch({ type: "CONNECT_SUCCESS" });
   });
-  console.log("connect _api ready");
 
   _api.on("error", (err) => {
     dispatch({ type: "CONNECT_ERROR", payload: err });
   });
-  console.log("connect _api error");
 };
 
 const retrieveChainInfo = async (api) => {

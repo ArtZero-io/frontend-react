@@ -53,7 +53,7 @@ function ChainDropdown() {
         minW="200px"
         h="28px"
         as={Button}
-        bg="black"
+        bg="#0000"
         fontSize="15px"
         textTransform="none"
         borderRadius="0"

@@ -16,6 +16,7 @@ import {
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
+  Box,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
@@ -37,7 +38,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { truncateStr, getTraitCount } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
-import { formMode } from "@constants";
+import { formMode, SUB_DOMAIN } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 import TransferNFTModal from "@components/Modal/TransferNFTModal";
@@ -57,7 +58,10 @@ import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
-import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import SocialShare from "@components/SocialShare/SocialShare";
+import useEditBidPrice from "@hooks/useEditBidPrice";
+import { fetchUserBalance } from "../../../../launchpad/component/Form/AddNewProject";
 
 function MyNFTTabInfo(props) {
   const {
@@ -78,8 +82,10 @@ function MyNFTTabInfo(props) {
     nft_count,
     rarityTable,
     isActive,
+    maxTotalSupply,
+    nft_owner,
   } = props;
-
+  console.log("props", props);
   const attrsList = !traits
     ? {}
     : Object.entries(traits).map(([k, v]) => {
@@ -103,7 +109,7 @@ function MyNFTTabInfo(props) {
   const [isOwner, setIsOwner] = useState(false);
   const [ownerAddress, setOwnerAddress] = useState("");
   const [, setLoading] = useState(false);
-
+  const [feeCalculated, setFeeCalculated] = useState(null);
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const doLoad = useCallback(async () => {
@@ -261,14 +267,12 @@ function MyNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const {
-        data: { username },
-      } = await profile_calls.getProfileOnChain({
+      const { data } = await profile_calls.getProfileOnChain({
         callerAccount: currentAccount,
         accountAddress,
       });
 
-      return setOwnerName(username || truncateStr(accountAddress, 6));
+      return setOwnerName(data?.username || truncateStr(accountAddress, 6));
     };
 
     ownerName();
@@ -288,12 +292,63 @@ function MyNFTTabInfo(props) {
       );
 
       setMyTradingFee(myTradingFeeData);
+      console.log(price / 10 ** 18, royaltyFee, myTradingFeeData);
+      const info = calculateFee(price / 10 ** 18, royaltyFee, myTradingFeeData);
+      setFeeCalculated(info);
+      console.log("info", info);
+      console.log("feeCalculated", feeCalculated);
     };
     fetchTradeFee();
-  }, [currentAccount]);
+  }, [currentAccount, feeCalculated, price, royaltyFee]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;
 
+  // ==============================================
+  const [isUpdateBidPriceMode, setIsUpdateBidPriceMode] = useState(false);
+  const [newBidPrice, setNewBidPrice] = useState("");
+
+  const { doUpdateBidPrice } = useEditBidPrice({
+    newBidPrice,
+    tokenID,
+    nftContractAddress,
+    sellerAddress: nft_owner,
+  });
+
+  const handleUpdateBidPrice = async () => {
+    // check wallet connected
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+
+    //check owner of the NFT
+    if (isOwner) {
+      toast.error(`Can not bid your own NFT!`);
+      return;
+    }
+
+    // check balance
+    const { balance } = await fetchUserBalance({ currentAccount, api });
+
+    if (balance < newBidPrice) {
+      toast.error(`Not enough balance!`);
+      return;
+    }
+
+    //check bidPrice
+    if (parseFloat(newBidPrice) <= 0) {
+      toast.error(`Bid price must greater than zero!`);
+      return;
+    }
+
+    if (parseFloat(newBidPrice) >= price / 10 ** 18) {
+      toast.error(`Bid amount must be less than current price!`);
+      return;
+    }
+
+    doUpdateBidPrice();
+  };
   return (
     <>
       <HStack alignItems="stretch" spacing={{ base: "20px", xl: "45px" }}>
@@ -412,14 +467,14 @@ function MyNFTTabInfo(props) {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
-              {console.log("isActive", isActive)}
-              {console.log("is_for_sale", is_for_sale)}
+
               {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
                   isDisabled={is_for_sale || actionType}
                 />
               )}
+              <SocialShare title={nftName} shareUrl={path} />
             </HStack>
           </HStack>
 
@@ -495,7 +550,7 @@ function MyNFTTabInfo(props) {
                             <PropCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={nft_count}
+                              totalNftCount={maxTotalSupply || nft_count}
                             />
                           </GridItem>
                         ))
@@ -511,7 +566,7 @@ function MyNFTTabInfo(props) {
                             <LevelCard
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
-                              totalNftCount={nft_count}
+                              totalNftCount={maxTotalSupply || nft_count}
                             />
                           </GridItem>
                         ))
@@ -565,7 +620,7 @@ function MyNFTTabInfo(props) {
             )}
 
             {filterSelected !== "BIDS" &&
-              owner === marketplace_contract.CONTRACT_ADDRESS &&
+              // owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
                   w="full"
@@ -607,23 +662,111 @@ function MyNFTTabInfo(props) {
                   alignItems="center"
                   justifyContent="start"
                 >
-                  <CommonButton
-                    mx="0"
-                    px="2px"
-                    {...rest}
-                    text="remove bid"
-                    onClick={handleRemoveBidAction}
-                    isDisabled={actionType && actionType !== REMOVE_BID}
-                  />
-                  <Flex textAlign="right" color="brand.grayLight">
-                    <Text ml={4} mr={1} my="auto">
-                      Your current offer is
-                    </Text>
-                    <Flex color="#fff" h="full" alignItems="center" px={1}>
-                      <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
+                  {/* Remove bid button */}
+                  {!isUpdateBidPriceMode && (
+                    <>
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="remove bid"
+                        onClick={handleRemoveBidAction}
+                        isDisabled={
+                          isUpdateBidPriceMode ||
+                          (actionType && actionType !== REMOVE_BID)
+                        }
+                      />{" "}
+                      <Box w={"8px"} />
+                    </>
+                  )}
+                  {/* END Remove bid button */}
+
+                  {!isUpdateBidPriceMode ? (
+                    <CommonButton
+                      mx="0"
+                      px="2px"
+                      {...rest}
+                      text="edit price"
+                      onClick={() => setIsUpdateBidPriceMode(true)}
+                      isDisabled={
+                        actionType && actionType !== "UPDATE_BID_PRICE"
+                      }
+                    />
+                  ) : (
+                    <>
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="submit"
+                        onClick={handleUpdateBidPrice}
+                        isDisabled={
+                          !newBidPrice ||
+                          (actionType && actionType !== "UPDATE_BID_PRICE")
+                        }
+                      />
+                      <Box w={"8px"} />
+
+                      <CommonButton
+                        mx="0"
+                        px="2px"
+                        {...rest}
+                        text="cancel"
+                        onClick={() => {
+                          setNewBidPrice("");
+                          setIsUpdateBidPriceMode(false);
+                        }}
+                        isDisabled={actionType && actionType !== REMOVE_BID}
+                      />
+                    </>
+                  )}
+
+                  {isUpdateBidPriceMode ? (
+                    <Flex textAlign="right" color="brand.grayLight">
+                      <Text ml={4} mr={1} my="auto">
+                        New bid price
+                      </Text>
+                      <NumberInput
+                        ml="8px"
+                        maxW={"120px"}
+                        isDisabled={!isActive || actionType}
+                        bg="black"
+                        max={999000000}
+                        min={0.1}
+                        precision={6}
+                        onChange={(v) => {
+                          console.log("v", v);
+                          if (/[eE+-]/.test(v)) return;
+
+                          setNewBidPrice(v);
+                        }}
+                        value={newBidPrice}
+                        h="52px"
+                      >
+                        <NumberInputField
+                          textAlign="right"
+                          h="52px"
+                          borderRadius={0}
+                          borderWidth={0}
+                          color="#fff"
+                          placeholder="0"
+                        />
+                        <InputRightElement bg="transparent" h={"52px"} w="32px">
+                          <AzeroIcon w="12px" />
+                        </InputRightElement>
+                      </NumberInput>
                     </Flex>
-                  </Flex>
+                  ) : (
+                    <Flex textAlign="right" color="brand.grayLight">
+                      <Text ml={4} mr={1} my="auto">
+                        Your current offer is
+                      </Text>
+                      <Flex color="#fff" h="full" alignItems="center" px={1}>
+                        <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                        <TagRightIcon as={AzeroIcon} />
+                      </Flex>
+                    </Flex>
+                  )}
                 </Flex>
               </>
             )}
@@ -665,7 +808,7 @@ function MyNFTTabInfo(props) {
             </HStack>
           ) : null}
 
-          {isActive && filterSelected === "LISTING" ? (
+          {isActive && filterSelected === "LISTING" && feeCalculated ? (
             <HStack
               w="full"
               pt="10px"
@@ -690,7 +833,7 @@ function MyNFTTabInfo(props) {
               <Text>
                 <Text as="span" color="brand.grayLight">
                   You will receive:{" "}
-                </Text>{" "}
+                </Text>
                 {formatNumDynamicDecimal(
                   price *
                   (1 / 10 ** 18 -
@@ -706,5 +849,34 @@ function MyNFTTabInfo(props) {
     </>
   );
 }
+
+export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
+  // price 99000000000000 -> price of LISTED item MUST div 10*12
+
+  // askPrice 99.000000 ~ 99 Azero
+  // royaltyFee 450 ~ 4.5%
+  // myTradingFee 5.00 ~ 5%
+  console.log("zxczxcz");
+
+  const royaltyFeePercent = royaltyFee / 100;
+  const royaltyFeeAmount = (askPrice * royaltyFeePercent) / 100;
+
+  const tradeFeePercent = Number(myTradingFee);
+  const tradeFeeAmount = (askPrice * tradeFeePercent) / 100;
+
+  const userPortionPercent = 100 - royaltyFeePercent - tradeFeePercent;
+  const userPortionAmount = askPrice - royaltyFeeAmount - tradeFeeAmount;
+
+  const ret = {
+    royaltyFeePercent: royaltyFeePercent.toFixed(2),
+    royaltyFeeAmount: formatNumDynamicDecimal(royaltyFeeAmount),
+    tradeFeePercent: tradeFeePercent.toFixed(2),
+    tradeFeeAmount: formatNumDynamicDecimal(tradeFeeAmount),
+    userPortionPercent: userPortionPercent.toFixed(2),
+    userPortionAmount: formatNumDynamicDecimal(userPortionAmount),
+  };
+
+  return ret;
+};
 
 export default MyNFTTabInfo;

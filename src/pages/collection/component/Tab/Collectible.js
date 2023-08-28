@@ -44,7 +44,7 @@ import { useSubstrateState } from "@utils/substrate";
 
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import { formMode } from "@constants";
+import { formMode, SUB_DOMAIN } from "@constants";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 
@@ -108,8 +108,11 @@ const NFTTabCollectible = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-
+  const gridSize = useBreakpointValue({
+    base: `8rem`,
+    xl: `10rem`,
+    "2xl": `11rem`,
+  });
   const [doOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(1);
 
@@ -256,10 +259,7 @@ const NFTTabCollectible = (props) => {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
-  const path = `${window.location.href.replace(
-    "#/collection/",
-    "#/nft/"
-  )}/${tokenID}`;
+  const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;
 
   const [askPrice, setAskPrice] = useState(1);
 
@@ -351,7 +351,7 @@ const NFTTabCollectible = (props) => {
     let p = askPrice;
 
     if (is_for_sale) {
-      p = price / (10**18);
+      p = price / 10 ** 18;
     }
 
     const info = calculateFee(p, royaltyFee, myTradingFee);
@@ -857,7 +857,7 @@ const NFTTabCollectible = (props) => {
                       maxH="232px"
                       id="grid-attrs"
                       w="full"
-                      gap="30px"
+                      gap={{ base: "10px", xl: "30px" }}
                       pr="22px"
                       overflowY="auto"
                       sx={SCROLLBAR}
