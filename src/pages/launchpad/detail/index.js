@@ -170,7 +170,7 @@ const LaunchpadDetailPage = () => {
   const [activePhaseId, setActivePhaseId] = useState(null);
 
   useEffect(() => {
-    if (apiState) return;
+    if (apiState !== "READY") return;
 
     let isUnmounted = false;
 
