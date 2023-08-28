@@ -1,5 +1,6 @@
 import { Box, Flex, Spacer, Text, Tooltip } from "@chakra-ui/react";
 import { formatNumDynamicDecimal } from "@utils";
+import moment from "moment/moment";
 
 export default function PropCard({
   item,
@@ -8,6 +9,16 @@ export default function PropCard({
   variant = "",
 }) {
   const [objItem] = Object.entries(item);
+
+  function formatTime(time) {
+    if (typeof time === "string") {
+      time = time?.replaceAll(",", "");
+    }
+
+    const testTime = moment(parseInt(time)).format("MMM D YYYY, H:mm");
+
+    return testTime;
+  }
 
   return (
     <Box
@@ -72,7 +83,9 @@ export default function PropCard({
             fontStyle="italic"
             textTransform="capitalize"
           >
-            {objItem[1]}
+            {["Expiration Time", "Registration Time"].includes(objItem[0])
+              ? formatTime(objItem[1])
+              : objItem[1]}
           </Text>
         </Tooltip>
       </Flex>
