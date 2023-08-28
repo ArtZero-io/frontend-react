@@ -13,7 +13,7 @@ import {
 import { clientAPI } from "@api/client";
 import toast from "react-hot-toast";
 
-let contract;
+export let contract;
 const value = 0;
 
 export const setProfileContract = (api, data) => {
@@ -26,9 +26,11 @@ export const setProfileContract = (api, data) => {
 
 export async function getProfileOnChain({ callerAccount, accountAddress }) {
   if (!contract || !callerAccount) {
-    toast.error(`Contract or caller not valid!`);
+    console.log("caller or Contract not valid!");
+    toast.error(`caller or Contract not valid!`);
     return null;
   }
+
   const address = callerAccount?.address;
 
   let profileInfo;

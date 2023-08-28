@@ -14,7 +14,7 @@ import { formatNumberOutput, formatOutput, readOnlyGasLimit } from "..";
 
 let contract;
 
-export const setMarketplaceContract = (api, data) => {
+export const setMarketplaceAzeroDomainsContract = (api, data) => {
   contract = new ContractPromise(
     api,
     data?.CONTRACT_ABI,
@@ -120,6 +120,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
+
     return output.toHuman().Ok;
   }
   return null;
@@ -365,6 +366,7 @@ async function list(
   txType,
   api
 ) {
+  console.log('list function');
   if (
     !contract ||
     !caller_account ||
@@ -381,7 +383,7 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -394,7 +396,8 @@ async function list(
   );
 
   contract.tx
-    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price,
+      [97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107])
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -406,9 +409,9 @@ async function list(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateNftData({
+        await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
       }
     })
@@ -427,6 +430,8 @@ async function unlist(
   txType,
   api
 ) {
+  console.log("marketplace for azero domains");
+  console.log(token_id);
   if (
     !contract ||
     !caller_account ||
@@ -465,15 +470,19 @@ async function unlist(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateNftData({
+        console.log({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
+        });
+        await APICall.askBeUpdateAzeroDomainsNftData({
+          collection_address: nft_contract_address,
+          azDomainName: token_id.bytes,
         });
 
-        await APICall.askBeUpdateBidsData({
+        await APICall.askBeUpdateAzeroDomainsBidsData({
           collection_address: nft_contract_address,
           seller: seller,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
 
         await APICall.askBeUpdateCollectionData({
@@ -511,7 +520,7 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
+  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -535,15 +544,15 @@ async function bid(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateBidsData({
+        await APICall.askBeUpdateAzeroDomainsBidsData({
           collection_address: nft_contract_address,
           seller: seller,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
 
-        await APICall.askBeUpdateNftData({
+        await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
       }
     })
@@ -600,15 +609,15 @@ async function removeBid(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateBidsData({
+        await APICall.askBeUpdateAzeroDomainsBidsData({
           collection_address: nft_contract_address,
           seller: seller,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
 
-        await APICall.askBeUpdateNftData({
+        await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
       }
     })
@@ -642,7 +651,8 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
+
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -665,19 +675,19 @@ async function buy(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateNftData({
+        await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
 
         await APICall.askBeUpdateCollectionData({
           collection_address: nft_contract_address,
         });
 
-        await APICall.askBeUpdateBidsData({
+        await APICall.askBeUpdateAzeroDomainsBidsData({
           collection_address: nft_contract_address,
           seller: seller,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
       }
     })
@@ -738,19 +748,19 @@ async function acceptBid(
       });
 
       if (status?.isFinalized) {
-        await APICall.askBeUpdateNftData({
+        await APICall.askBeUpdateAzeroDomainsNftData({
           collection_address: nft_contract_address,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
 
         await APICall.askBeUpdateCollectionData({
           collection_address: nft_contract_address,
         });
 
-        await APICall.askBeUpdateBidsData({
+        await APICall.askBeUpdateAzeroDomainsBidsData({
           collection_address: nft_contract_address,
           seller: seller,
-          token_id: token_id.u64,
+          azDomainName: token_id.bytes,
         });
       }
     })
@@ -760,7 +770,7 @@ async function acceptBid(
   return unsubscribe;
 }
 
-const marketplace_contract_calls = {
+const marketplace_azero_domains_contract_calls = {
   getListedTokenCountByCollectionAddress,
   getTotalProfit,
   getCurrentProfit,
@@ -777,13 +787,13 @@ const marketplace_contract_calls = {
   bid,
   buy,
   acceptBid,
-  setMarketplaceContract,
+  setMarketplaceAzeroDomainsContract,
   removeBid,
   getStakingDiscountCriteria,
   getStakingDiscountRate,
 };
 
-export default marketplace_contract_calls;
+export default marketplace_azero_domains_contract_calls;
 
 export const withdrawMarketplaceContract = async (
   caller_account,
@@ -811,7 +821,8 @@ export const withdrawMarketplaceContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 12))
+    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 6))
     .toString();
 
   gasLimit = await getEstimatedGas(

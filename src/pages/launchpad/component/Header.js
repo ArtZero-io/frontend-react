@@ -78,7 +78,7 @@ function LaunchpadDetailHeader({
   } = project;
 
   const history = useHistory();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const descLength = useBreakpointValue([115, 175]);
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -209,6 +209,8 @@ function LaunchpadDetailHeader({
   const [isAdmin, setIsAdmin] = useState(null);
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     const checkIsAdmin = async () => {
       if (!api || !currentAccount?.address) return;
       const queryResult1 = await execContractQuery(
@@ -224,7 +226,7 @@ function LaunchpadDetailHeader({
       setIsAdmin(queryResult1?.toHuman().Ok);
     };
     checkIsAdmin();
-  }, [api, currentAccount?.address, nftContractAddress]);
+  }, [apiState, api, currentAccount?.address, nftContractAddress]);
 
   const [isDoxxed, setIsDoxxed] = useState(false);
   const [isDuplicationChecked, setIsDuplicationChecked] = useState(false);
@@ -420,6 +422,7 @@ function LaunchpadDetailHeader({
                                   10 ** 18 ||
                                 0}{" "}
                               <AzeroIcon
+                                mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
                               />
@@ -441,6 +444,7 @@ function LaunchpadDetailHeader({
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
                             10 ** 18}{" "}
                           <AzeroIcon
+                            mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
@@ -815,20 +819,19 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
             onClose={onCloseWithdrawModal}
           />
-          {
-            <LaunchpadEventModal
-              isOpen={isOpenHistoryModal}
-              collection_address={collection_address}
-              onClose={onCloseHistoryModal}
-            />
-          }
-          {
-            <WithdrawHistoryModal
-              isOpen={isOpenWithdrawHistoryModal}
-              collection_address={collection_address}
-              onClose={onCloseWithdrawHistoryModal}
-            />
-          }
+
+          <LaunchpadEventModal
+            isOpen={isOpenHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseHistoryModal}
+          />
+
+          <WithdrawHistoryModal
+            isOpen={isOpenWithdrawHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseWithdrawHistoryModal}
+          />
+
           <UpdatePhasesModal
             {...project}
             isOpen={isOpenPhase}

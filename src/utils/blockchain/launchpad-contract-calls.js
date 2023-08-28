@@ -310,7 +310,10 @@ async function addNewProject(
                       eventValues.push(value.toString());
                     }
 
-                    const nft_address = reformatAddress(eventValues[1], networkSS58);
+                    const nft_address = reformatAddress(
+                      eventValues[1],
+                      networkSS58
+                    );
 
                     const res = await APICall.askBeUpdateProjectData({
                       project_address: nft_address,
@@ -508,6 +511,7 @@ export const withdrawLaunchpadContract = async (
   api
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

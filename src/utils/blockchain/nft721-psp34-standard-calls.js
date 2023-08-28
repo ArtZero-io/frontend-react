@@ -7,7 +7,6 @@ import { clientAPI } from "@api/client";
 
 import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
-import { delay } from "@utils";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import {
@@ -333,6 +332,7 @@ async function approve(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -383,7 +383,7 @@ async function approve(
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
-    await delay(20000)
+
   return unsubscribe;
 }
 
@@ -398,6 +398,7 @@ async function setMultipleAttributesNFT(
   inputCacheImages
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

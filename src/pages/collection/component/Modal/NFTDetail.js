@@ -20,6 +20,10 @@ import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import TxHistory from "../Tab/TxHistory";
 import PrevArrowIcon from "@theme/assets/icon/PrevArrow";
 
+// import AzeroDomainsNFTTabCollectible from "../../../azero-domains/collection/component/Tab/Collectible";
+// import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
+import azero_domains_nft from "@blockchain/azero-domains-nft";
+
 function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   const tabHeight = useBreakpointValue({
     base: `1rem`,
@@ -33,28 +37,54 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
     step === FINALIZED && onClose();
   }, [step, onClose]);
 
-  const tabData = [
-    {
-      label: "detail",
-      content: <NFTTabCollectible {...rest} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "offers",
-      content: <MyNFTOffer {...rest} />,
-      isDisabled: actionType || !rest?.is_for_sale,
-    },
-    {
-      label: "owner history",
-      content: <OwnershipHistory {...rest} />,
-      isDisabled: actionType,
-    },
-    {
-      label: "tx history",
-      content: <TxHistory {...rest} />,
-      isDisabled: actionType,
-    },
-  ];
+  let tabData = [];
+  if (rest.nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+    tabData = [
+      // {
+      //   label: "detail",
+      //   content: <AzeroDomainsNFTTabCollectible {...rest} />,
+      //   isDisabled: actionType,
+      // },
+      // {
+      //   label: "offers",
+      //   content: <MyAzeroDomainsNFTOffer {...rest} />,
+      //   isDisabled: actionType || !rest?.is_for_sale,
+      // },
+      {
+        label: "owner history",
+        content: <OwnershipHistory {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        content: <TxHistory {...rest} />,
+        isDisabled: actionType,
+      },
+    ];
+  } else {
+    tabData = [
+      {
+        label: "detail",
+        content: <NFTTabCollectible {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "offers",
+        content: <MyNFTOffer {...rest} />,
+        isDisabled: actionType || !rest?.is_for_sale,
+      },
+      {
+        label: "owner history",
+        content: <OwnershipHistory {...rest} />,
+        isDisabled: actionType,
+      },
+      {
+        label: "tx history",
+        content: <TxHistory {...rest} />,
+        isDisabled: actionType,
+      },
+    ];
+  }
 
   const [tabIndex, setTabIndex] = useState(0);
 

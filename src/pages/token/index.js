@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Breadcrumb,
@@ -18,6 +19,15 @@ import {
   InputRightElement,
   Tooltip,
   useBreakpointValue,
+  Flex,
+  useDisclosure,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TiArrowBackOutline } from "react-icons/ti";
@@ -41,7 +51,9 @@ import {
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-
+import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
+// import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
+import azero_domains_nft_contract_calls from "@utils/blockchain/azero-domains-nft-calls";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
@@ -91,10 +103,12 @@ import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
 import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import { MAX_BID_COUNT } from "../../constants";
+import useEditBidPrice from "@hooks/useEditBidPrice";
+import { isMobile } from "react-device-detect";
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -128,12 +142,14 @@ function TokenPage() {
       LOCK,
       TRANSFER,
       EDIT_NFT,
+      "UPDATE_BID_PRICE",
     ],
     () => fetchData()
   );
 
   const fetchData = useCallback(
     async function () {
+
       try {
         setLoading(true);
         if (currentAccount) {
@@ -239,17 +255,20 @@ function TokenPage() {
         setLoading(false);
       }
     },
-    [api, collection_address, currentAccount, token_id]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api, apiState, collection_address, currentAccount, token_id]
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     if (!currentAccount) {
       toast.error("Please connect wallet for full-function using!");
     }
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, currentAccount, token_id]);
+  }, [apiState, collection_address, currentAccount, token_id]);
 
   const handleBuyAction = async () => {
     try {
@@ -754,7 +773,7 @@ function TokenPage() {
                     />
                   </>
                 )}
-                {console.log("token", token)}
+
                 {isOwner && (
                   <TransferNFTModalMobile
                     {...token}
@@ -836,7 +855,10 @@ function TokenPage() {
                                     collection?.rarityTable,
                                     item
                                   )}
-                                  totalNftCount={collection?.nft_count}
+                                  totalNftCount={
+                                    collection?.maxTotalSupply ||
+                                    collection?.nft_count
+                                  }
                                 />
                               </GridItem>
                             );
@@ -855,7 +877,10 @@ function TokenPage() {
                                     collection?.rarityTable,
                                     item
                                   )}
-                                  totalNftCount={collection?.nft_count}
+                                  totalNftCount={
+                                    collection?.maxTotalSupply ||
+                                    collection?.nft_count
+                                  }
                                 />
                               </GridItem>
                             );
@@ -945,7 +970,12 @@ function TokenPage() {
                                 actionType && actionType !== UNLIST_TOKEN
                               }
                             />{" "}
-                            <VStack w="50%" alignItems="end">
+                            <Flex
+                              w="50%"
+                              justifyContent={["end"]}
+                              direction={["column", "row"]}
+                              alignItems={["end", "baseline"]}
+                            >
                               <Text color="#888">Current price</Text>
 
                               <Tag minH="20px" pr={0} bg="transparent">
@@ -956,7 +986,7 @@ function TokenPage() {
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
                               </Tag>
-                            </VStack>
+                            </Flex>
                           </HStack>
                         </Stack>
                       </Stack>
@@ -983,7 +1013,12 @@ function TokenPage() {
                             isDisabled={actionType && actionType !== BUY}
                           />
 
-                          <VStack w="50%" alignItems="end">
+                          <Flex
+                            w="50%"
+                            justifyContent={["end"]}
+                            direction={["column", "row"]}
+                            alignItems={["end", "baseline"]}
+                          >
                             <Text color="#888">Current price</Text>
 
                             <Tag minH="20px" pr={0} bg="transparent">
@@ -994,19 +1029,26 @@ function TokenPage() {
                               </TagLabel>
                               <TagRightIcon as={AzeroIcon} w="14px" />
                             </Tag>
-                          </VStack>
+                          </Flex>
                         </HStack>
                       </Stack>
                       {isAlreadyBid ? (
                         <HStack spacing="20px" p="20px" border="1px solid #333">
-                          <CommonButton
-                            h="40px"
-                            w="50%"
-                            {...rest}
-                            text="remove bid"
-                            onClick={handleRemoveBidAction}
-                            isDisabled={actionType && actionType !== REMOVE_BID}
-                          />
+                          <Flex justify="center" w={["75%", "50%"]}>
+                            <CommonButton
+                              h="40px"
+                              minW="fit-content"
+                              w="full"
+                              {...rest}
+                              text={isMobile ? "remove bid" : "remove bid"}
+                              onClick={handleRemoveBidAction}
+                              isDisabled={
+                                actionType && actionType !== REMOVE_BID
+                              }
+                            />
+
+                            <MobileEditBidPriceModal {...token} />
+                          </Flex>
 
                           <VStack w="50%" alignItems="end">
                             <Text color="#888">Your offer</Text>
@@ -1123,6 +1165,7 @@ export const buyToken = async (
 
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
+
   if (balance < askPrice / 10 ** 18) {
     toast.error(`Not enough balance!`);
     return;
@@ -1480,3 +1523,455 @@ export const FeeCalculatedBar = ({ feeCalculated }) => {
     </HStack>
   );
 };
+
+function MobileEditBidPriceModal({
+  tokenID,
+  nftContractAddress,
+  nft_owner,
+  price,
+  owner,
+  is_for_sale,
+}) {
+  const { api, currentAccount } = useSubstrateState();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [newBidPrice, setNewBidPrice] = useState("");
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
+
+  const { doUpdateBidPrice } = useEditBidPrice({
+    newBidPrice,
+    tokenID,
+    nftContractAddress,
+    sellerAddress: nft_owner,
+  });
+
+  const handleUpdateBidPrice = async () => {
+    // check wallet connected
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+    const ownerAddress = is_for_sale ? nft_owner : owner;
+    //check owner of the NFT
+    if (ownerAddress === currentAccount) {
+      toast.error(`Can not bid your own NFT!`);
+      return;
+    }
+
+    // check balance
+    const { balance } = await fetchUserBalance({ currentAccount, api });
+
+    if (balance < newBidPrice) {
+      toast.error(`Not enough balance!`);
+      return;
+    }
+
+    //check bidPrice
+    if (parseFloat(newBidPrice) <= 0) {
+      toast.error(`Bid price must greater than zero!`);
+      return;
+    }
+
+    if (parseFloat(newBidPrice) >= price / 10 ** 18) {
+      toast.error(`Bid amount must be less than current price!`);
+      return;
+    }
+
+    doUpdateBidPrice();
+  };
+
+  useEffect(() => {
+    rest.step === "Finalized" && onClose();
+  }, [onClose, rest.step]);
+
+  return (
+    <>
+      <Button
+        maxW="50px"
+        minW="fit-content"
+        fontSize={["13px", "15px"]}
+        isDisabled={actionType && actionType !== "UPDATE_BID_PRICE"}
+        h="40px"
+        onClick={() => onOpen()}
+      >
+        {isMobile ? "edit" : "edit price"}
+      </Button>
+
+      <Modal onClose={onClose} isOpen={isOpen} size={"sm"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontWeight="500">Edit bid price</ModalHeader>
+          <ModalCloseButton onClick={() => setNewBidPrice("")} />
+          <ModalBody>
+            <Flex
+              py="16px"
+              w="full"
+              justify="center"
+              textAlign="right"
+              flexDirection={["row"]}
+            >
+              <CommonButton
+                maxW="fit-content"
+                minW="fit-content"
+                w="full"
+                h="40px"
+                mx="0"
+                px="12px"
+                {...rest}
+                text="submit"
+                onClick={handleUpdateBidPrice}
+                isDisabled={
+                  !newBidPrice ||
+                  (actionType && actionType !== "UPDATE_BID_PRICE")
+                }
+              />
+
+              <Text ml={4} mr={1} my="auto" w="100px">
+                New bid
+              </Text>
+
+              <NumberInput
+                ml="8px"
+                maxW={"120px"}
+                isDisabled={actionType}
+                bg="black"
+                max={999000000}
+                min={0}
+                precision={6}
+                onChange={(v) => {
+                  console.log("v", v);
+                  if (/[eE+-]/.test(v)) return;
+
+                  setNewBidPrice(v);
+                }}
+                value={newBidPrice}
+                h="40px"
+              >
+                <NumberInputField
+                  textAlign="right"
+                  h="40px"
+                  borderRadius={0}
+                  borderWidth={0}
+                  color="#fff"
+                  placeholder="0"
+                />
+                <InputRightElement bg="transparent" h="40px" w="32px">
+                  <AzeroIcon w="12px" />
+                </InputRightElement>
+              </NumberInput>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+/**
+ * AzeroDomains Functions
+ */
+export const listAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice,
+  nftContractAddress,
+  marketplace_contract,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  //check askPrice
+  if (parseFloat(askPrice) <= 0) {
+    toast.error(`Bid price must greater than zero!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: LIST_TOKEN,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+
+  const isAllowance = await azero_domains_nft_contract_calls.allowance(
+    currentAccount,
+    currentAccount?.address,
+    marketplace_contract,
+    azDomainName,
+    dispatch
+  );
+
+  let res;
+
+  if (!isAllowance) {
+    toast.success("Step 1: Approving NFT transfer...");
+
+    res = await azero_domains_nft_contract_calls.approve(
+      currentAccount,
+      marketplace_contract,
+      azDomainName,
+      true,
+      dispatch,
+      LIST_TOKEN,
+      api
+    );
+  }
+  if (res || isAllowance) {
+    await delay(6000).then(async () => {
+      toast.success(`${res ? "Step 2:" : ""} Listing on marketplace...`);
+
+      await marketplace_azero_domains_contract_calls.list(
+        currentAccount,
+        nftContractAddress,
+        { bytes: azDomainName },
+        askPrice,
+        dispatch,
+        LIST_TOKEN,
+        api
+      );
+    });
+  }
+};
+
+export const unlistAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  nftContractAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: UNLIST_TOKEN,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+  await marketplace_azero_domains_contract_calls.unlist(
+    currentAccount,
+    nftContractAddress,
+    currentAccount.address,
+    { bytes: azDomainName },
+    dispatch,
+    UNLIST_TOKEN,
+    api
+  );
+};
+
+export const placeAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice, // Int 10**12
+  bidPrice, // Float
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (isOwner) {
+    toast.error(`Can not bid your own NFT!`);
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < bidPrice) {
+    toast.error(`Not enough balance!`);
+    return;
+  }
+
+  //check bidPrice
+  if (parseFloat(bidPrice) <= 0) {
+    toast.error(`Bid price must greater than zero!`);
+    return;
+  }
+
+  if (parseFloat(bidPrice) >= askPrice / 10 ** 18) {
+    toast.error(`Bid amount must be less than current price!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({ type: BID, step: START, tokenIDArray: Array.of(azDomainName) })
+  );
+
+  await marketplace_azero_domains_contract_calls.bid(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    bidPrice,
+    dispatch,
+    BID,
+    api
+  );
+};
+
+export const buyAzeroDomainsToken = async (
+  api,
+  currentAccount,
+  isOwner,
+  askPrice,
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+  //check owner of the NFT
+  if (isOwner) {
+    toast.error(`Can not buy your own NFT!`);
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < askPrice / 10 ** 18) {
+    toast.error(`Not enough balance!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(azDomainName) })
+  );
+
+  await marketplace_azero_domains_contract_calls.buy(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    askPrice,
+    dispatch,
+    BUY,
+    api
+  );
+};
+
+export const acceptAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  isOwner,
+  nftContractAddress,
+  azDomainName,
+  bidId,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: ACCEPT_BID,
+      step: START,
+      tokenIDArray: Array.of(bidId),
+      // array of bidId NOT TokenID
+    })
+  );
+  await marketplace_azero_domains_contract_calls.acceptBid(
+    currentAccount,
+    nftContractAddress,
+    currentAccount.address,
+    { bytes: azDomainName },
+    bidId,
+    dispatch,
+    ACCEPT_BID,
+    api
+  );
+};
+
+
+
+export const removeAzeroDomainsBid = async (
+  api,
+  currentAccount,
+  nftContractAddress,
+  ownerAddress,
+  azDomainName,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  // check balance
+  const { balance } = await fetchUserBalance({ currentAccount, api });
+
+  if (balance < 0.001) {
+    toast.error(`Balance is low!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: REMOVE_BID,
+      step: START,
+      tokenIDArray: Array.of(azDomainName),
+    })
+  );
+
+  await marketplace_azero_domains_contract_calls.removeBid(
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    { bytes: azDomainName },
+    dispatch,
+    REMOVE_BID,
+    api
+  );
+};
+
+/**
+ * End AzeroDomains Functions
+ */

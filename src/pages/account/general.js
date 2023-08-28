@@ -62,7 +62,7 @@ import { fetchValidatorProfit } from "../stats";
 
 function GeneralPage() {
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -160,18 +160,28 @@ function GeneralPage() {
           launchpadBalance?.balance +
           collectionBalance?.balance;
 
+        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
+
         const estimatedEarning =
           platformTotalStaked * 1
-            ? ((totalProfit * 0.3 + validatorProfit * 0.5) *
+            ? ((totalProfit * 0.3 +
+                validatorProfit * 0.5 +
+                (rewardStarted ? 0 : rewardPoolData)) *
                 totalStakedPromise) /
               (platformTotalStaked * 1)
             : 0;
 
+        // console.log("rewardPoolData", rewardPoolData);
+        // console.log(
+        //   "rewardPoolData SUM",
+        //   totalProfit * 0.3 +
+        //     validatorProfit * 0.5 +
+        //     (rewardStarted ? 0 : rewardPoolData)
+        // );
+
         if (!isMounted) return;
 
         setEstimatedEarning(estimatedEarning);
-        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
-
         const estimatedEarningBaseRewardPoolData = rewardPoolData
           ? (rewardPoolData * totalStakedPromise) / platformTotalStaked
           : 0;
@@ -213,7 +223,7 @@ function GeneralPage() {
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [api, currentAccount, publicCurrentAccount]
+    [api, currentAccount, publicCurrentAccount, rewardStarted]
   );
 
   const getTradeFee = useCallback(
@@ -277,6 +287,8 @@ function GeneralPage() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     const fetch = async () => {
@@ -307,16 +319,23 @@ function GeneralPage() {
 
     fetch();
 
-    return () => {
-      isMounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
+    return () => (isMounted = false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
   const lastDay = useMemo(() => {
     const now = new Date();
-    const lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
+    let lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    if (lastDayA.getDay() === 0) {
+      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -5);
+    }
+
+    if (lastDayA.getDay() === 6) {
+      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -4);
+    }
 
     return (
       <>

@@ -63,3 +63,36 @@ export default async function getGasLimit(
 
   return { ok: true, value: gasRequired };
 }
+export async function getGasLimitBulkAction(
+  api,
+  userAddress,
+  message,
+  contract,
+  options = {},
+  args = []
+) {
+  const abiMessage = toContractAbiMessage(contract, message);
+
+  if (!abiMessage.ok) return abiMessage;
+
+  const { value, gasLimit, storageDepositLimit } = options;
+
+  const { gasRequired } = await api.call.contractsApi.call(
+    userAddress,
+    contract.address,
+    value ?? new BN(0),
+    gasLimit ?? null,
+    storageDepositLimit ?? null,
+    abiMessage.value.toU8a(args)
+  );
+
+  const refTime = gasRequired.refTime.toHuman().replaceAll(",", "");
+  const proofSize = gasRequired.proofSize.toHuman().replaceAll(",", "");
+
+  const gasRequiredAdjust = api.registry.createType("WeightV2", {
+    refTime: new BN(refTime * 10 ** 0).mul(new BN(2)),
+    proofSize: new BN(proofSize * 10 ** 0).mul(new BN(2)),
+  });
+
+  return { ok: true, value: gasRequiredAdjust };
+}

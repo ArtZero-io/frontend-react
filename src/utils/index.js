@@ -8,7 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
-import getGasLimit from "../utils/blockchain/dryRun";
+import getGasLimit, {getGasLimitBulkAction} from "../utils/blockchain/dryRun";
 import { execContractQuery } from "../pages/account/nfts/nfts";
 import { ADMIN_ROLE_CODE } from "../constants";
 import moment from "moment/moment";
@@ -598,38 +598,38 @@ export const checkHasRoleAdmin = async ({
 };
 
 // getEstimatedGasBatchTx//
-// export async function getEstimatedGasBatchTx(
-//   address,
-//   contract,
-//   value,
-//   queryName,
-//   ...args
-// ) {
-//   let ret;
-//   // getEstimatedGasBatchTx
-//   try {
-//     const gasLimitResult = await getGasLimitBulkAction(
-//       contract?.api,
-//       address,
-//       queryName,
-//       contract,
-//       { value },
-//       args
-//     );
+export async function getEstimatedGasBatchTx(
+  address,
+  contract,
+  value,
+  queryName,
+  ...args
+) {
+  let ret;
+  // getEstimatedGasBatchTx
+  try {
+    const gasLimitResult = await getGasLimitBulkAction(
+      contract?.api,
+      address,
+      queryName,
+      contract,
+      { value },
+      args
+    );
 
-//     if (!gasLimitResult.ok) {
-//       console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
-//       return;
-//     }
+    if (!gasLimitResult.ok) {
+      console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
+      return;
+    }
 
-//     ret = gasLimitResult?.value;
-//   } catch (error) {
-//     toast.error("Error fetch gas:", error.message);
-//     console.log("error fetchGas xx>>", error.message);
-//   }
+    ret = gasLimitResult?.value;
+  } catch (error) {
+    toast.error("Error fetch gas:", error.message);
+    console.log("error fetchGas xx>>", error.message);
+  }
 
-//   return ret;
-// }
+  return ret;
+}
 
 // export const switchCollection = async ({
 //   contractAddress,

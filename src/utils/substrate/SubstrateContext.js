@@ -5,10 +5,13 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 import { TypeRegistry } from "@polkadot/types/create";
+import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 
 import config from "./config";
+// eslint-disable-next-line no-unused-vars
+import { resolveDomain } from "..";
+// import { toast } from "react-hot-toast";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -38,9 +41,7 @@ const initialState = {
 };
 
 const registry = new TypeRegistry();
-
-export function reformatAddress (address, networkPrefix) {
-
+export function reformatAddress(address, networkPrefix) {
   const publicKey = decodeAddress(address);
 
   if (networkPrefix < 0) {
@@ -49,8 +50,6 @@ export function reformatAddress (address, networkPrefix) {
 
   return encodeAddress(publicKey, networkPrefix);
 }
-
-
 ///
 // Reducer function for `useReducer`
 
@@ -163,14 +162,10 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
-  console.log("asyncLoadAccounts A", new Date());
   const asyncLoadAccounts = async () => {
     try {
-      console.log("asyncLoadAccounts A1", new Date());
-
       await web3Enable(config.APP_NAME, [], wallet);
 
-      console.log("asyncLoadAccounts A2", new Date());
       let allAccounts = await web3Accounts();
 
       allAccounts = allAccounts.map(({ address, meta }) => ({
@@ -178,7 +173,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         meta: { ...meta, name: `${meta.name}` },
       }));
 
-      console.log("asyncLoadAccounts A5", new Date());
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);
       const isDevelopment =
@@ -186,25 +180,20 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         systemChainType.isLocal ||
         isTestChain(systemChain);
 
-      console.log("asyncLoadAccounts A6", new Date());
       try {
-        console.log("asyncLoadAccounts A7", new Date());
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
-          Keyring.saveAddress(reformatAddress(address, systemChainType?.registry?.chainSS58 || 5), meta);
+          Keyring.saveAddress(address, meta);
         });
       }
-      console.log("asyncLoadAccounts A8", new Date());
 
       dispatch({ type: "SET_KEYRING", payload: Keyring });
-      console.log("asyncLoadAccounts A9", new Date());
     } catch (e) {
       console.error(e);
       dispatch({ type: "KEYRING_ERROR" });
     }
   };
-  console.log("asyncLoadAccounts B");
 
   await asyncLoadAccounts();
 };

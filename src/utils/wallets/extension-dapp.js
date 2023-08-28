@@ -131,13 +131,13 @@ export async function web3Accounts({ accountType, ss58Format } = {}) {
 
   const accounts = [];
   const injected = await web3EnablePromise;
-  console.log("web3Accounts injected", injected);
+
   const retrieved = await Promise.all(
     injected.map(async ({ accounts, name: source }) => {
       try {
         const list = await accounts.get();
-        console.log("web3Accounts list", list);
 
+        
         return mapAccounts(
           source,
           list.filter(({ type }) =>
