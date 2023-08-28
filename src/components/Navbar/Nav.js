@@ -37,7 +37,7 @@ function Nav() {
             />
           </Link>
 
-          <Flex display={{ base: "none", md: "flex" }}>
+          <Flex display={{ base: "none", md: "flex" }} ml={["35px", "15px"]}>
             <ChainDropdown />
           </Flex>
 

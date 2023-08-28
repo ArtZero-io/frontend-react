@@ -2,13 +2,10 @@ import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
 import React, { useEffect, useState } from "react";
-import { useSubstrateState } from "@utils/substrate";
 
 import { APICall } from "../../api/client";
 
 export const LaunchpadPage = () => {
-  const { api, currentAccount } = useSubstrateState();
-
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [endedProjects, setEndedProjects] = useState([]);
@@ -53,7 +50,7 @@ export const LaunchpadPage = () => {
 
     fetchData();
     return () => (isUnmounted = true);
-  }, [api, currentAccount]);
+  }, []);
 
   return (
     <Layout>

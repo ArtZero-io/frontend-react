@@ -34,9 +34,14 @@ import { NUMBER_NFT_PER_PAGE } from "@constants";
 import { useInView } from "react-intersection-observer";
 import { useMemo } from "react";
 import { HStack } from "@chakra-ui/react";
+import { isValidAddressPolkadotAddress } from "@utils";
+import { delay } from "@utils";
+import toast from "react-hot-toast";
+import { useSubstrateState } from "@utils/substrate";
 
 function CollectionPage() {
   const history = useHistory();
+  const { apiState } = useSubstrateState();
 
   const { search, state } = useLocation();
   const { collection_address } = useParams();
@@ -86,12 +91,14 @@ function CollectionPage() {
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     fetchCollectionInfo(isMounted);
 
     return () => (isMounted = false);
-  }, [fetchCollectionInfo]);
+  }, [fetchCollectionInfo, apiState]);
 
   useEffect(() => {
     if (state?.selectedItem === 1) {
@@ -300,7 +307,7 @@ function CollectionPage() {
           setSortData={setSortData}
           keyword={keyword}
           setKeyword={setKeyword}
-          ref={ref}
+          loadMoreRef={ref}
           isFetchingNextPage={isFetchingNextPage}
           isLastPageResult={isLastPageResult}
         />
@@ -318,7 +325,7 @@ function CollectionPage() {
       <CollectionHeader {...data} {...collectionInfo} />
 
       <CommonTabs tabsData={tabsData} />
-      <HStack py={7} justifyContent="center" w="" full>
+      <HStack py={7} justifyContent="center" w="full">
         <div ref={ref}></div>
       </HStack>
     </Layout>

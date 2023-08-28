@@ -1,7 +1,7 @@
 import {
   Button,
   Heading,
-  MenuItem,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -49,19 +49,20 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
       )}
 
       {variant === "navbar" && mode === formMode.ADD && (
-        <MenuItem
-          onClick={() => onOpen()}
+        <Flex
           to="#"
-          ml={["20px", "auto"]}
+          alignItems="center"
+          onClick={() => onOpen()}
+          h={["54px", "44px"]}
           py={["4px", "12px"]}
-          px={["4px", "10px"]}
+          px={["0px", "8px"]}
           _hover={{ color: "brand.blue", bg: "black" }}
           fontFamily="Evogria, sans-serif"
-          fontSize={{ base: "18px", md: "15px" }}
+          fontSize={{ base: "18px", md: "16px" }}
         >
           <MenuCreatorIcon />
           <Text ml="10px">become a creator</Text>
-        </MenuItem>
+        </Flex>
       )}
 
       <Modal

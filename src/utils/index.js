@@ -596,3 +596,59 @@ export const checkHasRoleAdmin = async ({
 
   return queryResult.toHuman().Ok;
 };
+
+// getEstimatedGasBatchTx//
+// export async function getEstimatedGasBatchTx(
+//   address,
+//   contract,
+//   value,
+//   queryName,
+//   ...args
+// ) {
+//   let ret;
+//   // getEstimatedGasBatchTx
+//   try {
+//     const gasLimitResult = await getGasLimitBulkAction(
+//       contract?.api,
+//       address,
+//       queryName,
+//       contract,
+//       { value },
+//       args
+//     );
+
+//     if (!gasLimitResult.ok) {
+//       console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
+//       return;
+//     }
+
+//     ret = gasLimitResult?.value;
+//   } catch (error) {
+//     toast.error("Error fetch gas:", error.message);
+//     console.log("error fetchGas xx>>", error.message);
+//   }
+
+//   return ret;
+// }
+
+// export const switchCollection = async ({
+//   contractAddress,
+// }) => {
+//   if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+//     return AZERO_DOMAINS_COLLECTION;
+//   } else if(contractAddress === artzero_nft.CONTRACT_ADDRESS) {
+//     return ARTZERO_COLLECTION;
+//   } else {
+//     return OTHER_COLLECTION;
+//   }
+// };
+
+// export const isAzeroDomainCollection = async ({
+//   contractAddress,
+// }) => {
+//   if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// };

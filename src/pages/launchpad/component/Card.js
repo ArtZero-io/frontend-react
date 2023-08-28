@@ -24,7 +24,7 @@ import { useMemo } from "react";
 export const Card = ({ variant, project }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   const [progressPercent, setProgressPercent] = useState(0);
 
@@ -56,33 +56,42 @@ export const Card = ({ variant, project }) => {
     timeLeftString && setCountdown(timeLeftString);
   }, 1000);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const currPhaseStatus = await getCurrentPhaseStatusOfProject({
-        currentAccount: currentAccount || getPublicCurrentAccount(),
-        nftContractAddress,
-        api,
-      });
+  const fetchData = useCallback(
+    async (isMounted) => {
+      try {
+        const currPhaseStatus = await getCurrentPhaseStatusOfProject({
+          currentAccount: currentAccount || getPublicCurrentAccount(),
+          nftContractAddress,
+          api,
+        });
 
-      if (!currPhaseStatus) {
-        return setProgressPercent(0);
+        if (!currPhaseStatus) {
+          return setProgressPercent(0);
+        }
+        if (!isMounted) return;
+
+        setProgressPercent(
+          (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
+            currPhaseStatus?.totalAmount?.replaceAll(",", "")) *
+            100
+        );
+      } catch (error) {
+        // setLoading(false);
+
+        console.log(error);
       }
-
-      setProgressPercent(
-        (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
-          currPhaseStatus?.totalAmount?.replaceAll(",", "")) *
-          100
-      );
-    } catch (error) {
-      // setLoading(false);
-
-      console.log(error);
-    }
-  }, [api, currentAccount, nftContractAddress]);
+    },
+    [api, currentAccount, nftContractAddress]
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [api, currentAccount, fetchData]);
+    let isMounted = true;
+
+    if (apiState !== "READY") return;
+
+    fetchData(isMounted);
+    return () => (isMounted = false);
+  }, [api, apiState, currentAccount, fetchData]);
 
   return (
     <FadeIn>

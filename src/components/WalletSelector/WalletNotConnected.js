@@ -21,13 +21,14 @@ import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
 import { browserName, isMobile } from "react-device-detect";
 import { isEmptyObj } from "@utils";
+import { toast } from "react-hot-toast";
 const win = window || {};
 
 function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
   const [, setSelectedExtensionLocal] = useLocalStorage("selectedExtension");
 
-  const { keyring } = state;
+  const { keyring, apiState } = state;
   const buttonVariants = {
     initial: {
       scale: 1,
@@ -63,6 +64,11 @@ function WalletNotConnected(props) {
   }
 
   function handleConnect(wallet) {
+    if (apiState !== "READY") {
+      toast.error("Please wait a moment, network is not ready!");
+      return;
+    }
+
     if (!keyring) {
       setSelectedExtensionLocal(wallet);
       loadAccounts(state, dispatch, wallet);

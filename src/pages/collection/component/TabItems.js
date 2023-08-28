@@ -73,12 +73,12 @@ const CollectionItems = ({
   pages,
   keyword,
   setKeyword,
-  ref,
+  loadMoreRef,
   isFetchingNextPage,
   isLastPageResult,
   ...rest
 }) => {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, apiState } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
@@ -160,8 +160,10 @@ const CollectionItems = ({
       setSortedNFT(fetchData);
     };
 
+    if (apiState !== "READY") return;
+
     fetchBidsData();
-  }, [NFTList, currentAccount]);
+  }, [NFTList, currentAccount, apiState]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -451,8 +453,8 @@ const CollectionItems = ({
         <Spacer />
 
         {sortedNFT?.length ? (
-          <HStack py={10} justifyContent="center" w="" full>
-            <Text ref={ref}>
+          <HStack py={10} justifyContent="center" w="full">
+            <Text ref={loadMoreRef}>
               {isFetchingNextPage ? (
                 <BeatLoader color="#7ae7ff" size="10px" />
               ) : !isLastPageResult ? (
