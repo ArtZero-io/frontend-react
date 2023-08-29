@@ -20,7 +20,11 @@ function TopNftTradesTab() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        let { ret } = await APICall.getTopNftTrades({});
+        let { ret } = await APICall.getTopNftTrades({
+          limit: 20,
+          offset: 0,
+          order: ["price DESC"],
+        });
 
         if (ret?.length > 0) {
           ret = await Promise.all(
