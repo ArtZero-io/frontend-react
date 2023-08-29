@@ -160,6 +160,96 @@ export const APICall = {
     return ret;
   },
 
+  // top nft trades API Calls
+  getTopNftTrades: async (options) => {
+    return clientWithGetParams("GET", "/api/top-nft-trades", {
+      filter: { ...options },
+    });
+  },
+
+  // user-buy-sell-event API Calls
+  getUserBuySellEvent: async (options) => {
+    return clientWithGetParams("GET", "/api/user-buy-sell-event", {
+      filter: { ...options },
+    });
+  },
+
+  // END top nft trades API Calls
+
+  // USER Event API Calls
+  getUserPurchaseEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    buyer,
+  }) => {
+    return clientWithGetParams("GET", "/api/purchase-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          buyer,
+        },
+      },
+    });
+  },
+
+  getUserBidWinEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    seller,
+  }) => {
+    return clientWithGetParams("GET", "/api/bid-win-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          seller,
+        },
+      },
+    });
+  },
+
+  getUserNewListEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/new-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+
+  getUserUnlistEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/un-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+  // END USER Event API Calls
+
   // Event API Calls
   getPurchaseEvents: async ({
     collection_address,
