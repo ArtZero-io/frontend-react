@@ -28,12 +28,12 @@ const NUMBER_NFT_PER_PAGE = 5;
 function TabActivity({ collectionOwner, nftContractAddress }) {
   const tabData = [
     {
-      label: "PURCHASE",
+      label: "SALE",
       content: (
         <NewEventTable
-          type="PURCHASE"
+          type="SALE"
           collectionOwner={collectionOwner}
-          tableHeaders={headers.purchase}
+          tableHeaders={headers.sale}
           collection_address={nftContractAddress}
         />
       ),
@@ -56,17 +56,6 @@ function TabActivity({ collectionOwner, nftContractAddress }) {
           type="UNLIST"
           collectionOwner={collectionOwner}
           tableHeaders={headers.unlist}
-          collection_address={nftContractAddress}
-        />
-      ),
-    },
-    {
-      label: "BID ACCEPTED",
-      content: (
-        <NewEventTable
-          type="BID ACCEPTED"
-          collectionOwner={collectionOwner}
-          tableHeaders={headers.bidAccepted}
           collection_address={nftContractAddress}
         />
       ),
@@ -165,12 +154,17 @@ const NewEventTable = ({
 
       let eventsList = [];
 
-      if (type === "PURCHASE") {
-        eventsList = await APICall.getPurchaseEvents({
-          collection_address,
+      if (type === "SALE") {
+        let { ret } = await APICall.getUserBuySellEvent({
           offset: pageParam,
+          order: ["blockNumber DESC"],
           limit: NUMBER_NFT_PER_PAGE,
+          where: {
+            nftContractAddress: collection_address,
+          },
         });
+
+        eventsList = ret;
       }
 
       if (type === "LIST") {
@@ -189,14 +183,6 @@ const NewEventTable = ({
         });
       }
 
-      if (type === "BID ACCEPTED") {
-        eventsList = await APICall.getBidWinEvents({
-          collection_address,
-          offset: pageParam,
-          limit: NUMBER_NFT_PER_PAGE,
-        });
-      }
-
       if (eventsList?.length > 0) {
         eventsList = await Promise.all(
           eventsList?.map(async ({ nftContractAddress, tokenID, ...rest }) => {
@@ -205,8 +191,6 @@ const NewEventTable = ({
             };
 
             if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
-              // const azDomainNameInHex = rest?.azDomainName?.slice(2);
-              // options.azDomainName = hexToAscii(azDomainNameInHex);
               options.azDomainName = rest?.azDomainName;
             } else {
               options.token_id = tokenID;
@@ -302,14 +286,13 @@ const NewEventTable = ({
 };
 
 const dropDownMobileOptions = {
-  PURCHASE: "purchase",
+  SALE: "sale",
   LIST: "list",
   UNLIST: "unlist",
-  BID_ACCEPTED: "bid accepted",
 };
 
 const headers = {
-  purchase: {
+  sale: {
     nftName: "nft name",
     avatar: "image",
     price: "price",
@@ -332,17 +315,6 @@ const headers = {
     nftName: "nft name",
     avatar: "image",
     trader: "trader",
-    // blockNumber: "block no#",
-    timestamp: "timestamp",
-  },
-  bidAccepted: {
-    nftName: "nft name",
-    avatar: "image",
-    price: "price",
-    platformFee: "platform fee",
-    royaltyFee: "royalty fee",
-    seller: "seller",
-    buyer: "buyer",
     // blockNumber: "block no#",
     timestamp: "timestamp",
   },
