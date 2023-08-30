@@ -234,7 +234,7 @@ const NewEventTable = ({
     [api, collection_address, type]
   );
 
-  const { hasNextPage, data, isFetchingNextPage, fetchNextPage } =
+  const { hasNextPage, data, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteQuery(
       [`getEvents${type}`, collection_address],
       ({ pageParam = 0 }) => fetchEvents({ pageParam }),
@@ -258,14 +258,19 @@ const NewEventTable = ({
 
   return (
     <>
-      <EventTable
-        type={type}
-        collectionOwner={collectionOwner}
-        tableHeaders={tableHeaders}
-        tableData={dataFormatted}
-        ref={ref}
-      />
-
+      {isLoading ? (
+        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
+          <BeatLoader color="#7ae7ff" size="10px" />
+        </HStack>
+      ) : (
+        <EventTable
+          type={type}
+          collectionOwner={collectionOwner}
+          tableHeaders={tableHeaders}
+          tableData={dataFormatted}
+          ref={ref}
+        />
+      )}
       {dataFormatted?.length ? (
         <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <Text ref={ref}>
