@@ -120,6 +120,12 @@ function WalletNotConnected(props) {
                               alt={wallet.extensionName}
                             />
                           )}
+                           {wallet.extensionName === "Nightly" && (
+                            <Image
+                              src={wallet.logo}
+                              alt={wallet.extensionName}
+                            />
+                          )}
                         </Box>
                         <Text fontSize="15px" pl="16px" mr="2">
                           {wallet.title}
