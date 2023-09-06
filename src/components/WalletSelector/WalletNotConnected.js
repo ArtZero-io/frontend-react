@@ -21,7 +21,8 @@ function WalletNotConnected({ onCloseMenu, display }) {
       return;
     }
     try {
-      onCloseMenu();
+      onCloseMenu && onCloseMenu();
+      console.log("handleConnect loadAccounts...");
       await loadAccounts(state, dispatch);
     } catch (error) {
       toast.error("User cancelled!");
