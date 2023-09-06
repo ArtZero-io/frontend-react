@@ -2,16 +2,43 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
+
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
-// eslint-disable-next-line no-unused-vars
+
 import { resolveDomain } from "..";
 import { toast } from "react-hot-toast";
-// import { toast } from "react-hot-toast";
+
+import { NightlyConnectAdapter } from "@nightlylabs/wallet-selector-polkadot";
+
+import { setSigner as setSignerArtzeroNft } from "@utils/blockchain/artzero-nft-calls";
+import { setSigner as setSignerAzeroDomainsNft } from "@utils/blockchain/azero-domains-nft-calls";
+import { setSigner as setSignerCollectionManager } from "@utils/blockchain/collection-manager-calls";
+import { setSigner as setSignerLaunchpadContract } from "@utils/blockchain/launchpad-contract-calls";
+import { setSigner as setSignerLaunchpadPsp34Nft } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { setSigner as setSignerMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
+import { setSigner as setSignerMarketplaceAzeroDomains } from "@utils/blockchain/marketplace-azero-domains-calls";
+import { setSigner as setSignerNft721Psp34Standard } from "@utils/blockchain/nft721-psp34-standard-calls";
+import { setSigner as setSignerProfile } from "@utils/blockchain/profile_calls";
+import { setSigner as setSignerStaking } from "@utils/blockchain/staking_calls";
+
+const adapter = NightlyConnectAdapter.buildLazy(
+  {
+    appMetadata: {
+      name: "a0-test.artzero.io",
+      description:
+        "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain testnet",
+      icon: "https://docs.nightly.app/img/logo.png",
+      additionalInfo:
+        "Discover, create, collect and trade NFTs on Aleph Zero Blockchain testnet with ArtZero.io",
+    },
+    network: "AlephZero",
+  },
+  true // should session be persisted
+);
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -87,7 +114,6 @@ const reducer = (state, action) => {
 
 const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
-  console.log("connect apiState", apiState);
 
   if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
@@ -111,8 +137,6 @@ const connect = (state, dispatch) => {
     },
   });
 
-  console.log("connect _api", _api);
-
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -120,17 +144,14 @@ const connect = (state, dispatch) => {
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
-  console.log("connect _api connected");
 
   _api.on("ready", () => {
     dispatch({ type: "CONNECT_SUCCESS" });
   });
-  console.log("connect _api ready");
 
   _api.on("error", (err) => {
     dispatch({ type: "CONNECT_ERROR", payload: err });
   });
-  console.log("connect _api error");
 };
 
 const retrieveChainInfo = async (api) => {
@@ -150,21 +171,35 @@ const retrieveChainInfo = async (api) => {
 ///
 // Loading accounts from dev and polkadot-js extension
 
-export const loadAccounts = async (state, dispatch, wallet) => {
+function setContractsSigner(adapter) {
+  setSignerArtzeroNft(adapter);
+  setSignerAzeroDomainsNft(adapter);
+  setSignerCollectionManager(adapter);
+  setSignerLaunchpadContract(adapter);
+  setSignerLaunchpadPsp34Nft(adapter);
+  setSignerMarketplaceContract(adapter);
+  setSignerMarketplaceAzeroDomains(adapter);
+  setSignerNft721Psp34Standard(adapter);
+  setSignerProfile(adapter);
+  setSignerStaking(adapter);
+}
+
+export const loadAccounts = async (state, dispatch) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
 
   const asyncLoadAccounts = async () => {
     try {
-      await web3Enable(config.APP_NAME, [], wallet);
-      console.log("web3Enable...");
+      await adapter.connect();
 
-      let allAccounts = await web3Accounts();
+      let allAccounts = await adapter.accounts.get();
 
-      allAccounts = allAccounts.map(({ address, meta }) => ({
+      setContractsSigner(adapter);
+
+      allAccounts = allAccounts.map(({ address, ...rest }) => ({
         address,
-        meta: { ...meta, name: `${meta.name}` },
+        meta: { ...rest },
       }));
 
       try {
@@ -187,12 +222,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
             };
           })
         );
-
-        // toast(`Load accounts domain...done!`, {
-        //   style: {
-        //     minWidth: "180px",
-        //   },
-        // });
       } catch (error) {
         console.log("resolveDomain error", error);
       }
@@ -208,7 +237,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
-          console.log("meta", meta);
           Keyring.saveAddress(address, meta);
         });
       }
@@ -219,7 +247,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       dispatch({ type: "KEYRING_ERROR" });
     }
   };
-  console.log("asyncLoadAccounts B");
 
   await asyncLoadAccounts();
 };
@@ -256,6 +283,8 @@ const SubstrateContextProvider = (props) => {
     window.localStorage.setItem("currentAccount", JSON.stringify(acct));
   }
   async function doLogOut() {
+    await adapter.disconnect();
+
     const accArr = Keyring.getAccounts();
 
     await Promise.all(
@@ -269,7 +298,7 @@ const SubstrateContextProvider = (props) => {
 
   return (
     <SubstrateContext.Provider
-      value={{ state, setCurrentAccount, doLogOut, dispatch }}
+      value={{ state, setCurrentAccount, doLogOut, dispatch, adapter }}
     >
       {props.children}
     </SubstrateContext.Provider>

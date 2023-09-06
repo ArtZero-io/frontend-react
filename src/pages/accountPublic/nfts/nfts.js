@@ -18,9 +18,6 @@ import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useTxStatus from "@hooks/useTxStatus";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import { formatBalance } from "@polkadot/util";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
-import { getEstimatedGas } from "@utils/";
 
 import {
   REMOVE_BID,
@@ -31,9 +28,6 @@ import {
   ACCEPT_BID,
 } from "@constants";
 import { APICall } from "../../../api/client";
-import { ContractPromise } from "@polkadot/api-contract";
-import toast from "react-hot-toast";
-import { readOnlyGasLimit } from "@utils";
 import { useParams } from "react-router-dom";
 
 const MyNFTsPage = () => {
@@ -44,7 +38,7 @@ const MyNFTsPage = () => {
     () => handleForceUpdate()
   );
 
-  const {address} = useParams()
+  const { address } = useParams();
 
   // eslint-disable-next-line no-unused-vars
   const [owner, setOwner] = useState(null);
@@ -355,110 +349,3 @@ export const tabList = {
   LISTING: "MY LISTING",
   BIDS: "MY BIDS",
 };
-
-export async function execContractQuery(
-  callerAddress, // -> address
-  api,
-  contractAbi,
-  contractAddress,
-  queryName,
-  ...args
-) {
-  if (contractAddress === undefined) return;
-
-  if (
-    !api ||
-    !callerAddress ||
-    !queryName ||
-    !contractAbi ||
-    !contractAddress
-  ) {
-    console.log("Api invalid");
-    // return toast.error("Api invalid");
-  }
-  // console.log("@_@ ", queryName, " callerAddress ", callerAddress);
-
-  const contract = new ContractPromise(api, contractAbi, contractAddress);
-
-  const gasLimit = readOnlyGasLimit(contract);
-
-  try {
-    const { result, output } = await contract.query[queryName](
-      callerAddress,
-      { gasLimit, storageDepositLimit: null, value: 0 },
-      ...args
-    );
-
-    if (result.isOk) {
-      return output;
-    }
-  } catch (error) {
-    console.log("@_@ ", queryName, " error >>", error.message);
-  }
-}
-
-export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
-  const ret = result?.toHuman().Ok?.replaceAll(",", "");
-
-  const formattedStrBal = formatBalance(ret, {
-    withSi: false,
-    forceUnit: "-",
-    decimals: chainDecimals,
-  });
-
-  return formattedStrBal;
-};
-
-export async function execContractTx(
-  caller, // -> currentAccount Object
-  api,
-  contractAbi,
-  contractAddress,
-  value = 0,
-  queryName,
-  ...args
-) {
-  // NOTE: amount need to convert before passing in
-  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  // console.log("execContractTx ", queryName);
-
-  const contract = new ContractPromise(api, contractAbi, contractAddress);
-
-  let unsubscribe;
-  let gasLimit;
-  // 6946816000 * 5;
-
-  const { signer } = await web3FromSource(caller?.meta?.source);
-
-  gasLimit = await getEstimatedGas(
-    caller?.address,
-    contract,
-    value,
-    queryName,
-    ...args
-  );
-
-  const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
-
-  await txNotSign
-    .signAndSend(caller.address, { signer }, ({ events = [], status }) => {
-      if (Object.keys(status.toHuman())[0] === "0") {
-        toast.success(`Processing ...`);
-      }
-
-      events.forEach(({ event: { method } }) => {
-        if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
-          toast.success("Successful!");
-        } else if (method === "ExtrinsicFailed") {
-          toast.error(`Error: ${method}.`);
-        }
-      });
-    })
-    .then((unsub) => (unsubscribe = unsub))
-    .catch((error) => {
-      console.log("error", error);
-      toast.error(`Error ${error}.`);
-    });
-
-  return unsubscribe;
-}

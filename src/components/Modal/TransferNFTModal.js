@@ -15,7 +15,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -23,7 +23,6 @@ import { useEffect, useState } from "react";
 
 import { ContractPromise } from "@polkadot/api-contract";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -44,6 +43,8 @@ function TransferNFTModal({
   isDisabled = false,
   showOnChainMetadata,
 }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -74,7 +75,7 @@ function TransferNFTModal({
       let gasLimit;
 
       const address = currentAccount?.address;
-      const { signer } = await web3FromSource(currentAccount?.meta?.source);
+
       const value = 0;
 
       let additionalData = "";
@@ -97,7 +98,7 @@ function TransferNFTModal({
       )
         .signAndSend(
           currentAccount?.address,
-          { signer },
+          { signer: adapter.signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,
