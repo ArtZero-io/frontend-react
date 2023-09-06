@@ -6,12 +6,11 @@ import {
 } from "@store/actions/txStatus";
 import { getEstimatedGasBatchTx } from "@utils";
 import BN from "bn.js";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
 
 import { START } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import marketplace from "@utils/blockchain/marketplace";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
@@ -24,6 +23,7 @@ export default function useEditAzeroDomainsBidPrice({
 } = {}) {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
+  const { adapter } = useSubstrate();
 
   const doUpdateAzeroDomainsBidPrice = async () => {
     toast(`Update Azero Domains bid price...`);
@@ -31,7 +31,6 @@ export default function useEditAzeroDomainsBidPrice({
     let unsubscribe;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     const value = 0;
     let gasLimit;
@@ -88,7 +87,7 @@ export default function useEditAzeroDomainsBidPrice({
       .batch([removeBidTx, newBidTx])
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

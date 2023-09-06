@@ -14,8 +14,7 @@ import { FINALIZED } from "@constants";
 import Dropdown from "@components/Dropdown/Dropdown";
 import { useState } from "react";
 import CommonButton from "@components/Button/CommonButton";
-import { useSubstrateState } from "@utils/substrate";
-import { web3FromSource } from "../../../../utils/wallets/extension-dapp";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { stringToHex } from "@polkadot/util";
 import { APICall } from "@api/client";
 import { MESSAGE_SIGN } from "@constants";
@@ -33,6 +32,7 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
   const { step, onEndClick } = useTxStatus();
   const { currentAccount } = useSubstrateState();
   const [value, setValue] = useState("");
+  const { adapter } = useSubstrate();
 
   const handleInputChange = (e) => {
     let inputValue = e.target.value;
@@ -46,8 +46,7 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
     if (!currentAccount) {
       toast.error("Please connect wallet for full-function using!");
     }
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
-    const { signature } = await signer.signRaw({
+    const { signature } = await adapter.signer.signRaw({
       address: currentAccount.address,
       data: stringToHex(MESSAGE_SIGN),
       type: "bytes",

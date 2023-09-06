@@ -1,13 +1,9 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
-import {
-  getEstimatedGas,
-  // handleContractCallAnimation,
-  isValidAddressPolkadotAddress,
-} from "@utils";
+
+import { getEstimatedGas, isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
-// import { AccountActionTypes } from "@store/types/account.types";
+
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -15,8 +11,6 @@ import {
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
-// import emailjs from "@emailjs/browser";
-// import { delay } from "@utils";
 
 let contract;
 
@@ -27,6 +21,13 @@ export const setLaunchPadContract = (api, data) => {
     data?.CONTRACT_ADDRESS
   );
 };
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
+};
+
 // no use???
 async function getAttributes(caller_account, collection_address, attributes) {
   if (!contract || !caller_account) {
@@ -71,73 +72,6 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   }
   return null;
 }
-
-// No use ?
-// async function setMultipleAttributes(
-//   account,
-//   collection_address,
-//   attributes,
-//   values,
-//   dispatch
-// ) {
-//   let unsubscribe;
-
-//   const address = account?.address;
-//   const gasLimit = readOnlyGasLimit(contract);
-//   const value = 0;
-
-//   const injector = await web3FromSource(account?.meta?.source);
-
-//   account &&
-//     contract.tx
-//       .setMultipleAttributes(
-//         { gasLimit, value },
-//         collection_address,
-//         attributes,
-//         values
-//       )
-//       .signAndSend(
-//         address,
-//         { signer: injector.signer },
-//         async ({ status, dispatchError }) => {
-//           if (dispatchError) {
-//             if (dispatchError.isModule) {
-//               toast.error(`There is some error with your request`);
-//             } else {
-//               console.log("dispatchError ", dispatchError.toString());
-//             }
-//           }
-
-//           if (status) {
-//             handleContractCallAnimation(status, dispatchError, dispatch);
-
-//             if (status?.isFinalized) {
-//               await APICall.askBeUpdateCollectionData({
-//                 collection_address: collection_address,
-//               });
-//             }
-
-//             // const statusText = Object.keys(status.toHuman().Ok)[0];
-//             // toast.success(
-//             //   `Update Collection Attributes ${
-//             //     statusText === "0" ? "started" : statusText.toLowerCase()
-//             //   }.`
-//             // );
-//           }
-//         }
-//       )
-//       .then((unsub) => (unsubscribe = unsub))
-//       .catch((e) => {
-//         dispatch({
-//           type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-//         });
-//         const mess = `Tnx is ${e.message}`;
-
-//         toast.error(mess);
-//       });
-
-//   return unsubscribe;
-// }
 
 async function owner(caller_account) {
   if (!contract || !caller_account) {
@@ -231,7 +165,6 @@ async function addNewProject(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = await getProjectAddingFee(caller_account);
 
@@ -338,7 +271,6 @@ async function editProject(caller_account, data, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -419,7 +351,6 @@ async function updateIsActiveProject(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -520,7 +451,7 @@ export const withdrawLaunchpadContract = async (
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
