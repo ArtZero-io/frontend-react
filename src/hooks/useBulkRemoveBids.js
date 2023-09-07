@@ -1,38 +1,37 @@
 import { ContractPromise } from "@polkadot/api-contract";
+import { getEstimatedGasBatchTx } from "@utils";
 import {
+  txErrorHandler,
   batchTxResponseErrorHandler,
   setTxStatus,
-  txErrorHandler,
 } from "@store/actions/txStatus";
-import { getEstimatedGasBatchTx } from "@utils";
-import BN from "bn.js";
 
 import { START } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
 import marketplace from "@utils/blockchain/marketplace";
 import { useSubstrateState, useSubstrate } from "@utils/substrate";
-import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import { APICall } from "../api/client";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { getTokenID } from "./useBulkDelist";
 
-export default function useEditBidPrice({
-  newBidPrice,
-  nftContractAddress,
-  tokenID,
-  sellerAddress,
-} = {}) {
+export default function useBulkRemoveBids({ listNFTFormatted }) {
   const { adapter } = useSubstrate();
 
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
-  const doUpdateBidPrice = async () => {
-    toast(`Update bid price...`);
+  const doBulkRemoveBids = async () => {
+    toast(`Bulk remove bids...`);
 
     let unsubscribe;
+    let removeBidsTxALL;
 
     const address = currentAccount?.address;
 
+    toast("Estimated transaction fee...");
+
+    // Change to get gasEst for every single tx to 1 for all
     const value = 0;
     let gasLimit;
 
@@ -42,51 +41,40 @@ export default function useEditBidPrice({
       marketplace.CONTRACT_ADDRESS
     );
 
+    let tokenID = getTokenID(listNFTFormatted[0]);
+
     gasLimit = await getEstimatedGasBatchTx(
       address,
       marketplaceContract,
       value,
       "removeBid",
-      nftContractAddress,
-      { u64: tokenID }
+      listNFTFormatted[0]?.nftContractAddress,
+      tokenID
     );
 
-    const removeBidTx = marketplaceContract.tx["removeBid"](
-      { gasLimit, value },
-      nftContractAddress,
-      { u64: tokenID }
-    );
+    await Promise.all(
+      listNFTFormatted?.map(async (item) => {
+        let tokenID = getTokenID(item);
 
-    // ============================================
-    const bidValue = new BN(newBidPrice * 10 ** 6)
-      .mul(new BN(10 ** 6))
-      .mul(new BN(10 ** 6))
-      .toString();
+        const ret = marketplaceContract.tx["removeBid"](
+          { gasLimit, value },
+          item?.nftContractAddress,
+          tokenID
+        );
 
-    let bidGasLimit = await getEstimatedGasBatchTx(
-      address,
-      marketplaceContract,
-      bidValue,
-      "bid",
-      nftContractAddress,
-      { u64: tokenID }
-    );
-
-    const newBidTx = marketplaceContract.tx["bid"](
-      { gasLimit: bidGasLimit, value: bidValue },
-      nftContractAddress,
-      { u64: tokenID }
-    );
+        return ret;
+      })
+    ).then((res) => (removeBidsTxALL = res));
 
     dispatch(
       setTxStatus({
-        type: "UPDATE_BID_PRICE",
+        type: "MULTI_REMOVE_BIDS",
         step: START,
       })
     );
 
     api.tx.utility
-      .batch([removeBidTx, newBidTx])
+      .batch(removeBidsTxALL)
       .signAndSend(
         address,
         { signer: adapter.signer },
@@ -100,24 +88,36 @@ export default function useEditBidPrice({
               }
 
               if (api.events.utility?.BatchCompleted.is(event)) {
-                toast.success("Bid price have been updated successfully");
+                toast.success(
+                  "All bids from this collection have been removed successfully"
+                );
               }
             });
 
-            await APICall.askBeUpdateBidsData({
-              collection_address: nftContractAddress,
-              seller: sellerAddress,
-              token_id: tokenID,
-            });
-            await APICall.askBeUpdateNftData({
-              collection_address: nftContractAddress,
-              token_id: tokenID,
-            });
+            await listNFTFormatted?.map(async (item) => {
+              try {
+                const options = item?.azDomainName
+                  ? { azDomainName: item?.azDomainName }
+                  : { token_id: item?.tokenID };
 
+                await APICall.askBeUpdateBidsData({
+                  collection_address: item?.nftContractAddress,
+                  seller: item?.nft_owner,
+                  ...options,
+                });
+
+                await APICall.askBeUpdateNftData({
+                  collection_address: item?.nftContractAddress,
+                  ...options,
+                });
+              } catch (error) {
+                console.log("error", error);
+              }
+            });
             // eslint-disable-next-line no-extra-boolean-cast
             if (!!totalSuccessTxCount) {
               toast.error(
-                `Update bid price are not fully successful! ${totalSuccessTxCount} edit completed successfully.`
+                `Bulk delistings are not fully successful! ${totalSuccessTxCount} delistings completed successfully.`
               );
 
               dispatch(clearTxStatus());
@@ -128,7 +128,7 @@ export default function useEditBidPrice({
             status,
             dispatchError,
             dispatch,
-            txType: "UPDATE_BID_PRICE",
+            txType: "MULTI_REMOVE_BIDS",
             api,
             currentAccount,
           });
@@ -139,5 +139,6 @@ export default function useEditBidPrice({
 
     return unsubscribe;
   };
-  return { doUpdateBidPrice };
+
+  return { doBulkRemoveBids };
 }

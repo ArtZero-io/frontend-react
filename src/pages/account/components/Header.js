@@ -37,7 +37,7 @@ import {
   execContractQuery,
   execContractTx,
   formatQueryResultToNumber,
-} from "../nfts/nfts";
+} from "@utils/blockchain/profile_calls";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier";

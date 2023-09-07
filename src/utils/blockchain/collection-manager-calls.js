@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
+
 import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
 import {
@@ -24,6 +24,12 @@ export const setCollectionContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 //SETTERS
@@ -52,7 +58,6 @@ async function addNewCollection(
   let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = await getAdvanceModeAddingFee(caller_account);
 
@@ -231,7 +236,7 @@ async function autoNewCollection(
   let transactionData = data;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = await getSimpleModeAddingFee(caller_account);
 
   gasLimit = await getEstimatedGas(
@@ -437,7 +442,6 @@ async function updateIsActive(
   let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -793,7 +797,6 @@ async function setMultipleAttributes(
   let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -929,7 +932,7 @@ export const withdrawCollectionContract = async (
   let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)

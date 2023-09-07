@@ -32,7 +32,7 @@ import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { execContractQuery } from "../../../nfts/nfts";
+import { execContractQuery } from "@utils/blockchain/profile_calls";
 import { ipfsClient } from "@api/client";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {

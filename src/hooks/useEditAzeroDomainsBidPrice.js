@@ -15,19 +15,18 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
 
-export default function useEditBidPrice({
+export default function useEditAzeroDomainsBidPrice({
   newBidPrice,
   nftContractAddress,
-  tokenID,
+  azDomainName,
   sellerAddress,
 } = {}) {
-  const { adapter } = useSubstrate();
-
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
+  const { adapter } = useSubstrate();
 
-  const doUpdateBidPrice = async () => {
-    toast(`Update bid price...`);
+  const doUpdateAzeroDomainsBidPrice = async () => {
+    toast(`Update Azero Domains bid price...`);
 
     let unsubscribe;
 
@@ -48,18 +47,17 @@ export default function useEditBidPrice({
       value,
       "removeBid",
       nftContractAddress,
-      { u64: tokenID }
+      { bytes: azDomainName }
     );
 
     const removeBidTx = marketplaceContract.tx["removeBid"](
       { gasLimit, value },
       nftContractAddress,
-      { u64: tokenID }
+      { bytes: azDomainName }
     );
 
     // ============================================
     const bidValue = new BN(newBidPrice * 10 ** 6)
-      .mul(new BN(10 ** 6))
       .mul(new BN(10 ** 6))
       .toString();
 
@@ -69,13 +67,13 @@ export default function useEditBidPrice({
       bidValue,
       "bid",
       nftContractAddress,
-      { u64: tokenID }
+      { bytes: azDomainName }
     );
 
     const newBidTx = marketplaceContract.tx["bid"](
       { gasLimit: bidGasLimit, value: bidValue },
       nftContractAddress,
-      { u64: tokenID }
+      { bytes: azDomainName }
     );
 
     dispatch(
@@ -104,14 +102,14 @@ export default function useEditBidPrice({
               }
             });
 
-            await APICall.askBeUpdateBidsData({
+            await APICall.askBeUpdateAzeroDomainsBidsData({
               collection_address: nftContractAddress,
               seller: sellerAddress,
-              token_id: tokenID,
+              azDomainName: azDomainName,
             });
-            await APICall.askBeUpdateNftData({
+            await APICall.askBeUpdateAzeroDomainsNftData({
               collection_address: nftContractAddress,
-              token_id: tokenID,
+              azDomainName: azDomainName,
             });
 
             // eslint-disable-next-line no-extra-boolean-cast
@@ -139,5 +137,5 @@ export default function useEditBidPrice({
 
     return unsubscribe;
   };
-  return { doUpdateBidPrice };
+  return { doUpdateAzeroDomainsBidPrice };
 }
