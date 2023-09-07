@@ -17,7 +17,10 @@ import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls
 
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
-import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
+import {
+  execContractQuery,
+  execContractTx,
+} from "@utils/blockchain/profile_calls";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { useProjectList } from "@hooks/useProjectList";
 

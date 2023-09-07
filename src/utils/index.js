@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit, { getGasLimitBulkAction } from "../utils/blockchain/dryRun";
-import { execContractQuery } from "../pages/account/nfts/nfts";
+import { execContractQuery } from "../utils/blockchain/profile_calls";
 import {
   ADMIN_ROLE_CODE,
   AZERO_DOMAINS_COLLECTION,
@@ -788,8 +788,8 @@ export const resolveDomain = async (address, api) => {
       );
 
       if (error?.name) {
-        console.log("error address", address);
-        console.log("error.message", error?.message);
+        // console.log("address", address);
+        // console.log("error?.message", error?.message);
         return undefined;
       }
 

@@ -1,5 +1,4 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
 import { getEstimatedGasBatchTx } from "@utils";
 import {
   txErrorHandler,
@@ -9,7 +8,7 @@ import {
 
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
@@ -17,6 +16,8 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import { getTokenID } from "./useBulkDelist";
 
 export default function useBulkRemoveBids({ listNFTFormatted }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
@@ -27,7 +28,6 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
     let removeBidsTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -77,7 +77,7 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
       .batch(removeBidsTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

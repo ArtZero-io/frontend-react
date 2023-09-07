@@ -1,5 +1,5 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../wallets/extension-dapp";
+
 import {
   getPublicCurrentAccount,
   truncateStr,
@@ -12,6 +12,7 @@ import {
 } from "@store/actions/txStatus";
 import { clientAPI } from "@api/client";
 import toast from "react-hot-toast";
+import { formatBalance } from "@polkadot/util";
 
 export let contract;
 const value = 0;
@@ -22,6 +23,12 @@ export const setProfileContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 export async function getProfileOnChain({ callerAccount, accountAddress }) {
@@ -93,7 +100,6 @@ export async function setMultipleAttributesProfileOnChain(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -164,3 +170,108 @@ export const getUsernameOnchain = async ({ accountAddress }) => {
 
   return username || truncateStr(accountAddress);
 };
+
+export async function execContractQuery(
+  callerAddress, // -> currentAccount?.address
+  api,
+  contractAbi,
+  contractAddress,
+  queryName,
+  ...args
+) {
+  if (contractAddress === undefined) return;
+
+  if (
+    !api ||
+    !callerAddress ||
+    !queryName ||
+    !contractAbi ||
+    !contractAddress
+  ) {
+    console.log("Api invalid");
+    // return toast.error("Api invalid");
+  }
+  //  console.log("@_@ ", queryName, " callerAddress ", callerAddress);
+
+  const contract = new ContractPromise(api, contractAbi, contractAddress);
+
+  const gasLimit = readOnlyGasLimit(contract);
+
+  try {
+    const { result, output } = await contract.query[queryName](
+      callerAddress,
+      { gasLimit, storageDepositLimit: null, value: 0 },
+      ...args
+    );
+
+    if (result.isOk) {
+      return output;
+    }
+  } catch (error) {
+    console.log("@_@ ", queryName, " error >>", error.message);
+  }
+}
+
+export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
+  const ret = result?.toHuman().Ok?.replaceAll(",", "");
+
+  const formattedStrBal = formatBalance(ret, {
+    withSi: false,
+    forceUnit: "-",
+    decimals: chainDecimals,
+  });
+
+  return formattedStrBal;
+};
+
+export async function execContractTx(
+  caller, // -> currentAccount Object
+  dispatch,
+  txType,
+  api,
+  contractAbi,
+  contractAddress,
+  value = 0,
+  queryName,
+  ...args
+) {
+  // NOTE: amount need to convert before passing in
+  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  // console.log("execContractTx ", queryName);
+
+  const contract = new ContractPromise(api, contractAbi, contractAddress);
+
+  let unsubscribe;
+  let gasLimit;
+
+  gasLimit = await getEstimatedGas(
+    caller?.address,
+    contract,
+    value,
+    queryName,
+    ...args
+  );
+
+  const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
+
+  await txNotSign
+    .signAndSend(
+      caller.address,
+      { signer },
+      async ({ events = [], status, dispatchError }) => {
+        // console.log("txResponseErrorHandler...1");
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}

@@ -49,7 +49,7 @@ import { withdrawMarketplaceContract } from "@utils/blockchain/marketplace_contr
 import { useCallback } from "react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { execContractQuery } from "../../../account/nfts/nfts";
+import { execContractQuery } from "@utils/blockchain/profile_calls";
 import marketplace from "@utils/blockchain/marketplace";
 import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
 

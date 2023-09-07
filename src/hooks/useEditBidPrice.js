@@ -6,12 +6,11 @@ import {
 } from "@store/actions/txStatus";
 import { getEstimatedGasBatchTx } from "@utils";
 import BN from "bn.js";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
 
 import { START } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import marketplace from "@utils/blockchain/marketplace";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { APICall } from "../api/client";
@@ -23,6 +22,8 @@ export default function useEditBidPrice({
   tokenID,
   sellerAddress,
 } = {}) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
@@ -32,7 +33,6 @@ export default function useEditBidPrice({
     let unsubscribe;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     const value = 0;
     let gasLimit;
@@ -95,7 +95,7 @@ export default function useEditBidPrice({
       .batch([removeBidTx, newBidTx])
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;
