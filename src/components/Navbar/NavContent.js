@@ -197,164 +197,6 @@ const myAccountList = [
   { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
 ];
 
-const MyAccountDropdown = () => {
-  const history = useHistory();
-  const location = useLocation();
-  const { currentAccount } = useSubstrateState();
-
-  const [path, setPath] = useState(location.pathname);
-
-  useEffect(() => {
-    setPath(location.pathname);
-  }, [location.pathname]);
-
-  const [myAccOpen, setMyAccOpen] = useState(false);
-  return (
-    <Box px={{ base: "23px", lg: "0" }} py={{ base: "0px", lg: "0" }}>
-      <Menu
-        autoSelect={false}
-        placement="bottom"
-        offset={[-82, 12]}
-        borderBottom="0"
-        // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
-      >
-        {/* Desktop button here */}
-        <Show above="sm">
-          <MenuButton
-            p={0}
-            ring={0}
-            h="41px"
-            py="10px"
-            as={Button}
-            display="flex"
-            bg="transparent"
-            textAlign="left"
-            borderBottom="2px"
-            transition="all 0.2s"
-            justifyContent="center"
-            fontSize={{ base: "24px", md: "15px" }}
-            _hover={{
-              borderColor: "brand.blue",
-              color: "brand.blue",
-            }}
-            _focus={{
-              bg: "transparent",
-            }}
-            borderColor={
-              path.includes("/account/") ? "brand.blue" : "transparent"
-            }
-            color={path.includes("/account/") ? "brand.blue" : "#fff"}
-          >
-            my account
-          </MenuButton>{" "}
-        </Show>
-
-        {/* Phone button here */}
-        <Show below="sm">
-          <MenuButton
-            w={["full", "auto"]}
-            p={0}
-            ring={0}
-            h="41px"
-            py="10px"
-            onClick={() => setMyAccOpen(!myAccOpen)}
-            rightIcon={
-              !myAccOpen ? (
-                <ChevronDownIcon fontSize="2xl" />
-              ) : (
-                <ChevronUpIcon fontSize="2xl" />
-              )
-            }
-            as={Button}
-            display="flex"
-            bg="transparent"
-            textAlign="left"
-            border="none"
-            transition="all 0.2s"
-            justifyContent="center"
-            fontSize={{ base: "24px", md: "15px" }}
-            _hover={{
-              borderBottomColor: "brand.blue",
-              color: "brand.blue",
-              borderBottomWidth: "2px",
-            }}
-            _focus={{
-              bg: "transparent",
-            }}
-            _active={{
-              bg: "transparent",
-              borderBottom: "none",
-            }}
-            borderColor={
-              path.includes("/account/") ? "brand.blue" : "transparent"
-            }
-            color={path.includes("/account/") ? "brand.blue" : "#fff"}
-          >
-            my account
-          </MenuButton>
-        </Show>
-
-        <MenuList
-          px={["0", "15px"]}
-          py={["0", "15px"]}
-          minW="250px"
-          borderWidth={["0px", "2px"]}
-          borderRadius="0"
-          bg={["black", "brand.grayDark"]}
-          borderColor="brand.blue"
-          // ml={{ base: "20px", lg: "auto" }}
-        >
-          {myAccountList?.slice(0, 1)?.map((item, idx) => (
-            <MenuItem
-              to="#"
-              key={idx}
-              ml={["20px", "auto"]}
-              py={["4px", "12px"]}
-              px={["4px", "15px"]}
-              _hover={{ bg: "black" }}
-              as={ReactRouterLink}
-              fontFamily="Evogria, sans-serif"
-              onClick={() =>
-                item?.isExternal
-                  ? window.open(item.href, "_blank")
-                  : history.push(item.href)
-              }
-              fontSize={{ base: "18px", md: "15px" }}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-
-          {currentAccount?.address && (
-            <AddNewCollectionModal mode={formMode.ADD} variant="navbar" />
-          )}
-
-          {myAccountList?.slice(1, myAccountList?.length)?.map((item, idx) => (
-            <MenuItem
-              to="#"
-              key={idx}
-              ml={["20px", "auto"]}
-              py={["4px", "12px"]}
-              px={["4px", "15px"]}
-              _hover={{ bg: "black" }}
-              as={ReactRouterLink}
-              fontFamily="Evogria, sans-serif"
-              onClick={() =>
-                item?.isExternal
-                  ? window.open(item.href, "_blank")
-                  : history.push(item.href)
-              }
-              fontSize={{ base: "18px", md: "15px" }}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-    </Box>
-  );
-};
-
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
   { twitter: "https://twitter.com/ArtZero_io" },
@@ -395,7 +237,10 @@ const MobileNav = ({ onClose, isOpen }) => {
           </DrawerHeader>
 
           <Flex pt="28px" w="full">
-            <WalletSelector display={{ base: "flex", md: "none" }} />
+            <WalletSelector
+              display={{ base: "flex", md: "none" }}
+              onCloseMenu={onClose}
+            />
           </Flex>
 
           <DrawerBody px="18px">

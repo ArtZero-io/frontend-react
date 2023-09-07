@@ -1,5 +1,5 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
+
 import { getEstimatedGasBatchTx } from "@utils";
 import {
   txErrorHandler,
@@ -10,7 +10,7 @@ import { stringToU8a } from "@polkadot/util";
 import { START } from "@constants";  
 import { APICall } from "../api/client";
 import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -20,6 +20,8 @@ import { isValidAddress } from "../utils";
 
 
 export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const [multiTransferData, setMultiTransferData] = useState({
@@ -54,7 +56,6 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
     let transferTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -109,7 +110,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       .batch(transferTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

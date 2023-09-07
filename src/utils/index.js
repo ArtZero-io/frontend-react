@@ -1,5 +1,5 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { hexToU8a, isHex } from "@polkadot/util";
+import { formatBalance, hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
@@ -9,12 +9,19 @@ import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit, { getGasLimitBulkAction } from "../utils/blockchain/dryRun";
-import { execContractQuery } from "../pages/account/nfts/nfts";
-import { ADMIN_ROLE_CODE, AZERO_DOMAINS_COLLECTION, ARTZERO_COLLECTION, OTHER_COLLECTION } from "../constants";
+import { execContractQuery } from "../utils/blockchain/profile_calls";
+import {
+  ADMIN_ROLE_CODE,
+  AZERO_DOMAINS_COLLECTION,
+  ARTZERO_COLLECTION,
+  OTHER_COLLECTION,
+} from "../constants";
 import moment from "moment/moment";
 import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import azero_domains_nft from "./blockchain/azero-domains-nft";
-import artzero_nft from './blockchain/artzero-nft';
+import artzero_nft from "./blockchain/artzero-nft";
+import { BigInt } from "@polkadot/x-bigint";
+import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -223,7 +230,9 @@ export const twoDigitTime = (time) => {
 export const truncateStr = (str, n = 6) => {
   if (!str) return "";
   return str.length > n
-    ? str.substr(0, n - 1) + " ... " + str.substr(str.length - n, str.length - 1)
+    ? str.substr(0, n - 1) +
+        " ... " +
+        str.substr(str.length - n, str.length - 1)
     : str;
 };
 
@@ -660,24 +669,160 @@ export async function getEstimatedGasBatchTx(
   return ret;
 }
 
-export const switchCollection = async ({
-  contractAddress,
-}) => {
+export const switchCollection = async ({ contractAddress }) => {
   if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return AZERO_DOMAINS_COLLECTION;
-  } else if(contractAddress === artzero_nft.CONTRACT_ADDRESS) {
+  } else if (contractAddress === artzero_nft.CONTRACT_ADDRESS) {
     return ARTZERO_COLLECTION;
   } else {
     return OTHER_COLLECTION;
   }
 };
 
-export const isAzeroDomainCollection = async ({
-  contractAddress,
-}) => {
+export const isAzeroDomainCollection = async ({ contractAddress }) => {
   if (contractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
     return true;
   } else {
     return false;
   }
+};
+
+export const getChainDecimal = (contract) => {
+  const chainDecimals = contract?.registry.chainDecimals;
+  return chainDecimals[0];
+};
+
+export const convertToBNString = (value, decimal = 12) => {
+  try {
+    const valueBigInt = BigInt(value * 10 ** decimal);
+
+    return valueBigInt.toString(10);
+  } catch (error) {
+    console.log("error convertToBNString", error);
+    return 0;
+  }
+};
+
+// ONLY USER FOR Validator Profit
+export const fetchValidatorProfit = async ({
+  currentAccount,
+  api,
+  address,
+}) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, reserved },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimal] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    // get reserved
+    const formattedStrBalReserved = formatBalance(reserved, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 +
+      formattedStrBalReserved?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** chainDecimal };
+  }
+};
+
+export const fetchUserBalance = async ({ currentAccount, api, address }) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, miscFrozen },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimal] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+    // get miscFrozen
+    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimal,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 -
+      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** chainDecimal };
+  }
+};
+
+export const resolveDomain = async (address, api) => {
+  const option = {
+    chainId: SupportedChainId.AlephZero,
+  };
+
+  if (api) {
+    option.customApi = api;
+  }
+
+  console.log("address", address);
+  console.log("option", option);
+
+  if (
+    process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
+    process.env.REACT_APP_NETWORK === "alephzero"
+  ) {
+    try {
+      const { primaryDomain, error } = await resolveAddressToDomain(
+        address,
+        option
+      );
+
+      if (error?.name) {
+        // console.log("address", address);
+        // console.log("error?.message", error?.message);
+        return undefined;
+      }
+
+      return primaryDomain;
+    } catch (error) {
+      console.log("resolveDomain error", error);
+    }
+  }
+};
+
+export function hexToAscii(str1) {
+  var hex = str1?.toString();
+  var str = "";
+  for (var n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+  }
+  return str;
+}
+
+export const getTimestamp = async (api, blockNumber) => {
+  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+
+  let ret = null;
+
+  const signedBlock = await api.rpc.chain.getBlock(blockHash);
+
+  signedBlock?.block?.extrinsics?.forEach(
+    ({ method: { args, section, method: extrinsicsMethod } }) => {
+      if (section === "timestamp" && extrinsicsMethod === "set") {
+        ret = args[0].toString();
+      }
+    }
+  );
+
+  return moment(parseInt(ret)).format("DD/MM/YY, H:mm");
 };

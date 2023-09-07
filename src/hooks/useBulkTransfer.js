@@ -1,5 +1,5 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
+
 import { getEstimatedGasBatchTx } from "@utils";
 import {
   txErrorHandler,
@@ -9,7 +9,7 @@ import {
 
 import { START } from "@constants";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
@@ -21,6 +21,7 @@ import { stringToU8a } from "@polkadot/util";
 export default function useBulkTransfer({ listNFTFormatted }) {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
+  const { adapter } = useSubstrate();
   const [multiTransferData, setMultiTransferData] = useState({
     action: null,
     list: [],
@@ -53,7 +54,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     let transferTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -79,25 +79,6 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        // const value = 0;
-        // let gasLimit;
-
-        // const nftPsp34Contract = new ContractPromise(
-        //   api,
-        //   nft721_psp34_standard.CONTRACT_ABI,
-        //   info?.nftContractAddress
-        // );
-
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   nftPsp34Contract,
-        //   value,
-        //   "psp34::transfer",
-        //   receiverAddress,
-        //   { u64: info?.tokenID },
-        //   stringToU8a("")
-        // );
-
         const ret = nftPsp34Contract.tx["psp34::transfer"](
           { gasLimit, value },
           receiverAddress,
@@ -126,7 +107,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       .batch(transferTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

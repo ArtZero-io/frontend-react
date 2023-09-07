@@ -1,5 +1,5 @@
 import BN from "bn.js";
-import { web3FromSource } from "../wallets/extension-dapp";
+
 import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { TypeRegistry, U32 } from "@polkadot/types";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -20,6 +20,12 @@ export const setMarketplaceAzeroDomainsContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 //GETS
@@ -379,7 +385,6 @@ async function list(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -444,7 +449,6 @@ async function unlist(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -518,7 +522,6 @@ async function bid(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
 
@@ -583,7 +586,6 @@ async function removeBid(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -649,7 +651,6 @@ async function buy(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).mul(new BN(10 ** 6)).toString();
 
@@ -719,7 +720,6 @@ async function acceptBid(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -817,7 +817,7 @@ export const withdrawMarketplaceContract = async (
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)

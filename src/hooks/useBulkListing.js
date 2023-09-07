@@ -1,5 +1,4 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
 import { getEstimatedGasBatchTx } from "@utils";
 import { BN } from "bn.js";
 import {
@@ -11,10 +10,10 @@ import {
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { execContractQuery } from "../pages/account/nfts/nfts";
+import { execContractQuery } from "@utils/blockchain/profile_calls";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
@@ -23,6 +22,8 @@ export default function useBulkListing({
   listNFTFormatted,
   nftContractAddress,
 }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const [multiListingData, setMultiListingData] = useState({
@@ -86,7 +87,6 @@ export default function useBulkListing({
     let approveTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -112,25 +112,6 @@ export default function useBulkListing({
 
     await Promise.all(
       listInfo.map(async ({ info }) => {
-        // const value = 0;
-        // let gasLimit;
-
-        // const nftPsp34Contract = new ContractPromise(
-        //   api,
-        //   nft721_psp34_standard.CONTRACT_ABI,
-        //   info?.nftContractAddress
-        // );
-
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   nftPsp34Contract,
-        //   value,
-        //   "psp34::approve",
-        //   marketplace.CONTRACT_ADDRESS, //   operator_address
-        //   { u64: info?.tokenID },
-        //   true
-        // );
-
         return nftPsp34Contract.tx["psp34::approve"](
           { gasLimit, value },
           marketplace.CONTRACT_ADDRESS, //   operator_address
@@ -150,51 +131,55 @@ export default function useBulkListing({
 
     api.tx.utility
       .batch(approveTxALL)
-      .signAndSend(address, { signer }, ({ events, status, dispatchError }) => {
-        if (status?.isFinalized) {
-          let totalSuccessTxCount = null;
+      .signAndSend(
+        address,
+        { signer: adapter.signer },
+        ({ events, status, dispatchError }) => {
+          if (status?.isFinalized) {
+            let totalSuccessTxCount = null;
 
-          events.forEach(
-            ({ event, event: { data, method, section, ...rest } }) => {
-              if (api.events.utility?.BatchInterrupted.is(event)) {
-                totalSuccessTxCount = data[0]?.toString();
+            events.forEach(
+              ({ event, event: { data, method, section, ...rest } }) => {
+                if (api.events.utility?.BatchInterrupted.is(event)) {
+                  totalSuccessTxCount = data[0]?.toString();
+                }
+
+                if (api.events.utility?.BatchCompleted.is(event)) {
+                  totalSuccessTxCount = list?.length;
+                  toast.success(
+                    totalSuccessTxCount === 1
+                      ? "NFT have been approved successfully"
+                      : "All NFTs have been approved successfully"
+                  );
+                }
               }
-
-              if (api.events.utility?.BatchCompleted.is(event)) {
-                totalSuccessTxCount = list?.length;
-                toast.success(
-                  totalSuccessTxCount === 1
-                    ? "NFT have been approved successfully"
-                    : "All NFTs have been approved successfully"
-                );
-              }
-            }
-          );
-
-          // eslint-disable-next-line no-extra-boolean-cast
-          if (totalSuccessTxCount !== list?.length) {
-            toast.error(
-              list?.length === 1
-                ? "Approval is not successful!"
-                : `Approval are not fully successful! ${totalSuccessTxCount} approvals completed successfully.`
             );
 
-            dispatch(clearTxStatus());
-          } else {
-            handleBulkListing();
-          }
-        }
+            // eslint-disable-next-line no-extra-boolean-cast
+            if (totalSuccessTxCount !== list?.length) {
+              toast.error(
+                list?.length === 1
+                  ? "Approval is not successful!"
+                  : `Approval are not fully successful! ${totalSuccessTxCount} approvals completed successfully.`
+              );
 
-        batchTxResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType: "APPROVE_MULTI_LISTING",
-          api,
-          currentAccount,
-          isApprovalTx: true,
-        });
-      })
+              dispatch(clearTxStatus());
+            } else {
+              handleBulkListing();
+            }
+          }
+
+          batchTxResponseErrorHandler({
+            status,
+            dispatchError,
+            dispatch,
+            txType: "APPROVE_MULTI_LISTING",
+            api,
+            currentAccount,
+            isApprovalTx: true,
+          });
+        }
+      )
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -217,7 +202,6 @@ export default function useBulkListing({
     let listingTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -244,29 +228,10 @@ export default function useBulkListing({
 
     await Promise.all(
       listInfo.map(async ({ price, info }) => {
-        // const value = 0;
-        // let gasLimit;
-
-        // const marketplaceContract = new ContractPromise(
-        //   api,
-        //   marketplace.CONTRACT_ABI,
-        //   marketplace.CONTRACT_ADDRESS
-        // );
-
         const salePrice = new BN(price * 10 ** 6)
           .mul(new BN(10 ** 6))
           .mul(new BN(10 ** 6))
           .toString();
-
-        // gasLimit = await getEstimatedGasBatchTx(
-        //   address,
-        //   marketplaceContract,
-        //   value,
-        //   "list",
-        //   info?.nftContractAddress,
-        //   { u64: info?.tokenID },
-        //   salePrice
-        // );
 
         const ret = marketplaceContract.tx["list"](
           { gasLimit, value },
@@ -291,7 +256,7 @@ export default function useBulkListing({
       .batch(listingTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

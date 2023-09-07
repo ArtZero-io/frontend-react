@@ -1,5 +1,5 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
+
 import { getEstimatedGasBatchTx } from "@utils";
 import {
   txErrorHandler,
@@ -9,15 +9,19 @@ import {
 
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
+// eslint-disable-next-line no-unused-vars
+import azero_domains_nft from "@blockchain/azero-domains-nft";
 
 export default function useBulkDelist({ listNFTFormatted }) {
   const dispatch = useDispatch();
+  const { adapter } = useSubstrate();
+
   const { api, currentAccount } = useSubstrateState();
   const [multiDelistData, setMultiDelistData] = useState({
     action: null,
@@ -39,7 +43,6 @@ export default function useBulkDelist({ listNFTFormatted }) {
     let delistTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -86,7 +89,7 @@ export default function useBulkDelist({ listNFTFormatted }) {
       .batch(delistTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;

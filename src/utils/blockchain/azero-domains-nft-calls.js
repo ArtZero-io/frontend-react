@@ -1,12 +1,6 @@
-// import BN from "bn.js";
 import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
-// import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
-import {
-  txErrorHandler,
-  // txResponseErrorHandler,
-} from "../../store/actions/txStatus";
+import { txErrorHandler } from "../../store/actions/txStatus";
 import { formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
@@ -17,6 +11,12 @@ export const setAzeroDomainsNFTContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 async function balanceOf(caller_account, account) {
@@ -104,7 +104,7 @@ async function approve(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -166,7 +166,7 @@ async function transfer(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
   gasLimit = await getEstimatedGas(
     address,

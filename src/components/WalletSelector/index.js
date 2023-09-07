@@ -46,9 +46,6 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
-import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
-import AzeroChain from "@theme/assets/icon/AzeroChain";
 import toast from "react-hot-toast";
 import { PiCopy } from "react-icons/pi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -82,29 +79,30 @@ function WalletSelector({ display }) {
     key: account.address,
     address: account.address,
     name: account.meta.name,
+    ...account,
   }));
 
   const initialAddress =
     keyringOptions?.length > 0 ? keyringOptions[0].address : "";
 
-  useEffect(() => {
-    if (!currentAccount && initialAddress?.length > 0) {
-      setCurrentAccount(keyring.getPair(initialAddress));
+  useEffect(
+    () => {
+      const currAccount = keyringOptions.find(
+        (item) => item.address === initialAddress
+      );
+
+      setCurrentAccount(currAccount);
+
       dispatch({
         type: AccountActionTypes.SET_ACTIVE_ADDRESS,
         payload: initialAddress,
       });
 
       setActiveAddressLocal(initialAddress);
-    }
-  }, [
-    setActiveAddressLocal,
-    dispatch,
-    currentAccount,
-    setCurrentAccount,
-    keyring,
-    initialAddress,
-  ]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   function selectAccountHandler(address) {
     setCurrentAccount(keyring.getPair(address));
@@ -251,21 +249,10 @@ function WalletSelector({ display }) {
                 justifyContent="center"
                 mr="12px"
               >
-                {currentAccount?.meta?.source === "subwallet-js" && (
-                  <Image
-                    src={SubwalletLogo}
-                    alt={currentAccount?.meta?.source}
-                  />
-                )}
-                {currentAccount?.meta?.source === "polkadot-js" && (
-                  <Image
-                    src={PolkadotjsLogo}
-                    alt={currentAccount?.meta?.source}
-                  />
-                )}
-                {currentAccount?.meta?.source === "aleph-zero-signer" && (
-                  <AzeroChain />
-                )}
+                <Image
+                  src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                  alt={currentAccount?.meta?.source}
+                />
               </Flex>
               <Flex
                 w="full"
@@ -528,21 +515,10 @@ function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
                       alignItems="center"
                       justifyContent="center"
                     >
-                      {currentAccount?.meta?.source === "subwallet-js" && (
-                        <Image
-                          src={SubwalletLogo}
-                          alt={currentAccount?.meta?.source}
-                        />
-                      )}
-                      {currentAccount?.meta?.source === "polkadot-js" && (
-                        <Image
-                          src={PolkadotjsLogo}
-                          alt={currentAccount?.meta?.source}
-                        />
-                      )}
-                      {currentAccount?.meta?.source === "aleph-zero-signer" && (
-                        <AzeroChain />
-                      )}
+                      <Image
+                        src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                        alt={currentAccount?.meta?.source}
+                      />
                     </Flex>
                     <Flex
                       pl="10px"
@@ -710,21 +686,10 @@ function WalletSubDrawer({
                     justifyContent="center"
                     mr="12px"
                   >
-                    {currentAccount?.meta?.source === "subwallet-js" && (
-                      <Image
-                        src={SubwalletLogo}
-                        alt={currentAccount?.meta?.source}
-                      />
-                    )}
-                    {currentAccount?.meta?.source === "polkadot-js" && (
-                      <Image
-                        src={PolkadotjsLogo}
-                        alt={currentAccount?.meta?.source}
-                      />
-                    )}
-                    {currentAccount?.meta?.source === "aleph-zero-signer" && (
-                      <AzeroChain />
-                    )}
+                    <Image
+                      src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                      alt={currentAccount?.meta?.source}
+                    />
                   </Flex>
                   <Flex
                     w="full"

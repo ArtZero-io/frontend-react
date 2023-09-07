@@ -1,5 +1,4 @@
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../utils/wallets/extension-dapp";
 import { getEstimatedGasBatchTx } from "@utils";
 import { BN } from "bn.js";
 import {
@@ -11,10 +10,10 @@ import {
 import { START } from "@constants";
 import marketplace from "@utils/blockchain/marketplace";
 import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { execContractQuery } from "../pages/account/nfts/nfts";
+import { execContractQuery } from "@utils/blockchain/profile_calls";
 import { APICall } from "../api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
@@ -23,6 +22,8 @@ export default function useBulkAzeroDomainsListing({
   listNFTFormatted,
   nftContractAddress,
 }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const [multiListingData, setMultiListingData] = useState({
@@ -86,7 +87,6 @@ export default function useBulkAzeroDomainsListing({
     let approveTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -130,45 +130,49 @@ export default function useBulkAzeroDomainsListing({
 
     api.tx.utility
       .batch(approveTxALL)
-      .signAndSend(address, { signer }, ({ events, status, dispatchError }) => {
-        if (status?.isFinalized) {
-          let totalSuccessTxCount = null;
+      .signAndSend(
+        address,
+        { signer: adapter.signer },
+        ({ events, status, dispatchError }) => {
+          if (status?.isFinalized) {
+            let totalSuccessTxCount = null;
 
-          events.forEach(
-            ({ event, event: { data, method, section, ...rest } }) => {
-              if (api.events.utility?.BatchInterrupted.is(event)) {
-                totalSuccessTxCount = data[0]?.toString();
+            events.forEach(
+              ({ event, event: { data, method, section, ...rest } }) => {
+                if (api.events.utility?.BatchInterrupted.is(event)) {
+                  totalSuccessTxCount = data[0]?.toString();
+                }
+
+                if (api.events.utility?.BatchCompleted.is(event)) {
+                  totalSuccessTxCount = list?.length;
+                  toast.success("Approval TXs are fully completed");
+                }
               }
-
-              if (api.events.utility?.BatchCompleted.is(event)) {
-                totalSuccessTxCount = list?.length;
-                toast.success("Approval TXs are fully completed");
-              }
-            }
-          );
-
-          // eslint-disable-next-line no-extra-boolean-cast
-          if (totalSuccessTxCount !== list?.length) {
-            toast.error(
-              `Approval TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
             );
 
-            dispatch(clearTxStatus());
-          } else {
-            handleBulkListing();
-          }
-        }
+            // eslint-disable-next-line no-extra-boolean-cast
+            if (totalSuccessTxCount !== list?.length) {
+              toast.error(
+                `Approval TXs are NOT fully success! Only ${totalSuccessTxCount} TX done.`
+              );
 
-        batchTxResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType: "APPROVE_MULTI_LISTING",
-          api,
-          currentAccount,
-          isApprovalTx: true,
-        });
-      })
+              dispatch(clearTxStatus());
+            } else {
+              handleBulkListing();
+            }
+          }
+
+          batchTxResponseErrorHandler({
+            status,
+            dispatchError,
+            dispatch,
+            txType: "APPROVE_MULTI_LISTING",
+            api,
+            currentAccount,
+            isApprovalTx: true,
+          });
+        }
+      )
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -187,7 +191,6 @@ export default function useBulkAzeroDomainsListing({
     let listingTxALL;
 
     const address = currentAccount?.address;
-    const { signer } = await web3FromSource(currentAccount?.meta?.source);
 
     toast("Estimated transaction fee...");
 
@@ -240,7 +243,7 @@ export default function useBulkAzeroDomainsListing({
       .batch(listingTxALL)
       .signAndSend(
         address,
-        { signer },
+        { signer: adapter.signer },
         async ({ events, status, dispatchError }) => {
           if (status?.isFinalized) {
             let totalSuccessTxCount = null;
