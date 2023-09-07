@@ -299,7 +299,7 @@ function MyNFTTabInfo(props) {
       console.log("feeCalculated", feeCalculated);
     };
     fetchTradeFee();
-  }, [currentAccount]);
+  }, [currentAccount, feeCalculated, price, royaltyFee]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const path = `${SUB_DOMAIN}/nft/${nftContractAddress}/${tokenID}`;

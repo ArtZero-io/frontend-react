@@ -165,7 +165,7 @@ function MyAzeroDomainsNFTTabInfo(props) {
 
       console.log("error", error);
     }
-  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [azDomainName, currentAccount, is_for_sale, nftContractAddress, owner]);
 
   useEffect(() => {
     doLoad();
