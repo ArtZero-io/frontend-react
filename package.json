@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@ajna/pagination": "^1.4.17",
+    "@azns/resolver-core": "^1.6.0",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
     "@emailjs/browser": "^3.6.2",
