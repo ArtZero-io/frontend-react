@@ -25,12 +25,12 @@ const NUMBER_NFT_PER_PAGE = 5;
 function TabActivity({ collectionOwner, nftContractAddress }) {
   const tabData = [
     {
-      label: "PURCHASE",
+      label: "SALE",
       content: (
         <NewEventTable
-          type="PURCHASE"
+          type="SALE"
           collectionOwner={collectionOwner}
-          tableHeaders={headers.purchase}
+          tableHeaders={headers.sale}
           collection_address={nftContractAddress}
         />
       ),
@@ -53,17 +53,6 @@ function TabActivity({ collectionOwner, nftContractAddress }) {
           type="UNLIST"
           collectionOwner={collectionOwner}
           tableHeaders={headers.unlist}
-          collection_address={nftContractAddress}
-        />
-      ),
-    },
-    {
-      label: "BID ACCEPTED",
-      content: (
-        <NewEventTable
-          type="BID ACCEPTED"
-          collectionOwner={collectionOwner}
-          tableHeaders={headers.bidAccepted}
           collection_address={nftContractAddress}
         />
       ),
@@ -161,12 +150,17 @@ const NewEventTable = ({
 
       let eventsList = [];
 
-      if (type === "PURCHASE") {
-        eventsList = await APICall.getPurchaseEvents({
-          collection_address,
+      if (type === "SALE") {
+        let { ret } = await APICall.getUserBuySellEvent({
           offset: pageParam,
+          order: ["blockNumber DESC"],
           limit: NUMBER_NFT_PER_PAGE,
+          where: {
+            nftContractAddress: collection_address,
+          },
         });
+
+        eventsList = ret;
       }
 
       if (type === "LIST") {
@@ -179,14 +173,6 @@ const NewEventTable = ({
 
       if (type === "UNLIST") {
         eventsList = await APICall.getUnlistEvents({
-          collection_address,
-          offset: pageParam,
-          limit: NUMBER_NFT_PER_PAGE,
-        });
-      }
-
-      if (type === "BID ACCEPTED") {
-        eventsList = await APICall.getBidWinEvents({
           collection_address,
           offset: pageParam,
           limit: NUMBER_NFT_PER_PAGE,
@@ -225,7 +211,7 @@ const NewEventTable = ({
     [collection_address, type]
   );
 
-  const { hasNextPage, data, isFetchingNextPage, fetchNextPage } =
+  const { hasNextPage, data, isFetchingNextPage, fetchNextPage, isLoading } =
     useInfiniteQuery(
       [`getEvents${type}`, collection_address],
       ({ pageParam = 0 }) => fetchEvents({ pageParam }),
@@ -249,14 +235,19 @@ const NewEventTable = ({
 
   return (
     <>
-      <EventTable
-        type={type}
-        collectionOwner={collectionOwner}
-        tableHeaders={tableHeaders}
-        tableData={dataFormatted}
-        ref={ref}
-      />
-
+      {isLoading ? (
+        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
+          <BeatLoader color="#7ae7ff" size="10px" />
+        </HStack>
+      ) : (
+        <EventTable
+          type={type}
+          collectionOwner={collectionOwner}
+          tableHeaders={tableHeaders}
+          tableData={dataFormatted}
+          ref={ref}
+        />
+      )}
       {dataFormatted?.length ? (
         <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <Text ref={ref}>
@@ -277,14 +268,13 @@ const NewEventTable = ({
 };
 
 const dropDownMobileOptions = {
-  PURCHASE: "purchase",
+  SALE: "sale",
   LIST: "list",
   UNLIST: "unlist",
-  BID_ACCEPTED: "bid accepted",
 };
 
 const headers = {
-  purchase: {
+  sale: {
     nftName: "nft name",
     avatar: "image",
     price: "price",
@@ -305,16 +295,6 @@ const headers = {
     nftName: "nft name",
     avatar: "image",
     trader: "trader",
-    blockNumber: "block no#",
-  },
-  bidAccepted: {
-    nftName: "nft name",
-    avatar: "image",
-    price: "price",
-    platformFee: "platform fee",
-    royaltyFee: "royalty fee",
-    seller: "seller",
-    buyer: "buyer",
     blockNumber: "block no#",
   },
 };

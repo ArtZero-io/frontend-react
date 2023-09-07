@@ -160,6 +160,96 @@ export const APICall = {
     return ret;
   },
 
+  // top nft trades API Calls
+  getTopNftTrades: async (options) => {
+    return clientWithGetParams("GET", "/api/top-nft-trades", {
+      filter: { ...options },
+    });
+  },
+
+  // user-buy-sell-event API Calls
+  getUserBuySellEvent: async (options) => {
+    return clientWithGetParams("GET", "/api/user-buy-sell-event", {
+      filter: { ...options },
+    });
+  },
+
+  // END top nft trades API Calls
+
+  // USER Event API Calls
+  getUserPurchaseEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    buyer,
+  }) => {
+    return clientWithGetParams("GET", "/api/purchase-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          buyer,
+        },
+      },
+    });
+  },
+
+  getUserBidWinEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    seller,
+  }) => {
+    return clientWithGetParams("GET", "/api/bid-win-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          seller,
+        },
+      },
+    });
+  },
+
+  getUserNewListEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/new-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+
+  getUserUnlistEvents: async ({
+    limit = 5,
+    offset = 0,
+    order = ["blockNumber DESC"],
+    trader,
+  }) => {
+    return clientWithGetParams("GET", "/api/un-list-event-schema", {
+      filter: {
+        limit,
+        offset,
+        order,
+        where: {
+          trader,
+        },
+      },
+    });
+  },
+  // END USER Event API Calls
+
   // Event API Calls
   getPurchaseEvents: async ({
     collection_address,
@@ -281,15 +371,17 @@ export const APICall = {
     });
   },
 
-  getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
-    return clientWithGetParams("GET", "/api/launchpad-minting-event-schemas", {
-      filter: {
-        limit,
-        offset,
-        where: {
-          nftContractAddress: nftContractAddress,
-        },
-      },
+  getLaunchpadEvent: async ({
+    limit = 5,
+    offset = 0,
+    nftContractAddress,
+    ...rest
+  }) => {
+    return await client("POST", `/api/launchpad-minting-event-schemas-v1`, {
+      nftContractAddress,
+      limit,
+      offset,
+      ...rest,
     });
   },
 
@@ -450,7 +542,7 @@ export const APICall = {
 
   getNFTByID: async ({ collection_address, token_id }) => {
     try {
-      if (token_id?.includes(",")) {
+      if (typeof token_id === "string" && token_id?.includes(",")) {
         token_id?.replaceAll(",", "");
       }
     } catch (error) {
@@ -590,6 +682,22 @@ export const APICall = {
     );
     // TEMP format to match current return format
     return { ret };
+  },
+
+  askBeUpdateAzeroDomainsBidsData: async ({ collection_address, seller, azDomainName }) => {
+    return await client("POST", "/updateBids", {
+      collection_address,
+      seller,
+      azDomainName,
+    });
+  },
+
+  askBeUpdateAzeroDomainsNftData: async ({ collection_address, azDomainName }) => {
+    console.log({ collection_address, azDomainName });
+    return await client("POST", "/updateNFT", {
+      collection_address,
+      azDomainName,
+    });
   },
 };
 

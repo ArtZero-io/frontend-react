@@ -33,10 +33,12 @@ function ActivityPages() {
 
   const tabData = [
     {
-      label: "PURCHASE",
-      content: (
-        <EventTableWrapper type="PURCHASE" tableHeaders={headers.purchase} />
-      ),
+      label: "BUY",
+      content: <EventTableWrapper type="BUY" tableHeaders={headers.buy} />,
+    },
+    {
+      label: "SELL",
+      content: <EventTableWrapper type="SELL" tableHeaders={headers.sell} />,
     },
     {
       label: "LIST",
@@ -46,15 +48,6 @@ function ActivityPages() {
       label: "UNLIST",
       content: (
         <EventTableWrapper type="UNLIST" tableHeaders={headers.unlist} />
-      ),
-    },
-    {
-      label: "BID ACCEPTED",
-      content: (
-        <EventTableWrapper
-          type="BID ACCEPTED"
-          tableHeaders={headers.bidAccepted}
-        />
       ),
     },
   ];
@@ -148,13 +141,18 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
       if (pageParam === undefined || apiState !== "READY") return;
 
       let eventsList = [];
+      if (type === "BUY") {
 
-      if (type === "PURCHASE") {
-        const { ret } = await APICall.getUserPurchaseEvents({
-          buyer: currentAccount?.address,
-          offset: pageParam,
+
+        let { ret } = await APICall.getUserBuySellEvent({
           limit: NUMBER_NFT_PER_PAGE,
+          offset: pageParam,
+          order: ["blockNumber DESC"],
+          where: {
+            buyer: currentAccount?.address,
+          },
         });
+
         eventsList = ret;
       }
 
@@ -176,12 +174,17 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
         eventsList = ret;
       }
 
-      if (type === "BID ACCEPTED") {
-        const { ret } = await APICall.getUserBidWinEvents({
-          seller: currentAccount?.address,
-          offset: pageParam,
+      if (type === "SELL") {
+
+        let { ret } = await APICall.getUserBuySellEvent({
           limit: NUMBER_NFT_PER_PAGE,
+          offset: pageParam,
+          order: ["blockNumber DESC"],
+          where: {
+            seller: currentAccount?.address,
+          },
         });
+
         eventsList = ret;
       }
 
@@ -229,7 +232,7 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
           if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
             return undefined;
           }
-          return lastPage.nextId || 0;
+          return lastPage?.nextId || 0;
         },
       }
     );
@@ -276,21 +279,20 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 };
 
 const dropDownMobileOptions = {
-  PURCHASE: "purchase",
+  BUY: "buy",
+  SELL: "sell",
   LIST: "list",
   UNLIST: "unlist",
-  BID_ACCEPTED: "bid accepted",
 };
 
 const headers = {
-  purchase: {
+  buy: {
     nftName: "nft name",
     avatar: "image",
     price: "price",
     platformFee: "platform Fee",
     royaltyFee: "royalty fee",
     seller: "seller",
-    buyer: "buyer",
     timestamp: "timestamp",
   },
   list: {
@@ -306,13 +308,12 @@ const headers = {
     trader: "trader",
     timestamp: "timestamp",
   },
-  bidAccepted: {
+  sell: {
     nftName: "nft name",
     avatar: "image",
     price: "price",
     platformFee: "platform fee",
     royaltyFee: "royalty fee",
-    seller: "seller",
     buyer: "buyer",
     timestamp: "timestamp",
   },
