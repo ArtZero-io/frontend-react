@@ -709,7 +709,7 @@ function GridNftA({
                 shadow="md"
               >
                 <Heading size="h6" fontSize="14px">
-                  Bulk Transfer
+                  {multiTransferData?.listInfo?.length === 1 ? 'Transfer' : 'Bulk Transfer'}
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
