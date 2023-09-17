@@ -78,10 +78,10 @@ function WalletSelector({ display }) {
   const { api, keyring, currentAccount } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => ({
-    key: reformatAddress(account.address, networkSS58),
-    address: reformatAddress(account.address, networkSS58),
-    name: account.meta.name,
     ...account,
+    key: reformatAddress(account?.address, networkSS58),
+    address: reformatAddress(account?.address, networkSS58),
+    name: account?.meta.name,
   }));
 
   const initialAddress =
