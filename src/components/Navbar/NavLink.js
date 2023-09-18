@@ -39,7 +39,7 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
           }}
           color={path === to ? "brand.blue" : "#fff"}
         >
-          {label === "Stake2Earn" ? <InkWhale /> : "null"}
+          {label === "Stake2Earn" ? <InkWhale /> : null}
           <Text ml="8px">{label}</Text>
         </Link>
       )}
