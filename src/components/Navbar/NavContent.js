@@ -113,13 +113,12 @@ const MobileNavContent = (props) => {
           </Flex>
 
           <Flex justify={{ base: "center", md: "start" }} alignItems="center">
-            {/* <ArtZeroLogo
+            <ArtZeroLogo
               height="20px"
               width="138px"
               alt="ArtZeroLogo"
               display={{ base: "flex", md: "none" }}
-            /> */}
-            <ChainDropdown />
+            />
           </Flex>
 
           <SearchDrawer
@@ -385,20 +384,21 @@ const MobileNav = ({ onClose, isOpen }) => {
           h="var(--doc-height)"
         >
           <DrawerHeader bg="transparent">
-            <Flex minH="30px" justifyContent="center" alignItems="end">
+            <Flex minH="30px" justifyContent="center" alignItems="center">
               <DrawerCloseButton
                 left="14px"
-                top="22px"
+                top="18px"
                 borderRadius="0"
                 color="#fff"
               />
 
-              <ArtZeroLogo
+              {/* <ArtZeroLogo
                 alt="ArtZeroLogo"
                 height="20px"
                 width="138px"
-                display={{ base: "flex", xl: "none" }}
-              />
+                display={{ base: "flex", md: "none" }}
+              /> */}
+              <ChainDropdown />
             </Flex>
           </DrawerHeader>
 
@@ -415,7 +415,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               />
             ))}
 
-            {isAleph && <C14Modal />}
+            <C14Modal />
           </DrawerBody>
 
           <DrawerFooter>

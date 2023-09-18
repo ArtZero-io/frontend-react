@@ -8,7 +8,6 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
 import Astar from "@theme/assets/icon/Astar";
@@ -53,10 +52,8 @@ function ChainDropdown() {
     (e) => e.id === process.env.REACT_APP_CHAIN
   );
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-
   return (
-    <Box ml={isBigScreen ? "35px" : "15px"}>
+    <Box ml={["35px", "15px"]}>
       <Menu autoSelect={false} placement="bottom-start" offset={[0, 27]}>
         <MenuButton
           ring={0}

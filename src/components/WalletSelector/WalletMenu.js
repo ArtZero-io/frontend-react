@@ -1,18 +1,15 @@
+/* eslint-disable no-unused-vars */
 import {
   Flex,
-  IconButton,
-  Tag,
-  TagLabel,
-  useClipboard,
+  // useClipboard,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
 import BN from "bn.js";
 import { shortenNumber } from "@utils";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
+// import toast from 'react-hot-toast';
 import { CopyIcon } from "@chakra-ui/icons";
 
 function WalletMenu() {
@@ -61,11 +58,11 @@ function WalletMenu() {
     return () => unsubscribe && unsubscribe();
   }, [activeAddress, api, chainDecimal, currentAccount]);
 
-  const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
+  // const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
 
-  useEffect(() => {
-    hasCopied && toast.success("Copied to clipboard!");
-  }, [hasCopied]);
+  // useEffect(() => {
+  //   hasCopied && toast.success('Copied to clipboard!');
+  // }, [hasCopied]);
 
   return currentAccount ? (
     <>
@@ -75,8 +72,8 @@ function WalletMenu() {
         exit={{ opacity: 0 }}
       >
         <Flex alignItems="center">
-          <IconButton
-            display={{ base: "none", xl: "flex" }}
+          {/* <IconButton
+            display={['none', 'flex']}
             mr={2}
             size="icon"
             color="#fff"
@@ -84,12 +81,12 @@ function WalletMenu() {
             aria-label="copy"
             icon={<CopyIcon w="18px" h="18px" />}
             onClick={onCopy}
-          />
+          /> */}
 
-          <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
+          {/* <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
             <TagLabel>{accountBalance}</TagLabel>
-            <AzeroIcon chainToken={chainToken} />
-          </Tag>
+            <TagRightIcon as={AzeroIcon} />
+          </Tag> */}
         </Flex>
       </motion.div>
     </>
