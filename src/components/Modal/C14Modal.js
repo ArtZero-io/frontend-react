@@ -30,9 +30,9 @@ export default function C14Modal() {
             borderBottom: "none",
           }}
           py={["4px", "12px"]}
-          px="0"
+          px={["4px", "15px"]}
           fontFamily="Evogria, sans-serif"
-          fontSize={{ base: "32px", xl: "15px" }}
+          fontSize={{ base: "18px", md: "15px" }}
           variant="ghost"
           onClick={onOpen}
           borderBottomWidth="2px"

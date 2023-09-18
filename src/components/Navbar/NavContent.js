@@ -47,6 +47,7 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import C14Modal from "../Modal/C14Modal";
+import InkWhale from "@theme/assets/icon/InkWhale";
 
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -458,6 +459,8 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
     return (
       <Stack>
         <Link
+          display="flex"
+          alignItems="center"
           _hover={{
             textDecoration: "none",
             color: "#7ae7ff",
@@ -484,9 +487,11 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
             lineHeight="shorter"
             fontFamily="Evogria, sans-serif"
             color={isOpen ? "#7ae7ff" : "#fff"}
+            mr="8px"
           >
             {label}
           </Text>
+          {label === "stake2earn" ? <InkWhale /> : "null"}
         </Link>
       </Stack>
     );
