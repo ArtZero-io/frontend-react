@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -172,8 +173,9 @@ const DesktopNavContent = (props) => {
         }
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
+        {/* <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} /> */}
 
-        {currentAccount?.address && <MyAccountDropdown />}
+        {/* {currentAccount?.address && <MyAccountDropdown />} */}
 
         {isAleph && <C14Modal />}
       </HStack>
@@ -383,21 +385,15 @@ const MobileNav = ({ onClose, isOpen }) => {
           id="drawer-content"
           h="var(--doc-height)"
         >
-          <DrawerHeader bg="transparent">
-            <Flex minH="30px" justifyContent="center" alignItems="center">
+          <DrawerHeader pl="18px" bg="transparent">
+            <Flex minH="30px" justifyContent="start" alignItems="center">
               <DrawerCloseButton
-                left="14px"
-                top="18px"
+                right="14px"
+                top="16px"
                 borderRadius="0"
                 color="#fff"
               />
 
-              {/* <ArtZeroLogo
-                alt="ArtZeroLogo"
-                height="20px"
-                width="138px"
-                display={{ base: "flex", md: "none" }}
-              /> */}
               <ChainDropdown />
             </Flex>
           </DrawerHeader>
@@ -651,7 +647,11 @@ const NAV_ITEMS = [
     label: "stats",
     href: ROUTES.STATS,
   },
-
+  {
+    label: "docs",
+    href: ROUTES.DOCS,
+    isExternal: true,
+  },
   {
     label: "my account",
     children: [

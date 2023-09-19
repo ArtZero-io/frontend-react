@@ -39,11 +39,14 @@ export default function UpdateWithdrawModal({
   const dispatch = useDispatch();
   const [contractBalance, setContractBalance] = useState(0);
   const [withdrawBalance, setWithdrawBalance] = useState(0);
-  const { currentAccount, api, chainDecimal, chainToken } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken, apiState } =
+    useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    const fetch = async () => {
+    let isUnmounted = false;
+
+    const fetch = async (isUnmount) => {
       if (rest.step === FINALIZED) {
         dispatch(clearTxStatus());
         setWithdrawBalance(0);
@@ -74,12 +77,23 @@ export default function UpdateWithdrawModal({
       const tempBal = balFree - balMiscFrozen;
 
       const tempBalFloorRound = Math.floor(tempBal);
+      if (isUnmounted) return;
 
       setContractBalance(tempBalFloorRound);
     };
+    if (apiState !== "READY") return;
 
-    fetch();
-  }, [api, chainDecimal, collection_address, dispatch, onClose, rest.step]);
+    fetch(isUnmounted);
+    return () => (isUnmounted = true);
+  }, [
+    api,
+    chainDecimal,
+    collection_address,
+    dispatch,
+    onClose,
+    rest.step,
+    apiState,
+  ]);
 
   const withdrawFee = async () => {
     const launchpad_psp34_nft_standard_contract = new ContractPromise(

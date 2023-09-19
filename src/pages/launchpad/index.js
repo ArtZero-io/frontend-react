@@ -53,7 +53,7 @@ export const LaunchpadPage = () => {
 
     fetchData();
     return () => (isUnmounted = true);
-  }, [api, currentAccount]);
+  }, []);
 
   return (
     <Layout>

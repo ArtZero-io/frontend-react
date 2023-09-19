@@ -39,7 +39,7 @@ export default function WithdrawHistoryModal({
   onClose,
 }) {
   // const dispatch = useDispatch();
-  const { currentAccount, chainToken } = useSubstrateState();
+  const { currentAccount, chainToken, apiState } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [events, setEvents] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -90,6 +90,8 @@ export default function WithdrawHistoryModal({
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     fetchEvents(isMounted);
@@ -97,7 +99,7 @@ export default function WithdrawHistoryModal({
     return () => {
       isMounted = false;
     };
-  }, [currentAccount, fetchEvents]);
+  }, [currentAccount, fetchEvents, apiState]);
 
   // if (rest.step === FINALIZED) {
   //   dispatch(clearTxStatus());

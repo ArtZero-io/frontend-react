@@ -43,7 +43,8 @@ import { formatNumberOutput } from "../../../utils";
 function ProfileHeader() {
   const dispatch = useDispatch();
 
-  const { currentAccount, api, chainDecimal, chainToken } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, chainToken, apiState } =
+    useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [profile, setProfile] = useState(null);
@@ -56,7 +57,7 @@ function ProfileHeader() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!api) return;
+      if (!api || apiState !== "READY") return;
 
       const res = await dispatch(getProfile(currentAccount));
       if (res?.status === "OK") {
@@ -78,7 +79,7 @@ function ProfileHeader() {
     if (!profile?.address || profile?.address !== currentAccount?.address) {
       fetchProfile();
     }
-  }, [api, currentAccount, dispatch, profile]);
+  }, [api, currentAccount, dispatch, profile, apiState]);
 
   // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate } = useForceUpdate(

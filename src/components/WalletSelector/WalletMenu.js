@@ -58,11 +58,7 @@ function WalletMenu() {
     return () => unsubscribe && unsubscribe();
   }, [activeAddress, api, chainDecimal, currentAccount]);
 
-  // const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
-
-  // useEffect(() => {
-  //   hasCopied && toast.success('Copied to clipboard!');
-  // }, [hasCopied]);
+  
 
   return currentAccount ? (
     <>

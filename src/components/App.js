@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Toaster } from "react-hot-toast";
 import { PuffLoader } from "react-spinners";
 
@@ -39,12 +40,13 @@ import { setProfileContract } from "@utils/blockchain/profile_calls";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { setMarketplaceAzeroDomainsContract } from "@utils/blockchain/marketplace-azero-domains-calls";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { ArtZero_Privacy, START } from "../constants";
 import { isEmptyObj } from "@utils";
+import useInterval from "use-interval";
 
 // import { useHistory } from "react-router-dom";
 // import bannerImg from "@theme/assets/banner.jpg";
@@ -58,77 +60,100 @@ import { isEmptyObj } from "@utils";
 export default function App() {
   const { apiState } = useSubstrateState();
 
+  useEffect(() => {
+    toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
+      style: {
+        minWidth: "180px",
+      },
+    });
+  }, [apiState]);
+
   return (
     <ChakraProvider theme={theme}>
-      {apiState === "ERROR" ? (
-        <InitModal apiState={apiState} loadingErrorMess={`...`} />
+      {/* {apiState === "ERROR" ? (
+        <InitModal apiState={apiState} loadingErrorMess={`... A`} />
       ) : apiState !== "READY" ? (
-        <InitModal apiState={apiState} loadingErrorMess={`to network...`} />
+        <InitModal apiState={apiState} loadingErrorMess={`to network...B`} />
       ) : (
         <Main />
-      )}
+      )} */}
+
+      <Main />
     </ChakraProvider>
   );
 }
 
-const InitModal = ({ apiState, loadingErrorMess }) => {
-  return (
-    <Modal size="full" isCentered isOpen={apiState !== "READY"}>
-      <ModalOverlay
-        bg="#33333330"
-        backdropFilter="blur(50px) hue-rotate(90deg)"
-      />
+// const InitModal = ({ apiState, loadingErrorMess }) => {
+//   return (
+//     <Modal size="full" isCentered isOpen={apiState !== "READY"}>
+//       <ModalOverlay
+//         bg="#33333330"
+//         backdropFilter="blur(50px) hue-rotate(90deg)"
+//       />
 
-      <ModalContent
-        bg="transparent"
-        boxShadow={"none"}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <PuffLoader color="#7ae7ff" />
+//       <ModalContent
+//         bg="transparent"
+//         boxShadow={"none"}
+//         justifyContent="center"
+//         alignItems="center"
+//       >
+//         <PuffLoader color="#7ae7ff" />
 
-        <Heading
-          size="h6"
-          my="30px"
-          mx="auto"
-          maxW="250px"
-          minH="100px"
-          color="#7ae7ff"
-          textAlign="center"
-        >
-          connecting {loadingErrorMess}
-        </Heading>
-      </ModalContent>
-    </Modal>
-  );
-};
+//         <Heading
+//           size="h6"
+//           my="30px"
+//           mx="auto"
+//           maxW="250px"
+//           minH="100px"
+//           color="#7ae7ff"
+//           textAlign="center"
+//         >
+//           connecting {loadingErrorMess}
+//         </Heading>
+//       </ModalContent>
+//     </Modal>
+//   );
+// };
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
 
   const [loadContractDone, setLoadContractDone] = useState(false);
 
-  useEffect(() => {
-    const initContract = async () => {
-      try {
-        if (apiState === "READY") {
-          await setCollectionContract(api, collection_manager);
-          await setMarketplaceContract(api, marketplace);
-          await setProfileContract(api, profile);
-          await setStakingContract(api, staking);
-          await setAZNFTContract(api, artzero_nft);
-          !isEmptyObj(azero_domains_nft) &&
-            (await setAzeroDomainsNFTContract(api, azero_domains_nft));
-          await setLaunchPadContract(api, launchpad_manager);
-          await setMarketplaceAzeroDomainsContract(api, marketplace);
-          setLoadContractDone(true);
-        }
-      } catch (e) {
-        return console.log("err iniContract", e);
+  const initContract = useCallback(async () => {
+    try {
+      if (apiState === "READY") {
+        await setCollectionContract(api, collection_manager);
+        await setMarketplaceContract(api, marketplace);
+        await setProfileContract(api, profile);
+        await setStakingContract(api, staking);
+        await setAZNFTContract(api, artzero_nft);
+        await setAzeroDomainsNFTContract(api, azero_domains_nft);
+        await setLaunchPadContract(api, launchpad_manager);
+        await setMarketplaceAzeroDomainsContract(api, marketplace);
+        setLoadContractDone(true);
+        console.log("initContract setLoadContractDone apiState", apiState);
       }
-    };
-    initContract();
+    } catch (e) {
+      return console.log("err iniContract", e);
+    }
   }, [api, apiState]);
+
+  useEffect(() => {
+    initContract();
+  }, [api, apiState, initContract]);
+
+  // useInterval(() => {
+  //   console.log("useInterval", apiState);
+
+  // if (apiState !== "READY") {
+  //   console.log("A useInterval apiState READY", apiState);
+  //   toast("Trying again in 3s... ", { position: "bottom-right" });
+  // } else {
+  //   console.log("B useInterval apiState READY", apiState);
+  //   initContract();
+  // }
+  // }, 3000);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
@@ -228,24 +253,24 @@ const Main = () => {
 
       <AlertCookiesAccepted />
 
-      {loadContractDone && (
-        <Fragment>
-          <Toaster
-            position="bottom-left"
-            reverseOrder={true}
-            toastOptions={{
-              style: {
-                borderRadius: 0,
-                padding: "8px",
-                color: "#000",
-                background: "#7AE7FF",
-              },
-            }}
-          />
+      {/* {loadContractDone && ( */}
+      <Fragment>
+        <Toaster
+          position="bottom-left"
+          reverseOrder={true}
+          toastOptions={{
+            style: {
+              borderRadius: 0,
+              padding: "8px",
+              color: "#000",
+              background: "#7AE7FF",
+            },
+          }}
+        />
 
-          <Router />
-        </Fragment>
-      )}
+        <Router />
+      </Fragment>
+      {/* )} */}
     </>
   );
 };

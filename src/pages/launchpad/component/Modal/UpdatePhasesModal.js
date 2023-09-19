@@ -26,6 +26,7 @@ import { FINALIZED } from "@constants";
 import { useDispatch } from "react-redux";
 import { clearTxStatus } from "@store/actions/txStatus";
 import Loader from "@components/Loader/CommonLoader";
+import { getPublicCurrentAccount } from "../../../../utils";
 
 const UpdatePhasesModal = React.memo(function ({
   isOpen,
@@ -35,7 +36,7 @@ const UpdatePhasesModal = React.memo(function ({
   startTime,
   endTime,
 }) {
-  const { currentAccount, api, chainDecimal } = useSubstrateState();
+  const { currentAccount, api, chainDecimal, apiState } = useSubstrateState();
   const dispatch = useDispatch();
 
   const [initialValues, setInitialValues] = useState({
@@ -55,77 +56,95 @@ const UpdatePhasesModal = React.memo(function ({
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(
+    async (isUnmounted) => {
+      setLoading(true);
 
-    let initialValuesData = {};
+      let initialValuesData = {};
 
-    try {
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        collection_address
-      );
-
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const availableTokenAmount =
-        await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
-          currentAccount
+      try {
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          collection_address
         );
 
-      const totalPhase =
-        await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
+        launchpad_psp34_nft_standard_calls.setContract(
+          launchpad_psp34_nft_standard_contract
+        );
 
-      let phasesTmp = [];
-
-      for (let i = 1; i <= totalPhase; i++) {
-        let phaseSchedule =
-          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-            currentAccount,
-            i
+        const availableTokenAmount =
+          await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+            getPublicCurrentAccount()
           );
 
-        if (phaseSchedule.isActive) {
-          let phaseInfo = {
-            availableTokenAmount: strToNumber(availableTokenAmount),
-            currPublicAmount: strToNumber(phaseSchedule?.publicMintingAmount),
-            id: i,
-            // canEdit: false,
-            name: phaseSchedule.title,
-            start: strToNumber(phaseSchedule.startTime),
-            end: strToNumber(phaseSchedule.endTime),
-            isPublic: phaseSchedule.isPublic,
-            publicAmount: strToNumber(phaseSchedule.publicMintingAmount),
-            publicMaxMintingAmount: strToNumber(
-              phaseSchedule.publicMaxMintingAmount
-            ),
-            publicMintingFee: convertStringToPrice(
-              phaseSchedule.publicMintingFee,
-              chainDecimal
-            ),
-          };
+        const totalPhase =
+          await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+            getPublicCurrentAccount()
+          );
 
-          phasesTmp.push(phaseInfo);
+        let phasesTmp = [];
+
+        for (let i = 1; i <= totalPhase; i++) {
+          let phaseSchedule =
+            await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+              getPublicCurrentAccount(),
+              i
+            );
+
+          if (phaseSchedule.isActive) {
+            let phaseInfo = {
+              availableTokenAmount: strToNumber(availableTokenAmount),
+              currPublicAmount: strToNumber(phaseSchedule?.publicMintingAmount),
+              id: i,
+              // canEdit: false,
+              name: phaseSchedule.title,
+              start: strToNumber(phaseSchedule.startTime),
+              end: strToNumber(phaseSchedule.endTime),
+              isPublic: phaseSchedule.isPublic,
+              publicAmount: strToNumber(phaseSchedule.publicMintingAmount),
+              publicMaxMintingAmount: strToNumber(
+                phaseSchedule.publicMaxMintingAmount
+              ),
+              publicMintingFee: convertStringToPrice(
+                phaseSchedule.publicMintingFee,
+                chainDecimal
+              ),
+            };
+
+            phasesTmp.push(phaseInfo);
+          }
         }
+
+        initialValuesData.phases = phasesTmp;
+        if (isUnmounted) return;
+
+        setInitialValues(initialValuesData);
+        setCurrentPhaseId(currentPhaseId);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
       }
-
-      initialValuesData.phases = phasesTmp;
-
-      setInitialValues(initialValuesData);
-      setCurrentPhaseId(currentPhaseId);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  }, [api, chainDecimal, collection_address, currentAccount, currentPhaseId]);
+    },
+    [api, chainDecimal, collection_address, currentPhaseId]
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [api, currentAccount, collection_address, currentPhaseId, fetchData]);
+    let isUnmounted = false;
+
+    if (apiState !== "READY") return;
+
+    fetchData(isUnmounted);
+    return () => (isUnmounted = true);
+  }, [
+    apiState,
+    api,
+    currentAccount,
+    collection_address,
+    currentPhaseId,
+    fetchData,
+  ]);
 
   useEffect(() => {
     const reload = async () => {

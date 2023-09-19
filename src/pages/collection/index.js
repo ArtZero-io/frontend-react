@@ -42,6 +42,7 @@ import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 function CollectionPage() {
   const { chainDecimal } = useSubstrateState();
   const history = useHistory();
+  const { apiState } = useSubstrateState();
 
   const { search, state } = useLocation();
   const { collection_address } = useParams();
@@ -112,12 +113,14 @@ function CollectionPage() {
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     fetchCollectionInfo(isMounted);
 
     return () => (isMounted = false);
-  }, [fetchCollectionInfo]);
+  }, [fetchCollectionInfo, apiState]);
 
   useEffect(() => {
     if (state?.selectedItem) {
@@ -328,7 +331,7 @@ function CollectionPage() {
           setSortData={setSortData}
           keyword={keyword}
           setKeyword={setKeyword}
-          ref={ref}
+          loadMoreRef={ref}
           isFetchingNextPage={isFetchingNextPage}
           isLastPageResult={isLastPageResult}
         />
@@ -346,7 +349,7 @@ function CollectionPage() {
       <CollectionHeader {...data} {...collectionInfo} />
 
       <CommonTabs tabsData={tabsData} />
-      <HStack py={7} justifyContent="center" w="" full>
+      <HStack py={7} justifyContent="center" w="full">
         <div ref={ref}></div>
       </HStack>
     </Layout>

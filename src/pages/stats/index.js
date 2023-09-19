@@ -22,7 +22,7 @@ const INW_RATE = 120;
 const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
 
 function StatsPage() {
-  const { api, chainToken, chainDecimal } = useSubstrateState();
+  const { api, chainToken, chainDecimal, apiState } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -266,6 +266,8 @@ function StatsPage() {
 
   useEffect(() => {
     if (!platformStatistics || !topCollections) {
+      if (apiState !== "READY") return;
+
       setIsLoading(true);
       fetchAzeroPrice();
       prepareStats().then((data) => {
@@ -274,13 +276,13 @@ function StatsPage() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiState]);
 
   useInterval(() => {
     fetchAzeroPrice();
     prepareStats().then((data) => {
-      setPlatformStatistics(data.platformStatistics);
-      setTopCollections(data.topCollections);
+      setPlatformStatistics(data?.platformStatistics);
+      setTopCollections(data?.topCollections);
     });
   }, 60000);
 
