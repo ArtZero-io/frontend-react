@@ -55,6 +55,7 @@ function AddNewCollection({
 
       {variant === "navbar" && mode === formMode.ADD && (
         <Flex
+          cursor="pointer"
           to="#"
           alignItems="center"
           onClick={() => onOpen()}

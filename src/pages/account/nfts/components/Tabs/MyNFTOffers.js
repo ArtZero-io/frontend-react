@@ -12,7 +12,7 @@ import { acceptBid } from "@pages/token";
 import { getPublicCurrentAccount } from "@utils";
 
 function MyNFTOffer({ nftContractAddress, tokenID }) {
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
   const dispatch = useDispatch();
 
   const [bidders, setBidders] = useState(null);
@@ -41,6 +41,8 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
 
   const publicCurrentAccount = getPublicCurrentAccount();
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     const fetchBidder = async () => {
@@ -91,7 +93,7 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
     fetchBidder();
     return () => (isMounted = false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nftContractAddress, tokenID, currentAccount?.address]);
+  }, [apiState, nftContractAddress, tokenID, currentAccount?.address]);
 
   return (
     <>

@@ -10,7 +10,7 @@ import { TypeRegistry } from "@polkadot/types/create";
 import config from "./config";
 // eslint-disable-next-line no-unused-vars
 import { resolveDomain } from "..";
-import { toast } from "react-hot-toast";
+// import { toast } from "react-hot-toast";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -195,11 +195,11 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       }));
       console.log("asyncLoadAccounts A4", new Date());
       try {
-        toast(`Loading ${allAccounts?.length} accounts domain...`, {
-          style: {
-            minWidth: "180px",
-          },
-        });
+        // toast(`Loading ${allAccounts?.length} accounts domain...`, {
+        //   style: {
+        //     minWidth: "180px",
+        //   },
+        // });
 
         allAccounts = await Promise.all(
           allAccounts.map(async (item) => {
@@ -220,12 +220,11 @@ export const loadAccounts = async (state, dispatch, wallet) => {
           })
         );
 
-        console.log("asyncLoadAccounts allAccounts", allAccounts);
-        toast(`Load accounts domain...done!`, {
-          style: {
-            minWidth: "180px",
-          },
-        });
+        // toast(`Load accounts domain...done!`, {
+        //   style: {
+        //     minWidth: "180px",
+        //   },
+        // });
       } catch (error) {
         console.log("resolveDomain error", error);
       }

@@ -114,7 +114,8 @@ import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs
 
 function TokenPage() {
   const dispatch = useDispatch();
-  const { currentAccount, api, chainToken, chainDecimal } = useSubstrateState();
+  const { currentAccount, api, chainToken, chainDecimal, apiState } =
+    useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
@@ -287,17 +288,20 @@ function TokenPage() {
         setLoading(false);
       }
     },
-    [api, chainDecimal, collection_address, currentAccount, token_id]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [api, chainDecimal, apiState, collection_address, currentAccount, token_id]
   );
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     if (!currentAccount) {
       toast.error("Please connect wallet for full-function using!");
     }
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, currentAccount, token_id]);
+  }, [apiState, collection_address, currentAccount, token_id]);
 
   const handleBuyAction = async () => {
     try {

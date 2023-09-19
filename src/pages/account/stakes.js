@@ -37,7 +37,7 @@ import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import toast from "react-hot-toast";
 
 const MyStakesPage = () => {
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
 
   const [loading, setLoading] = useState(false);
   const [statsInfo, setStatsInfo] = useState(null);
@@ -50,6 +50,8 @@ const MyStakesPage = () => {
 
   const fetchCollectionDetail = useCallback(
     async (isMounted) => {
+      if (apiState !== "READY") return;
+
       setLoading(true);
 
       try {
@@ -137,7 +139,7 @@ const MyStakesPage = () => {
         setLoading(false);
       }
     },
-    [activeTab, api, currentAccount]
+    [activeTab, api, apiState, currentAccount]
   );
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(

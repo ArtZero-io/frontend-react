@@ -75,6 +75,7 @@ async function updateWhitelist(
   selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -154,6 +155,7 @@ async function addWhitelist(
   selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -233,6 +235,7 @@ async function addMultiWhitelists(
   selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -300,6 +303,7 @@ async function clearWhitelistPhase(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -548,6 +552,7 @@ async function editProjectInformation(
 
 async function mint(caller_account, mintAmount, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -597,6 +602,7 @@ async function publicMint(
   collection_address
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -866,6 +872,7 @@ async function grantAdminRoleToAddress(
 
 async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -965,6 +972,7 @@ async function addNewPhase(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -1038,6 +1046,7 @@ async function updateSchedulePhase(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -1100,6 +1109,7 @@ async function updateSchedulePhase(
 
 async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

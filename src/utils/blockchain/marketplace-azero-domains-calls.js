@@ -409,7 +409,7 @@ async function list(
       nft_contract_address,
       token_id,
       sale_price,
-      azDomainData
+      [97, 122, 101, 114, 111, 46, 105, 100, 45, 108, 111, 99, 107]
     )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
@@ -815,6 +815,7 @@ export const withdrawMarketplaceContract = async (
   receiver_address
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

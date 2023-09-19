@@ -91,6 +91,7 @@ async function approve(
   dispatch
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -152,6 +153,7 @@ async function transfer(
   dispatch
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }

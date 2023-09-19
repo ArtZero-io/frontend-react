@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 function ProfileHeader({ address }) {
   const dispatch = useDispatch();
 
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount, api, apiState } = useSubstrateState();
 
   const [profile, setProfile] = useState(null);
   const history = useHistory();
@@ -39,7 +39,7 @@ function ProfileHeader({ address }) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!api) return;
+      if (!api || apiState !== "READY") return;
 
       const res = await getProfileOnChain({
         callerAccount: getPublicCurrentAccount(),
@@ -57,14 +57,14 @@ function ProfileHeader({ address }) {
           };
         });
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     };
 
     if (!profile?.address || profile?.address !== address) {
       fetchProfile();
     }
-  }, [api, dispatch, profile, address]);
+  }, [api, apiState, dispatch, profile, address]);
 
   return (
     <Box

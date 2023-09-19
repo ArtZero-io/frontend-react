@@ -64,7 +64,7 @@ import {
 
 function GeneralPage() {
   const history = useHistory();
-  const { api, currentAccount, chainToken } = useSubstrateState();
+  const { api, apiState, currentAccount, chainToken } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -287,6 +287,8 @@ function GeneralPage() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
+    if (apiState !== "READY") return;
+
     let isMounted = true;
 
     const fetch = async () => {
@@ -317,11 +319,10 @@ function GeneralPage() {
 
     fetch();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => (isMounted = false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
+  }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
   const lastDay = useMemo(() => {
     const now = new Date();

@@ -228,9 +228,21 @@ const LaunchpadDetailPage = () => {
 
   const fetchPublicPhasesInfoData = useCallback(
     async (isUnmounted) => {
+      if (apiState !== "READY") return;
+
       setLoadingPhaseInfo(true);
 
       try {
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          collection_address
+        );
+
+        launchpad_psp34_nft_standard_calls.setContract(
+          launchpad_psp34_nft_standard_contract
+        );
+
         const totalPhase =
           await launchpad_psp34_nft_standard_calls.getLastPhaseId(
             getPublicCurrentAccount()
@@ -287,13 +299,10 @@ const LaunchpadDetailPage = () => {
         setLoadingPhaseInfo(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiState]
+    [api, collection_address, apiState]
   );
 
   useEffect(() => {
-    if (apiState !== "READY") return;
-
     let isUnmounted = false;
 
     fetchPublicPhasesInfoData(isUnmounted);

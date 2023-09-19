@@ -60,13 +60,14 @@ import useInterval from "use-interval";
 export default function App() {
   const { apiState } = useSubstrateState();
 
-  useEffect(() => {
-    toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
-      style: {
-        minWidth: "180px",
-      },
-    });
-  }, [apiState]);
+  // useEffect(() => {
+  //   (apiState === "READY" || apiState === "CONNECT_INIT") &&
+  //     toast(`Network ${apiState?.replaceAll("_", " ")?.toLowerCase()}`, {
+  //       style: {
+  //         minWidth: "180px",
+  //       },
+  //     });
+  // }, [apiState]);
 
   return (
     <ChakraProvider theme={theme}>

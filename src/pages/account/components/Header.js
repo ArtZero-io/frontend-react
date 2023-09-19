@@ -39,6 +39,8 @@ import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { formatNumberOutput } from "../../../utils";
+import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
+import contractData from "@utils/blockchain/";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -57,7 +59,8 @@ function ProfileHeader() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!api || apiState !== "READY") return;
+      if (!api || !contract) return;
+      await setProfileContract(api, contractData?.profile);
 
       const res = await dispatch(getProfile(currentAccount));
       if (res?.status === "OK") {
@@ -72,7 +75,7 @@ function ProfileHeader() {
           };
         });
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     };
 
@@ -98,7 +101,7 @@ function ProfileHeader() {
           };
         });
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     }
   );
@@ -106,7 +109,7 @@ function ProfileHeader() {
   const [claimAmount, setClaimAmount] = useState(0);
 
   const fetchMyBidHoldInfo = useCallback(async () => {
-    if (!api) return;
+    if (!api || apiState !== "READY") return;
 
     const queryResult = await execContractQuery(
       currentAccount?.address,
@@ -120,7 +123,7 @@ function ProfileHeader() {
     const amount = formatNumberOutput(queryResult) / 10 ** chainDecimal;
 
     setClaimAmount(amount);
-  }, [api, chainDecimal, currentAccount?.address]);
+  }, [api, chainDecimal, currentAccount?.address, apiState]);
 
   useEffect(() => {
     fetchMyBidHoldInfo();

@@ -41,6 +41,7 @@ async function addNewCollection(
   templateParams
 ) {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
@@ -527,10 +528,6 @@ async function getCollectionCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    // console.log(
-    //   "ArtZeroCollectionTrait::getCollectionCount formatOutput(output)",
-    //   formatOutput(output)
-    // );
     return formatOutput(output);
   }
   return null;
@@ -701,11 +698,6 @@ async function getAdvanceModeAddingFee(caller_account) {
   ](address, { gasLimit });
 
   if (result.isOk) {
-    // console.log(
-    //   "artZeroCollectionTrait::getAdvanceModeAddingFee",
-    //   formatOutput(output)
-    // );
-
     return formatOutput(output);
   }
   return null;
@@ -719,10 +711,6 @@ async function getMaxRoyaltyFeeRate(caller_account) {
   ](address, { gasLimit });
 
   if (result.isOk) {
-    // console.log(
-    //   "artZeroCollectionTrait::getMaxRoyaltyFeeRate",
-    //   formatOutput(output)
-    // );
     return formatOutput(output);
   }
   return null;
@@ -929,6 +917,7 @@ export const withdrawCollectionContract = async (
   api
 ) => {
   if (!contract || !caller_account) {
+    console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
     return null;
   }
