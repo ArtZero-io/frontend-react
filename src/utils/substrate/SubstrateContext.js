@@ -201,9 +201,9 @@ export const loadAccounts = async (state, dispatch, wallet) => {
           },
         });
 
-        allAccounts = await Promise.allSettled(
+        allAccounts = await Promise.all(
           allAccounts.map(async (item) => {
-            const addressDomain = await resolveDomain(item.address);
+            const addressDomain = await resolveDomain(item.address, api);
             console.log(
               "asyncLoadAccounts A4 addressDomain",
               addressDomain,
@@ -218,15 +218,8 @@ export const loadAccounts = async (state, dispatch, wallet) => {
               },
             };
           })
-        ).then((result) => {
-          console.log("asyncLoadAccounts A4 result", result, new Date());
+        );
 
-          return result.map((r, idx) => {
-            return result.status === "fulfilled"
-              ? result.status
-              : allAccounts[idx];
-          });
-        });
         console.log("asyncLoadAccounts allAccounts", allAccounts);
         toast(`Load accounts domain...done!`, {
           style: {
@@ -237,7 +230,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         console.log("resolveDomain error", error);
       }
 
-      console.log("asyncLoadAccounts A5", new Date());
+      console.log("asyncLoadAccounts A5", allAccounts, new Date());
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType, chainSS58 } =
         await retrieveChainInfo(api);
@@ -260,10 +253,12 @@ export const loadAccounts = async (state, dispatch, wallet) => {
 
       console.log("asyncLoadAccounts A6", new Date());
       try {
-        console.log("asyncLoadAccounts A7", new Date());
+        console.log("asyncLoadAccounts A7", allAccounts, new Date());
         Keyring.loadAll({ isDevelopment }, allAccounts);
+        console.log("asyncLoadAccounts A7", Keyring, new Date());
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
+          console.log("meta", meta);
           Keyring.saveAddress(address, meta);
         });
       }
@@ -272,7 +267,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       Keyring.setSS58Format(chainSS58);
 
       dispatch({ type: "SET_KEYRING", payload: Keyring });
-      console.log("asyncLoadAccounts A9", new Date());
+      console.log("asyncLoadAccounts A9", Keyring, new Date());
     } catch (e) {
       console.error(e);
       dispatch({ type: "KEYRING_ERROR" });

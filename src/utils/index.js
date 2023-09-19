@@ -758,17 +758,31 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
   }
 };
 
-export const resolveDomain = async (address) => {
+export const resolveDomain = async (address, customApi) => {
+  const option = {
+    chainId: SupportedChainId.AlephZeroTestnet,
+  };
+
+  if (customApi) {
+    option.customApi = customApi;
+  }
   if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
     try {
-      const domains = await resolveAddressToDomain(address, {
-        chainId: SupportedChainId.AlephZeroTestnet,
-      });
+      const { primaryDomain, error } = await resolveAddressToDomain(
+        address,
+        option
+      );
 
-      return domains[0];
+      if (error?.name) {
+        console.log("address", address);
+        console.log("error?.message", error?.message);
+        return undefined;
+      }
+
+      return primaryDomain;
     } catch (error) {
       console.log("resolveDomain error", error);
     }

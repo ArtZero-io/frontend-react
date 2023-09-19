@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState, useMemo } from "react";
 
 import {
@@ -7,17 +6,14 @@ import {
 } from "@utils/substrate/SubstrateContext";
 
 import WalletNotConnected from "./WalletNotConnected";
-import WalletMenu from "./WalletMenu";
 import {
   ChevronLeftIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  Bback,
 } from "@chakra-ui/icons";
 import {
   TagRightIcon,
   TagLabel,
-  Tag,
   Image,
   Menu,
   MenuButton,
@@ -25,9 +21,7 @@ import {
   MenuItem,
   Button,
   Flex,
-  Spacer,
   Text,
-  IconButton,
   useClipboard,
   useDisclosure,
   Drawer,
@@ -37,8 +31,14 @@ import {
   DrawerHeader,
   DrawerBody,
   useMediaQuery,
-  Input,
-  DrawerFooter,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  Heading,
+  ModalBody,
+  useBreakpointValue,
+  ModalOverlay,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
@@ -48,18 +48,13 @@ import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
-import AzeroSignerLogo from "@utils/wallets/AzeroSignerLogo.svg";
 import AzeroChain from "@theme/assets/icon/AzeroChain";
 import toast from "react-hot-toast";
 import { PiCopy } from "react-icons/pi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-import { useSelector } from "react-redux";
 import BN from "bn.js";
 import { shortenNumber } from "@utils";
-import { motion } from "framer-motion";
-// import toast from 'react-hot-toast';
-import { CopyIcon } from "@chakra-ui/icons";
 import * as ROUTES from "@constants/routes";
 import { formMode } from "@constants";
 import { Link as ReactRouterLink } from "react-router-dom";
@@ -73,6 +68,7 @@ import MenuActivityIcon from "@theme/assets/icon/MenuActivity.js";
 import MenuDisconnectIcon from "@theme/assets/icon/MenuDisconnect.js";
 import MenuSwitchIcon from "@theme/assets/icon/MenuSwitch.js";
 import ChainDropdown from "../Dropdown/ChainDropdown";
+import { SCROLLBAR } from "@constants";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();
@@ -324,14 +320,12 @@ function WalletSelector({ display }) {
             </Flex>
           </Flex>
 
-          <Flex borderBottom="2px #303030 solid" p="20px" pt="12px" pb="18px">
+          <Flex p="20px" pb="12px" display="flex" flexDirection="column">
             <WalletSubmenu
               keyringOptions={keyringOptions}
               selectAccountHandler={selectAccountHandler}
             />
-          </Flex>
 
-          <Flex p="20px" pb="12px" display="flex" flexDirection="column">
             {myAccountList?.slice(0, 1)?.map((item, idx) => (
               <MenuItem
                 to="#"
@@ -403,6 +397,8 @@ function WalletSelector({ display }) {
       onCopy={onCopy}
       accountBalance={accountBalance}
       logoutHandler={logoutHandler}
+      keyringOptions={keyringOptions}
+      selectAccountHandler={selectAccountHandler}
     />
   );
 }
@@ -450,85 +446,164 @@ const myAccountList = [
 
 function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
   const { currentAccount } = useSubstrateState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const modalSize = useBreakpointValue(["xs", "md"]);
 
   return (
-    <Menu placement="left-start" offset={[0, 30]}>
-      <MenuButton
-        disabled={keyringOptions?.length === 1}
-        _hover={{ color: "brand.blue", bg: "black" }}
+    <>
+      <Flex
+        alignItems="center"
         w="full"
-        h="48px"
+        h={["54px", "48px"]}
+        cursor="pointer"
+        color="white"
+        fontFamily="Evogria, sans-serif"
+        _hover={{ color: "brand.blue", bg: "black" }}
+        ml={["0px", "auto"]}
+        py={["4px", "12px"]}
+        px={["0px", "10px"]}
+        fontSize={{ base: "18px", md: "16px" }}
+        onClick={() =>
+          keyringOptions?.length === 1
+            ? toast("You have only 1 account!")
+            : onOpen()
+        }
       >
-        <MenuItem
-          isDisabled={keyringOptions?.length === 1}
-          color="white"
-          ml={["20px", "auto"]}
-          py={["4px", "12px"]}
-          px={["4px", "10px"]}
-          fontSize={{ base: "18px", md: "15px" }}
+        <MenuSwitchIcon />
+        <Text ml="10px">switch account</Text>
+      </Flex>
+      <Modal
+        isCentered
+        size={modalSize}
+        scrollBehavior={"inside"}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay
+          bg="blackAlpha.300"
+          backdropFilter="blur(10px) hue-rotate(90deg)"
+        />
+        <ModalContent
+          borderRadius="0"
+          position="relative"
+          bg="brand.grayDark"
+          px={["4px", "24px", "24px"]}
+          py={["4px", "14px"]}
         >
-          <MenuSwitchIcon />
-          <Text ml="10px">Switch Account</Text>
-        </MenuItem>
-      </MenuButton>
-      <MenuList
-        minW="260px"
-        display="flex"
-        bg="#222"
-        flexDirection="column"
-        borderRadius="0"
-        borderWidth="2px"
-        borderColor="brand.blue"
-        px={["4px", "10px"]}
-      >
-        {keyringOptions?.map(({ address, name, addressDomain }) => (
-          <MenuItem
-            to="#"
-            key={address}
-            ml={["20px", "auto"]}
-            px={["4px", "10px"]}
-            py={["4px"]}
-            as={ReactRouterLink}
-            fontFamily="Evogria, sans-serif"
-            fontSize={{ base: "18px", md: "15px" }}
-            _hover={{ color: "brand.blue", bg: "black" }}
-            onClick={() => selectAccountHandler(address)}
-            display={currentAccount?.address === address ? "none" : ""}
-          >
-            <Flex w="full" h="40px" justifyContent="start" alignItems="center">
-              <Text
-                isTruncated
-                maxW="120px"
-                minW="120px"
-                mr="10px"
-                color="#fff"
-                fontSize="15px"
-                textAlign="left"
-                lineHeight="20px"
-                textTransform="lowercase"
-                fontFamily="Evogria,sans-serif"
-              >
-                {name}
-              </Text>
-              <Text
-                fontSize="15px"
-                lineHeight="20px"
-                textTransform="none"
-                fontFamily="Oswald, sans-serif"
-              >
-                {addressDomain ?? truncateStr(address, 5)}
-              </Text>
+          <ModalCloseButton
+            borderWidth={2}
+            borderRadius="0"
+            position="absolute"
+            _hover="none"
+            bg="#171717"
+            top="4"
+            right="4"
+          />
+
+          <ModalHeader textAlign="center" borderBottom="2px #303030 solid">
+            <Heading fontSize={["xl", "24px"]}>choose account</Heading>
+          </ModalHeader>
+
+          <ModalBody px="0px" w="full" overflowY="auto" sx={SCROLLBAR}>
+            <Flex
+              w="full"
+              minW="260px"
+              display="flex"
+              bg="#222"
+              flexDirection="column"
+            >
+              {keyringOptions?.map(({ address, name, addressDomain }) => (
+                <Flex
+                  w="full"
+                  to="#"
+                  key={address}
+                  py={["4px"]}
+                  as={ReactRouterLink}
+                  fontFamily="Evogria, sans-serif"
+                  fontSize={{ base: "18px", md: "15px" }}
+                  _hover={{ color: "brand.blue", bg: "black" }}
+                  onClick={() => {
+                    selectAccountHandler(address);
+                    onClose();
+                  }}
+                  display={currentAccount?.address === address ? "none" : ""}
+                >
+                  <Flex alignItems="center" pl="10px">
+                    <Flex
+                      width="40px"
+                      height="40px"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      {currentAccount?.meta?.source === "subwallet-js" && (
+                        <Image
+                          src={SubwalletLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )}
+                      {currentAccount?.meta?.source === "polkadot-js" && (
+                        <Image
+                          src={PolkadotjsLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )}
+                      {currentAccount?.meta?.source === "aleph-zero-signer" && (
+                        <AzeroChain />
+                      )}
+                    </Flex>
+                    <Flex
+                      pl="10px"
+                      w="full"
+                      h="70px"
+                      alignItems="start"
+                      flexDirection="column"
+                      justifyContent="center"
+                    >
+                      <Text
+                        isTruncated
+                        maxW="90%"
+                        minW="90%"
+                        mr="10px"
+                        mb="4px"
+                        color="#fff"
+                        fontSize="15px"
+                        textAlign="left"
+                        lineHeight="20px"
+                        textTransform="lowercase"
+                        fontFamily="Evogria,sans-serif"
+                      >
+                        {name}
+                      </Text>
+                      <Text
+                        fontSize="16px"
+                        lineHeight="20px"
+                        textTransform="none"
+                        fontFamily="Oswald, sans-serif"
+                      >
+                        {addressDomain ?? truncateStr(address, 5)}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              ))}
             </Flex>
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
 
-function WalletSubDrawer({ display, onCopy, accountBalance, logoutHandler }) {
+function WalletSubDrawer({
+  display,
+  onCopy,
+  accountBalance,
+  logoutHandler,
+  keyringOptions,
+  selectAccountHandler,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
   const history = useHistory();
 
   return (
@@ -667,7 +742,7 @@ function WalletSubDrawer({ display, onCopy, accountBalance, logoutHandler }) {
                   >
                     <Flex>
                       <Text
-                        maxW="120px"
+                        maxW="200px"
                         color="#fff"
                         fontSize="15px"
                         textAlign="left"
@@ -702,19 +777,11 @@ function WalletSubDrawer({ display, onCopy, accountBalance, logoutHandler }) {
                 </Flex>
               </Flex>
 
-              {/* <Flex
-                borderBottom="2px #303030 solid"
-                p="20px"
-                pt="12px"
-                pb="18px"
-              >
+              <Flex pb="12px" display="flex" flexDirection="column">
                 <WalletSubmenu
                   keyringOptions={keyringOptions}
                   selectAccountHandler={selectAccountHandler}
                 />
-              </Flex> */}
-
-              <Flex pb="12px" display="flex" flexDirection="column">
                 {myAccountList?.slice(0, 1)?.map((item, idx) => (
                   <Flex
                     h="54px"
@@ -722,7 +789,6 @@ function WalletSubDrawer({ display, onCopy, accountBalance, logoutHandler }) {
                     to="#"
                     key={idx}
                     py={["4px", "12px"]}
-                    // p={["4px", "10px"]}
                     as={ReactRouterLink}
                     fontFamily="Evogria, sans-serif"
                     fontSize={{ base: "18px", md: "15px" }}
