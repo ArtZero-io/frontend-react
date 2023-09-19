@@ -34,7 +34,7 @@ import { SCROLLBAR } from "@constants";
 function ProjectAdmin() {
   const dispatch = useDispatch();
 
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   const [collectionCount, setCollectionCount] = useState(0);
 
@@ -61,7 +61,7 @@ function ProjectAdmin() {
 
   const onGetCollectionContractAdmin = async () => {
     const checkIsAdmin = async ({ address }) => {
-      if (!api) return;
+      if (!api || apiState !== "READY") return;
 
       const queryResult1 = await execContractQuery(
         currentAccount?.address,
@@ -73,7 +73,7 @@ function ProjectAdmin() {
         address
       );
 
-      return queryResult1.toHuman().Ok;
+      return queryResult1?.toHuman()?.Ok;
     };
     const isLPAdmin = await checkIsAdmin({
       address: currentAccount?.address,

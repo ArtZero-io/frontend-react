@@ -10,6 +10,7 @@ import { TypeRegistry } from "@polkadot/types/create";
 import config from "./config";
 // eslint-disable-next-line no-unused-vars
 import { resolveDomain } from "..";
+import { toast } from "react-hot-toast";
 // import { toast } from "react-hot-toast";
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -185,6 +186,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       console.log("asyncLoadAccounts A1", new Date());
 
       await web3Enable(config.APP_NAME, [], wallet);
+      console.log("web3Enable...");
 
       console.log("asyncLoadAccounts A2", new Date());
       let allAccounts = await web3Accounts();
@@ -195,11 +197,11 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       }));
       console.log("asyncLoadAccounts A4", new Date());
       try {
-        // toast(`Loading ${allAccounts?.length} accounts domain...`, {
-        //   style: {
-        //     minWidth: "180px",
-        //   },
-        // });
+        toast.success(
+          `Loading ${allAccounts?.length} account${
+            allAccounts?.length > 1 ? "s" : ""
+          } ...`
+        );
 
         allAccounts = await Promise.all(
           allAccounts.map(async (item) => {

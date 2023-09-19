@@ -20,8 +20,9 @@ import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import TxHistory from "../Tab/TxHistory";
 import PrevArrowIcon from "@theme/assets/icon/PrevArrow";
 import AzeroDomainsNFTTabCollectible from "../../../azero-domains/collection/component/Tab/Collectible";
-import { isAzeroDomainCollection } from "@utils";
 import MyAzeroDomainsNFTOffer from "@pages/account/azero-domains/components/Tabs/MyNFTOffers";
+import { artzero_nft, azero_domains_nft } from "@utils/blockchain/abi";
+import { isAzeroDomainCollection } from "@utils";
 
 function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -121,7 +122,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
               position="absolute"
               left="17px"
               bottom="0"
-              onClick={() => handleNav(rest?.tokenID, -1)}
+              onClick={() => handleNav(rest?.azDomainName || rest?.tokenID, -1)}
             >
               <PrevArrowIcon />
             </Flex>
@@ -138,7 +139,7 @@ function NFTDetailModal({ isOpen, onClose, handleNav, ...rest }) {
               position="absolute"
               right="17px"
               bottom="0"
-              onClick={() => handleNav(rest?.tokenID, 1)}
+              onClick={() => handleNav(rest?.azDomainName || rest?.tokenID, 1)}
             >
               <PrevArrowIcon />
             </Flex>

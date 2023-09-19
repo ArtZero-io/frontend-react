@@ -32,7 +32,7 @@ import { fetchUserBalance } from "@utils";
 let collection_count = 0;
 
 function CollectionAdmin() {
-  const { api, currentAccount } = useSubstrateState();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   const [collectionCount, setCollectionCount] = useState(null);
 
@@ -46,6 +46,8 @@ function CollectionAdmin() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const getCollectionContractBalance = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     const { balance } = await fetchUserBalance({
       currentAccount,
       api,
@@ -53,19 +55,21 @@ function CollectionAdmin() {
     });
 
     setCollectionContractBalance(balance);
-  }, [api, currentAccount]);
+  }, [api, apiState, currentAccount]);
 
   const onGetCollectionContractOwner = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     let res = await collection_manager_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
-  }, [currentAccount]);
+  }, [api, apiState, currentAccount]);
 
   const isOwner = collectionContractOwner === currentAccount?.address;
 
   const onGetCollectionContractAdmin = useCallback(async () => {
     const checkIsAdmin = async ({ address }) => {
-      if (!api) return;
+      if (!api || apiState !== "READY") return;
 
       const queryResult1 = await execContractQuery(
         currentAccount?.address,
@@ -77,7 +81,7 @@ function CollectionAdmin() {
         address
       );
 
-      return queryResult1.toHuman().Ok;
+      return queryResult1?.toHuman()?.Ok;
     };
 
     const isCollectionAdmin = await checkIsAdmin({
@@ -86,16 +90,18 @@ function CollectionAdmin() {
 
     setIsCollectionAdmin(isCollectionAdmin);
     return;
-  }, [api, currentAccount?.address]);
+  }, [api, apiState, currentAccount?.address]);
 
   const onGetCollectionCount = useCallback(async () => {
+    if (!api || apiState !== "READY") return;
+
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
 
     if (res) {
       collection_count = res;
       setCollectionCount(res);
     } else setCollectionCount(0);
-  }, [currentAccount]);
+  }, [api, apiState, currentAccount]);
 
   const getAllCollections = useCallback(async () => {
     const options_active = {
@@ -148,7 +154,7 @@ function CollectionAdmin() {
       setLoading(false);
     }
   }, [
-    api.query.system,
+    api?.query?.system,
     currentAccount,
     getAllCollections,
     getCollectionContractBalance,
