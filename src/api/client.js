@@ -154,12 +154,16 @@ export const APICall = {
   },
 
   // top nft trades API Calls
-  getTopNftTrades: async ({ limit = 20, order = ["price DESC"] }) => {
+  getTopNftTrades: async (options) => {
     return clientWithGetParams("GET", "/api/top-nft-trades", {
-      filter: {
-        limit,
-        order,
-      },
+      filter: { ...options },
+    });
+  },
+
+  // user-buy-sell-event API Calls
+  getUserBuySellEvent: async (options) => {
+    return clientWithGetParams("GET", "/api/user-buy-sell-event", {
+      filter: { ...options },
     });
   },
 

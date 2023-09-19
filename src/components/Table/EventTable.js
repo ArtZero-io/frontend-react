@@ -23,12 +23,12 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 
-function EventTable({ tableHeaders, tableData }) {
-  const { chainToken } = useSubstrateState();
+function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+  const { apiState, chainToken } = useSubstrateState();
 
   return (
     <>
-      {tableData?.length === 0 ? (
+      {apiState !== "READY" || tableData?.length === 0 ? (
         <Heading py="30px" size="h6">
           No event found!
         </Heading>
