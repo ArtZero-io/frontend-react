@@ -154,7 +154,7 @@ function MyNFTGroupCard({
             </Text>
           </VStack>
 
-          {!isMobile && filterSelected === "BIDS" && (
+          {!isMobile && filterSelected === "BIDS" && type !== "public" && (
             <CommonButton
               size="sm"
               {...restStatus}
@@ -163,7 +163,7 @@ function MyNFTGroupCard({
             />
           )}
         </Flex>
-        {isMobile && filterSelected === "BIDS" && (
+        {isMobile && filterSelected === "BIDS" && type !== "public" && (
           <CommonButton
             size="sm"
             {...restStatus}

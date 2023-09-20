@@ -152,7 +152,7 @@ const DesktopNavContent = (props) => {
         alignItems="center"
         justifyContent={{
           base: "flex-start",
-          md: "space-between",
+          md: "space-evenly",
           "2xl": "center",
         }}
         spacing={{ base: "20px", "2xl": "40px" }}
@@ -255,7 +255,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               />
             ))}
 
-            <C14Modal />
+            {isAleph && <C14Modal />}
           </DrawerBody>
 
           <DrawerFooter>

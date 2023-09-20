@@ -323,6 +323,8 @@ const SubstrateContextProvider = (props) => {
     const { apiState, keyringState } = state;
 
     if (apiState === "READY" && !keyringState && !keyringLoadAll) {
+      console.log("SubstrateContextProvider loadAccounts...");
+
       keyringLoadAll = true;
       state?.currentAccount?.address &&
         loadAccounts(state, dispatch, state?.selectedExtension);

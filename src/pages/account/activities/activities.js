@@ -277,9 +277,9 @@ const EventTableWrapper = ({ type, tableHeaders }) => {
 
 const dropDownMobileOptions = {
   BUY: "buy",
+  SELL: "sell",
   LIST: "list",
   UNLIST: "unlist",
-  SELL: "sell",
 };
 
 const headers = {
