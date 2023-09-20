@@ -32,7 +32,11 @@ import CommonButton from "@components/Button/CommonButton";
 
 import { marketplace } from "@utils/blockchain/abi";
 import { delay } from "@utils";
-import { execContractQuery, execContractTx } from "../nfts/nfts";
+import {
+  execContractQuery,
+  execContractTx,
+  formatQueryResultToNumber,
+} from "@utils/blockchain/profile_calls";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { PublicProfileLinkCopier } from "@components/AddressCopier/AddressCopier";

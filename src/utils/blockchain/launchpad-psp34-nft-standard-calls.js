@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
+
 import { APICall } from "../../api/client";
 import { isValidAddressPolkadotAddress } from "@utils";
 import launchpad_contract_calls from "./launchpad-contract-calls";
@@ -22,6 +22,12 @@ let contract;
 
 export const setContract = (c) => {
   contract = c;
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 async function getTotalSupply(caller_account) {
@@ -94,7 +100,7 @@ async function updateWhitelist(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   const minting_fee = convertToBNString(price, getChainDecimal(contract));
@@ -174,7 +180,7 @@ async function addWhitelist(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   const minting_fee = convertToBNString(price, getChainDecimal(contract));
@@ -244,7 +250,7 @@ async function addMultiWhitelists(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -312,7 +318,7 @@ async function clearWhitelistPhase(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -510,7 +516,6 @@ async function editProjectInformation(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -561,7 +566,7 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -611,10 +616,8 @@ async function publicMint(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = convertToBNString(mintingFee, getChainDecimal(contract));
-
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -686,7 +689,6 @@ async function whitelistMint(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = convertToBNString(mintingFee, getChainDecimal(contract));
 
@@ -775,7 +777,6 @@ async function updateAdminAddress(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -828,7 +829,6 @@ async function grantAdminRoleToAddress(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -881,7 +881,7 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -981,7 +981,7 @@ async function addNewPhase(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   publicMintingFee = convertToBNString(
@@ -1055,7 +1055,7 @@ async function updateSchedulePhase(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   publicMintingFee = convertToBNString(
@@ -1118,7 +1118,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -1272,7 +1272,6 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 

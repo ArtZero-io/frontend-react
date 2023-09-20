@@ -1,5 +1,4 @@
 import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
 
@@ -22,6 +21,12 @@ let contract;
 
 export const setContract = (c) => {
   contract = c;
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 async function getTotalSupply(caller_account) {
@@ -73,7 +78,6 @@ async function mint(caller_account) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -163,7 +167,6 @@ async function mintWithAttributes(
   }
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -333,7 +336,7 @@ async function approve(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(
@@ -403,7 +406,7 @@ async function setMultipleAttributesNFT(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
   gasLimit = await getEstimatedGas(

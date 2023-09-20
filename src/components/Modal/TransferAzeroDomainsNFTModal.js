@@ -15,14 +15,14 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
+
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -45,6 +45,8 @@ function TransferAzeroDomainsNFTModal({
   isDisabled = false,
   showOnChainMetadata,
 }) {
+  const { adapter } = useSubstrate();
+
   const dispatch = useDispatch();
   const { api, currentAccount, chainToken } = useSubstrateState();
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -75,7 +77,7 @@ function TransferAzeroDomainsNFTModal({
       let gasLimit;
 
       const address = currentAccount?.address;
-      const { signer } = await web3FromSource(currentAccount?.meta?.source);
+
       const value = 0;
 
       let additionalData = "";
@@ -98,7 +100,7 @@ function TransferAzeroDomainsNFTModal({
       )
         .signAndSend(
           currentAccount?.address,
-          { signer },
+          { signer: adapter.signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,

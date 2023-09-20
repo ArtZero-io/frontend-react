@@ -13,14 +13,14 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 import { ContractPromise } from "@polkadot/api-contract";
 import { nft721_psp34_standard } from "@utils/blockchain/abi";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
+
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -40,6 +40,8 @@ function LockNFTModalMobile({
   isDisabled = false,
   showOnChainMetadata,
 }) {
+  const { adapter } = useSubstrate();
+
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -63,7 +65,6 @@ function LockNFTModalMobile({
       let gasLimit;
 
       const address = currentAccount?.address;
-      const { signer } = await web3FromSource(currentAccount?.meta?.source);
       const value = 0;
 
       gasLimit = await getEstimatedGas(
@@ -71,9 +72,7 @@ function LockNFTModalMobile({
         contract,
         value,
         "psp34Traits::lock",
-        {
-          u64: tokenID,
-        }
+        { u64: tokenID }
       );
 
       await contract.tx["psp34Traits::lock"](
@@ -82,7 +81,7 @@ function LockNFTModalMobile({
       )
         .signAndSend(
           currentAccount?.address,
-          { signer },
+          { signer: adapter.signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,

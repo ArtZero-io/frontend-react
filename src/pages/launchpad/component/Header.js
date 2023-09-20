@@ -43,7 +43,7 @@ import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import { launchpad_psp34_nft_standard } from "@utils/blockchain/abi";
 import { useEffect } from "react";
-import { execContractQuery } from "../../account/nfts/nfts";
+import { execContractQuery } from "@utils/blockchain/profile_calls";
 import { useMemo } from "react";
 import { APICall } from "../../../api/client";
 import LaunchpadEventModal from "./Modal/LaunchpadEventModal";

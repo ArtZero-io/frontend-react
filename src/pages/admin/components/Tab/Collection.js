@@ -24,8 +24,12 @@ import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { useCallback } from "react";
-import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
-import { isEmptyObj, isValidAddressPolkadotAddress } from "@utils";
+import {
+  execContractQuery,
+  execContractTx,
+} from "@utils/blockchain/profile_calls";
+import { isValidAddressPolkadotAddress } from "@utils";
+import { isEmptyObj } from "@utils";
 import { ipfsClient } from "@api/client";
 import { fetchUserBalance } from "@utils";
 

@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
-import { web3FromSource } from "../wallets/extension-dapp";
+
 import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { artzero_nft } from "@utils/blockchain/abi";
 import {
@@ -18,6 +18,12 @@ export const setStakingContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+};
+
+let signer;
+
+export const setSigner = (adapter) => {
+  signer = adapter?.signer;
 };
 
 //GETTERS
@@ -324,7 +330,6 @@ async function claimReward(caller_account, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -359,7 +364,6 @@ async function setClaimable(caller_account, account, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -400,7 +404,6 @@ async function addReward(caller_account, amount) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = convertToBNString(amount, getChainDecimal(contract));
 
@@ -449,7 +452,6 @@ async function updateIsLocked(caller_account, status) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -508,7 +510,6 @@ async function startRewardDistribution(caller_account) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -565,7 +566,6 @@ async function stopRewardDistribution(caller_account) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -623,7 +623,6 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -673,7 +672,6 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -729,7 +727,6 @@ async function requestUnstake(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 
@@ -784,7 +781,6 @@ async function cancelRequestUnstake(
   let gasLimit;
 
   const address = caller_account?.address;
-  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = 0;
 

@@ -31,9 +31,12 @@ import { UPDATE_ADMIN_ADDRESS, START, FINALIZED } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { isValidAddressPolkadotAddress } from "@utils";
 import toast from "react-hot-toast";
-import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
+import {
+  execContractQuery,
+  execContractTx,
+} from "@utils/blockchain/profile_calls";
 import { useCallback } from "react";
-// import { execContractTx } from "../../../account/nfts/nfts";
+
 import useForceUpdate from "@hooks/useForceUpdate";
 import { REVOKE_ADMIN_ADDRESS } from "../../../../constants";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
