@@ -65,7 +65,6 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -154,14 +153,14 @@ function MyNFTGroupCard({
             </Text>
           </VStack>
 
-          {!isMobile && filterSelected === "BIDS" && type !== "public" && (
+          {/* {!isMobile && filterSelected === "BIDS" && type !== "public" && (
             <CommonButton
               size="sm"
               {...restStatus}
               text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
               onClick={() => doBulkRemoveBids()}
             />
-          )}
+          )} */}
         </Flex>
         {isMobile && filterSelected === "BIDS" && type !== "public" && (
           <CommonButton
@@ -441,6 +440,15 @@ function GridNftA({
     listNFTFormatted,
   });
 
+  const {
+    multiDebidData,
+    showSlideMultiDebid,
+    doBulkRemoveBids,
+    handleSelectMultiDebid,
+  } = useBulkRemoveBids({
+    listNFTFormatted,
+  });
+
   // eslint-disable-next-line no-unused-vars
   const { loading: _loadingForceUpdate } = useForceUpdate(
     ["MULTI_TRANSFER", "MULTI_LISTING"],
@@ -536,6 +544,44 @@ function GridNftA({
         </motion.div>
       ) : null}
       {/*END MULTI DE-LISTING */}
+
+      {/* MULTI REMOVE-BID */}
+      {showSlideMultiDebid ? (
+        <motion.div
+          style={{
+            width: "100%",
+            position: "fixed",
+            bottom: "30px",
+            right: "0px",
+            zIndex: "10",
+          }}
+          animate={{
+            y: [0, 1.5, 0],
+            rotate: 0,
+            scale: [1, 1, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            curve: [0.42, 0, 0.58, 1],
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        >
+          <CommonButton
+            {...rest}
+            minH="content"
+            py="20px"
+            text={
+              <>
+                Remove { multiDebidData?.list.length > 1 ? 'bids': 'bid' } ID# <br />
+                {`${multiDebidData?.list?.toString()}`}
+              </>
+            }
+            onClick={() => doBulkRemoveBids()}
+          />
+        </motion.div>
+      ) : null}
+      {/*END MULTI REMOVE-BID */}
 
       {/* MULTI LISTING */}
       <Slide
@@ -709,7 +755,9 @@ function GridNftA({
                 shadow="md"
               >
                 <Heading size="h6" fontSize="14px">
-                  {multiTransferData?.listInfo?.length === 1 ? 'Transfer' : 'Bulk Transfer'}
+                  {multiTransferData?.listInfo?.length === 1
+                    ? "Transfer"
+                    : "Bulk Transfer"}
                 </Heading>
 
                 <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
@@ -789,7 +837,7 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => !bulkTxMode && onClickHandler(c)}
+              onClick={() => !bulkTxMode && onClickHandler(c)}             
             >
               <MyNFTCard
                 {...c}
@@ -803,6 +851,8 @@ function GridNftA({
                 filterSelected={filterSelected}
                 multiDelistData={multiDelistData}
                 handleSelectMultiDelist={handleSelectMultiDelist}
+                multiDebidData={multiDebidData}
+                handleSelectMultiDebid={handleSelectMultiDebid}
               />
             </GridItemA>
           ))}
