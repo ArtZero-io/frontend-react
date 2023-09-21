@@ -31,6 +31,7 @@ import {
   MAX_ITEM_STAKE,
   MAX_ITEM_BULK_LISTING,
   MAX_ITEM_BULK_TRANSFER,
+  MAX_BID_COUNT
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
@@ -155,12 +156,12 @@ function MyNFTCard({
     e.cancelBubble = true;
 
     const target = !multiDebidData?.list?.includes(tokenID);
-    if (target && multiDebidData?.list?.length >= MAX_ITEM_BULK_LISTING) {
+    if (target && multiDebidData?.list?.length >= MAX_BID_COUNT) {
       !multiDebidData?.list?.includes(tokenID) &&
       setIsMultiDebidCheckbox(false);
 
       return toast.error(
-        `Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`
+        `Max items allowed limited to ${MAX_BID_COUNT}!`
       );
     }
 
