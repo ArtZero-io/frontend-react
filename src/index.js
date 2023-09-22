@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import "rc-steps/assets/index.css";
 
 import { store } from "@store/store";
 import { SubstrateContextProvider } from "@utils/substrate";
