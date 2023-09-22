@@ -67,6 +67,7 @@
     "patch-package": "^6.4.7",
     "process": "^0.11.10",
     "qs": "^6.11.0",
+    "rc-steps": "^6.0.1",
     "react": "^17.0.2",
     "react-content-loader": "^6.2.0",
     "react-copy-to-clipboard": "^5.0.4",
