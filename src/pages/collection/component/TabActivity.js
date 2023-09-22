@@ -22,6 +22,7 @@ import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
 import azero_domains_nft from "../../../utils/blockchain/azero-domains-nft";
 import { resolveDomain, getTimestamp } from "@utils";
+import SortTableWrapper from "@components/Table/SortTableWrapper";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
@@ -30,32 +31,20 @@ function TabActivity({ collectionOwner, nftContractAddress }) {
     {
       label: "SALE",
       content: (
-        <NewEventTable
-          type="SALE"
-          collectionOwner={collectionOwner}
-          tableHeaders={headers.sale}
-          collection_address={nftContractAddress}
-        />
+        <SortTableWrapper type="SALE" collection_address={nftContractAddress} />
       ),
     },
     {
       label: "LIST",
       content: (
-        <NewEventTable
-          type="LIST"
-          collectionOwner={collectionOwner}
-          tableHeaders={headers.list}
-          collection_address={nftContractAddress}
-        />
+        <SortTableWrapper type="LIST" collection_address={nftContractAddress} />
       ),
     },
     {
       label: "UNLIST",
       content: (
-        <NewEventTable
+        <SortTableWrapper
           type="UNLIST"
-          collectionOwner={collectionOwner}
-          tableHeaders={headers.unlist}
           collection_address={nftContractAddress}
         />
       ),
@@ -132,195 +121,8 @@ function TabActivity({ collectionOwner, nftContractAddress }) {
 
 export default TabActivity;
 
-const NewEventTable = ({
-  type,
-  tableHeaders,
-  collection_address,
-  collectionOwner,
-}) => {
-  const { ref, inView } = useInView();
-  const { api } = useSubstrateState();
-
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
-
-  const fetchEvents = useCallback(
-    async ({ pageParam }) => {
-      if (pageParam === undefined) return;
-
-      let eventsList = [];
-
-      if (type === "SALE") {
-        let { ret } = await APICall.getUserBuySellEvent({
-          offset: pageParam,
-          order: ["blockNumber DESC"],
-          limit: NUMBER_NFT_PER_PAGE,
-          where: {
-            nftContractAddress: collection_address,
-          },
-        });
-
-        eventsList = ret;
-      }
-
-      if (type === "LIST") {
-        eventsList = await APICall.getNewListEvents({
-          collection_address,
-          offset: pageParam,
-          limit: NUMBER_NFT_PER_PAGE,
-        });
-      }
-
-      if (type === "UNLIST") {
-        eventsList = await APICall.getUnlistEvents({
-          collection_address,
-          offset: pageParam,
-          limit: NUMBER_NFT_PER_PAGE,
-        });
-      }
-
-      if (eventsList?.length > 0) {
-        eventsList = await Promise.all(
-          eventsList?.map(async ({ nftContractAddress, tokenID, ...rest }) => {
-            let options = {
-              collection_address: nftContractAddress,
-            };
-
-            if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
-              options.azDomainName = rest?.azDomainName;
-            } else {
-              options.token_id = tokenID;
-            }
-
-            const { status, ret } = await APICall.getNFTByID(options);
-
-            const buyerDomain = await resolveDomain(rest?.buyer, api);
-            const sellerDomain = await resolveDomain(rest?.seller, api);
-            const traderDomain = await resolveDomain(rest?.trader, api);
-
-            const eventFormatted = {
-              nftContractAddress,
-              tokenID,
-              ...rest,
-              buyerDomain,
-              sellerDomain,
-              traderDomain,
-            };
-
-            const timestamp = await getTimestamp(api, rest?.blockNumber);
-
-            if (timestamp) {
-              eventFormatted.timestamp = timestamp;
-            }
-
-            if (status === "OK") {
-              eventFormatted.nftName = ret[0]?.nftName;
-              eventFormatted.avatar = ret[0]?.avatar;
-            }
-            return eventFormatted;
-          })
-        );
-      }
-
-      return {
-        eventsList,
-        nextId: pageParam + NUMBER_NFT_PER_PAGE,
-      };
-    },
-    [api, collection_address, type]
-  );
-
-  const { hasNextPage, data, isFetchingNextPage, fetchNextPage, isLoading } =
-    useInfiniteQuery(
-      [`getEvents${type}`, collection_address],
-      ({ pageParam = 0 }) => fetchEvents({ pageParam }),
-      {
-        getNextPageParam: (lastPage) => {
-          if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
-            return undefined;
-          }
-          return lastPage.nextId || 0;
-        },
-      }
-    );
-
-  const dataFormatted = useMemo(
-    () =>
-      data?.pages?.reduce((a, b) => {
-        return a.concat(b?.eventsList);
-      }, []),
-    [data]
-  );
-
-  return (
-    <>
-      {isLoading ? (
-        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
-          <BeatLoader color="#7ae7ff" size="10px" />
-        </HStack>
-      ) : (
-        <EventTable
-          type={type}
-          collectionOwner={collectionOwner}
-          tableHeaders={tableHeaders}
-          tableData={dataFormatted}
-          ref={ref}
-        />
-      )}
-      {dataFormatted?.length ? (
-        <HStack pt="80px" pb="20px" justifyContent="center" w="full">
-          <Text ref={ref}>
-            {isFetchingNextPage ? (
-              <BeatLoader color="#7ae7ff" size="10px" />
-            ) : hasNextPage ? (
-              ""
-            ) : (
-              "Nothing more to load"
-            )}
-          </Text>
-        </HStack>
-      ) : (
-        ""
-      )}
-    </>
-  );
-};
-
 const dropDownMobileOptions = {
   SALE: "sale",
   LIST: "list",
   UNLIST: "unlist",
-};
-
-const headers = {
-  sale: {
-    nftName: "nft name",
-    avatar: "image",
-    price: "price",
-    platformFee: "platform Fee",
-    royaltyFee: "royalty fee",
-    seller: "seller",
-    buyer: "buyer",
-    // blockNumber: "block no#",
-    timestamp: "timestamp",
-  },
-  list: {
-    nftName: "nft name",
-    avatar: "image",
-    price: "price",
-    trader: "trader",
-    // blockNumber: "block no#",
-    timestamp: "timestamp",
-  },
-  unlist: {
-    nftName: "nft name",
-    avatar: "image",
-    trader: "trader",
-    // blockNumber: "block no#",
-    timestamp: "timestamp",
-  },
 };

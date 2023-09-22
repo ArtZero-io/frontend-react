@@ -178,7 +178,15 @@ const NFTTabCollectible = (props) => {
       toast.error("There is some error when fetching sale info!");
       console.log("error", error);
     }
-  }, [api, currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+  }, [
+    api,
+    
+    currentAccount,
+    is_for_sale,
+    nftContractAddress,
+    owner,
+    tokenID,
+  ]);
 
   const attrsList = !traits
     ? {}
