@@ -113,7 +113,7 @@ function GeneralPage() {
         staker_address: currentAccount.address,
       });
 
-      const stakerDomain = await resolveDomain(currentAccount.address);
+      const stakerDomain = await resolveDomain(currentAccount.address, api);
 
       rewards = rewards.map((item) => ({ ...item, stakerDomain }));
 
@@ -121,7 +121,7 @@ function GeneralPage() {
 
       rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
     },
-    [currentAccount]
+    [api, currentAccount.address]
   );
 
   const fetchAllNfts = useCallback(

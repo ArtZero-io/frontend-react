@@ -2217,6 +2217,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.46.0.tgz#3f7802972e8b6fe3f88ed1aabc74ec596c456db6"
   integrity sha512-a8TLtmPi8xzPkCbp/OGFUo5yhRkHM2Ko9kOWP4znJr0WAhWyThaw3PnwX4vOTWOAMsV2uRt32PPDcEz63esSaA==
 
+"@faker-js/faker@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-8.1.0.tgz#e14896f1c57af2495e341dc4c7bf04125c8aeafd"
+  integrity sha512-38DT60rumHfBYynif3lmtxMqMqmsOQIxQgEuPZxCk2yUYN0eqWpTACgxi0VpidvsJB8CRxCpvP7B3anK85FjtQ==
+
 "@fontsource/oswald@^4.5.7":
   version "4.5.12"
   resolved "https://registry.yarnpkg.com/@fontsource/oswald/-/oswald-4.5.12.tgz#9f42cb91591783ec1dd537df0507e7f29aa663fb"
@@ -3774,6 +3779,11 @@
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
+"@reach/observe-rect@^1.1.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
+  integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
+
 "@reach/utils@0.13.2":
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.13.2.tgz#87e8fef8ebfe583fa48250238a1a3ed03189fcc8"
@@ -4044,6 +4054,18 @@
   dependencies:
     "@tanstack/query-core" "4.32.6"
     use-sync-external-store "^1.2.0"
+
+"@tanstack/react-table@^8.10.0":
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.10.0.tgz#6ff84dfccdf6e567b87053f727f4b758a1a9aa01"
+  integrity sha512-FNhKE3525hryvuWw90xRbP16qNiq7OLJkDZopOKcwyktErLi1ibJzAN9DFwA/gR1br9SK4StXZh9JPvp9izrrQ==
+  dependencies:
+    "@tanstack/table-core" "8.10.0"
+
+"@tanstack/table-core@8.10.0":
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.10.0.tgz#d6e88157f536f7f29009670b207e60462c84be7f"
+  integrity sha512-e701yAJ18aGDP6mzVworlFAmQ+gi3Wtqx5mGZUe2BUv4W4D80dJxUfkHdtEGJ6GryAnlCCNTej7eaJiYmPhyYg==
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -12282,6 +12304,13 @@ react-tsparticles@^2.0.6:
   integrity sha512-6NhuND25vy0ryWod5bL1y2I4Xf7QX7Jwoh1TLzJvLK3BgJlRVVDH+TvuS1xU5SN+f/EJ6zJaFCPf9b2ytkdRLg==
   dependencies:
     tsparticles-engine "^2.12.0"
+
+react-virtual@^2.10.4:
+  version "2.10.4"
+  resolved "https://registry.yarnpkg.com/react-virtual/-/react-virtual-2.10.4.tgz#08712f0acd79d7d6f7c4726f05651a13b24d8704"
+  integrity sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==
+  dependencies:
+    "@reach/observe-rect" "^1.1.0"
 
 react@^16.13.1:
   version "16.14.0"

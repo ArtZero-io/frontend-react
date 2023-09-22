@@ -150,7 +150,7 @@ function MyNFTTabInfo(props) {
         setIsOwner(true);
       }
 
-      const name = await resolveDomain(accountAddress);
+      const name = await resolveDomain(accountAddress, api);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -163,6 +163,7 @@ function MyNFTTabInfo(props) {
       console.log("error", error);
     }
   }, [
+    api,
     chainDecimal,
     currentAccount,
     is_for_sale,
@@ -273,13 +274,13 @@ function MyNFTTabInfo(props) {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
 
-      const username = await resolveDomain(accountAddress);
+      const username = await resolveDomain(accountAddress, api);
 
       return setOwnerName(username || truncateStr(accountAddress, 6));
     };
 
     ownerName();
-  }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
+  }, [api, currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
 
   useEffect(() => {
     const fetchTradeFee = async () => {
