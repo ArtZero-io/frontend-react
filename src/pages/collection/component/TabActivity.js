@@ -22,6 +22,7 @@ import { BeatLoader } from "react-spinners";
 import { useSubstrateState } from "@utils/substrate";
 import { resolveDomain, getTimestamp } from "@utils";
 import { azero_domains_nft } from "@utils/blockchain/abi";
+import SortTable from "@components/Table/SortTable";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
@@ -261,7 +262,8 @@ const NewEventTable = ({
 
   return (
     <>
-      {isLoading ? (
+      <SortTable collection_address={collection_address} type={type} />
+      {/* {isLoading ? (
         <HStack pt="80px" pb="20px" justifyContent="center" w="full">
           <BeatLoader color="#7ae7ff" size="10px" />
         </HStack>
@@ -288,16 +290,15 @@ const NewEventTable = ({
         </HStack>
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 };
 
 const dropDownMobileOptions = {
-  PURCHASE: "sale",
+  SALE: "sale",
   LIST: "list",
   UNLIST: "unlist",
-  BID_ACCEPTED: "bid accepted",
 };
 
 const headers = {
