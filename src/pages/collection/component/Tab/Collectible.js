@@ -166,7 +166,7 @@ const NFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = await resolveDomain(accountAddress);
+      const name = await resolveDomain(accountAddress, api);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -178,6 +178,7 @@ const NFTTabCollectible = (props) => {
       console.log("error", error);
     }
   }, [
+    api,
     chainDecimal,
     currentAccount,
     is_for_sale,
