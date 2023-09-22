@@ -253,9 +253,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     return [
       {
         title: "PROJECT INFO",
-        description: "What your project is about?",
+        description: "Overview of your project",
         content: (
-          <CommonStack>
+          <CommonStack desc="What your project is about?">
             <Stack
               pb="30px"
               alignItems="start"
@@ -554,10 +554,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       },
       {
         title: "NFT INFO",
-        description: `The launchpad will create the NFT Smart Contract for you, to do so general information such as NFT Name, Symbol and Total Supply is required. Those info can not be changed after initial`,
+        description: `The launchpad create a Nft smart contract for you`,
         content: (
           <>
-            <CommonStack>
+            <CommonStack desc="To do this, we need key information such as NFT name, symbol, and total supply, which cannot be changed after the initial setup">
               <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                 <CommonInput
                   type="text"
@@ -594,22 +594,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       },
       mode === formMode.ADD && {
         title: "SALE PHASE INFO",
-        description: `A sale phase is a control mechanism that defines how you
-        will sell the NFT collection. You can add different
-        phases to control how you will sell the collection. By
-        default, you can add whitelist to every sale phase in
-        Administrator Page after the project creation. If Allow
-        public mint is selected, anyone can mint the NFT at
-        fixed price.`,
+        description: `A sale phase is your strategy for selling NFTs`,
         content: (
-          <CommonStack>
+          <CommonStack desc="You can customize each phase. By default, you can add whitelist buyers on the Administrator page. If you enable public minting, anyone can purchase NFTs at fixed price.">
             <AddPhase name="phases" mode={mode} isDisabled={actionType} />
           </CommonStack>
         ),
       },
       mode === formMode.ADD && {
         title: "CONTACT INFO",
-        description: "Enter the contact information",
+        description: "Please provide the contact information",
         content: (
           <>
             <CommonStack>
