@@ -35,6 +35,7 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
     selectedCollectionAddress,
   } = multiDebidData;
 
+  // Remove bids
   const doBulkRemoveBids = async () => {
     toast(`Bulk remove bids...`);
 
@@ -87,7 +88,7 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
         tokenIDArray: list,
       })
     );
-    
+
     api.tx.utility
       .batch(removeBidsTxALL)
       .signAndSend(
@@ -182,7 +183,8 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
     multiDebidData?.action,
     selectedCollectionAddress,
   ]);
-   
+
+  // Handle select multi remove bids
   function handleSelectMultiDebid(tokenID, action, isChecked) {
     let newData = { ...multiDebidData };
 
@@ -240,10 +242,71 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
     }
   }
 
+  // Handle select multi remove bids Azero Domains
+  function handleSelectMultiDebidAzeroDomains(azDomainName, action, isChecked) {
+    let newData = { ...multiDebidData };
+
+    let info = listNFTFormatted?.find(
+      (item) => item.azDomainName === azDomainName
+    );
+
+    // Initial data is empty
+    if (multiDebidData?.action === null) {
+      if (!isChecked) return;
+
+      newData.action = action;
+      newData.selectedCollectionAddress = info?.nftContractAddress;
+      newData.list = [azDomainName];
+      newData.listInfo = [{ price: null, info }];
+      setMultiDebidData(newData);
+      setMultiDebidActionMode(action);
+      return;
+    }
+
+    if (multiDebidData?.action !== action) {
+      return toast.error("Please select same action!");
+    }
+
+    const isExisted = multiDebidData?.list.includes(azDomainName);
+
+    if (isChecked) {
+      if (isExisted) return toast.error("This item is already added!");
+
+      const newList = multiDebidData?.list;
+      const newListInfo = multiDebidData?.listInfo;
+
+      newData.list = [...newList, azDomainName];
+      newData.listInfo = [...newListInfo, { price: null, info }];
+
+      setMultiDebidData(newData);
+      setMultiDebidActionMode(action);
+
+      return;
+    } else {
+      if (!isExisted) return toast.error("This item is not add yet!");
+
+      newData.list = multiDebidData?.list?.filter(
+        (item) => item !== azDomainName
+      );
+
+      const idxFound = multiDebidData?.list?.indexOf(azDomainName);
+      newData.listInfo = multiDebidData?.listInfo?.filter(
+        (_, idx) => idx !== idxFound
+      );
+      if (newData?.list?.length === 0) {
+        newData.action = null;
+      }
+
+      setMultiDebidData(newData);
+      setMultiDebidActionMode(action);
+    }
+  }
+
   return {
     multiDebidData,
     showSlideMultiDebid,
     doBulkRemoveBids,
     handleSelectMultiDebid,
+    handleSelectMultiDebidAzeroDomains,
   };
 }

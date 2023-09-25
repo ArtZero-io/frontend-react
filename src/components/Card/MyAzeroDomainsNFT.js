@@ -71,7 +71,7 @@ function MyAzeroDomainsNFTCard({
   multiDelistData,
   handleSelectMultiDelist,
   multiDebidData,
-  handleSelectMultiDebid,
+  handleSelectMultiDebidAzeroDomains,
 }) {
   const { currentAccount } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -156,9 +156,9 @@ function MyAzeroDomainsNFTCard({
     e.stopPropagation();
     e.cancelBubble = true;
 
-    const target = !multiDebidData?.list?.includes(tokenID);
+    const target = !multiDebidData?.list?.includes(azDomainName);
     if (target && multiDebidData?.list?.length >= MAX_BID_COUNT) {
-      !multiDebidData?.list?.includes(tokenID) &&
+      !multiDebidData?.list?.includes(azDomainName) &&
         setIsMultiDebidCheckbox(false);
 
       return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
@@ -170,7 +170,7 @@ function MyAzeroDomainsNFTCard({
       !multiDebidData?.action ||
       multiDebidData?.action === "MULTI_REMOVE_BIDS"
     ) {
-      handleSelectMultiDebid(tokenID, "MULTI_REMOVE_BIDS", target);
+      handleSelectMultiDebidAzeroDomains(azDomainName, "MULTI_REMOVE_BIDS", target);
       return;
     }
 

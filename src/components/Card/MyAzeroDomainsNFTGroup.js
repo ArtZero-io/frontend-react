@@ -456,7 +456,7 @@ function GridNftA({
     multiDebidData,
     showSlideMultiDebid,
     doBulkRemoveBids,
-    handleSelectMultiDebid,
+    handleSelectMultiDebidAzeroDomains,
   } = useBulkRemoveBids({
     listNFTFormatted,
   });
@@ -475,6 +475,7 @@ function GridNftA({
 
   const templateColumnsListing = isMobile ? "repeat(1, 1fr)" : "repeat(5, 1fr)";
   const templateRowsListing = isMobile ? "repeat(2, 1fr)" : "repeat(1, 1fr)";
+
   return (
     <>
       {multiStakeData?.action !== null ? (
@@ -585,7 +586,7 @@ function GridNftA({
             py="20px"
             text={
               <>
-                Remove {multiDebidData?.list.length > 1 ? "bids" : "bid"} ID#{" "}
+                Remove {multiDebidData?.list.length > 1 ? "bids" : "bid"} Name#{" "}
                 <br />
                 {`${multiDebidData?.list?.toString()}`}
               </>
@@ -869,7 +870,7 @@ function GridNftA({
                 multiDelistData={multiDelistData}
                 handleSelectMultiDelist={handleSelectMultiDelist}
                 multiDebidData={multiDebidData}
-                handleSelectMultiDebid={handleSelectMultiDebid}
+                handleSelectMultiDebidAzeroDomains={handleSelectMultiDebidAzeroDomains}
               />
             </GridItemA>
           ))}
