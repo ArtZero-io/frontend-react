@@ -82,6 +82,7 @@ import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "../../../../api/client";
 import { delay } from "../../../../utils";
 import Steps from "rc-steps";
+import { isMobile } from "react-device-detect";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -255,7 +256,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         title: "PROJECT INFO",
         description: "Overview of your project",
         content: (
-          <CommonStack desc="What your project is about?">
+          <CommonStack
+            desc={mode === formMode.ADD ? "What your project is about?" : ""}
+          >
             <Stack
               pb="30px"
               alignItems="start"
@@ -552,7 +555,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           </CommonStack>
         ),
       },
-      {
+      mode === formMode.ADD && {
         title: "NFT INFO",
         description: `The launchpad create a Nft smart contract for you`,
         content: (
@@ -1070,42 +1073,47 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         width: mode === formMode.ADD ? "100%" : "50%",
                       }}
                     >
-                      <Steps
-                        className={styles.step_create}
-                        current={current}
-                        items={stepItems(values, setFieldValue).map(
-                          (e, index) => ({
-                            ...e,
-                            icon:
-                              current > index ? (
-                                <Circle
-                                  size="40px"
-                                  bg="#151515"
-                                  border={"4px solid #93F0F5"}
-                                  color="#151515"
-                                >
-                                  <CheckIcon color={"#93F0F5"} />
-                                </Circle>
-                              ) : null,
-                          })
-                        )}
-                      ></Steps>
+                      {mode === formMode.ADD && (
+                        <Steps
+                          direction={isMobile ? "vertical" : "horizontal"}
+                          className={styles.step_create}
+                          current={current}
+                          items={stepItems(values, setFieldValue).map(
+                            (e, index) => ({
+                              ...e,
+                              icon:
+                                current > index ? (
+                                  <Circle
+                                    size="40px"
+                                    bg="#151515"
+                                    border={"4px solid #93F0F5"}
+                                    color="#151515"
+                                  >
+                                    <CheckIcon color={"#93F0F5"} />
+                                  </Circle>
+                                ) : null,
+                            })
+                          )}
+                        ></Steps>
+                      )}
                     </Box>
                     {stepItems(values, setFieldValue)[current].content}
                     <Box
                       sx={{ display: "flex", justifyContent: "center" }}
                       pb={{ base: "20px" }}
                     >
-                      <Button
-                        isDisabled={!(current > 0)}
-                        onClick={() =>
-                          setCurrent((prev) => setCurrent(prev - 1))
-                        }
-                      >
-                        Back
-                      </Button>
-                      {current == 1 && mode === formMode.EDIT ? (
-                        <Box px="10px" mb="30px">
+                      {mode === formMode.ADD && (
+                        <Button
+                          isDisabled={!(current > 0)}
+                          onClick={() =>
+                            setCurrent((prev) => setCurrent(prev - 1))
+                          }
+                        >
+                          Back
+                        </Button>
+                      )}
+                      {mode === formMode.EDIT ? (
+                        <Box px="10px" mb="30px" w="full">
                           {mode === formMode.EDIT && (
                             <Stack>
                               <CommonButton
