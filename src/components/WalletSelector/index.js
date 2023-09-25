@@ -249,7 +249,7 @@ function WalletSelector({ display }) {
                 mr="12px"
               >
                 <Image
-                  src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                  src="https://registry.nightly.app/wallets/nightly/default.png"
                   alt={currentAccount?.meta?.source}
                 />
               </Flex>
@@ -515,7 +515,7 @@ function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
                       justifyContent="center"
                     >
                       <Image
-                        src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                        src="https://registry.nightly.app/wallets/nightly/default.png"
                         alt={currentAccount?.meta?.source}
                       />
                     </Flex>
@@ -686,7 +686,7 @@ function WalletSubDrawer({
                     mr="12px"
                   >
                     <Image
-                      src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                      src="https://registry.nightly.app/wallets/nightly/default.png"
                       alt={currentAccount?.meta?.source}
                     />
                   </Flex>

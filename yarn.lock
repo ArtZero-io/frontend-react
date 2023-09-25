@@ -2529,13 +2529,6 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@lit-labs/motion@^1.0.3":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@lit-labs/motion/-/motion-1.0.4.tgz#6ced578999f4d968d27144445c2930b28eca3136"
-  integrity sha512-cZrA6u/qR71ZIqk0PGINBLWPDxT8oHB706QzWHJKo7nCOi3KCsd7CSuR5H09I0t6E+bd2nVB+zJPGd2wVjNSsA==
-  dependencies:
-    lit "^2.8.0"
-
 "@lit-labs/ssr-dom-shim@^1.0.0", "@lit-labs/ssr-dom-shim@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.1.1.tgz#64df34e2f12e68e78ac57e571d25ec07fa460ca9"
@@ -2608,10 +2601,10 @@
   dependencies:
     eslint-scope "5.1.1"
 
-"@nightlylabs/nightly-connect-base@0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-base/-/nightly-connect-base-0.0.24.tgz#7cfc5d5e9cf7152ed8c32fc7283b33d74aa1717d"
-  integrity sha512-Iqds6yzEfSCpIAkZrEmX9NCcYEMZ0fIX1PmqKJUkrISkvP8KvuWLgcEFLxnSRGaEfXxB2unQIcRMTmY6wDri2A==
+"@nightlylabs/nightly-connect-base@0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-base/-/nightly-connect-base-0.0.25.tgz#369571d60b6b0a365316099f7b5dc52d816e1a5a"
+  integrity sha512-E0NwUoBuyqzcnxSiLxEZAiujoUYhndwiprJ2bH615xkpPRRGiS/PGkfeoBtuZewV/6uhAcyQyW0+maCQqGKWog==
   dependencies:
     cross-fetch "^3.1.6"
     eventemitter3 "^5.0.1"
@@ -2620,12 +2613,12 @@
     uuid "^9.0.0"
     ws "^8.13.0"
 
-"@nightlylabs/nightly-connect-polkadot@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-polkadot/-/nightly-connect-polkadot-0.0.5.tgz#a268c9c34e7635dd58ab84d77c644381e40030eb"
-  integrity sha512-N5JOLxX97nb+3OyFWCgNEKAOOMnYPU97BGyXI6feuOHnCkkF/X1kBYNTHXwH4V69Ae3lwOX8vq4dRilbnnX+7g==
+"@nightlylabs/nightly-connect-polkadot@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-polkadot/-/nightly-connect-polkadot-0.0.6.tgz#605388a660232261b4f34994bb76ca6a146f81e8"
+  integrity sha512-QR4xNgcKNHcgiTjY3Y/wWfVskRMVhcIksEjoqPi2ZH34Ro8ucGyfLruhMh+uZY4xPLuSyllcutWIt3NGlkLViA==
   dependencies:
-    "@nightlylabs/nightly-connect-base" "0.0.24"
+    "@nightlylabs/nightly-connect-base" "0.0.25"
     "@polkadot/api" "^10.9.1"
     "@polkadot/extension-inject" "^0.46.5"
     "@polkadot/types" "^10.9.1"
@@ -2634,43 +2627,42 @@
     eventemitter3 "^5.0.1"
     uuid "^9.0.0"
 
-"@nightlylabs/qr-code@2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/qr-code/-/qr-code-2.0.3.tgz#3a5dd3ed7596fd8a18d5af5b3a3de8b72a3f7c0e"
-  integrity sha512-/FK3hRIIeXsMHlhzq68BHBURLdbtJNygaSCQMEYatpDFWmONseIItEQl6yyRksSE3Ti5RD24zZJ679NE8b7esQ==
+"@nightlylabs/qr-code@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/qr-code/-/qr-code-2.0.4.tgz#cf1389dca3a5b7d802c1f52c4f42bd627f420492"
+  integrity sha512-GU8u8Cm1Q5YnoB/kikM4whFQhJ7ZWKaazBm4wiZK9Qi64Ht9tyRVzASBbZRpeOZVzxwi7Mml5sz0hUKPEFMpdA==
   dependencies:
     qrcode-generator "^1.4.4"
 
-"@nightlylabs/wallet-selector-base@0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-base/-/wallet-selector-base-0.1.5.tgz#3d8e1227935f3cf9b5098bffa041bbb0b0945f1b"
-  integrity sha512-J6CwkP67w8wKuioTe7HvtSbNlzxr7pGWEB/StSjQGyTcuONn+OrNNBogduxRNouPtuGIhjxF3o/bmjTl8Fw7Ug==
+"@nightlylabs/wallet-selector-base@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-base/-/wallet-selector-base-0.2.2.tgz#755edf8971ab8d9179431b675265b1e559762a47"
+  integrity sha512-Xui3qxtMSzJ/GQEo9G21x8zowxLIQQfRhNmzSlRlxkv5waRNm4eW4BmegfE2DRXCVM2WzgbdP8RYRS20EKXrmQ==
   dependencies:
-    "@nightlylabs/nightly-connect-base" "0.0.24"
-    "@nightlylabs/wallet-selector-modal" "0.0.12"
+    "@nightlylabs/nightly-connect-base" "0.0.25"
+    "@nightlylabs/wallet-selector-modal" "0.1.2"
     "@wallet-standard/core" "^1.0.3"
     isomorphic-localstorage "^1.0.2"
 
-"@nightlylabs/wallet-selector-modal@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-modal/-/wallet-selector-modal-0.0.12.tgz#feded970300aea73fa3af856cfa3240cd009436a"
-  integrity sha512-42yAMhs8ioYJHdrum0OSDovkguiO7qq5g0tvWejSxXUj2wJu/FAjWPMixk6+sqEGNti2N1VWfV2dt8M+4dokeA==
+"@nightlylabs/wallet-selector-modal@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-modal/-/wallet-selector-modal-0.1.2.tgz#880b69e32ba387c53fb3699eca558efb7004c7fe"
+  integrity sha512-vxy9S2dEf3NARW6LDq2ZKpWMlk5JJFIuwUfSxkuJlgUg2OVSlnDS7vdho3h4DmluRU5GM9vVhaXUGHAVp5sDQg==
   dependencies:
-    "@lit-labs/motion" "^1.0.3"
-    "@nightlylabs/qr-code" "2.0.3"
+    "@nightlylabs/qr-code" "2.0.4"
     autoprefixer "^10.4.14"
     lit "^2.7.2"
     postcss "^8.4.24"
     postcss-lit "^1.1.0"
     tailwindcss "^3.3.2"
 
-"@nightlylabs/wallet-selector-polkadot@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-polkadot/-/wallet-selector-polkadot-0.0.7.tgz#e2d6df90a5fd3787af6ccfe81f35a3ced1fc23d5"
-  integrity sha512-A8z+zDBRTpqZDRJZCr7BlErOqYXqMWgl5Du40YIlr4kLtM9wxMssKdTF258eiyyNGjklkmf7Q+U5gjZ2HuSQDg==
+"@nightlylabs/wallet-selector-polkadot@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-polkadot/-/wallet-selector-polkadot-0.1.2.tgz#497e41e5736a93150e51de0e378442b473ec284b"
+  integrity sha512-j80gt6T64q1Zv2QwEPbMj0byNfGBN4Kpw0BB5mAQ+aRset65xrfgX40v56PiZD2w+URKWey6KIbYna3t6Yi4Qg==
   dependencies:
-    "@nightlylabs/nightly-connect-polkadot" "0.0.5"
-    "@nightlylabs/wallet-selector-base" "0.1.5"
+    "@nightlylabs/nightly-connect-polkadot" "0.0.6"
+    "@nightlylabs/wallet-selector-base" "0.2.2"
     "@polkadot/api" "10.9.1"
     "@polkadot/extension-inject" "0.46.5"
     "@wallet-standard/core" "^1.0.3"
@@ -9781,7 +9773,7 @@ lit-html@^2.8.0:
   dependencies:
     "@types/trusted-types" "^2.0.2"
 
-lit@^2.7.2, lit@^2.8.0:
+lit@^2.7.2:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/lit/-/lit-2.8.0.tgz#4d838ae03059bf9cafa06e5c61d8acc0081e974e"
   integrity sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==
