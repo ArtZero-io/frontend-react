@@ -62,6 +62,7 @@ function MyNFTGroupCard({
   nftContractAddress,
   hasBottomBorder = false,
   isStakingContractLocked,
+  stakeStatus,
   type,
   ...rest
 }) {
@@ -80,7 +81,8 @@ function MyNFTGroupCard({
 
     if (isBigScreen) {
       setSelectedNFT(item);
-      item?.stakeStatus === 0 && onOpen();
+      onOpen();
+      // item?.stakeStatus === 0 && onOpen();
       return;
     }
 
@@ -100,6 +102,8 @@ function MyNFTGroupCard({
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
+        isStakingContractLocked={isStakingContractLocked}
+        stakeStatus={stakeStatus}
         {...selectedNFT}
         {...rest}
       />
@@ -789,7 +793,7 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => !bulkTxMode && onClickHandler(c)}
+              onClick={() => !bulkTxMode && !multiStakeData?.action && onClickHandler(c)}
             >
               <MyNFTCard
                 {...c}
