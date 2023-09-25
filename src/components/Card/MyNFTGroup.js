@@ -87,8 +87,8 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
-  const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
-  const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
+  // const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
+  // const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
 
   return (
     <Box my={10} position="relative">
@@ -162,14 +162,14 @@ function MyNFTGroupCard({
             />
           )} */}
         </Flex>
-        {isMobile && filterSelected === "BIDS" && type !== "public" && (
+        {/* {isMobile && filterSelected === "BIDS" && type !== "public" && (
           <CommonButton
             size="sm"
             {...restStatus}
             text={listNFT?.length > 1 ? "Remove All Bids" : "Remove Bid"}
             onClick={() => doBulkRemoveBids()}
           />
-        )}
+        )} */}
       </motion.div>
 
       {!listNFT?.length ? (
@@ -573,7 +573,8 @@ function GridNftA({
             py="20px"
             text={
               <>
-                Remove { multiDebidData?.list.length > 1 ? 'bids': 'bid' } ID# <br />
+                Remove {multiDebidData?.list.length > 1 ? "bids" : "bid"} ID#{" "}
+                <br />
                 {`${multiDebidData?.list?.toString()}`}
               </>
             }
@@ -837,7 +838,7 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => !bulkTxMode && onClickHandler(c)}             
+              onClick={() => !bulkTxMode && onClickHandler(c)}
             >
               <MyNFTCard
                 {...c}
