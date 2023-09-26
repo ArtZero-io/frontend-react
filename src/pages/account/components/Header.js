@@ -64,7 +64,11 @@ function ProfileHeader() {
   useEffect(() => {
     const fetchProfile = async () => {
       if (!api || !contract) return;
-      await setProfileContract(api, contractData?.profile);
+
+      if (!contract) {
+        await setProfileContract(api, contractData?.profile);
+        return;
+      }
 
       const res = await dispatch(getProfile(currentAccount));
       if (res?.status === "OK") {
