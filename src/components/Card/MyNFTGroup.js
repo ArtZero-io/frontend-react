@@ -66,7 +66,6 @@ function MyNFTGroupCard({
   type,
   ...rest
 }) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -88,6 +87,19 @@ function MyNFTGroupCard({
 
     if (location?.pathname === "/account/nfts") {
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+    }
+
+    if (location?.pathname === "/account/stakes") {
+      history.push({
+        state: {
+          filterSelected,
+          isStakingContractLocked,
+          stakeStatus: item?.stakeStatus,
+          tokenID: item?.tokenID,
+          ...location,
+        },
+        pathname: `/nft/${item.nftContractAddress}/${item.tokenID}`,
+      });
     }
   }
   const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
@@ -793,7 +805,9 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => !bulkTxMode && !multiStakeData?.action && onClickHandler(c)}
+              onClick={() =>
+                !bulkTxMode && !multiStakeData?.action && onClickHandler(c)
+              }
             >
               <MyNFTCard
                 {...c}

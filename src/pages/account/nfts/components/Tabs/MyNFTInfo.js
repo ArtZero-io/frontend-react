@@ -517,6 +517,7 @@ function MyNFTTabInfo(props) {
 
     doUpdateBidPrice();
   };
+
   return (
     <>
       <HStack alignItems="stretch" spacing={{ base: "20px", xl: "45px" }}>
@@ -855,14 +856,16 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </Flex>
 
-                  <CommonButton
-                    mx="0"
-                    {...rest}
-                    minW="150px"
-                    text="cancel sale"
-                    onClick={handleUnlistTokenAction}
-                    isDisabled={actionType && actionType !== UNLIST_TOKEN}
-                  />
+                  {filterSelected !== "STAKE_FILTER_SELECTED" && (
+                    <CommonButton
+                      mx="0"
+                      {...rest}
+                      minW="150px"
+                      text="cancel sale"
+                      onClick={handleUnlistTokenAction}
+                      isDisabled={actionType && actionType !== UNLIST_TOKEN}
+                    />
+                  )}
                 </Flex>
               )}
 
