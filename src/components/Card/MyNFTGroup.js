@@ -62,10 +62,10 @@ function MyNFTGroupCard({
   nftContractAddress,
   hasBottomBorder = false,
   isStakingContractLocked,
+  stakeStatus,
   type,
   ...rest
 }) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -80,12 +80,26 @@ function MyNFTGroupCard({
 
     if (isBigScreen) {
       setSelectedNFT(item);
-      item?.stakeStatus === 0 && onOpen();
+      onOpen();
+      // item?.stakeStatus === 0 && onOpen();
       return;
     }
 
     if (location?.pathname === "/account/nfts") {
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+    }
+
+    if (location?.pathname === "/account/stakes") {
+      history.push({
+        state: {
+          filterSelected,
+          isStakingContractLocked,
+          stakeStatus: item?.stakeStatus,
+          tokenID: item?.tokenID,
+          ...location,
+        },
+        pathname: `/nft/${item.nftContractAddress}/${item.tokenID}`,
+      });
     }
   }
   const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
@@ -100,6 +114,8 @@ function MyNFTGroupCard({
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
+        isStakingContractLocked={isStakingContractLocked}
+        stakeStatus={stakeStatus}
         {...selectedNFT}
         {...rest}
       />
@@ -789,7 +805,9 @@ function GridNftA({
               delayPerPixel={delayPerPixel}
               originOffset={originOffset}
               id="grid-item-a"
-              onClick={() => !bulkTxMode && onClickHandler(c)}
+              onClick={() =>
+                !bulkTxMode && !multiStakeData?.action && onClickHandler(c)
+              }
             >
               <MyNFTCard
                 {...c}

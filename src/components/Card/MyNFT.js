@@ -406,35 +406,43 @@ function MyNFTCard({
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi STAKE */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (
-          <Checkbox
-            display={!multiStakeData?.action && "none"}
+          <Square
             sx={{
-              ".my-nft-card:hover &": {
-                display: "inline-flex",
-              },
-              "span.chakra-checkbox__control": {
-                borderRadius: "0",
-                borderWidth: "0.2px",
-                borderColor: "brand.blue",
-                backgroundColor: "brand.semiBlack",
-              },
-              "span.chakra-checkbox__control[data-checked] > div": {
-                color: "brand.blue",
-              },
+              maxWidth: "content",
+              maxHeight: "content",
             }}
-            size="lg"
-            top="10px"
-            right="10px"
-            position="absolute"
-            isChecked={isTicked}
-            isDisabled={
-              actionType ||
-              (multiStakeData?.action &&
-                multiStakeData?.action !==
-                  getStakeAction(stakeStatus, isUnstakeTime))
-            }
-            onChange={(e) => handleOnChangeCheckbox(e)}
-          />
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Checkbox
+              display={!multiStakeData?.action && "none"}
+              sx={{
+                ".my-nft-card:hover &": {
+                  display: "inline-flex",
+                },
+                "span.chakra-checkbox__control": {
+                  borderRadius: "0",
+                  borderWidth: "0.2px",
+                  borderColor: "brand.blue",
+                  backgroundColor: "brand.semiBlack",
+                },
+                "span.chakra-checkbox__control[data-checked] > div": {
+                  color: "brand.blue",
+                },
+              }}
+              size="lg"
+              top="10px"
+              right="10px"
+              position="absolute"
+              isChecked={isTicked}
+              isDisabled={
+                actionType ||
+                (multiStakeData?.action &&
+                  multiStakeData?.action !==
+                    getStakeAction(stakeStatus, isUnstakeTime))
+              }
+              onChange={(e) => handleOnChangeCheckbox(e)}
+            />
+          </Square>
         ) : null}{" "}
         {/* END Check Box for multi STAKE */}
         <Flex

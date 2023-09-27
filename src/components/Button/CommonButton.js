@@ -24,7 +24,9 @@ function CommonButton(props) {
   } = props;
   const dispatch = useDispatch();
 
-  const handleOnClick = async () => {
+  const handleOnClick = async (event) => {
+    event.stopPropagation();
+
     if (type === "submit") {
       if (step !== FINALIZED) return;
 

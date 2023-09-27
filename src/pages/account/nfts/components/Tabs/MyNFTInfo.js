@@ -25,16 +25,24 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 
 import staking_calls from "@utils/blockchain/staking_calls";
+import staking from "@utils/blockchain/staking";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import { delay } from "@utils";
 import marketplace_contract from "@utils/blockchain/marketplace";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
+import { getStakeAction } from "@components/Card/MyNFT";
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
 import { truncateStr, getTraitCount, resolveDomain } from "@utils";
-import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
+import {
+  convertStringToPrice,
+  formatNumDynamicDecimal,
+  secondsToTime,
+} from "@utils";
 
 import { formMode, SUB_DOMAIN } from "@constants";
 
@@ -50,7 +58,15 @@ import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
+import { clearTxStatus, setTxStatus } from "@store/actions/txStatus";
+import {
+  START,
+  STAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
+  UNSTAKE,
+} from "@constants";
+import useInterval from "use-interval";
 import { listToken, unlistToken, removeBid } from "@pages/token";
 import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
@@ -70,6 +86,8 @@ function MyNFTTabInfo(props) {
     is_for_sale,
     price,
     filterSelected,
+    isStakingContractLocked,
+    stakeStatus,
     tokenID,
     owner,
     nftContractAddress,
@@ -91,6 +109,13 @@ function MyNFTTabInfo(props) {
       });
 
   const { api, currentAccount } = useSubstrateState();
+  const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
+  const [countdownTime, setCountdownTime] = useState(0);
+  const [isUnstakeTime, setIsUnstakeTime] = useState(false);
+  const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
@@ -265,6 +290,155 @@ function MyNFTTabInfo(props) {
     }
   };
 
+  // STAKE ACTION=======================================================
+  const handleStakeAction = async (action, tokenIDArray) => {
+    if (isStakingContractLocked) {
+      return toast.error("Staking contract is locked!");
+    }
+
+    if (action === STAKE) {
+      dispatch(setTxStatus({ type: STAKE, step: START, tokenIDArray }));
+
+      let res;
+      let allowance;
+
+      allowance = await artzero_nft_calls.allowance(
+        currentAccount,
+        currentAccount.address,
+        staking.CONTRACT_ADDRESS,
+        { u64: tokenIDArray[0] }
+      );
+
+      if (!allowance) {
+        toast.success("Step 1: Approving NFT for staking...");
+        res = await artzero_nft_calls.approve(
+          currentAccount,
+          staking.CONTRACT_ADDRESS,
+          { u64: tokenIDArray[0] },
+          true,
+          dispatch
+        );
+      }
+
+      if (res || allowance) {
+        //Token is unstaked, Stake Now
+
+        toast.success(res ? "Step 2: Staking..." : "Staking...");
+
+        await delay(3000).then(async () => {
+          await staking_calls.stake(
+            currentAccount,
+            tokenIDArray,
+            dispatch,
+            STAKE,
+            api
+          );
+        });
+        return;
+      }
+    }
+
+    if (action === REQUEST_UNSTAKE) {
+      dispatch(
+        setTxStatus({ type: REQUEST_UNSTAKE, step: START, tokenIDArray })
+      );
+
+      //Token is staked, Request Unstake Now
+
+      toast.success("Request Unstaking NFT...");
+
+      await staking_calls.requestUnstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        REQUEST_UNSTAKE,
+        api
+      );
+    }
+
+    if (action === UNSTAKE) {
+      dispatch(setTxStatus({ type: UNSTAKE, step: START, tokenIDArray }));
+
+      toast.success("Unstaking NFT...");
+
+      await staking_calls.unstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        UNSTAKE,
+        api
+      );
+    }
+
+    if (action === CANCEL_REQUEST_UNSTAKE) {
+      dispatch(
+        setTxStatus({ type: CANCEL_REQUEST_UNSTAKE, step: START, tokenIDArray })
+      );
+
+      toast("Cancel Unstaking Request...");
+
+      await staking_calls.cancelRequestUnstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        CANCEL_REQUEST_UNSTAKE,
+        api
+      );
+    }
+  };
+
+  useInterval(() => {
+    if (unstakeRequestTime) {
+      let now = new Date().getTime() / 1000;
+      let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
+      if (valid_time - now > 0)
+        setCountdownTime(secondsToTime(valid_time - now));
+      else {
+        setIsUnstakeTime(true);
+        setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
+      }
+    }
+  }, 1000);
+
+  useEffect(() => {
+    const getRequestTime = async () => {
+      setIsLoading(true);
+      let time = await staking_calls.getRequestUnstakeTime(
+        currentAccount,
+        currentAccount.address,
+        tokenID
+      );
+      /* eslint-disable no-useless-escape */
+      const unstakeRequestTimeTmp = time.replace(/\,/g, "");
+      setUnstakeRequestTime(unstakeRequestTimeTmp);
+
+      let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(
+        currentAccount
+      );
+      setLimitUnstakeTime(limitUnstakeTimeTmp);
+
+      if (unstakeRequestTimeTmp) {
+        let now = new Date().getTime() / 1000;
+
+        let valid_time =
+          unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+
+        if (valid_time - now > 0)
+          setCountdownTime(secondsToTime(valid_time - now));
+        else {
+          setIsUnstakeTime(true);
+          setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    if (stakeStatus === 3) getRequestTime();
+  }, [currentAccount, stakeStatus, tokenID]);
+
+  // END STAKE ACTION=======================================================
+
   useEffect(() => {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
@@ -343,6 +517,7 @@ function MyNFTTabInfo(props) {
 
     doUpdateBidPrice();
   };
+
   return (
     <>
       <HStack alignItems="stretch" spacing={{ base: "20px", xl: "45px" }}>
@@ -573,37 +748,87 @@ function MyNFTTabInfo(props) {
                 justifyContent="space-between"
               >
                 <Spacer />
-                <NumberInput
-                  // maxW={32}
-                  isDisabled={!isActive || actionType}
-                  bg="black"
-                  max={999000000}
-                  min={1}
-                  precision={6}
-                  onChange={(v) => setAskPrice(v)}
-                  value={askPrice}
-                  mr={3}
-                  h="52px"
-                >
-                  <NumberInputField
+
+                {/* Input */}
+                {filterSelected !== "STAKE_FILTER_SELECTED" ? (
+                  <NumberInput
+                    // maxW={32}
+                    isDisabled={!isActive || actionType}
+                    bg="black"
+                    max={999000000}
+                    min={1}
+                    precision={6}
+                    onChange={(v) => setAskPrice(v)}
+                    value={askPrice}
+                    mr={3}
                     h="52px"
-                    borderRadius={0}
-                    borderWidth={0}
-                    color="#fff"
+                  >
+                    <NumberInputField
+                      h="52px"
+                      borderRadius={0}
+                      borderWidth={0}
+                      color="#fff"
+                    />
+                    <InputRightElement bg="transparent" h={"52px"} w={16}>
+                      <AzeroIcon />
+                    </InputRightElement>
+                  </NumberInput>
+                ) : null}
+
+                {/* Button action */}
+                {filterSelected === "STAKE_FILTER_SELECTED" ? (
+                  <Flex flexDirection={"column"}>
+                    {stakeStatus === 3 ? (
+                      <Text
+                        textAlign="center"
+                        color="brand.grayLight"
+                        fontSize={["xs", "md"]}
+                        mb="12px"
+                      >
+                        Unstake in {countdownTime?.d || 0}d:{" "}
+                        {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
+                        {countdownTime?.s || 0}s
+                      </Text>
+                    ) : null}
+                    <CommonButton
+                      mx="0"
+                      {...rest}
+                      isLoading={isLoading || rest.isLoading}
+                      text={
+                        stakeStatus === 1
+                          ? "Stake"
+                          : stakeStatus === 2
+                          ? "Request Unstake"
+                          : !isUnstakeTime
+                          ? "Cancel Unstake"
+                          : "Unstake"
+                      }
+                      onClick={() =>
+                        handleStakeAction(
+                          getStakeAction(stakeStatus, isUnstakeTime),
+                          [tokenID]
+                        )
+                      }
+                      // isDisabled={
+                      //   actionType && !tokenIDArray?.includes(tokenID)
+                      //     ? true
+                      //     : getStakeAction(stakeStatus, isUnstakeTime)
+                      //     ? true
+                      //     : false
+                      // }
+                    />
+                  </Flex>
+                ) : (
+                  <CommonButton
+                    mx="0"
+                    {...rest}
+                    text="push for sale"
+                    onClick={handleListTokenAction}
+                    isDisabled={
+                      !isActive || (actionType && actionType !== LIST_TOKEN)
+                    }
                   />
-                  <InputRightElement bg="transparent" h={"52px"} w={16}>
-                    <AzeroIcon />
-                  </InputRightElement>
-                </NumberInput>
-                <CommonButton
-                  mx="0"
-                  {...rest}
-                  text="push for sale"
-                  onClick={handleListTokenAction}
-                  isDisabled={
-                    !isActive || (actionType && actionType !== LIST_TOKEN)
-                  }
-                />
+                )}
               </Flex>
             )}
 
@@ -631,14 +856,16 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </Flex>
 
-                  <CommonButton
-                    mx="0"
-                    {...rest}
-                    minW="150px"
-                    text="cancel sale"
-                    onClick={handleUnlistTokenAction}
-                    isDisabled={actionType && actionType !== UNLIST_TOKEN}
-                  />
+                  {filterSelected !== "STAKE_FILTER_SELECTED" && (
+                    <CommonButton
+                      mx="0"
+                      {...rest}
+                      minW="150px"
+                      text="cancel sale"
+                      onClick={handleUnlistTokenAction}
+                      isDisabled={actionType && actionType !== UNLIST_TOKEN}
+                    />
+                  )}
                 </Flex>
               )}
 

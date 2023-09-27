@@ -317,6 +317,7 @@ const MyStakesPage = () => {
                 {...PMPCollectionDetail}
                 hasBottomBorder={false}
                 isStakingContractLocked={isStakingContractLocked}
+                filterSelected={STAKE_FILTER_SELECTED}
               />
             }
           </motion.div>
@@ -570,6 +571,7 @@ export const getPMPCollectionDetail = async () => {
 const NOT_STAKED = "NOT STAKED";
 const PENDING_UNSTAKE = "PENDING UNSTAKE";
 const STAKED = "STAKED";
+const STAKE_FILTER_SELECTED = "STAKE_FILTER_SELECTED";
 
 export const tabList = {
   NOT_STAKED,
