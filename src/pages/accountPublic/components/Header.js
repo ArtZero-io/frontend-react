@@ -19,7 +19,7 @@ import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 import { getProfile } from "@actions/account";
 import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
-import contractData from "@utils/blockchain/";
+import { profile as profileAbi } from "@utils/blockchain/abi";
 
 function ProfileHeader({ address }) {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ function ProfileHeader({ address }) {
       if (!api || apiState !== "READY") return;
 
       if (!contract) {
-        await setProfileContract(api, contractData?.profile);
+        await setProfileContract(api, profileAbi);
         return;
       }
 
