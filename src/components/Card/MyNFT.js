@@ -31,6 +31,7 @@ import {
   MAX_ITEM_STAKE,
   MAX_ITEM_BULK_LISTING,
   MAX_ITEM_BULK_TRANSFER,
+  MAX_BID_COUNT
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
@@ -68,6 +69,8 @@ function MyNFTCard({
   filterSelected,
   multiDelistData,
   handleSelectMultiDelist,
+  multiDebidData,
+  handleSelectMultiDebid,
 }) {
   const { currentAccount } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -143,6 +146,39 @@ function MyNFTCard({
   };
 
   //END  BULK DELIST=============================================================
+
+  // BULK REMOVE BID=============================================================
+  const [isMultiDebidCheckbox, setIsMultiDebidCheckbox] = useState(false);
+
+  const handleOnChangeMultiDebidCheckbox = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.cancelBubble = true;
+
+    const target = !multiDebidData?.list?.includes(tokenID);
+    if (target && multiDebidData?.list?.length >= MAX_BID_COUNT) {
+      !multiDebidData?.list?.includes(tokenID) &&
+      setIsMultiDebidCheckbox(false);
+
+      return toast.error(
+        `Max items allowed limited to ${MAX_BID_COUNT}!`
+      );
+    }
+
+    target ? setIsMultiDebidCheckbox(true) : setIsMultiDebidCheckbox(false);
+
+    if (
+      !multiDebidData?.action ||
+      multiDebidData?.action === "MULTI_REMOVE_BIDS"
+    ) {
+      handleSelectMultiDebid(tokenID, "MULTI_REMOVE_BIDS", target);
+      return;
+    }
+
+    return toast.error("Please select same action!");
+  };
+
+  //END BULK REMOVE BID=============================================================
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -403,6 +439,45 @@ function MyNFTCard({
             </Square>
           )}
         {/*END Check Box for multi DE-LISTING*/}
+        {/* ++++++++++++++++++++++++++++++++++++++++ */}
+        {/* Check Box for multi DE-BID */}
+        {location?.pathname === "/account/nfts" &&
+          filterSelected === "BIDS" &&
+          is_for_sale && (
+            <Square
+              borderColor="#333"
+              onClick={(e) => handleOnChangeMultiDebidCheckbox(e)}
+              cursor="pointer"
+              h="40px"
+              display={
+                !(
+                  bulkTxMode &&
+                  bulkTxMode === "MULTI_REMOVE_BIDS" &&
+                  nftContractAddress === selectedCollectionAddress
+                ) && "none"
+              }
+              px="8px"
+              top="0px"
+              zIndex="1"
+              minW="40px"
+              right="0px"
+              pos="absolute"
+              lineHeight="36px"
+              color="#7ae7ff"
+              sx={{
+                ".my-nft-card-wrapper:hover &": {
+                  display: !bulkTxMode && "inline-flex",
+                },
+              }}
+            >
+              {isMultiDebidCheckbox ? (
+                <Icon as={RiMoneyDollarBoxFill} w={8} h={8} />
+              ) : (
+                <Icon as={RiMoneyDollarBoxLine} w={8} h={8} />
+              )}
+            </Square>
+          )}
+        {/*END Check Box for multi DE-BID*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi STAKE */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (
