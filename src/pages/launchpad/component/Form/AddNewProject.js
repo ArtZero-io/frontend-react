@@ -1134,7 +1134,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             </Stack>
                           )}
                         </Box>
-                      ) : current == 3 && mode === formMode.ADD ? (
+                      ) : current === 3 && mode === formMode.ADD ? (
                         <HStack justifyContent="center" ml={{ base: "8px" }}>
                           <Button
                             minW="180px"
