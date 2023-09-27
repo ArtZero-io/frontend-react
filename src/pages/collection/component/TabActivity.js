@@ -1,30 +1,16 @@
-import React, { useEffect } from "react";
-import EventTable from "@components/Table/EventTable";
+import React from "react";
 import {
-  HStack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
   useMediaQuery,
 } from "@chakra-ui/react";
 
-import { APICall } from "@api/client";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import { useCallback } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useInView } from "react-intersection-observer";
-import { useMemo } from "react";
-import { BeatLoader } from "react-spinners";
-import { useSubstrateState } from "@utils/substrate";
-import azero_domains_nft from "../../../utils/blockchain/azero-domains-nft";
-import { resolveDomain, getTimestamp } from "@utils";
 import SortTableWrapper from "@components/Table/SortTableWrapper";
-
-const NUMBER_NFT_PER_PAGE = 5;
 
 function TabActivity({ collectionOwner, nftContractAddress }) {
   const tabData = [

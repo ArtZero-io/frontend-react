@@ -20,6 +20,8 @@ export const PUBLIC_ACCOUNT_MY_COLLECTIONS = "/public-account/collections/:addre
 export const PUBLIC_ACCOUNT_MY_NFTS = "/public-account/nfts/:address";
 export const PUBLIC_ACCOUNT_MY_STAKES = "/public-account/stakes/:address";
 export const PUBLIC_ACCOUNT_MY_PROJECTS = "/public-account/projects/:address";
+export const PUBLIC_ACCOUNT_MY_ACTIVITIES =
+  "/public-account/activities/:address";
 
 // COLLECTION
 
