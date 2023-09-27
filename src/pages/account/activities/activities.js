@@ -24,31 +24,31 @@ import { useSubstrateState } from "@utils/substrate";
 import { useCallback, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { BeatLoader } from "react-spinners";
+import MyActivitiesTableWrapper from "@components/Table/MyActivitiesTableWrapper";
 
 const NUMBER_NFT_PER_PAGE = 5;
 
-function ActivityPages() {
+function ActivitiesPage({ mode }) {
   const [tabIndex, setTabIndex] = React.useState(0);
+
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   const tabData = [
     {
       label: "BUY",
-      content: <EventTableWrapper type="BUY" tableHeaders={headers.buy} />,
+      content: <MyActivitiesTableWrapper mode={mode} type="BUY" />,
     },
     {
       label: "SELL",
-      content: <EventTableWrapper type="SELL" tableHeaders={headers.sell} />,
+      content: <MyActivitiesTableWrapper mode={mode} type="SELL" />,
     },
     {
       label: "LIST",
-      content: <EventTableWrapper type="LIST" tableHeaders={headers.list} />,
+      content: <MyActivitiesTableWrapper mode={mode} type="LIST" />,
     },
     {
       label: "UNLIST",
-      content: (
-        <EventTableWrapper type="UNLIST" tableHeaders={headers.unlist} />
-      ),
+      content: <MyActivitiesTableWrapper mode={mode} type="UNLIST" />,
     },
   ];
 
@@ -123,7 +123,7 @@ function ActivityPages() {
   );
 }
 
-export default ActivityPages;
+export default ActivitiesPage;
 
 const EventTableWrapper = ({ type, tableHeaders }) => {
   const { ref, inView } = useInView();

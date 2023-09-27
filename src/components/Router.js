@@ -57,11 +57,9 @@ const Router = () => {
               path={ROUTES.ACCOUNT_MY_PROJECTS}
               component={MyProjectsPage}
             />
-            <Route
-              exact
-              path={ROUTES.ACCOUNT_MY_ACTIVITIES}
-              component={ActivitiesPage}
-            />
+            <Route exact path={ROUTES.ACCOUNT_MY_ACTIVITIES}>
+              <ActivitiesPage mode="MY_ACCOUNT" />
+            </Route>
             <Route
               exact
               path={ROUTES.ACCOUNT_WHITELIST_PROJECTS}
@@ -91,14 +89,12 @@ const Router = () => {
             />
             <Route
               exact
-              path={ROUTES.PUBLIC_ACCOUNT_MY_STAKES}
-              component={MyStakesPublicPage}
-            />
-            <Route
-              exact
               path={ROUTES.PUBLIC_ACCOUNT_MY_PROJECTS}
               component={MyProjectsPublicPage}
             />
+            <Route exact path={ROUTES.PUBLIC_ACCOUNT_MY_ACTIVITIES}>
+              <ActivitiesPage mode="PUBLIC_ACCOUNT" />
+            </Route>
           </PublicAccountLayout>
         )}
       />

@@ -44,7 +44,7 @@ import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { formatNumberOutput } from "../../../utils";
 import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
-import contractData from "@utils/blockchain/";
+import { profile as profileAbi } from "@utils/blockchain/abi";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -66,7 +66,7 @@ function ProfileHeader() {
       if (!api || !contract) return;
 
       if (!contract) {
-        await setProfileContract(api, contractData?.profile);
+        await setProfileContract(api, profileAbi);
         return;
       }
 
