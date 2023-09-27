@@ -36,6 +36,7 @@ export default function MyActivitiesTableWrapper({ type, mode }) {
       : mode === "PUBLIC_ACCOUNT"
       ? address
       : null;
+
   const [sorting, setSorting] = useState([]);
 
   const columns = useMemo(() => {
@@ -249,7 +250,7 @@ export default function MyActivitiesTableWrapper({ type, mode }) {
     isFetchingNextPage,
     isFetched,
   } = useInfiniteQuery(
-    ["my-activities-table", sorting, type],
+    ["my-activities-table", sorting, type, userAccount],
     async ({ pageParam = 0 }) => {
       const eventsData = await fetchEvents({ pageParam });
       return eventsData;
