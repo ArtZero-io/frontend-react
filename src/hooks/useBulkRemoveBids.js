@@ -302,11 +302,22 @@ export default function useBulkRemoveBids({ listNFTFormatted }) {
     }
   }
 
+  function resetList() {
+    const newData = {
+      action: null,
+      list: [],
+      listInfo: [],
+      selectedCollectionAddress: "",
+    };
+    setMultiDebidData(newData);
+  }
+
   return {
     multiDebidData,
     showSlideMultiDebid,
     doBulkRemoveBids,
     handleSelectMultiDebid,
     handleSelectMultiDebidAzeroDomains,
+    resetList,
   };
 }

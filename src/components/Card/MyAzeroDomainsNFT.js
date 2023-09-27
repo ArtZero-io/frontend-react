@@ -40,7 +40,11 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { MAX_ITEM_BULK_LISTING, MAX_ITEM_BULK_TRANSFER, MAX_BID_COUNT } from "../../constants";
+import {
+  MAX_ITEM_BULK_LISTING,
+  MAX_ITEM_BULK_TRANSFER,
+  MAX_BID_COUNT,
+} from "../../constants";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 // Stake Status
@@ -151,26 +155,25 @@ function MyAzeroDomainsNFTCard({
   // BULK REMOVE BID=============================================================
   const [isMultiDebidCheckbox, setIsMultiDebidCheckbox] = useState(false);
 
-  const handleOnChangeMultiDebidCheckbox = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.cancelBubble = true;
-
-    const target = !multiDebidData?.list?.includes(azDomainName);
-    if (target && multiDebidData?.list?.length >= MAX_BID_COUNT) {
+  const handleOnChangeMultiDebidCheckbox = ({target}) => {
+    if (target.checked && multiDebidData?.list?.length >= MAX_BID_COUNT) {
       !multiDebidData?.list?.includes(azDomainName) &&
         setIsMultiDebidCheckbox(false);
 
       return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
     }
 
-    target ? setIsMultiDebidCheckbox(true) : setIsMultiDebidCheckbox(false);
+    target.checked ? setIsMultiDebidCheckbox(true) : setIsMultiDebidCheckbox(false);
 
     if (
       !multiDebidData?.action ||
       multiDebidData?.action === "MULTI_REMOVE_BIDS"
     ) {
-      handleSelectMultiDebidAzeroDomains(azDomainName, "MULTI_REMOVE_BIDS", target);
+      handleSelectMultiDebidAzeroDomains(
+        azDomainName,
+        "MULTI_REMOVE_BIDS",
+        target.checked
+      );
       return;
     }
 
@@ -450,44 +453,51 @@ function MyAzeroDomainsNFTCard({
           )}
         {/*END Check Box for multi DE-LISTING*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
-        {/* Check Box for multi DE-BID */}
+        {/* Check Box for multi REMOVE-BID */}
         {location?.pathname === "/account/nfts" &&
           filterSelected === "BIDS" &&
           is_for_sale && (
             <Square
-              borderColor="#333"
-              onClick={(e) => handleOnChangeMultiDebidCheckbox(e)}
-              cursor="pointer"
-              h="40px"
-              display={
-                !(
-                  bulkTxMode &&
-                  bulkTxMode === "MULTI_REMOVE_BIDS" &&
-                  nftContractAddress === selectedCollectionAddress
-                ) && "none"
-              }
-              px="8px"
-              top="0px"
-              zIndex="1"
-              minW="40px"
-              right="0px"
-              pos="absolute"
-              lineHeight="36px"
-              color="#7ae7ff"
               sx={{
-                ".my-nft-card-wrapper:hover &": {
-                  display: !bulkTxMode && "inline-flex",
-                },
+                maxWidth: "content",
+                maxHeight: "content",
               }}
+              onClick={(e) => e.stopPropagation()}
             >
-              {isMultiDebidCheckbox ? (
-                <Icon as={RiMoneyDollarBoxFill} w={8} h={8} />
-              ) : (
-                <Icon as={RiMoneyDollarBoxLine} w={8} h={8} />
-              )}
+              <Checkbox
+                display={
+                  !(
+                    bulkTxMode &&
+                    bulkTxMode === "MULTI_REMOVE_BIDS" &&
+                    nftContractAddress === selectedCollectionAddress
+                  ) && "none"
+                }
+                sx={{
+                  ".my-nft-card:hover &": {
+                    display: "inline-flex",
+                  },
+                  "span.chakra-checkbox__control": {
+                    borderRadius: "0",
+                    borderWidth: "0.2px",
+                    borderColor: "brand.blue",
+                    backgroundColor: "brand.semiBlack",
+                  },
+                  "span.chakra-checkbox__control[data-checked] > div": {
+                    color: "brand.blue",
+                  },
+                }}
+                size="lg"
+                top="10px"
+                right="10px"
+                position="absolute"
+                isChecked={isMultiDebidCheckbox}
+                isDisabled = {actionType}
+                onChange={(e) => handleOnChangeMultiDebidCheckbox(e)}
+              >
+              </Checkbox>
             </Square>
           )}
-        {/*END Check Box for multi DE-BID*/}
+        {/*END Check Box for multi REMOVE-BID*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi stake */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (

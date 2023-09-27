@@ -69,12 +69,14 @@ const MyNFTsPage = () => {
     myCollectionList,
     isLoading: isLoadingMyCollectionList,
     refetch: refetchMyCollectionList,
+    isRefetching: isRefetchingMyCollectionList,
   } = useMyCollectionList(filterSelected, currentAccount.address);
 
   const {
     myBidList,
     isLoading: isLoadingMyBidList,
     refetch: refetchMyBidList,
+    isFetching: isFetchingMyBidList,
   } = useMyBidList(currentAccount.address);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
@@ -166,8 +168,8 @@ const MyNFTsPage = () => {
           <MyNFTGroupCardContainer
             isLoading={
               filterSelected !== "BIDS"
-                ? isLoadingMyCollectionList
-                : isLoadingMyBidList
+                ? isLoadingMyCollectionList || isRefetchingMyCollectionList
+                : isLoadingMyBidList || isFetchingMyBidList
             }
             list={filterSelected !== "BIDS" ? myCollectionList : myBidList}
             filterSelected={filterSelected}
@@ -185,8 +187,6 @@ export const tabList = {
   LISTING: "MY LISTING",
   BIDS: "MY BIDS",
 };
-
-
 
 function MyNFTGroupCardContainer({ list, filterSelected, isLoading }) {
   return isLoading ? (
