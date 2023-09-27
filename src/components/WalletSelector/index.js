@@ -85,8 +85,17 @@ function WalletSelector({ display }) {
     };
   });
 
-  const initialAddress =
-    keyringOptions?.length > 0 ? keyringOptions[0].address : "";
+  const initialAddress = useMemo(() => {
+    const item =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("activeAddress")
+        : false;
+
+    return (
+      JSON.parse(item) ||
+      (keyringOptions?.length > 0 ? keyringOptions[0].address : "")
+    );
+  }, [keyringOptions]);
 
   useEffect(
     () => {
