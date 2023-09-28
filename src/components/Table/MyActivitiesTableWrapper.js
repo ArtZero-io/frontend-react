@@ -26,7 +26,7 @@ import { useParams } from "react-router-dom";
 const NUMBER_NFT_PER_PAGE = 10;
 
 export default function MyActivitiesTableWrapper({ type, mode }) {
-  const { api, chainToken, currentAccount } = useSubstrateState();
+  const { api, chainToken, currentAccount, apiState } = useSubstrateState();
 
   const { address } = useParams();
 
@@ -250,7 +250,7 @@ export default function MyActivitiesTableWrapper({ type, mode }) {
     isFetchingNextPage,
     isFetched,
   } = useInfiniteQuery(
-    ["my-activities-table", sorting, type, userAccount],
+    ["my-activities-table", sorting, type, userAccount, apiState === "READY"],
     async ({ pageParam = 0 }) => {
       const eventsData = await fetchEvents({ pageParam });
       return eventsData;

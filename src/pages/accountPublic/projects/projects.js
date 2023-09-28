@@ -82,7 +82,7 @@ const MyProjectsPage = () => {
         pb={["20px", "20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
-        <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>projects</Heading>
 
       </Stack>
 
