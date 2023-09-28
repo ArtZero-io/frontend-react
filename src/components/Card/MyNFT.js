@@ -158,7 +158,9 @@ function MyNFTCard({
       return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
     }
 
-    target.checked ? setIsMultiDebidCheckbox(true) : setIsMultiDebidCheckbox(false);
+    target.checked
+      ? setIsMultiDebidCheckbox(true)
+      : setIsMultiDebidCheckbox(false);
 
     if (
       !multiDebidData?.action ||
@@ -454,7 +456,7 @@ function MyNFTCard({
                 }
                 sx={{
                   ".my-nft-card:hover &": {
-                    display: "inline-flex",
+                    display: !bulkTxMode && "inline-flex",
                   },
                   "span.chakra-checkbox__control": {
                     borderRadius: "0",
@@ -471,10 +473,9 @@ function MyNFTCard({
                 right="10px"
                 position="absolute"
                 isChecked={isMultiDebidCheckbox}
-                isDisabled = {actionType}
+                isDisabled={actionType}
                 onChange={(e) => handleOnChangeMultiDebidCheckbox(e)}
-              >
-              </Checkbox>
+              ></Checkbox>
             </Square>
           )}
         {/*END Check Box for multi REMOVE-BID*/}

@@ -474,7 +474,7 @@ function MyAzeroDomainsNFTCard({
                 }
                 sx={{
                   ".my-nft-card:hover &": {
-                    display: "inline-flex",
+                    display: !bulkTxMode && "inline-flex",
                   },
                   "span.chakra-checkbox__control": {
                     borderRadius: "0",
@@ -491,10 +491,9 @@ function MyAzeroDomainsNFTCard({
                 right="10px"
                 position="absolute"
                 isChecked={isMultiDebidCheckbox}
-                isDisabled = {actionType}
+                isDisabled={actionType}
                 onChange={(e) => handleOnChangeMultiDebidCheckbox(e)}
-              >
-              </Checkbox>
+              ></Checkbox>
             </Square>
           )}
         {/*END Check Box for multi REMOVE-BID*/}
