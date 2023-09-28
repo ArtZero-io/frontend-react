@@ -23,8 +23,13 @@ async function fetchCollectionList(filterSelected, ownerAddress) {
             options
           );
           // Hard code to remove azero domain collection inactive on testnet
-          let azeroDomainInactive = ['5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn', '5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP'];
-          dataList = dataList?.filter((item) => !azeroDomainInactive.includes(item.nftContractAddress));
+          let azeroDomainInactive = [
+            "5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn",
+            "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP",
+          ];
+          dataList = dataList?.filter(
+            (item) => !azeroDomainInactive.includes(item.nftContractAddress)
+          );
           // End hard code to remove azero domain collection inactive on testnet
           if (filterSelected === "COLLECTED") {
             dataList = dataList?.filter((item) => item.is_for_sale !== true);
@@ -56,11 +61,11 @@ async function fetchCollectionList(filterSelected, ownerAddress) {
 }
 
 export function useMyCollectionList(filterSelected, ownerAddress) {
-  const { data, refetch, isLoading } = useQuery(
+  const { data, refetch, isLoading, isRefetching } = useQuery(
     [queryKeys.myCollectionList, filterSelected, ownerAddress],
     () => fetchCollectionList(filterSelected, ownerAddress),
     { refetchOnWindowFocus: false }
   );
 
-  return { myCollectionList: data, refetch, isLoading };
+  return { myCollectionList: data, refetch, isLoading, isRefetching };
 }
