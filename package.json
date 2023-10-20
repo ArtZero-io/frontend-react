@@ -29,7 +29,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/oswald": "^4.5.7",
-    "@nightlylabs/wallet-selector-polkadot": "^0.1.2",
+    "@nightlylabs/wallet-selector-polkadot": "^0.1.9",
     "@polkadot/api": "^9.13.5",
     "@polkadot/api-contract": "^9.13.5",
     "@polkadot/keyring": "^10.3.1",
