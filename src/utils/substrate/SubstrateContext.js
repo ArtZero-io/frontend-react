@@ -191,15 +191,15 @@ export const loadAccounts = async (state, dispatch) => {
 
   const asyncLoadAccounts = async () => {
     try {
-      toast("await adapter connect...");
+      // toast("await adapter connect...");
       await adapter.connect();
 
-      toast("allAccounts...");
+      // toast("allAccounts...");
       let allAccounts = await adapter.accounts.get();
 
-      toast("setContractsSigner...");
+      // toast("setContractsSigner...");
       setContractsSigner(adapter);
-      toast("allAccounts...");
+      // toast("allAccounts...");
 
       allAccounts = allAccounts.map(({ address, ...rest }) => ({
         address,
