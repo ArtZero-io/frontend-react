@@ -195,7 +195,7 @@ export const loadAccounts = async (state, dispatch) => {
     toast("getAdapter...");
 
     const adapter = await getAdapter();
-
+    console.log("adapter", adapter);
     try {
       toast("await adapter connect...");
       await adapter
