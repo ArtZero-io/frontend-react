@@ -2553,10 +2553,10 @@
     uuid "^9.0.0"
     ws "^8.13.0"
 
-"@nightlylabs/nightly-connect-polkadot@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-polkadot/-/nightly-connect-polkadot-0.0.10.tgz#81d666b5c7c99132a5ee1f40bc63dca81af9cc5a"
-  integrity sha512-2tXN4GfErHZUniDZZMFaQ99mWL9G7mTEZ1GP7aVZOVRVkQG9jjhVX8gsyRSFebwGX+m/Or3P3laGsfy9WDZP6A==
+"@nightlylabs/nightly-connect-polkadot@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/nightly-connect-polkadot/-/nightly-connect-polkadot-0.0.11.tgz#8a32f0419d9982be46d371001229d2a18d265515"
+  integrity sha512-orI2ip99dJ6O6zc3MN9EtAEbt2TToF/KxkjyHp1dA6OUpy3z6Dt8tgUPZU4j+a2ozcGNU+Mzfm1NQx335piolg==
   dependencies:
     "@nightlylabs/nightly-connect-base" "0.0.26"
     "@polkadot/api" "^10.10.1"
@@ -2596,12 +2596,12 @@
     postcss-lit "^1.1.0"
     tailwindcss "^3.3.2"
 
-"@nightlylabs/wallet-selector-polkadot@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-polkadot/-/wallet-selector-polkadot-0.1.9.tgz#46c683b13d3f2cd9cd78f1f248eeb56fe621a698"
-  integrity sha512-rsgIZ0RB//8IoUMhozLx8rcI7wjWbJWEML0Jditw8pXsZlM5Is5sKckM/mePSFZIF/kkd46D7Rb1xXC5EHfNzQ==
+"@nightlylabs/wallet-selector-polkadot@^0.1.6":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@nightlylabs/wallet-selector-polkadot/-/wallet-selector-polkadot-0.1.10.tgz#4d297a70ca9c8f037d0db0e56d16c9da248db3be"
+  integrity sha512-jA6btrIRsPjc90G4z0MIadV+1UgRWE4tTJrjX0ErQgVM+YeQj+Du1CT/J8MaiLlzmrS7s9cXyJKKChCRdHfV9g==
   dependencies:
-    "@nightlylabs/nightly-connect-polkadot" "0.0.10"
+    "@nightlylabs/nightly-connect-polkadot" "0.0.11"
     "@nightlylabs/wallet-selector-base" "0.2.3"
     "@polkadot/api" "10.10.1"
     "@polkadot/extension-inject" "0.46.5"

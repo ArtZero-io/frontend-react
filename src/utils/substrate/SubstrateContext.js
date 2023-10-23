@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
@@ -25,20 +25,22 @@ import { setSigner as setSignerNft721Psp34Standard } from "@utils/blockchain/nft
 import { setSigner as setSignerProfile } from "@utils/blockchain/profile_calls";
 import { setSigner as setSignerStaking } from "@utils/blockchain/staking_calls";
 
-const adapter = NightlyConnectAdapter.buildLazy(
-  {
-    appMetadata: {
-      name: "a0-test.artzero.io",
-      description:
-        "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain testnet",
-      icon: "https://docs.nightly.app/img/logo.png",
-      additionalInfo:
-        "Discover, create, collect and trade NFTs on Aleph Zero Blockchain testnet with ArtZero.io",
+const getAdapter = async () => {
+  return await NightlyConnectAdapter.build(
+    {
+      appMetadata: {
+        name: "a0-test.artzero.io",
+        description:
+          "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain testnet",
+        icon: "https://docs.nightly.app/img/logo.png",
+        additionalInfo:
+          "Discover, create, collect and trade NFTs on Aleph Zero Blockchain testnet with ArtZero.io",
+      },
+      network: "AlephZero",
     },
-    network: "AlephZero",
-  },
-  true // should session be persisted
-);
+    true // should session be persisted
+  );
+};
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -190,16 +192,28 @@ export const loadAccounts = async (state, dispatch) => {
   dispatch({ type: "LOAD_KEYRING" });
 
   const asyncLoadAccounts = async () => {
-    try {
-      // toast("await adapter connect...");
-      await adapter.connect();
+    toast("getAdapter...");
 
-      // toast("allAccounts...");
+    const adapter = await getAdapter();
+
+    try {
+      toast("await adapter connect...");
+      await adapter
+        .connect()
+        .then((res) => {
+          toast("adapter connect sussessfull!");
+        })
+        .catch((err) => {
+          console.log("err", err);
+          toast("adapter connect error!");
+        });
+
+      toast("allAccounts...");
       let allAccounts = await adapter.accounts.get();
 
-      // toast("setContractsSigner...");
+      toast("setContractsSigner...");
       setContractsSigner(adapter);
-      // toast("allAccounts...");
+      toast("allAccounts...");
 
       allAccounts = allAccounts.map(({ address, ...rest }) => ({
         address,
@@ -302,9 +316,28 @@ const SubstrateContextProvider = (props) => {
     });
   }
 
+  const [adapter, setAdapter] = useState(null);
+
+  useEffect(() => {
+    const init = async () => {
+      const adapter = await getAdapter();
+
+      if (await adapter.canEagerConnect()) {
+        setAdapter(adapter);
+      }
+    };
+    init();
+  }, []);
+
   return (
     <SubstrateContext.Provider
-      value={{ state, setCurrentAccount, doLogOut, dispatch, adapter }}
+      value={{
+        state,
+        setCurrentAccount,
+        doLogOut,
+        dispatch,
+        // adapter
+      }}
     >
       {props.children}
     </SubstrateContext.Provider>
