@@ -46,6 +46,10 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
+import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
+import AzeroChain from "@theme/assets/icon/AzeroChain";
+import NightlyLogo from "@utils/wallets/Nightly.svg";
 import toast from "react-hot-toast";
 import { PiCopy } from "react-icons/pi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -257,10 +261,24 @@ function WalletSelector({ display }) {
                 justifyContent="center"
                 mr="12px"
               >
-                <Image
-                  src="https://registry.nightly.app/wallets/nightly/default.png"
-                  alt={currentAccount?.meta?.source}
-                />
+                {currentAccount?.meta?.source === "subwallet-js" && (
+                  <Image
+                    src={SubwalletLogo}
+                    alt={currentAccount?.meta?.source}
+                  />
+                )}
+                {currentAccount?.meta?.source === "polkadot-js" && (
+                  <Image
+                    src={PolkadotjsLogo}
+                    alt={currentAccount?.meta?.source}
+                  />
+                )}
+                {currentAccount?.meta?.source === "aleph-zero-signer" && (
+                  <AzeroChain />
+                )}
+                {currentAccount?.meta?.source === "Nightly" && (
+                  <Image src={NightlyLogo} alt={currentAccount?.meta?.source} />
+                )}
               </Flex>
               <Flex
                 w="full"
@@ -523,10 +541,27 @@ function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <Image
-                        src="https://registry.nightly.app/wallets/nightly/default.png"
-                        alt={currentAccount?.meta?.source}
-                      />
+                      {currentAccount?.meta?.source === "subwallet-js" && (
+                        <Image
+                          src={SubwalletLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )}
+                      {currentAccount?.meta?.source === "polkadot-js" && (
+                        <Image
+                          src={PolkadotjsLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )}
+                      {currentAccount?.meta?.source === "aleph-zero-signer" && (
+                        <AzeroChain />
+                      )}
+                      {currentAccount?.meta?.source === "Nightly" && (
+                        <Image
+                          src={NightlyLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )}
                     </Flex>
                     <Flex
                       pl="10px"
@@ -694,10 +729,27 @@ function WalletSubDrawer({
                     justifyContent="center"
                     mr="12px"
                   >
-                    <Image
-                      src="https://registry.nightly.app/wallets/nightly/default.png"
-                      alt={currentAccount?.meta?.source}
-                    />
+                    {currentAccount?.meta?.source === "subwallet-js" && (
+                      <Image
+                        src={SubwalletLogo}
+                        alt={currentAccount?.meta?.source}
+                      />
+                    )}
+                    {currentAccount?.meta?.source === "polkadot-js" && (
+                      <Image
+                        src={PolkadotjsLogo}
+                        alt={currentAccount?.meta?.source}
+                      />
+                    )}
+                    {currentAccount?.meta?.source === "aleph-zero-signer" && (
+                      <AzeroChain />
+                    )}
+                    {currentAccount?.meta?.source === "Nightly" && (
+                      <Image
+                        src={NightlyLogo}
+                        alt={currentAccount?.meta?.source}
+                      />
+                    )}
                   </Flex>
                   <Flex
                     w="full"
