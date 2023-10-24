@@ -1,18 +1,17 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { web3FromSource } from "../wallets/extension-dapp";
 
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
-
+import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import config from "./config";
 
 import { resolveDomain } from "..";
 import { toast } from "react-hot-toast";
-
-import { NightlyConnectAdapter } from "@nightlylabs/wallet-selector-polkadot";
 
 import { setSigner as setSignerArtzeroNft } from "@utils/blockchain/artzero-nft-calls";
 import { setSigner as setSignerAzeroDomainsNft } from "@utils/blockchain/azero-domains-nft-calls";
@@ -24,21 +23,6 @@ import { setSigner as setSignerMarketplaceAzeroDomains } from "@utils/blockchain
 import { setSigner as setSignerNft721Psp34Standard } from "@utils/blockchain/nft721-psp34-standard-calls";
 import { setSigner as setSignerProfile } from "@utils/blockchain/profile_calls";
 import { setSigner as setSignerStaking } from "@utils/blockchain/staking_calls";
-
-const adapter = NightlyConnectAdapter.buildLazy(
-  {
-    appMetadata: {
-      name: "a0.artzero.io",
-      description:
-        "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
-      icon: "https://docs.nightly.app/img/logo.png",
-      additionalInfo:
-        "Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io",
-    },
-    network: "AlephZero",
-  },
-  true // should session be persisted
-);
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -171,6 +155,7 @@ const retrieveChainInfo = async (api) => {
 ///
 // Loading accounts from dev and polkadot-js extension
 
+// eslint-disable-next-line no-unused-vars
 function setContractsSigner(adapter) {
   setSignerArtzeroNft(adapter);
   setSignerAzeroDomainsNft(adapter);
@@ -184,22 +169,22 @@ function setContractsSigner(adapter) {
   setSignerStaking(adapter);
 }
 
-export const loadAccounts = async (state, dispatch) => {
+export const loadAccounts = async (state, dispatch, wallet) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
 
   const asyncLoadAccounts = async () => {
     try {
-      await adapter.connect();
+      await web3Enable(config.APP_NAME, [], wallet);
 
-      let allAccounts = await adapter.accounts.get();
+      let allAccounts = await web3Accounts();
 
-      setContractsSigner(adapter);
+      // setContractsSigner(adapter);
 
-      allAccounts = allAccounts.map(({ address, ...rest }) => ({
+      allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
-        meta: { ...rest },
+        meta: { ...meta, name: `${meta.name}` },
       }));
 
       try {
@@ -209,12 +194,10 @@ export const loadAccounts = async (state, dispatch) => {
           } ...`
         );
 
-        console.log("allAccounts", allAccounts);
         allAccounts = await Promise.all(
           allAccounts.map(async (item) => {
-            console.log("resolveDomain api", api);
             const addressDomain = await resolveDomain(item.address, api);
-            console.log("addressDomain", addressDomain);
+
             return {
               ...item,
               meta: {
@@ -273,22 +256,23 @@ const SubstrateContextProvider = (props) => {
     const { apiState, keyringState } = state;
 
     if (apiState === "READY" && !keyringState && !keyringLoadAll) {
-      console.log("SubstrateContextProvider loadAccounts...");
-
       keyringLoadAll = true;
       state?.currentAccount?.address &&
         loadAccounts(state, dispatch, state?.selectedExtension);
     }
   }, [state, dispatch]);
+  const [adapter, setAdapter] = useState();
 
-  function setCurrentAccount(acct) {
+  async function setCurrentAccount(acct) {
+    const walletAdapter = await web3FromSource(acct?.meta?.source);
+    setContractsSigner(walletAdapter);
+    setAdapter(walletAdapter);
+
     dispatch({ type: "SET_CURRENT_ACCOUNT", payload: acct });
     // blockchainModule.setAccount(acct);
     window.localStorage.setItem("currentAccount", JSON.stringify(acct));
   }
   async function doLogOut() {
-    await adapter.disconnect();
-
     const accArr = Keyring.getAccounts();
 
     await Promise.all(
@@ -302,7 +286,13 @@ const SubstrateContextProvider = (props) => {
 
   return (
     <SubstrateContext.Provider
-      value={{ state, setCurrentAccount, doLogOut, dispatch, adapter }}
+      value={{
+        state,
+        setCurrentAccount,
+        doLogOut,
+        dispatch,
+        adapter,
+      }}
     >
       {props.children}
     </SubstrateContext.Provider>
