@@ -33,7 +33,6 @@ export const setSigner = (adapter) => {
 
 export async function getProfileOnChain({ callerAccount, accountAddress }) {
   if (!contract || !callerAccount) {
-    console.log("caller or Contract not valid!");
     toast.error(`caller or Contract not valid!`);
     return null;
   }

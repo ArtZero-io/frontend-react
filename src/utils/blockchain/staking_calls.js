@@ -636,7 +636,6 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
     token_ids
   );
 
-  console.log("token_ids", token_ids);
   contract.tx
     .stake({ gasLimit, value }, token_ids)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {

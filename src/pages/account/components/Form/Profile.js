@@ -88,8 +88,6 @@ const ProfileForm = ({ profile }) => {
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
 
-
-          
           if (!a.length || !v.length) return toast.error("Please check again.");
 
           dispatch(setTxStatus({ type: UPDATE_PROFILE, step: START }));
@@ -205,7 +203,6 @@ const ProfileForm = ({ profile }) => {
                   text="update profile"
                   // isDisabled={!(dirty && isValid) && noImagesChange}
                 />
-                
               </VStack>
             </Stack>
           </Form>
