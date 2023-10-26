@@ -14,6 +14,7 @@ import {
 import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
+import NovaWalletLogo from "@utils/wallets/NovaWalletLogo.jpg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
 import AzeroSignerLogo from "@utils/wallets/AzeroSignerLogo.svg";
 import NightlyLogo from "@utils/wallets/Nightly.svg";
@@ -86,6 +87,10 @@ function WalletNotConnected(props) {
     }
   }
 
+  const noWalletInstalled = supportedWalletList
+    .map((i) => i.installed)
+    .every((i) => i === false);
+
   return (
     <>
       <Box
@@ -107,18 +112,82 @@ function WalletNotConnected(props) {
                 curve: [0.17, 0.67, 0.83, 0.67],
               }}
             >
-              <MenuButton
-                as={Button}
-                h="50px"
-                px="8"
-                fontSize="15px"
-                lineHeight="shorter"
-                minW="10rem"
-                bg="brand.blue"
-                color="blackAlpha.900"
-              >
-                connect wallet
-              </MenuButton>
+              {!isMobile ? (
+                <MenuButton
+                  as={Button}
+                  h="50px"
+                  px="8"
+                  fontSize="15px"
+                  lineHeight="shorter"
+                  minW="10rem"
+                  bg="brand.blue"
+                  color="blackAlpha.900"
+                >
+                  connect wallet
+                </MenuButton>
+              ) : (
+                <>
+                  {noWalletInstalled ? (
+                    <Button
+                      variant="outline"
+                      minW="36"
+                      alignItems="center"
+                      isDisabled={true}
+                    >
+                      <MenuItem>
+                        <Box>
+                          <Flex align="center" justifyContent="start">
+                            <Flex align="center" fontSize="15px">
+                              No Wallet Installed
+                            </Flex>
+                          </Flex>
+                        </Box>
+                      </MenuItem>
+                    </Button>
+                  ) : (
+                    supportedWalletList.map((wallet) => (
+                      <Button
+                        variant="outline"
+                        key={wallet.extensionName}
+                        minW="36"
+                        alignItems="center"
+                      >
+                        <MenuItem
+                          isDisabled={!wallet.installed}
+                          onClick={() => handleConnect(wallet.extensionName)}
+                        >
+                          <Box>
+                            <Flex align="center" justifyContent="start">
+                              {wallet.extensionName === "subwallet-js" && (
+                                <Flex align="center" fontSize="15px">
+                                  Connect {wallet.title}
+                                  <Flex w="26px" ml="2">
+                                    <Image
+                                      src={SubwalletLogo}
+                                      alt={wallet.extensionName}
+                                    />
+                                  </Flex>
+                                </Flex>
+                              )}
+                              {wallet.extensionName === "polkadot-js" && (
+                                <Flex align="center" fontSize="15px">
+                                  Connect Nova Wallet
+                                  <Flex w="26px" ml="2">
+                                    <Image borderRadius='8px'
+                                      src={NovaWalletLogo}
+                                      alt={wallet.extensionName}
+                                    />
+                                  </Flex>
+                                </Flex>
+                              )}
+                            </Flex>
+                          </Box>
+                        </MenuItem>
+                      </Button>
+                    ))
+                  )}
+                </>
+              )}
             </motion.div>
 
             <MenuList
