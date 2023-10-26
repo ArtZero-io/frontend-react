@@ -155,6 +155,22 @@ export const SUPPORTED_WALLET_LIST = [
     installUrlBrave:
       "https://chrome.google.com/webstore/detail/opbinaebpmphpefcimknblieddamhmol",
   },
+  {
+    extensionName: "Nightly",
+    title: "Nightly",
+    noExtensionMessage:
+      "You can use any Polkadot compatible wallet but we recommend using Nightly Wallet",
+    installUrlChrome:
+      "https://chrome.google.com/webstore/detail/nightly/fiikommddbeccaoicoejoniammnalkfa/related?hl=en&authuser=0",
+    installUrlEdge:
+      "https://chrome.google.com/webstore/detail/nightly/fiikommddbeccaoicoejoniammnalkfa/related?hl=en&authuser=0",
+    installUrlFirefox:
+      "https://addons.mozilla.org/en-GB/firefox/addon/nightly-app/",
+    installUrlOpera:
+      "https://chrome.google.com/webstore/detail/nightly/fiikommddbeccaoicoejoniammnalkfa/related?hl=en&authuser=0",
+    installUrlBrave:
+      "https://chrome.google.com/webstore/detail/nightly/fiikommddbeccaoicoejoniammnalkfa/related?hl=en&authuser=0",
+  },
 ];
 
 export const MESSAGE_SIGN = "Sign message to report";
