@@ -70,6 +70,8 @@ import MenuDisconnectIcon from "@theme/assets/icon/MenuDisconnect.js";
 import MenuSwitchIcon from "@theme/assets/icon/MenuSwitch.js";
 import ChainDropdown from "../Dropdown/ChainDropdown";
 import { SCROLLBAR } from "@constants";
+import { isMobile } from "react-device-detect";
+import NovaWalletLogo from "@utils/wallets/NovaWalletLogo.jpg";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();
@@ -735,11 +737,21 @@ function WalletSubDrawer({
                         alt={currentAccount?.meta?.source}
                       />
                     )}
-                    {currentAccount?.meta?.source === "polkadot-js" && (
-                      <Image
-                        src={PolkadotjsLogo}
-                        alt={currentAccount?.meta?.source}
-                      />
+                    {currentAccount?.meta?.source === "polkadot-js" ? (
+                      isMobile ? (
+                        <Image
+                          borderRadius="8px"
+                          src={NovaWalletLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      ) : (
+                        <Image
+                          src={PolkadotjsLogo}
+                          alt={currentAccount?.meta?.source}
+                        />
+                      )
+                    ) : (
+                      ""
                     )}
                     {currentAccount?.meta?.source === "aleph-zero-signer" && (
                       <AzeroChain />
