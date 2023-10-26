@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { browserName, isMobile } from "react-device-detect";
 import { isEmptyObj } from "@utils";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
 const win = window || {};
 
 function WalletNotConnected(props) {
@@ -49,6 +50,8 @@ function WalletNotConnected(props) {
 
   let supportedWalletList = SUPPORTED_WALLET_LIST;
 
+  const [tryConnect, setTryConnect] = useState(0);
+
   if (isMobile) {
     const injectedWeb3 = win?.injectedWeb3;
     if (!isEmptyObj(injectedWeb3)) {
@@ -68,6 +71,13 @@ function WalletNotConnected(props) {
     if (apiState !== "READY") {
       toast.error("Please wait a monent, network is not ready!");
       return;
+    }
+
+    if (tryConnect >= 2) {
+      localStorage.clear();
+      setTryConnect(0);
+    } else {
+      setTryConnect(tryConnect + 1);
     }
 
     if (!keyring) {
