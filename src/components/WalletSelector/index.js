@@ -82,8 +82,17 @@ function WalletSelector({ display }) {
     ...account,
   }));
 
-  const initialAddress =
-    keyringOptions?.length > 0 ? keyringOptions[0].address : "";
+  const initialAddress = useMemo(() => {
+    const item =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("activeAddress")
+        : false;
+
+    return (
+      JSON.parse(item) ||
+      (keyringOptions?.length > 0 ? keyringOptions[0].address : "")
+    );
+  }, [keyringOptions]);
 
   useEffect(
     () => {
@@ -250,7 +259,7 @@ function WalletSelector({ display }) {
                 mr="12px"
               >
                 <Image
-                  src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                  src="https://registry.nightly.app/wallets/nightly/default.png"
                   alt={currentAccount?.meta?.source}
                 />
               </Flex>
@@ -516,7 +525,7 @@ function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
                       justifyContent="center"
                     >
                       <Image
-                        src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                        src="https://registry.nightly.app/wallets/nightly/default.png"
                         alt={currentAccount?.meta?.source}
                       />
                     </Flex>
@@ -687,7 +696,7 @@ function WalletSubDrawer({
                     mr="12px"
                   >
                     <Image
-                      src="https://registry.connect.nightly.app/wallets/nightly/default.png"
+                      src="https://registry.nightly.app/wallets/nightly/default.png"
                       alt={currentAccount?.meta?.source}
                     />
                   </Flex>
