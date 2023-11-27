@@ -63,6 +63,8 @@ import {
   resolveDomain,
 } from "@utils";
 
+const PAY_DAY = 27;
+
 function GeneralPage() {
   const history = useHistory();
   const { api, apiState, currentAccount } = useSubstrateState();
@@ -325,27 +327,26 @@ function GeneralPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
-  const lastDay = useMemo(() => {
-    const now = new Date();
-    let lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const payDay = useMemo(() => {
+    const currentDate = new Date();
 
-    if (lastDayA.getDay() === 0) {
-      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -5);
+    currentDate.setDate(PAY_DAY);
+
+    const dayNum = currentDate.getDay();
+
+    // 0 ~ CN
+    if (dayNum === 0) {
+      currentDate.setDate(PAY_DAY + 1);
     }
 
-    if (lastDayA.getDay() === 6) {
-      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -4);
+    // 6 ~ T7
+    if (dayNum === 6) {
+      currentDate.setDate(PAY_DAY + 2);
     }
 
     return (
       <>
-        {lastDayA.toLocaleString("en-US", {
-          month: "long",
-          day: "numeric",
-        })}{" "}
-        -{" "}
-        {lastDay.toLocaleString("en-US", {
+        {currentDate.toLocaleString("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric",
@@ -614,12 +615,18 @@ function GeneralPage() {
               </Skeleton>
 
               <Stack>
-                <Text fontSize={{ base: "16px", xl: "lg" }}>
-                  Next Payout:{" "}
-                  <Text as="span" color="#7AE7FF" mr="30px">
-                    {lastDay}
+                {isStakingLocked || rewardStarted ? (
+                  <Text fontSize={{ base: "16px", xl: "lg" }}>
+                    Payment in progress
                   </Text>
-                </Text>
+                ) : (
+                  <Text fontSize={{ base: "16px", xl: "lg" }}>
+                    Next Payout:{" "}
+                    <Text as="span" color="#7AE7FF" mr="30px">
+                      {payDay}
+                    </Text>
+                  </Text>
+                )}
               </Stack>
             </Stack>
 
