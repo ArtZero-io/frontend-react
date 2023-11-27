@@ -29,7 +29,7 @@ import {
 } from "@store/actions/txStatus";
 import { setTxStatus } from "@store/actions/txStatus";
 import { stringToU8a } from "@polkadot/util";
-import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
+import { isValidAddressPolkadotAddress, getEstimatedGas, getDomainToAddress } from "@utils";
 import { APICall } from "@api/client";
 import { START, FINALIZED, TRANSFER } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
@@ -56,8 +56,14 @@ function TransferAzeroDomainsNFTModal({
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   const transferNFTsHandler = async () => {
+    let receiver = receiverAddress;
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
-      return toast.error(`Invalid address! Please check again!`);
+      const address = await getDomainToAddress(receiverAddress, api);
+      if (address && isValidAddressPolkadotAddress(address)) {
+        receiver = address;
+      } else {
+        return toast.error(`Invalid address! Please check again!`);
+      }
     }
 
     if (owner !== currentAccount?.address) {
@@ -87,14 +93,14 @@ function TransferAzeroDomainsNFTModal({
         contract,
         value,
         "psp34::transfer",
-        receiverAddress,
+        receiver,
         { bytes: azDomainName },
         stringToU8a(additionalData)
       );
 
       await contract.tx["psp34::transfer"](
         { value, gasLimit },
-        receiverAddress,
+        receiver,
         { bytes: azDomainName },
         stringToU8a(additionalData)
       )
