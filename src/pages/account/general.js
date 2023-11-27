@@ -266,24 +266,6 @@ function GeneralPage() {
     [currentAccount]
   );
 
-  const claimReward = async () => {
-    try {
-      dispatch(setTxStatus({ type: CLAIM_REWARDS, step: START }));
-
-      await staking_calls.claimReward(
-        currentAccount,
-        dispatch,
-        CLAIM_REWARDS,
-        api
-      );
-      await checkRewardStatus();
-    } catch (error) {
-      console.log(error);
-      toast.error("There was an error while claiming the rewards.");
-      dispatch(clearTxStatus());
-    }
-  };
-
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
@@ -651,23 +633,6 @@ function GeneralPage() {
               >
                 stake now
               </Button>
-
-              {rewardStarted ? (
-                <CommonButton
-                  {...rest}
-                  w="full"
-                  minW="120px"
-                  mx={["0", "30px"]}
-                  my={["20px", "30px"]}
-                  maxW={["auto", "220px"]}
-                  text={claimed ? "rewards is claimed" : "claim rewards"}
-                  isDisabled={
-                    claimed || !estimatedEarningBaseRewardPool || actionType
-                  }
-                  onClick={() => claimReward()}
-                />
-              ) : null}
-
               <FeeInfoModal platformFee={platformFee} />
             </Skeleton>
           </VStack>
