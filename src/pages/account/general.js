@@ -47,15 +47,11 @@ import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
 import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { useDispatch } from "react-redux";
-import { START, CLAIM_REWARDS } from "@constants";
-import { setTxStatus } from "@store/actions/txStatus";
+import { CLAIM_REWARDS } from "@constants";
 import useForceUpdate from "@hooks/useForceUpdate";
 
 import { APICall } from "@api/client";
 import { useMemo } from "react";
-import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
 import {
   fetchValidatorProfit,
@@ -85,7 +81,6 @@ function GeneralPage() {
 
   const publicCurrentAccount = getPublicCurrentAccount();
 
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
