@@ -46,7 +46,7 @@ import CommonContainer from "@components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
-import useTxStatus from "@hooks/useTxStatus";
+
 import { CLAIM_REWARDS } from "@constants";
 import useForceUpdate from "@hooks/useForceUpdate";
 
@@ -264,7 +264,6 @@ function GeneralPage() {
   );
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
-  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
     if (apiState !== "READY") return;

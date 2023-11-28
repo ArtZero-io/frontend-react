@@ -171,8 +171,7 @@ const DesktopNavContent = (props) => {
         }
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
-
-        <C14Modal />
+        <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -250,8 +249,6 @@ const MobileNav = ({ onClose, isOpen }) => {
                 {...navItem}
               />
             ))}
-
-            <C14Modal />
           </DrawerBody>
 
           <DrawerFooter>
@@ -487,7 +484,11 @@ const NAV_ITEMS = [
     label: "stats",
     href: ROUTES.STATS,
   },
-
+  {
+    label: "docs",
+    href: ROUTES.DOCS,
+    isExternal: true,
+  },
   // {
   //   label: "my account",
   //   children: [
