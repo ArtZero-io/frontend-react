@@ -320,6 +320,27 @@ function GeneralPage() {
       currentDate.setDate(PAY_DAY + 2);
     }
 
+
+    if (Date.now() > currentDate.getDate()) {
+      const currMonth = currentDate.getMonth();
+
+      currentDate.setMonth(currMonth + 1);
+
+      currentDate.setDate(PAY_DAY);
+
+      const dayNum = currentDate.getDay();
+
+      // 0 ~ CN
+      if (dayNum === 0) {
+        currentDate.setDate(PAY_DAY + 1);
+      }
+
+      // 6 ~ T7
+      if (dayNum === 6) {
+        currentDate.setDate(PAY_DAY + 2);
+      }
+    }
+
     return (
       <>
         {currentDate.toLocaleString("en-US", {
