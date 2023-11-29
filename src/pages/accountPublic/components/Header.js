@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -17,9 +18,10 @@ import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
-import { getProfileOnChain } from "../../../utils/blockchain/profile_calls";
-import { getPublicCurrentAccount } from "../../../utils";
 import { useHistory } from "react-router-dom";
+import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
+import contractData from "@utils/blockchain/";
+import { getProfile } from "@actions/account";
 
 function ProfileHeader({ address }) {
   const dispatch = useDispatch();
@@ -39,12 +41,12 @@ function ProfileHeader({ address }) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!api || apiState !== "READY") return;
+      if (!api || apiState !== "READY" || !contract || !address) return;
 
-      const res = await getProfileOnChain({
-        callerAccount: getPublicCurrentAccount(),
-        accountAddress: address,
-      });
+      await setProfileContract(api, contractData?.profile);
+
+      const res = await dispatch(getProfile(address));
+
       if (res?.status === "OK") {
         if (!res.data.username) {
           res.data.username = truncateStr(address);
@@ -64,7 +66,7 @@ function ProfileHeader({ address }) {
     if (!profile?.address || profile?.address !== address) {
       fetchProfile();
     }
-  }, [api, apiState, dispatch, profile, address]);
+  }, [api, apiState, dispatch, profile, address, currentAccount]);
 
   return (
     <Box
@@ -90,7 +92,9 @@ function ProfileHeader({ address }) {
               src={profile?.avatar}
             />
           )}
-          {!profile?.avatar && <IdenticonAvatar size={avatarProfileSize} />}
+          {!profile?.avatar && (
+            <IdenticonAvatar address={address} size={avatarProfileSize} />
+          )}
         </Center>
 
         <HStack w="full" justifyContent="space-around" py={4}>
