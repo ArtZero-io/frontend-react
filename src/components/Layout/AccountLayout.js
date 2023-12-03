@@ -154,4 +154,9 @@ const tabsList = [
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_ACTIVITIES,
   },
+  {
+    label: "My Bids",
+    isDisabled: false,
+    route: ROUTES.ACCOUNT_MY_BIDS,
+  },
 ];
