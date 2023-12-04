@@ -133,6 +133,16 @@ export function convertStringToPrice(stringPrice) {
   }
 }
 
+export function convertNumberToPrice(price) {
+  try {
+    /* eslint-disable no-useless-escape */
+    return price / 10 ** 12;
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+}
+
 export function convertNumberWithoutCommas(input) {
   return input.replace(/,/g, "");
 }

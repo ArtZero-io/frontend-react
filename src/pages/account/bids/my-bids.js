@@ -11,7 +11,8 @@ import {
     VStack,
     useMediaQuery,
   } from "@chakra-ui/react";
-  import EventTable from "@components/Table/EventTable";
+  import BidsTable from "@components/Table/BidsTable";
+  
   import React, { useEffect } from "react";
   
   import { APICall } from "@api/client";
@@ -19,11 +20,12 @@ import {
   import DropdownMobile from "@components/Dropdown/DropdownMobile";
   import { SCROLLBAR } from "@constants";
   import { useInfiniteQuery } from "@tanstack/react-query";
-  import { getTimestamp, resolveDomain } from "@utils";
+  import { resolveDomain, convertNumberToPrice, convertStringToDateTime} from "@utils";
   import { useSubstrateState } from "@utils/substrate";
   import { useCallback, useMemo } from "react";
   import { useInView } from "react-intersection-observer";
   import { BeatLoader } from "react-spinners";
+  import azero_domains_nft from "@blockchain/azero-domains-nft";
   
   const NUMBER_NFT_PER_PAGE = 5;
   
@@ -33,23 +35,9 @@ import {
   
     const tabData = [
       {
-        label: "BUY",
+        label: "My Bids",
         content: <EventTableWrapper type="BUY" tableHeaders={headers.buy} />,
-      },
-      {
-        label: "SELL",
-        content: <EventTableWrapper type="SELL" tableHeaders={headers.sell} />,
-      },
-      {
-        label: "LIST",
-        content: <EventTableWrapper type="LIST" tableHeaders={headers.list} />,
-      },
-      {
-        label: "UNLIST",
-        content: (
-          <EventTableWrapper type="UNLIST" tableHeaders={headers.unlist} />
-        ),
-      },
+      }
     ];
   
     return (
@@ -137,35 +125,71 @@ import {
     }, [inView]);
   
     const fetchEvents = useCallback(
-      async ({ pageParam }) => {
-        if (pageParam === undefined || apiState !== "READY") return;
+      async ({ pageParam, bidder }) => {
+        console.log('pageParam', pageParam);
+        console.log('bidder', bidder);
+        if (pageParam === undefined || apiState !== "READY" || bidder === undefined) return;
   
         let eventsList = [];
-        let {ret} = await APICall.getBidsByBidderAddress();
+        const options = {
+          bidder: bidder,
+          limit: 10000,
+          offset: 0,
+          sort: -1,
+        };
+        let {ret} = await APICall.getBidsByBidderAddress(options);
+        console.log('getBidsByBidderAddress', ret)
         eventsList= ret;
   
         if (eventsList?.length > 0) {
           eventsList = await Promise.all(
             eventsList?.map(async (event) => {
-              const { blockNumber, buyer, seller, trader } = event;
+              const { nftContractAddress, tokenID, azDomainName, seller, bidder, bid_value, bid_date } = event;
   
-              const buyerDomain = await resolveDomain(buyer, api);
+              const buyerDomain = await resolveDomain(bidder, api);
               const sellerDomain = await resolveDomain(seller, api);
-              const traderDomain = await resolveDomain(trader, api);
-  
+              console.log('nftContractAddress', nftContractAddress);
+              console.log('tokenID', tokenID);
+              let nftInformationData = {};
+              let originalPrice = 0;
+              let highestBidPrice = 0;
+              let bidPrice = convertNumberToPrice(bid_value);
+              let bidDate = convertStringToDateTime(bid_date);
+              if (nftContractAddress) {
+                if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+                  const { ret: nftInformationRes, status } = await APICall.getNFTByID({
+                    collection_address: nftContractAddress,
+                    azDomainName: azDomainName,
+                  });
+                  if (status === "OK") {
+                    nftInformationData = nftInformationRes[0];
+                    originalPrice = convertNumberToPrice(nftInformationData.price);
+                    highestBidPrice = convertNumberToPrice(nftInformationData.highest_bid);
+                  }
+                } else {
+                  const { ret: nftInformationRes, status } = await APICall.getNFTByID({
+                    collection_address: nftContractAddress,
+                    token_id: tokenID,
+                  });
+                  if (status === "OK") {
+                    nftInformationData = nftInformationRes[0];
+                    originalPrice = convertNumberToPrice(nftInformationData.price);
+                    highestBidPrice = convertNumberToPrice(nftInformationData.highest_bid);
+                  }
+                }
+              }
+              
               const eventFormatted = {
                 ...event,
+                ...nftInformationData,
                 buyerDomain,
                 sellerDomain,
-                traderDomain,
+                originalPrice,
+                bidPrice,
+                bidDate,
+                highestBidPrice
               };
-  
-              const timestamp = await getTimestamp(api, blockNumber);
-  
-              if (timestamp) {
-                eventFormatted.timestamp = timestamp;
-              }
-  
+              console.log('eventFormatted', eventFormatted);
               return eventFormatted;
             })
           );
@@ -182,7 +206,7 @@ import {
     const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
       useInfiniteQuery(
         [`getEvents${type}`, currentAccount?.address, apiState],
-        ({ pageParam = 0 }) => fetchEvents({ pageParam }),
+        ({ pageParam = 0, bidder = currentAccount?.address }) => fetchEvents({ pageParam, bidder }),
         {
           getNextPageParam: (lastPage) => {
             if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
@@ -208,7 +232,7 @@ import {
             <BeatLoader color="#7ae7ff" size="10px" />
           </HStack>
         ) : (
-          <EventTable
+          <BidsTable
             type={type}
             tableHeaders={tableHeaders}
             tableData={dataFormatted}
@@ -235,43 +259,18 @@ import {
   };
   
   const dropDownMobileOptions = {
-    BUY: "buy",
-    SELL: "sell",
-    LIST: "list",
-    UNLIST: "unlist",
+    BUY: "buy"
   };
   
   const headers = {
     buy: {
       nftName: "nft name",
       avatar: "image",
-      price: "price",
-      platformFee: "platform Fee",
-      royaltyFee: "royalty fee",
+      originalPrice: "price",
+      highestBidPrice: "highest bid",
+      bidPrice: "bid amount",
+      bidDate: "bid date",
       seller: "seller",
-      timestamp: "timestamp",
-    },
-    list: {
-      nftName: "nft name",
-      avatar: "image",
-      price: "price",
-      trader: "trader",
-      timestamp: "timestamp",
-    },
-    unlist: {
-      nftName: "nft name",
-      avatar: "image",
-      trader: "trader",
-      timestamp: "timestamp",
-    },
-    sell: {
-      nftName: "nft name",
-      avatar: "image",
-      price: "price",
-      platformFee: "platform fee",
-      royaltyFee: "royalty fee",
-      buyer: "buyer",
-      timestamp: "timestamp",
     },
   };
   
