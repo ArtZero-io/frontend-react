@@ -19,20 +19,33 @@ import {
   import { memo } from "react";
   import { SCROLLBAR } from "@constants";
   import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
-  
+  import CommonButton from "@components/Button/CommonButton";
   import { Link as ReactRouterLink } from "react-router-dom";
   import { truncateStr } from "@utils";
   import { useSubstrateState } from "@utils/substrate";
+  import {
+    START,
+    ACCEPT_BID,
+    REMOVE_BID
+  } from "@constants";
+  import { useDispatch } from "react-redux";
+  import { setTxStatus } from "@store/actions/txStatus";
+  import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+  import toast from "react-hot-toast";
+  import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
   
   function BidsTable({ tableHeaders, tableData, collectionOwner, type }) {
+    console.log('BidsTable::type', type);
+    const dispatch = useDispatch();
+    const { currentAccount, api } = useSubstrateState();
     //  const { chainToken } = useSubstrateState();
     const { apiState } = useSubstrateState();
-  
+    
     return (
       <>
         {apiState !== "READY" || tableData?.length === 0 ? (
           <Heading py="30px" size="h6">
-            No event found!
+            No bid found!
           </Heading>
         ) : (
           <>
@@ -90,7 +103,9 @@ import {
                     </Thead>
   
                     <Tbody>
+                    {console.log('tableData', tableData)}
                       {tableData?.map((item, idx) => (
+                        
                         <Tr key={idx} color="#fff">
                           {Object.keys(tableHeaders)?.map((i, idx) =>
                             i === "avatar" ? null : (
@@ -103,16 +118,44 @@ import {
                               </Td>
                             )
                           )}
-                          {/* <Td
-                          key={idx}
-                          py={{ base: "1rem", "2xl": "1.75rem" }}
-                          textAlign="center"
-                          color="#fff"
-                        >
-                          {new Date(1657304023551).toLocaleString("en-US")}
-                        </Td> */}
+                          {(type === "BUY") ? (<Td>
+                              <CommonButton
+                                mx="0"
+                                px="8px"
+                                h="40px"
+                                text="Remove bid"
+                                onClick={() => removeBid(
+                                  api,
+                                  currentAccount,
+                                  item['nftContractAddress'],
+                                  item['tokenID'],
+                                  item['bidId'],
+                                  dispatch
+                                )}
+                              />
+                            </Td>) : ""}
+                            {(type === "SELL") ? (
+                              <Td>
+                                <CommonButton
+                                    mx="0"
+                                    px="8px"
+                                    h="40px"
+                                    text="Accept bid"
+                                    onClick={() => acceptBid(
+                                      api,
+                                      currentAccount,
+                                      item['nftContractAddress'],
+                                      item['tokenID'],
+                                      item['bidId'],
+                                      dispatch
+                                    )}
+                                  />
+                              </Td>
+                            ) : ""}
+                            
                         </Tr>
                       ))}
+                     
                     </Tbody>
                   </Table>
                 ) : null}
@@ -171,6 +214,21 @@ import {
           </Text>
         );
   
+        case "bidder":
+          return (
+            <Text color="#7ae7ff">
+              <Link
+                as={ReactRouterLink}
+                to={`/public-account/collections/${itemObj[headerValue]}`}
+                color="#7AE7FF"
+                textTransform="none"
+                textDecoration="underline"
+              >
+                {itemObj[`${headerValue}Domain`] ??
+                  truncateStr(itemObj[headerValue])}
+              </Link>
+            </Text>
+          );
       case "seller":
         return (
           <Text color="#7ae7ff">
@@ -217,9 +275,83 @@ import {
             <Text>{itemObj[headerValue]}</Text>
           </HStack>
         );
-  
       default:
         return <Text> {itemObj[headerValue]} </Text>;
     }
+  };
+
+  const acceptBid = async (
+    api,
+    currentAccount,
+    nftContractAddress,
+    tokenID,
+    bidId,
+    dispatch
+  ) => {
+    // check wallet connected
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+  
+    dispatch(
+      setTxStatus({
+        type: ACCEPT_BID,
+        step: START,
+        tokenIDArray: Array.of(bidId),
+        // array of bidId NOT TokenID
+      })
+    );
+    await marketplace_contract_calls.acceptBid(
+      currentAccount,
+      nftContractAddress,
+      currentAccount.address,
+      { u64: tokenID },
+      bidId,
+      dispatch,
+      ACCEPT_BID,
+      api
+    );
+  };
+
+  const removeBid = async (
+    api,
+    currentAccount,
+    nftContractAddress,
+    ownerAddress,
+    tokenID,
+    dispatch
+  ) => {
+    // check wallet connected
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+  
+    // check balance
+    const { balance } = await fetchUserBalance({ currentAccount, api });
+  
+    if (balance < 0.001) {
+      toast.error(`Balance is low!`);
+      return;
+    }
+  
+    dispatch(
+      setTxStatus({
+        type: REMOVE_BID,
+        step: START,
+        tokenIDArray: Array.of(tokenID),
+      })
+    );
+  
+    await marketplace_contract_calls.removeBid(
+      currentAccount,
+      nftContractAddress,
+      ownerAddress,
+      { u64: tokenID },
+      dispatch,
+      REMOVE_BID,
+      api
+    );
   };
   

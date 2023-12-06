@@ -37,6 +37,10 @@ import {
       {
         label: "My Bids",
         content: <EventTableWrapper type="BUY" tableHeaders={headers.buy} />,
+      },
+      {
+        label: "The Bids of My Nfts",
+        content: <EventTableWrapper type="SELL" tableHeaders={headers.sell} />,
       }
     ];
   
@@ -131,15 +135,29 @@ import {
         if (pageParam === undefined || apiState !== "READY" || bidder === undefined) return;
   
         let eventsList = [];
-        const options = {
-          bidder: bidder,
-          limit: 10000,
-          offset: 0,
-          sort: -1,
-        };
-        let {ret} = await APICall.getBidsByBidderAddress(options);
-        console.log('getBidsByBidderAddress', ret)
-        eventsList= ret;
+        let options = {};
+        console.log("type", type);
+        if (type === "BUY") {
+          options = {
+            bidder: bidder,
+            limit: 10000,
+            offset: 0,
+            sort: -1,
+          };
+          let {ret} = await APICall.getBidsByBidderAddress(options);
+          eventsList= ret;
+        } else {
+          options = {
+            seller: bidder,
+            limit: 10000,
+            offset: 0,
+            sort: -1,
+          };
+          let {ret} = await APICall.getBidsBySellerAddress(options);
+          eventsList= ret;
+        }
+        
+        
   
         if (eventsList?.length > 0) {
           eventsList = await Promise.all(
@@ -270,7 +288,16 @@ import {
       highestBidPrice: "highest bid",
       bidPrice: "bid amount",
       bidDate: "bid date",
-      seller: "seller",
+      seller: "seller"
+    },
+    sell: {
+      nftName: "nft name",
+      avatar: "image",
+      originalPrice: "price",
+      highestBidPrice: "highest bid",
+      bidPrice: "bid amount",
+      bidDate: "bid date",
+      bidder: "bidder"
     },
   };
   

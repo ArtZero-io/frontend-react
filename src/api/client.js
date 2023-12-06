@@ -114,6 +114,21 @@ export const APICall = {
     });
   },
 
+  // get list of Seller by Address
+  getBidsBySellerAddress: async ({
+    seller,
+    limit = 10000,
+    offset = 0,
+    sort = -1,
+  }) => {
+    return await client("POST", "/getBidsBySellerAddress", {
+      seller,
+      limit,
+      offset,
+      sort,
+    });
+  },
+
   // Ask BE Update API Calls
   askBeCacheImage: async ({ input, is1024 = false, is1920 = false }) => {
     return await client("POST", "/cacheImage", {
