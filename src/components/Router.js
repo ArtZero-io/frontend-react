@@ -30,6 +30,8 @@ import MyMintingProjectPage from "@pages/account/projects/minting";
 import NftDetailPage from "../pages/token/";
 import PublicAccountLayout from "./Layout/PublicAccountLayout";
 import ActivitiesPage from "../pages/account/activities/activities";
+import MyBidsPages from "../pages/account/bids/my-bids";
+
 // import NotFound from "./NotFound/NotFound";
 
 const Router = () => {
@@ -61,6 +63,11 @@ const Router = () => {
               exact
               path={ROUTES.ACCOUNT_MY_ACTIVITIES}
               component={ActivitiesPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_BIDS}
+              component={MyBidsPages}
             />
             <Route
               exact

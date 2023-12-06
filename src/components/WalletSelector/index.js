@@ -450,6 +450,11 @@ const myAccountList = [
     href: ROUTES.ACCOUNT_MY_ACTIVITIES,
     icon: <MenuActivityIcon />,
   },
+  {
+    label: "My Bids",
+    href: ROUTES.ACCOUNT_MY_BIDS,
+    icon: <MenuActivityIcon />,
+  },
 ];
 
 function WalletSubmenu({ keyringOptions, selectAccountHandler }) {

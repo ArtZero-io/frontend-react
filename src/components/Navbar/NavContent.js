@@ -192,7 +192,8 @@ const myAccountList = [
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
   { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
-  { label: "My Activities", href: ROUTES.ACCOUNT_MY_ACTIVITIES },
+  { label: "My Activities 2", href: ROUTES.ACCOUNT_MY_ACTIVITIES },
+  { label: "My Bids", href: ROUTES.ACCOUNT_MY_BIDS },
 ];
 
 const profile = [
@@ -513,7 +514,7 @@ const NAV_ITEMS = [
   //       href: ROUTES.ACCOUNT_MY_PROJECTS,
   //     },
   //     {
-  //       label: "my activities",
+  //       label: "my activities 3",
   //       href: ROUTES.ACCOUNT_MY_ACTIVITIES,
   //     },
   //   ],

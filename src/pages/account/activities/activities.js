@@ -56,7 +56,7 @@ function ActivityPages() {
     <CommonContainer>
       <VStack as="section" w="full">
         <Box w="full" textAlign="left" mb={[0, "24px"]}>
-          <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>My Activities</Heading>
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>My Activities 5</Heading>
         </Box>
       </VStack>
 
