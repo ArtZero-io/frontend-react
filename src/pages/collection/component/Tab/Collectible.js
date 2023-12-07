@@ -70,7 +70,7 @@ import LevelCard from "@components/Card/LevelCard";
 import { Fragment } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
-import { MAX_BID_COUNT } from "../../../../constants";
+import { MAX_BID_COUNT } from "@constants";
 import NFTReportModal from "../Modal/NFTReport";
 import marketplace from "@utils/blockchain/marketplace";
 
@@ -82,7 +82,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
-import { resolveDomain, truncateStr } from "../../../../utils";
+import { resolveDomain, truncateStr } from "@utils";
 
 const NFTTabCollectible = (props) => {
   const {

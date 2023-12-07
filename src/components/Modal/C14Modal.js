@@ -30,14 +30,15 @@ export default function C14Modal() {
             bg: "transparent",
             borderBottom: "none",
           }}
-          py={["4px", "12px"]}
-          px={["4px", "15px"]}
+          py={["4px", "10px"]}
+          px={["1px"]}
           fontFamily="Evogria, sans-serif"
           fontSize={{ base: "18px", md: "15px" }}
           variant="ghost"
           onClick={onOpen}
           borderBottomWidth="2px"
           borderBottomColor="transparent"
+          h={"42px"}
         >
           <Text>buy azero</Text>
         </Button>

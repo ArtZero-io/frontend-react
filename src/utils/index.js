@@ -588,13 +588,13 @@ export const isPhaseEnd = (endTime = "") => {
 };
 
 export function formatOutput(o) {
-  const frmtRet = o.toHuman().Ok;
+  const frmtRet = o?.toHuman().Ok;
 
   return frmtRet?.replaceAll(",", "");
 }
 
 export function formatNumberOutput(o) {
-  const frmtRet = o.toHuman().Ok;
+  const frmtRet = o?.toHuman().Ok;
 
   return !frmtRet ? 0 : parseInt(frmtRet?.replaceAll(",", ""));
 }
@@ -765,15 +765,19 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
   }
 };
 
-export const resolveDomain = async (address, customApi) => {
+export const resolveDomain = async (address, api) => {
   const option = {
-    chainId: SupportedChainId.AlephZeroTestnet,
+    chainId: SupportedChainId.AlephZero,
   };
 
-  if (customApi) {
-    option.customApi = customApi;
+  if (api) {
+    option.customApi = api;
   }
-  if (
+
+  console.log("address", address);
+  console.log("option", option);
+
+    if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {

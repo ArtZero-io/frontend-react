@@ -109,6 +109,7 @@ export default function useEditBidPrice({
                 toast.success("Bid price have been updated successfully");
               }
             });
+            
             const options = tokenIdFound.bytes
               ? { azDomainName: tokenIdFound?.bytes }
               : { token_id: tokenIdFound?.u64 };

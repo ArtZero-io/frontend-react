@@ -22,6 +22,8 @@ async function fetchCollectionList(filterSelected, ownerAddress) {
           let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
             options
           );
+
+          // TODO: remove after mainnet release
           // Hard code to remove azero domain collection inactive on testnet
           let azeroDomainInactive = [
             "5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn",
@@ -31,6 +33,7 @@ async function fetchCollectionList(filterSelected, ownerAddress) {
             (item) => !azeroDomainInactive.includes(item.nftContractAddress)
           );
           // End hard code to remove azero domain collection inactive on testnet
+
           if (filterSelected === "COLLECTED") {
             dataList = dataList?.filter((item) => item.is_for_sale !== true);
           }

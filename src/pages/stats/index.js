@@ -11,9 +11,10 @@ import { APICall } from "@api/client";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
-import { getPublicCurrentAccount } from "@utils";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
+import { getPublicCurrentAccount } from "@utils";
+
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
@@ -50,6 +51,25 @@ function StatsPage() {
 
   const prepareStats = async () => {
     try {
+      // ==Fetch Total Payout (INW)===================
+
+      // const chainDecimals = api?.registry?.chainDecimals;
+
+      // let result = await execContractQuery(
+      //   publicCurrentAccount?.address,
+      //   api,
+      //   psp22_contract.CONTRACT_ABI,
+      //   process.env.REACT_APP_INW_TOKEN_ADDRESS,
+      //   "psp22::balanceOf",
+      //   process.env.REACT_APP_INW_PAYOUT_ADDRESS
+      // );
+
+      // const bal = formatNumberOutput(result) / 10 ** chainDecimals[0];
+
+      // const totalINWPayout = 50 * 10 ** 6 - bal;
+
+      // ================================
+
       // Total Payout
       const { ret: data } = await APICall.getAllRewardPayout({
         limit: 1000,
@@ -57,13 +77,37 @@ function StatsPage() {
         sort: -1,
       });
 
-      const totalPayouts = data.reduce((acc, curr) => {
+      const totalPayouts = data?.reduce((acc, curr) => {
         return acc + curr.rewardAmount;
       }, 0);
 
-      const totalNftPayouts = data.reduce((acc, curr) => {
-        return acc + curr.totalStakedAmount * 10 ** 12;
-      }, 0);
+      const chainDecimals = api?.registry?.chainDecimals;
+
+      // payout INW reveser order Temp hard set
+      const INWPayout1 =
+        120 * data[0]?.totalStakedAmount * 10 ** chainDecimals[0];
+      const INWPayout2 =
+        150 * data[1]?.totalStakedAmount * 10 ** chainDecimals[0]; // 150INW x 3387 = 508050
+      const INWPayout3 =
+        120 * data[2]?.totalStakedAmount * 10 ** chainDecimals[0];
+
+      const totalINWPayout = INWPayout1 + INWPayout2 + INWPayout3;
+
+      process.env.NODE_ENV === "development" &&
+        console.table({
+          INWPayout1: {
+            INWPayout: INWPayout1,
+            nftCount: data[0]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+          INWPayout2: {
+            INWPayout: INWPayout2,
+            nftCount: data[1]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+          INWPayout3: {
+            INWPayout: INWPayout3,
+            nftCount: data[2]?.totalStakedAmount * 10 ** chainDecimals[0],
+          },
+        });
 
       let remainRewardPool = 0;
       let isRewardStarted = await staking_calls.getRewardStarted(
@@ -187,7 +231,7 @@ function StatsPage() {
           },
           {
             title: "Total Payout (INW)",
-            value: totalNftPayouts * INW_RATE,
+            value: totalINWPayout,
             unit: "INW",
           },
           {
@@ -198,7 +242,7 @@ function StatsPage() {
           {
             title: "Next Payout (INW)",
             value: platformTotalStaked * INW_RATE,
-            unit: "INW",
+            unit: "TBD",
           },
         ],
         topCollections: dataListWithFP,

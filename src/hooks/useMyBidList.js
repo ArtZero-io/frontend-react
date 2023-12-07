@@ -39,6 +39,7 @@ async function fetchMyBidList(bidderAddress) {
           token_id: bid.tokenID,
         };
       }
+      
       let { ret: dataList } = await APICall.getNFTByID(options);
 
       if (!dataList) return;

@@ -173,7 +173,6 @@ function TokenPage() {
     async function () {
       try {
         setLoading(true);
-
         if (currentAccount) {
           const stakedCount = await fetchMyPMPStakedCount(
             currentAccount,
@@ -193,7 +192,6 @@ function TokenPage() {
         } = await APICall.getCollectionByAddress({
           collection_address,
         });
-
         let tokenDetails = {};
 
         if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
@@ -235,7 +233,6 @@ function TokenPage() {
         }
 
         let listBidder;
-
         if (tokenDetails?.is_for_sale) {
           if (collection_address === azero_domains_nft.CONTRACT_ADDRESS) {
             listBidder = await marketplace_contract_calls.getAllBids(
@@ -644,7 +641,7 @@ function TokenPage() {
 
   useEffect(() => {
     if (filterSelected) rest.step === "Finalized" && history.goBack();
-  }, [rest.step]);
+  }, [filterSelected, history, rest.step]);
 
   // END STAKE ACTION=======================================================
 
@@ -1120,7 +1117,7 @@ function TokenPage() {
                       textDecoration="underline"
                       as={ReactRouterLink}
                     >
-                      {ownerName ?? truncateStr(ownerAddress)}{" "}
+                      {ownerName ?? truncateStr(ownerAddress)}
                     </Link>
                   </Text>
                 </Stack>

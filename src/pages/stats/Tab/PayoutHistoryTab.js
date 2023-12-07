@@ -34,6 +34,8 @@ function PayoutHistoryTab() {
           nftStakedCount: 0,
         }
       );
+      
+      console.log("summary", summary);
 
       data = data.map((item, idx) => {
         return { ...item, order: idx + 1 };

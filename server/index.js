@@ -6,7 +6,7 @@ const {
   getProjectByAddress,
   getCloudFlareImage,
   getCollectionByAddress,
-  getNFTByID
+  getNFTByID,
 } = require("./api");
 const app = express();
 
@@ -44,7 +44,10 @@ app.get("/launchpad/*", async (req, res, next) => {
         const result = await getProjectByAddress({
           nftContractAddress: req.params[0],
         });
-        if (!result?.length) return res.redirect(['https://', req.get('Host'), '/launchpad'].join('')); 
+        if (!result?.length)
+          return res.redirect(
+            ["https://", req.get("Host"), "/launchpad"].join("")
+          );
         const project = result[0];
         // get post info
         // inject meta tags
@@ -53,9 +56,18 @@ app.get("/launchpad/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.headerImage);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.name)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
-          .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
+          .replaceAll(
+            "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
+            project.name
+          )
+          .replaceAll(
+            "Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io",
+            project.description
+          )
+          .replaceAll(
+            "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024",
+            image
+          );
       }
 
       return res.send(htmlData);
@@ -76,7 +88,10 @@ app.get("/collection/*", async (req, res, next) => {
         const result = await getCollectionByAddress({
           collection_address: req.params[0],
         });
-        if (!result?.length) return res.redirect(['https://', req.get('Host'), '/marketplace'].join('')); 
+        if (!result?.length)
+          return res.redirect(
+            ["https://", req.get("Host"), "/marketplace"].join("")
+          );
         const project = result[0];
         // get post info
         // inject meta tags
@@ -85,9 +100,18 @@ app.get("/collection/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.headerImage);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.name)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
-          .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
+          .replaceAll(
+            "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
+            project.name
+          )
+          .replaceAll(
+            "Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io",
+            project.description
+          )
+          .replaceAll(
+            "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024",
+            image
+          );
       }
 
       return res.send(htmlData);
@@ -105,12 +129,15 @@ app.get("/nft/*", async (req, res, next) => {
         return res.status(404).end();
       }
       if (req.params?.[0]) {
-        const arr = req.params[0].split('/')
+        const arr = req.params[0].split("/");
         const result = await getNFTByID({
           collection_address: arr[0],
-          token_id: arr[1]
+          token_id: arr[1],
         });
-        if (!result?.length) return res.redirect(['https://', req.get('Host'), '/marketplace'].join('')); 
+        if (!result?.length)
+          return res.redirect(
+            ["https://", req.get("Host"), "/marketplace"].join("")
+          );
         const project = result[0];
         // get post info
         // inject meta tags
@@ -119,9 +146,18 @@ app.get("/nft/*", async (req, res, next) => {
           image = await getCloudFlareImage(project.avatar);
         }
         htmlData = htmlData
-          .replaceAll("ArtZero.io - NFT Marketplace for Aleph Zero Blockchain", project.nftName)
-          .replaceAll("Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io", project.description)
-          .replaceAll("https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024", image);
+          .replaceAll(
+            "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
+            project.nftName
+          )
+          .replaceAll(
+            "Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io",
+            project.description
+          )
+          .replaceAll(
+            "https://imagedelivery.net/AHcX2l0hfeTsnvkojY22Eg/artzero/preview/1024",
+            image
+          );
       }
 
       return res.send(htmlData);
@@ -131,17 +167,16 @@ app.get("/nft/*", async (req, res, next) => {
   });
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = null;
   try {
-      decodeURIComponent(req.path)
+    decodeURIComponent(req.path);
+  } catch (e) {
+    err = e;
   }
-  catch(e) {
-      err = e;
-  }
-  if (err){
-      // console.log(err, req.url);
-      return res.redirect(['https://', req.get('Host'), '/'].join(''));    
+  if (err) {
+    // console.log(err, req.url);
+    return res.redirect(["https://", req.get("Host"), "/"].join(""));
   }
   next();
 });

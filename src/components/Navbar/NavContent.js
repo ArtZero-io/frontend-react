@@ -153,7 +153,7 @@ const DesktopNavContent = (props) => {
           md: "space-between",
           xl: "center",
         }}
-        spacing={{ xl: "35px", "2xl": "55px" }}
+        spacing={{ xl: "35px", "2xl": "50px" }}
         pl={{ base: "8px", md: "32px", xl: "50px" }}
         pr="10px"
         {...props}
@@ -162,8 +162,15 @@ const DesktopNavContent = (props) => {
           <NavLink.Desktop key={index} label={link.label} to={link.href} />
         ))}
 
+        {
+          <NavLink.Desktop
+            label="Stake2Earn"
+            to={ROUTES.STAKE2EARN}
+            isExternal={true}
+          />
+        }
+
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
-        {/* <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} /> */}
 
         <C14Modal />
       </HStack>
@@ -471,11 +478,11 @@ const NAV_ITEMS = [
     label: "launchpad",
     href: ROUTES.LAUNCHPAD_BASE,
   },
-  // {
-  //   label: "stake2earn",
-  //   href: ROUTES.STAKE2EARN,
-  //   isExternal: true,
-  // },
+  {
+    label: "stake2earn",
+    href: ROUTES.STAKE2EARN,
+    isExternal: true,
+  },
   {
     label: "stats",
     href: ROUTES.STATS,

@@ -42,7 +42,7 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
-import CommonContainer from "../../components/Container/CommonContainer";
+import CommonContainer from "@components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
@@ -91,7 +91,7 @@ function GeneralPage() {
     [CLAIM_REWARDS],
     () => {
       checkRewardStatus();
-      getRewardHistory();
+      getRewardHistory(true);
     }
   );
 
@@ -353,6 +353,16 @@ function GeneralPage() {
       </>
     );
   }, []);
+
+  const [isStakingLocked, setIsStakingLocked] = useState(false);
+  useEffect(() => {
+    const fetchStakingContractStatus = async () => {
+      const isLocked = await staking_calls.getIsLocked(currentAccount);
+      setIsStakingLocked(isLocked);
+    };
+
+    fetchStakingContractStatus();
+  }, [currentAccount]);
 
   return (
     <CommonContainer>
@@ -625,7 +635,19 @@ function GeneralPage() {
               <Button
                 variant="solid"
                 w={{ base: "full", md: "auto" }}
-                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+                onClick={() => {
+                  if (rewardStarted) {
+                    toast.error("Reward distribution started!");
+                    return;
+                  }
+
+                  if (isStakingLocked) {
+                    toast.error("Staking contract is locked!");
+                    return;
+                  }
+
+                  history.push(ROUTES.ACCOUNT_MY_STAKES);
+                }}
               >
                 stake now
               </Button>

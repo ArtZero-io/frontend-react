@@ -25,6 +25,7 @@ import { truncateStr } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 
 function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+  //  const { chainToken } = useSubstrateState();
   const { apiState } = useSubstrateState();
 
   return (

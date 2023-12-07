@@ -60,7 +60,6 @@
     "ipfs-http-client": "^52.0.0",
     "jdenticon": "^3.1.1",
     "loglevel": "^1.8.1",
-    "mime": "^3.0.0",
     "moment": "^2.29.4",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "numeral": "^2.0.6",
@@ -118,11 +117,11 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not ie <= 99",
-      "not android <= 4.4.4",
-      "not dead",
-      "not op_mini all"
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
     ],
     "development": [
       "last 1 chrome version",

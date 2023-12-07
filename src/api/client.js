@@ -520,7 +520,6 @@ export const APICall = {
     } catch (error) {
       console.log("error", error);
     }
-
     return await client("POST", "/getNFTByID", options);
   },
 
