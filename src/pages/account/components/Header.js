@@ -237,6 +237,7 @@ function ProfileHeader() {
 
               {(tabPath === "nfts" ||
                 tabPath === "projects" ||
+                tabPath === "activites" ||
                 tabPath === "collections") && (
                 <PublicProfileLinkCopier
                   tabPath={tabPath}

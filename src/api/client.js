@@ -241,6 +241,18 @@ export const APICall = {
       },
     });
   },
+
+  getNewListEvents: async (options) => {
+    return clientWithGetParams("GET", "/api/new-list-event-schema", {
+      filter: { ...options },
+    });
+  },
+
+  getUnlistEvents: async (options) => {
+    return clientWithGetParams("GET", "/api/un-list-event-schema", {
+      filter: { ...options },
+    });
+  },
   // END USER Event API Calls
 
   // Event API Calls
@@ -279,46 +291,6 @@ export const APICall = {
 
     result = result.map((item) => {
       return { ...item, type: "BID ACCEPTED" };
-    });
-
-    return result;
-  },
-
-  getUnlistEvents: async ({
-    collection_address,
-    limit = 6,
-    offset = 0,
-    sort = -1,
-  }) => {
-    let { ret: result } = await client("POST", "/getUnlistEvents", {
-      limit,
-      offset,
-      sort,
-      collection_address,
-    });
-
-    result = result.map((item) => {
-      return { ...item, type: "UNLIST" };
-    });
-
-    return result;
-  },
-
-  getNewListEvents: async ({
-    collection_address,
-    limit = 6,
-    offset = 0,
-    sort = -1,
-  }) => {
-    let { ret: result } = await client("POST", "/getNewListEvents", {
-      limit,
-      offset,
-      sort,
-      collection_address,
-    });
-
-    result = result.map((item) => {
-      return { ...item, type: "LIST" };
     });
 
     return result;

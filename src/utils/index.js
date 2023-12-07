@@ -810,11 +810,11 @@ export function hexToAscii(str1) {
 }
 
 export const getTimestamp = async (api, blockNumber) => {
-  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+  const blockHash = await api?.rpc.chain.getBlockHash(blockNumber);
 
   let ret = null;
 
-  const signedBlock = await api.rpc.chain.getBlock(blockHash);
+  const signedBlock = await api?.rpc.chain.getBlock(blockHash);
 
   signedBlock?.block?.extrinsics?.forEach(
     ({ method: { args, section, method: extrinsicsMethod } }) => {

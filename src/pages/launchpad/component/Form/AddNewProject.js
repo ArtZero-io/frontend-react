@@ -11,6 +11,7 @@ import {
   Container,
   Link,
   Button,
+  Circle,
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
@@ -56,9 +57,10 @@ import * as ROUTES from "@constants/routes";
 import { getPublicCurrentAccount } from "@utils";
 
 import { ipfsClient } from "@api/client";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, CheckIcon } from "@chakra-ui/icons";
 import { getProjectMintFeeRate } from "@utils/blockchain/launchpad-contract-calls";
 import { isPhaseTimeOverlap } from "@utils";
+import styles from "./style.module.css";
 
 import {
   validationCollectionName,
@@ -79,6 +81,8 @@ import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "../../../../api/client";
 import { delay } from "../../../../utils";
+import Steps from "rc-steps";
+import { isMobile } from "react-device-detect";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -109,6 +113,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
+
+  const [current, setCurrent] = useState(0);
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
@@ -243,6 +249,473 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   }, [actionType, handleOnRedirect, rest?.step]);
 
   const [formStep, setFormStep] = useState(null);
+
+  const stepItems = (values, setFieldValue) => {
+    return [
+      {
+        title: "PROJECT INFO",
+        description: "Overview of your project",
+        content: (
+          <CommonStack
+            desc={mode === formMode.ADD ? "What your project is about?" : ""}
+          >
+            <Stack
+              pb="30px"
+              alignItems="start"
+              justifyContent="space-between"
+              direction={["column", "row"]}
+            >
+              <Stack
+                w={{ base: "full", xl: "50%" }}
+                direction="column"
+                alignItems={["center", "start"]}
+                justifyContent="end"
+              >
+                <Stack w="full">
+                  <Text>Choose avatar image</Text>
+                  <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
+                    This image will also be used for navigation. <br />
+                    <br />
+                  </Text>
+                </Stack>
+
+                <VStack>
+                  <ImageUploadThumbnail
+                    limitedSize={{
+                      width: "500",
+                      height: "500",
+                    }}
+                    isRounded={true}
+                    width="260px"
+                    height="260px"
+                    isDisabled={actionType}
+                    id="avatar"
+                    mode={mode}
+                    isBanner={false}
+                    imageIPFSUrl={avatarIPFSUrl}
+                    setImageIPFSUrl={setAvatarIPFSUrl}
+                  />
+                </VStack>
+              </Stack>
+
+              <Stack
+                pt={{ base: "30px", md: "0px" }}
+                w={{ base: "full", md: "50%" }}
+                direction="column"
+                alignItems="start"
+                justifyContent="start"
+              >
+                <Text>Choose featured image</Text>
+                <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
+                  This image will be used for featuring your collection on the
+                  homepage, category pages, or other promotional areas of
+                  ArtZero.
+                </Text>
+                <ImageUploadThumbnail
+                  limitedSize={{
+                    width: "400",
+                    height: "260",
+                  }}
+                  width={["100%", "400px"]}
+                  height={["250px", "260px"]}
+                  isDisabled={actionType}
+                  id="header_square"
+                  mode={mode}
+                  imageIPFSUrl={headerSquareIPFSUrl}
+                  setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                />
+              </Stack>
+            </Stack>
+
+            <Stack pb="30px">
+              <Stack
+                w="full"
+                direction="column"
+                alignItems="start"
+                justifyContent="end"
+              >
+                <Text>Choose header image</Text>
+
+                <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
+                  This image will appear at the top of your collection page.
+                  Avoid including too much text in this banner image, as the
+                  dimensions change on different devices.
+                </Text>
+
+                <ImageUploadThumbnail
+                  limitedSize={{
+                    width: "1920",
+                    height: "600",
+                  }}
+                  width="100%"
+                  height={["120px", "260px"]}
+                  isDisabled={actionType}
+                  id="header"
+                  mode={mode}
+                  isBanner={true}
+                  imageIPFSUrl={headerIPFSUrl}
+                  setImageIPFSUrl={setHeaderIPFSUrl}
+                />
+              </Stack>
+            </Stack>
+
+            <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+              <Stack w={["100%", "31%"]}>
+                <CommonInput
+                  mx="0"
+                  type="text"
+                  name="name"
+                  isRequired={true}
+                  label="Project name"
+                  placeholder="Project name"
+                  isDisabled={actionType}
+                />
+              </Stack>
+
+              <Stack w={["100%", "66%"]}>
+                {/* {mode === formMode.ADD && ( */}
+                <Stack pb="30px">
+                  <Tooltip
+                    placeContent="start"
+                    hasArrow
+                    bg="#333"
+                    color="#fff"
+                    borderRadius="0"
+                    label="Start time & end time of launchpad project."
+                  >
+                    <Text w="fit-content" fontSize="lg" ml={1}>
+                      Pick time range Start & End time{" "}
+                      <Text as="span" fontSize="lg" color="#fc8181">
+                        *
+                      </Text>
+                    </Text>
+                  </Tooltip>
+
+                  <DateTimeRangePicker
+                    showDoubleView={true}
+                    disableClock
+                    disabled={!!actionType || mode === formMode.EDIT}
+                    onChange={(e) => handleOnchangeSchedule(e, setFieldValue)}
+                    value={
+                      !values?.startTime
+                        ? null
+                        : [
+                            new Date(parseInt(values?.startTime)),
+                            new Date(parseInt(values?.endTime)),
+                          ]
+                    }
+                    locale="en-EN"
+                  />
+                  {/* TEMP FIX with parseInt */}
+                </Stack>
+                {/* )} */}
+              </Stack>
+            </Stack>
+
+            <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+              <CommonInput
+                mx="0"
+                type="text"
+                name="website"
+                label="Website URL"
+                placeholder={"Website URL"}
+                isDisabled={actionType}
+              />
+              <CommonInput
+                mx="0"
+                type="text"
+                name="twitter"
+                label="Twitter URL"
+                placeholder={"Twitter URL"}
+                isDisabled={actionType}
+              />
+              <CommonInput
+                mx="0"
+                type="text"
+                name="discord"
+                label="Discord URL"
+                placeholder={"Discord URL"}
+                isDisabled={actionType}
+              />
+              <CommonInput
+                mx="0"
+                type="text"
+                name="telegram"
+                label="Telegram URL"
+                placeholder={"Telegram URL"}
+                isDisabled={actionType}
+              />
+            </Stack>
+
+            <Stack minH="180px">
+              <TextArea
+                mx="0"
+                textAreaHeight="120"
+                type="text"
+                isRequired={true}
+                name="description"
+                label="Project description"
+                placeholder="Launchpad project description"
+                isDisabled={actionType}
+              />
+            </Stack>
+
+            <Stack
+              minH="86px"
+              alignItems={["start", "end"]}
+              gap={["10px", "30px"]}
+              direction={["column", "row"]}
+            >
+              {mode === formMode.ADD && (
+                <Stack
+                  minW={"238px"}
+                  alignItems="end"
+                  direction={{ base: "column", "2xl": "row" }}
+                >
+                  <AdvancedModeSwitch
+                    name="collectRoyaltyFee"
+                    label="Collect Royalty Fee"
+                    isDisabled={actionType}
+                    onChange={() => {
+                      values.collectRoyaltyFee = !values.collectRoyaltyFee;
+                      setIsSetRoyal(!isSetRoyal);
+                    }}
+                  />
+                </Stack>
+              )}
+
+              {mode === formMode.EDIT && (
+                <HStack my="30px" py="30px">
+                  <Text>Collect Royalty Fee :</Text>
+                  <Box
+                    px="3px"
+                    borderWidth="1px"
+                    borderColor="#7ae7ff"
+                    textTransform="capitalize"
+                  >
+                    {initialValues?.royaltyFee}% Royalty
+                  </Box>
+                </HStack>
+              )}
+
+              <Flex
+                justifyContent="start"
+                alignItems={["center", "end"]}
+                w="full"
+                display={!isSetRoyal ? "none" : "flex"}
+              >
+                <Stack minW="10rem">
+                  <NumberInput
+                    isDisabled={!isSetRoyal || actionType}
+                    max={maxRoyaltyFeeRate}
+                    label={`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
+                    name="royaltyFee"
+                    type="number"
+                    placeholder="Royalty Fee"
+                    inputWidth={"8rem"}
+                  />
+                </Stack>
+                <Text fontSize={["xs", "sm"]} color="brand.grayLight">
+                  (*) Royalty Fee gives the NFT creator a percentage of the sale
+                  price each time the NFT is sold on the marketplace.
+                </Text>
+              </Flex>
+            </Stack>
+
+            <Stack my="30px">
+              <Stack
+                w="full"
+                mb="30px"
+                pb="30px"
+                borderBottom="1px solid #2F2F2F"
+              >
+                <Heading fontSize={["2xl", "3xl"]}>project roadmap</Heading>
+
+                <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
+                  You can provide high-level goals and deliverables on your
+                  project's timeline.
+                </Text>
+              </Stack>
+
+              <AddRoadmap name="roadmap" mode={mode} isDisabled={actionType} />
+            </Stack>
+
+            <Stack my="30px">
+              <Stack
+                w="full"
+                mb="30px"
+                pb="30px"
+                borderBottom="1px solid #2F2F2F"
+              >
+                <Heading fontSize={["2xl", "3xl"]}>project team member</Heading>
+              </Stack>
+
+              <AddMember name="members" mode={mode} isDisabled={actionType} />
+            </Stack>
+          </CommonStack>
+        ),
+      },
+      mode === formMode.ADD && {
+        title: "NFT INFO",
+        description: `The launchpad create a Nft smart contract for you`,
+        content: (
+          <>
+            <CommonStack desc="To do this, we need key information such as NFT name, symbol, and total supply, which cannot be changed after the initial setup">
+              <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+                <CommonInput
+                  type="text"
+                  name="nftName"
+                  label="NFT Name"
+                  isRequired={true}
+                  placeholder="NFT Name"
+                  isDisabled={actionType || mode !== formMode.ADD}
+                />
+
+                <CommonInput
+                  type="text"
+                  name="nftSymbol"
+                  label="NFT Symbol"
+                  isRequired={true}
+                  placeholder="NFT Symbol"
+                  isDisabled={actionType || mode !== formMode.ADD}
+                />
+
+                <NumberInput
+                  inputWidth="full"
+                  precision={0}
+                  isRequired={true}
+                  name="totalSupply"
+                  hasStepper={false}
+                  label="Total Supply"
+                  isDisabled={actionType || mode !== formMode.ADD}
+                  min={1}
+                />
+              </Stack>
+            </CommonStack>
+          </>
+        ),
+      },
+      mode === formMode.ADD && {
+        title: "SALE PHASE INFO",
+        description: `A sale phase is your strategy for selling NFTs`,
+        content: (
+          <CommonStack desc="You can customize each phase. By default, you can add whitelist buyers on the Administrator page. If you enable public minting, anyone can purchase NFTs at fixed price.">
+            <AddPhase name="phases" mode={mode} isDisabled={actionType} />
+          </CommonStack>
+        ),
+      },
+      mode === formMode.ADD && {
+        title: "CONTACT INFO",
+        description: "Please provide the contact information",
+        content: (
+          <>
+            <CommonStack>
+              <CommonInput
+                isRequired={true}
+                type="text"
+                name="email_owner"
+                label="Enter your email so we can contact for additional information."
+                placeholder={"Email Contact"}
+                isDisabled={actionType}
+              />
+            </CommonStack>
+            <>
+              {/*addProjectTotalFee*/}
+              <HStack
+                w="full"
+                p="15px"
+                alignItems="center"
+                justifyContent="start"
+              >
+                <Stack>
+                  <CommonCheckbox
+                    justifyContent="center"
+                    isDisabled={actionType}
+                    name="agreeFeeCheckbox"
+                    content={
+                      <>
+                        <Text as="span" color="#888">{`I agree to pay `}</Text>
+                        <Text color="#fff" as="span">
+                          {`${addProjectTotalFee} AZERO`}
+                        </Text>
+                        <Text
+                          as="span"
+                          color="#888"
+                        >{` to ArtZero.io for the creation of new project. This fee is non-refundable`}</Text>
+                      </>
+                    }
+                  />
+                </Stack>
+              </HStack>
+
+              {/*agreeProjectMintFeeCheckbox*/}
+              <HStack
+                w="full"
+                p="15px"
+                alignItems="center"
+                justifyContent="start"
+              >
+                <Stack>
+                  <CommonCheckbox
+                    justifyContent="center"
+                    isDisabled={actionType}
+                    name="agreeProjectMintFeeCheckbox"
+                    content={
+                      <>
+                        {" "}
+                        <Text as="span" color="#888">{`I agree to a `}</Text>
+                        <Text color="#fff" as="span">
+                          {`${projectMintFeeRate}%`}
+                        </Text>
+                        <Text
+                          as="span"
+                          color="#888"
+                        >{` share of the mint price for every sucessful mint to be distributed to ArtZerio.io`}</Text>
+                      </>
+                    }
+                  />
+                </Stack>
+              </HStack>
+
+              {/*Terms of Service*/}
+              <HStack
+                w="full"
+                p="15px"
+                alignItems="center"
+                justifyContent="start"
+              >
+                <Stack>
+                  <CommonCheckbox
+                    isDisabled={actionType}
+                    name="agreeTosCheckbox"
+                    content={
+                      <>
+                        <Text as="span" color="#888">
+                          {`I agree to ArtZero's `}
+                        </Text>
+                        <Link
+                          color="#fff"
+                          _hover={{
+                            color: "#7ae7ff",
+                            textDecoration: "underline",
+                          }}
+                          textTransform="none"
+                          isExternal
+                          href={ArtZero_TOS}
+                        >
+                          Terms of Service
+                        </Link>
+                      </>
+                    }
+                  />
+                </Stack>
+              </HStack>
+            </>
+          </>
+        ),
+      },
+    ].filter((e) => e);
+  };
 
   return (
     <>
@@ -594,511 +1067,75 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             >
               {({ values, dirty, isValid, setFieldValue, handleSubmit }) => (
                 <Form>
-                  <Container maxW="1200px" px={["0px", "15px"]}>
-                    <CommonStack stackTitle="1. project info">
-                      <Stack
-                        pb="30px"
-                        alignItems="start"
-                        justifyContent="space-between"
-                        direction={["column", "row"]}
-                      >
-                        <Stack
-                          w={{ base: "full", xl: "50%" }}
-                          direction="column"
-                          alignItems={["center", "start"]}
-                          justifyContent="end"
-                        >
-                          <Stack w="full">
-                            <Text>Choose avatar image</Text>
-                            <Text
-                              ml={2}
-                              fontSize={["xs", "sm"]}
-                              color="brand.grayLight"
-                            >
-                              This image will also be used for navigation.{" "}
-                              <br />
-                              <br />
-                            </Text>
-                          </Stack>
-
-                          <VStack>
-                            <ImageUploadThumbnail
-                              limitedSize={{ width: "500", height: "500" }}
-                              isRounded={true}
-                              width="260px"
-                              height="260px"
-                              isDisabled={actionType}
-                              id="avatar"
-                              mode={mode}
-                              isBanner={false}
-                              imageIPFSUrl={avatarIPFSUrl}
-                              setImageIPFSUrl={setAvatarIPFSUrl}
-                            />
-                          </VStack>
-                        </Stack>
-
-                        <Stack
-                          pt={{ base: "30px", md: "0px" }}
-                          w={{ base: "full", md: "50%" }}
-                          direction="column"
-                          alignItems="start"
-                          justifyContent="start"
-                        >
-                          <Text>Choose featured image</Text>
-                          <Text
-                            ml={2}
-                            fontSize={["xs", "sm"]}
-                            color="brand.grayLight"
-                          >
-                            This image will be used for featuring your
-                            collection on the homepage, category pages, or other
-                            promotional areas of ArtZero.
-                          </Text>
-                          <ImageUploadThumbnail
-                            limitedSize={{ width: "400", height: "260" }}
-                            width={["100%", "400px"]}
-                            height={["250px", "260px"]}
-                            isDisabled={actionType}
-                            id="header_square"
-                            mode={mode}
-                            imageIPFSUrl={headerSquareIPFSUrl}
-                            setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                          />
-                        </Stack>
-                      </Stack>
-
-                      <Stack pb="30px">
-                        <Stack
-                          w="full"
-                          direction="column"
-                          alignItems="start"
-                          justifyContent="end"
-                        >
-                          <Text>Choose header image</Text>
-
-                          <Text
-                            ml={2}
-                            fontSize={["xs", "sm"]}
-                            color="brand.grayLight"
-                          >
-                            This image will appear at the top of your collection
-                            page. Avoid including too much text in this banner
-                            image, as the dimensions change on different
-                            devices.
-                          </Text>
-
-                          <ImageUploadThumbnail
-                            limitedSize={{ width: "1920", height: "600" }}
-                            width="100%"
-                            height={["120px", "260px"]}
-                            isDisabled={actionType}
-                            id="header"
-                            mode={mode}
-                            isBanner={true}
-                            imageIPFSUrl={headerIPFSUrl}
-                            setImageIPFSUrl={setHeaderIPFSUrl}
-                          />
-                        </Stack>
-                      </Stack>
-
-                      <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
-                      >
-                        <Stack w={["100%", "31%"]}>
-                          <CommonInput
-                            mx="0"
-                            type="text"
-                            name="name"
-                            isRequired={true}
-                            label="Project name"
-                            placeholder="Project name"
-                            isDisabled={actionType}
-                          />
-                        </Stack>
-
-                        <Stack w={["100%", "66%"]}>
-                          {/* {mode === formMode.ADD && ( */}
-                          <Stack pb="30px">
-                            <Tooltip
-                              placeContent="start"
-                              hasArrow
-                              bg="#333"
-                              color="#fff"
-                              borderRadius="0"
-                              label="Start time & end time of launchpad project."
-                            >
-                              <Text w="fit-content" fontSize="lg" ml={1}>
-                                Pick time range Start & End time{" "}
-                                <Text as="span" fontSize="lg" color="#fc8181">
-                                  *
-                                </Text>
-                              </Text>
-                            </Tooltip>
-
-                            <DateTimeRangePicker
-                              showDoubleView={true}
-                              disableClock
-                              disabled={!!actionType || mode === formMode.EDIT}
-                              onChange={(e) =>
-                                handleOnchangeSchedule(e, setFieldValue)
-                              }
-                              value={
-                                !values?.startTime
-                                  ? null
-                                  : [
-                                      new Date(parseInt(values?.startTime)),
-                                      new Date(parseInt(values?.endTime)),
-                                    ]
-                              }
-                              locale="en-EN"
-                            />
-                            {/* TEMP FIX with parseInt */}
-                          </Stack>
-                          {/* )} */}
-                        </Stack>
-                      </Stack>
-
-                      <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
-                      >
-                        <CommonInput
-                          mx="0"
-                          type="text"
-                          name="website"
-                          label="Website URL"
-                          placeholder={"Website URL"}
-                          isDisabled={actionType}
-                        />
-                        <CommonInput
-                          mx="0"
-                          type="text"
-                          name="twitter"
-                          label="Twitter URL"
-                          placeholder={"Twitter URL"}
-                          isDisabled={actionType}
-                        />
-                        <CommonInput
-                          mx="0"
-                          type="text"
-                          name="discord"
-                          label="Discord URL"
-                          placeholder={"Discord URL"}
-                          isDisabled={actionType}
-                        />
-                        <CommonInput
-                          mx="0"
-                          type="text"
-                          name="telegram"
-                          label="Telegram URL"
-                          placeholder={"Telegram URL"}
-                          isDisabled={actionType}
-                        />
-                      </Stack>
-
-                      <Stack minH="180px">
-                        <TextArea
-                          mx="0"
-                          textAreaHeight="120"
-                          type="text"
-                          isRequired={true}
-                          name="description"
-                          label="Project description"
-                          placeholder="Launchpad project description"
-                          isDisabled={actionType}
-                        />
-                      </Stack>
-
-                      <Stack
-                        minH="86px"
-                        alignItems={["start", "end"]}
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
-                      >
-                        {mode === formMode.ADD && (
-                          <Stack
-                            minW={"238px"}
-                            alignItems="end"
-                            direction={{ base: "column", "2xl": "row" }}
-                          >
-                            <AdvancedModeSwitch
-                              name="collectRoyaltyFee"
-                              label="Collect Royalty Fee"
-                              isDisabled={actionType}
-                              onChange={() => {
-                                values.collectRoyaltyFee =
-                                  !values.collectRoyaltyFee;
-                                setIsSetRoyal(!isSetRoyal);
-                              }}
-                            />
-                          </Stack>
-                        )}
-
-                        {mode === formMode.EDIT && (
-                          <HStack my="30px" py="30px">
-                            <Text>Collect Royalty Fee :</Text>
-                            <Box
-                              px="3px"
-                              borderWidth="1px"
-                              borderColor="#7ae7ff"
-                              textTransform="capitalize"
-                            >
-                              {initialValues?.royaltyFee}% Royalty
-                            </Box>
-                          </HStack>
-                        )}
-
-                        <Flex
-                          justifyContent="start"
-                          alignItems={["center", "end"]}
-                          w="full"
-                          display={!isSetRoyal ? "none" : "flex"}
-                        >
-                          <Stack minW="10rem">
-                            <NumberInput
-                              isDisabled={!isSetRoyal || actionType}
-                              max={maxRoyaltyFeeRate}
-                              label={`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
-                              name="royaltyFee"
-                              type="number"
-                              placeholder="Royalty Fee"
-                              inputWidth={"8rem"}
-                            />
-                          </Stack>
-                          <Text fontSize={["xs", "sm"]} color="brand.grayLight">
-                            (*) Royalty Fee gives the NFT creator a percentage
-                            of the sale price each time the NFT is sold on the
-                            marketplace.
-                          </Text>
-                        </Flex>
-                      </Stack>
-
-                      <Stack my="30px">
-                        <Stack
-                          w="full"
-                          mb="30px"
-                          pb="30px"
-                          borderBottom="1px solid #2F2F2F"
-                        >
-                          <Heading fontSize={["2xl", "3xl"]}>
-                            project roadmap
-                          </Heading>
-
-                          <Text
-                            ml={2}
-                            fontSize={["xs", "sm"]}
-                            color="brand.grayLight"
-                          >
-                            You can provide high-level goals and deliverables on
-                            your project's timeline.
-                          </Text>
-                        </Stack>
-
-                        <AddRoadmap
-                          name="roadmap"
-                          mode={mode}
-                          isDisabled={actionType}
-                        />
-                      </Stack>
-
-                      <Stack my="30px">
-                        <Stack
-                          w="full"
-                          mb="30px"
-                          pb="30px"
-                          borderBottom="1px solid #2F2F2F"
-                        >
-                          <Heading fontSize={["2xl", "3xl"]}>
-                            project team member
-                          </Heading>
-                        </Stack>
-
-                        <AddMember
-                          name="members"
-                          mode={mode}
-                          isDisabled={actionType}
-                        />
-                      </Stack>
-                    </CommonStack>
-
-                    <CommonStack
-                      stackTitle="2. nft info"
-                      desc="The launchpad will create the NFT Smart Contract for you, to
-                    do so general information such as NFT Name, Symbol and Total
-                    Supply is required. Those info can not be changed after initial."
+                  <Container maxW="1200px" px={["0px", "15px"]} pt="10px">
+                    <Box
+                      sx={{
+                        width: mode === formMode.ADD ? "100%" : "50%",
+                      }}
                     >
-                      <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
-                      >
-                        <CommonInput
-                          type="text"
-                          name="nftName"
-                          label="NFT Name"
-                          isRequired={true}
-                          placeholder="NFT Name"
-                          isDisabled={actionType || mode !== formMode.ADD}
-                        />
-
-                        <CommonInput
-                          type="text"
-                          name="nftSymbol"
-                          label="NFT Symbol"
-                          isRequired={true}
-                          placeholder="NFT Symbol"
-                          isDisabled={actionType || mode !== formMode.ADD}
-                        />
-
-                        <NumberInput
-                          inputWidth="full"
-                          precision={0}
-                          isRequired={true}
-                          name="totalSupply"
-                          hasStepper={false}
-                          label="Total Supply"
-                          isDisabled={actionType || mode !== formMode.ADD}
-                          min={1}
-                        />
-                      </Stack>
-                    </CommonStack>
-
-                    {mode === formMode.ADD && (
-                      <CommonStack
-                        stackTitle="3. sale phase information"
-                        desc={`A sale phase is a control mechanism that defines how you
-                        will sell the NFT collection. You can add different
-                        phases to control how you will sell the collection. By
-                        default, you can add whitelist to every sale phase in
-                        Administrator Page after the project creation. If Allow
-                        public mint is selected, anyone can mint the NFT at
-                        fixed price.`}
-                      >
-                        <AddPhase
-                          name="phases"
-                          mode={mode}
-                          isDisabled={actionType}
-                        />
-                      </CommonStack>
-                    )}
-
-                    {mode === formMode.ADD && (
-                      <CommonStack stackTitle="4. Contact info">
-                        <CommonInput
-                          isRequired={true}
-                          type="text"
-                          name="email_owner"
-                          label="Enter your email so we can contact for additional information."
-                          placeholder={"Email Contact"}
-                          isDisabled={actionType}
-                        />
-                      </CommonStack>
-                    )}
-
-                    <Box w="full" mx="auto" px="30px" mb="30px">
                       {mode === formMode.ADD && (
-                        <>
-                          {/*addProjectTotalFee*/}
-                          <HStack
-                            w="full"
-                            p="15px"
-                            alignItems="center"
-                            justifyContent="start"
-                          >
-                            <Stack>
-                              <CommonCheckbox
-                                justifyContent="center"
-                                isDisabled={actionType}
-                                name="agreeFeeCheckbox"
-                                content={
-                                  <>
-                                    <Text
-                                      as="span"
-                                      color="#888"
-                                    >{`I agree to pay `}</Text>
-                                    <Text color="#fff" as="span">
-                                      {`${addProjectTotalFee} AZERO`}
-                                    </Text>
-                                    <Text
-                                      as="span"
-                                      color="#888"
-                                    >{` to ArtZero.io for the creation of new project. This fee is non-refundable`}</Text>
-                                  </>
-                                }
-                              />
-                            </Stack>
-                          </HStack>
-
-                          {/*agreeProjectMintFeeCheckbox*/}
-                          <HStack
-                            w="full"
-                            p="15px"
-                            alignItems="center"
-                            justifyContent="start"
-                          >
-                            <Stack>
-                              <CommonCheckbox
-                                justifyContent="center"
-                                isDisabled={actionType}
-                                name="agreeProjectMintFeeCheckbox"
-                                content={
-                                  <>
-                                    {" "}
-                                    <Text
-                                      as="span"
-                                      color="#888"
-                                    >{`I agree to a `}</Text>
-                                    <Text color="#fff" as="span">
-                                      {`${projectMintFeeRate}%`}
-                                    </Text>
-                                    <Text
-                                      as="span"
-                                      color="#888"
-                                    >{` share of the mint price for every sucessful mint to be distributed to ArtZerio.io`}</Text>
-                                  </>
-                                }
-                              />
-                            </Stack>
-                          </HStack>
-
-                          {/*Terms of Service*/}
-                          <HStack
-                            w="full"
-                            p="15px"
-                            alignItems="center"
-                            justifyContent="start"
-                          >
-                            <Stack>
-                              <CommonCheckbox
-                                isDisabled={actionType}
-                                name="agreeTosCheckbox"
-                                content={
-                                  <>
-                                    <Text as="span" color="#888">
-                                      {`I agree to ArtZero's `}
-                                    </Text>
-                                    <Link
-                                      color="#fff"
-                                      _hover={{
-                                        color: "#7ae7ff",
-                                        textDecoration: "underline",
-                                      }}
-                                      textTransform="none"
-                                      isExternal
-                                      href={ArtZero_TOS}
-                                    >
-                                      Terms of Service
-                                    </Link>
-                                  </>
-                                }
-                              />
-                            </Stack>
-                          </HStack>
-                        </>
+                        <Steps
+                          direction={isMobile ? "vertical" : "horizontal"}
+                          className={styles.step_create}
+                          current={current}
+                          items={stepItems(values, setFieldValue).map(
+                            (e, index) => ({
+                              ...e,
+                              icon:
+                                current > index ? (
+                                  <Circle
+                                    size="40px"
+                                    bg="#151515"
+                                    border={"4px solid #93F0F5"}
+                                    color="#151515"
+                                  >
+                                    <CheckIcon color={"#93F0F5"} />
+                                  </Circle>
+                                ) : null,
+                            })
+                          )}
+                        ></Steps>
                       )}
-
+                    </Box>
+                    {stepItems(values, setFieldValue)[current].content}
+                    <Box
+                      sx={{ display: "flex", justifyContent: "center" }}
+                      pb={{ base: "20px" }}
+                    >
                       {mode === formMode.ADD && (
-                        <HStack justifyContent="center">
+                        <Button
+                          isDisabled={!(current > 0)}
+                          onClick={() =>
+                            setCurrent((prev) => setCurrent(prev - 1))
+                          }
+                        >
+                          Back
+                        </Button>
+                      )}
+                      {mode === formMode.EDIT ? (
+                        <Box px="10px" mb="30px" w="full">
+                          {mode === formMode.EDIT && (
+                            <Stack>
+                              <CommonButton
+                                // mx="0"
+                                onRedirect={handleOnRedirect}
+                                // w="full"
+                                // my="24px"
+                                {...rest}
+                                type="submit"
+                                text={`${
+                                  mode === formMode.ADD ? "create" : "update"
+                                } project`}
+                                isDisabled={
+                                  (!(dirty && isValid) && noImagesChange) ||
+                                  rest?.step === FINALIZED
+                                }
+                              />
+                            </Stack>
+                          )}
+                        </Box>
+                      ) : current === 3 && mode === formMode.ADD ? (
+                        <HStack justifyContent="center" ml={{ base: "8px" }}>
                           <Button
                             minW="180px"
                             {...rest}
@@ -1130,26 +1167,15 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             STEP 2
                           </Button>
                         </HStack>
-                      )}
-
-                      {mode === formMode.EDIT && (
-                        <Stack w="full">
-                          <CommonButton
-                            mx="0"
-                            onRedirect={handleOnRedirect}
-                            w="full"
-                            my="24px"
-                            {...rest}
-                            type="submit"
-                            text={`${
-                              mode === formMode.ADD ? "create" : "update"
-                            } project`}
-                            isDisabled={
-                              (!(dirty && isValid) && noImagesChange) ||
-                              rest?.step === FINALIZED
-                            }
-                          />
-                        </Stack>
+                      ) : (
+                        <Button
+                          ml={{ base: "20px" }}
+                          onClick={() =>
+                            setCurrent((prev) => setCurrent(prev + 1))
+                          }
+                        >
+                          Next
+                        </Button>
                       )}
                     </Box>
                   </Container>

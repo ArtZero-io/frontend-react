@@ -14,7 +14,6 @@ export default function AddressCopier({
 }) {
   const { onCopy } = useClipboard(address);
   const { api, apiState } = useSubstrateState();
-
   const handleCopy = () => {
     toast.success("Address copied!");
     onCopy();
@@ -37,7 +36,7 @@ export default function AddressCopier({
       console.log("error", error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address, apiState]);
+  }, [address, api, apiState]);
 
   return (
     <>

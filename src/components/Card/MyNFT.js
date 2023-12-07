@@ -31,6 +31,7 @@ import {
   MAX_ITEM_STAKE,
   MAX_ITEM_BULK_LISTING,
   MAX_ITEM_BULK_TRANSFER,
+  MAX_BID_COUNT,
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
@@ -68,6 +69,8 @@ function MyNFTCard({
   filterSelected,
   multiDelistData,
   handleSelectMultiDelist,
+  multiDebidData,
+  handleSelectMultiDebid,
 }) {
   const { currentAccount } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -142,7 +145,35 @@ function MyNFTCard({
     return toast.error("Please select same action!");
   };
 
-  //END  BULK DELIST=============================================================
+  // END  BULK DELIST=============================================================
+
+  // BULK REMOVE BID=============================================================
+  const [isMultiDebidCheckbox, setIsMultiDebidCheckbox] = useState(false);
+
+  const handleOnChangeMultiDebidCheckbox = ({ target }) => {
+    if (target.checked && multiDebidData?.list?.length >= MAX_BID_COUNT) {
+      !multiDebidData?.list?.includes(tokenID) &&
+        setIsMultiDebidCheckbox(false);
+
+      return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
+    }
+
+    target.checked
+      ? setIsMultiDebidCheckbox(true)
+      : setIsMultiDebidCheckbox(false);
+
+    if (
+      !multiDebidData?.action ||
+      multiDebidData?.action === "MULTI_REMOVE_BIDS"
+    ) {
+      handleSelectMultiDebid(tokenID, "MULTI_REMOVE_BIDS", target.checked);
+      return;
+    }
+
+    return toast.error("Please select same action!");
+  };
+
+  //END BULK REMOVE BID=============================================================
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -404,37 +435,90 @@ function MyNFTCard({
           )}
         {/*END Check Box for multi DE-LISTING*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
+        {/* Check Box for multi REMOVE-BID */}
+        {location?.pathname === "/account/nfts" &&
+          filterSelected === "BIDS" &&
+          is_for_sale && (
+            <Square
+              sx={{
+                maxWidth: "content",
+                maxHeight: "content",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Checkbox
+                display={
+                  !(
+                    bulkTxMode &&
+                    bulkTxMode === "MULTI_REMOVE_BIDS" &&
+                    nftContractAddress === selectedCollectionAddress
+                  ) && "none"
+                }
+                sx={{
+                  ".my-nft-card:hover &": {
+                    display: !bulkTxMode && "inline-flex",
+                  },
+                  "span.chakra-checkbox__control": {
+                    borderRadius: "0",
+                    borderWidth: "0.2px",
+                    borderColor: "brand.blue",
+                    backgroundColor: "brand.semiBlack",
+                  },
+                  "span.chakra-checkbox__control[data-checked] > div": {
+                    color: "brand.blue",
+                  },
+                }}
+                size="lg"
+                top="10px"
+                right="10px"
+                position="absolute"
+                isChecked={isMultiDebidCheckbox}
+                isDisabled={actionType}
+                onChange={(e) => handleOnChangeMultiDebidCheckbox(e)}
+              ></Checkbox>
+            </Square>
+          )}
+        {/*END Check Box for multi REMOVE-BID*/}
+        {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi STAKE */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (
-          <Checkbox
-            display={!multiStakeData?.action && "none"}
+          <Square
             sx={{
-              ".my-nft-card:hover &": {
-                display: "inline-flex",
-              },
-              "span.chakra-checkbox__control": {
-                borderRadius: "0",
-                borderWidth: "0.2px",
-                borderColor: "brand.blue",
-                backgroundColor: "brand.semiBlack",
-              },
-              "span.chakra-checkbox__control[data-checked] > div": {
-                color: "brand.blue",
-              },
+              maxWidth: "content",
+              maxHeight: "content",
             }}
-            size="lg"
-            top="10px"
-            right="10px"
-            position="absolute"
-            isChecked={isTicked}
-            isDisabled={
-              actionType ||
-              (multiStakeData?.action &&
-                multiStakeData?.action !==
-                  getStakeAction(stakeStatus, isUnstakeTime))
-            }
-            onChange={(e) => handleOnChangeCheckbox(e)}
-          />
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Checkbox
+              display={!multiStakeData?.action && "none"}
+              sx={{
+                ".my-nft-card:hover &": {
+                  display: "inline-flex",
+                },
+                "span.chakra-checkbox__control": {
+                  borderRadius: "0",
+                  borderWidth: "0.2px",
+                  borderColor: "brand.blue",
+                  backgroundColor: "brand.semiBlack",
+                },
+                "span.chakra-checkbox__control[data-checked] > div": {
+                  color: "brand.blue",
+                },
+              }}
+              size="lg"
+              top="10px"
+              right="10px"
+              position="absolute"
+              isChecked={isTicked}
+              isDisabled={
+                actionType ||
+                (multiStakeData?.action &&
+                  multiStakeData?.action !==
+                    getStakeAction(stakeStatus, isUnstakeTime))
+              }
+              onChange={(e) => handleOnChangeCheckbox(e)}
+            />
+          </Square>
         ) : null}{" "}
         {/* END Check Box for multi STAKE */}
         <Flex

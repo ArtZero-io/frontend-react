@@ -17,9 +17,9 @@ import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
-import { getProfileOnChain } from "../../../utils/blockchain/profile_calls";
-import { getPublicCurrentAccount } from "../../../utils";
-import { useHistory } from "react-router-dom";
+import { getProfile } from "@actions/account";
+import { setProfileContract, contract } from "@utils/blockchain/profile_calls";
+import contractData from "@utils/blockchain/";
 
 function ProfileHeader({ address }) {
   const dispatch = useDispatch();
@@ -27,24 +27,20 @@ function ProfileHeader({ address }) {
   const { currentAccount, api, apiState } = useSubstrateState();
 
   const [profile, setProfile] = useState(null);
-  const history = useHistory();
 
   const avatarProfileSize = useBreakpointValue([64, 120]);
-
-  useEffect(() => {
-    if (address && address === currentAccount?.address) {
-      history.replace("/account/general");
-    }
-  }, [currentAccount, address, history]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!api || apiState !== "READY") return;
 
-      const res = await getProfileOnChain({
-        callerAccount: getPublicCurrentAccount(),
-        accountAddress: address,
-      });
+      if (!contract) {
+        await setProfileContract(api, contractData?.profile);
+        return;
+      }
+
+      const res = await dispatch(getProfile({ address }));
+
       if (res?.status === "OK") {
         if (!res.data.username) {
           res.data.username = truncateStr(address);
@@ -64,7 +60,8 @@ function ProfileHeader({ address }) {
     if (!profile?.address || profile?.address !== address) {
       fetchProfile();
     }
-  }, [api, apiState, dispatch, profile, address]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, apiState, dispatch, profile, address, contract]);
 
   return (
     <Box
