@@ -27,7 +27,7 @@ import {
 } from "@store/actions/txStatus";
 import { setTxStatus } from "@store/actions/txStatus";
 
-import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
+import { isValidAddressPolkadotAddress, getEstimatedGas, getDomainToAddress } from "@utils";
 import { useEffect, useState } from "react";
 import { stringToU8a } from "@polkadot/util";
 import { APICall } from "@api/client";
@@ -54,8 +54,14 @@ function TransferNFTModalMobile({
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   const transferNFTsHandler = async () => {
+    let receiver = receiverAddress;
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
-      return toast.error(`Invalid address! Please check again!`);
+      const address = await getDomainToAddress(receiverAddress, api);
+      if (address && isValidAddressPolkadotAddress(address)) {
+        receiver = address;
+      } else {
+        return toast.error(`Invalid address! Please check again!`);
+      }
     }
 
     if (owner !== currentAccount?.address) {
@@ -84,14 +90,14 @@ function TransferNFTModalMobile({
         contract,
         value,
         "psp34::transfer",
-        receiverAddress,
+        receiver,
         { u64: tokenID },
         stringToU8a(additionalData)
       );
 
       await contract.tx["psp34::transfer"](
         { value, gasLimit },
-        receiverAddress,
+        receiver,
         { u64: tokenID },
         stringToU8a(additionalData)
       )

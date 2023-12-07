@@ -11,6 +11,7 @@ export const ACCOUNT_MY_STAKES = "/account/stakes";
 export const ACCOUNT_ADMIN = "/admin";
 export const ACCOUNT_MY_PROJECTS = "/account/projects";
 export const ACCOUNT_MY_ACTIVITIES = "/account/activites";
+export const ACCOUNT_MY_BIDS = "/account/bids";
 export const ACCOUNT_WHITELIST_PROJECTS = "/account/projects/whitelist";
 export const ACCOUNT_MINTING_PROJECTS = "/account/projects/minting";
 

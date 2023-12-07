@@ -227,10 +227,12 @@ async function owner(caller_account) {
   return null;
 }
 async function getStakingDiscountCriteria(caller_account) {
+  console.log('getStakingDiscountCriteria Starting...');
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
   }
+  console.log('getStakingDiscountCriteria testing...');
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
@@ -239,6 +241,7 @@ async function getStakingDiscountCriteria(caller_account) {
     "artZeroMarketplaceTrait::getStakingDiscountCriteria"
   ](address, { value: azero_value, gasLimit });
 
+    
   if (result.isOk) {
     const ret = output.toHuman().Ok;
 

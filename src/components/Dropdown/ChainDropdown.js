@@ -18,25 +18,25 @@ const netList = [
     id: "AZERO_MAINNET",
     code: "alephzero mainnet",
     icon: <AzeroChain />,
-    url: "https://a0.artzero.io/",
+    url: "http://localhost:8002/",
   },
   {
     id: "AZERO_TESTNET",
     code: "alephzero testnet",
     icon: <AzeroChain />,
-    url: "https://a0-test.artzero.io/",
+    url: "http://localhost:8002/",
   },
   {
     id: "ASTAR_MAINNET",
     code: "astar network",
     icon: <Astar />,
-    url: "https://astar.artzero.io/",
+    url: "http://localhost:8002/",
   },
   {
     id: "5IRECHAIN_TESTNET",
     code: "5irechain testnet",
     icon: <FireChain />,
-    url: "https://5iretest.artzero.io/",
+    url: "http://localhost:8002/",
   },
 ];
 

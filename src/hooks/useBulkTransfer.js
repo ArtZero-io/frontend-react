@@ -1,6 +1,6 @@
 import { ContractPromise } from "@polkadot/api-contract";
 
-import { getEstimatedGasBatchTx } from "@utils";
+import { getEstimatedGasBatchTx, getDomainToAddress } from "@utils";
 import {
   txErrorHandler,
   batchTxResponseErrorHandler,
@@ -38,14 +38,22 @@ export default function useBulkTransfer({ listNFTFormatted }) {
   } = multiTransferData;
 
   const doBulkTransfer = async () => {
+    
     if (!receiverAddress) {
       toast.error("Receiver address can not be empty!");
       return;
     }
-
+    let receiver = receiverAddress;
     if (!isValidAddress(receiverAddress)) {
-      toast.error("Receiver address is not valid!");
-      return;
+      const address = await getDomainToAddress(receiverAddress, api);
+      console.log('address', address);
+      if (address && isValidAddress(address)) {
+        receiver = address;
+      } else {
+        toast.error("Receiver address is not valid!");
+        return;
+      }
+      
     }
 
     toast(`Bulk transfer...`);
@@ -72,7 +80,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       nftPsp34Contract,
       value,
       "psp34::transfer",
-      receiverAddress,
+      receiver,
       { u64: listInfo[0].info?.tokenID },
       stringToU8a("")
     );
@@ -81,7 +89,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       listInfo.map(async ({ info }) => {
         const ret = nftPsp34Contract.tx["psp34::transfer"](
           { gasLimit, value },
-          receiverAddress,
+          receiver,
           { u64: info?.tokenID },
           stringToU8a("")
         );
@@ -89,7 +97,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
         return ret;
       })
     ).then((res) => (transferTxALL = res));
-
+    console.log('receiver',receiver);
     dispatch(
       setTxStatus({
         type: "MULTI_TRANSFER",
