@@ -641,7 +641,7 @@ function TokenPage() {
 
   useEffect(() => {
     if (filterSelected) rest.step === "Finalized" && history.goBack();
-  }, [rest.step]);
+  }, [filterSelected, history, rest.step]);
 
   // END STAKE ACTION=======================================================
 
