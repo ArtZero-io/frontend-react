@@ -21,7 +21,7 @@ import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import azero_domains_nft from "./blockchain/azero-domains-nft";
 import artzero_nft from "./blockchain/artzero-nft";
 import { BigInt } from "@polkadot/x-bigint";
-import { SupportedChainId, resolveAddressToDomain } from "@azns/resolver-core";
+import { SupportedChainId, resolveAddressToDomain, resolveDomainToAddress } from "@azns/resolver-core";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -127,6 +127,16 @@ export function convertStringToPrice(stringPrice) {
     const a = stringPrice.replace(/\,/g, "");
     // let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
     return a / 10 ** 12;
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+}
+
+export function convertNumberToPrice(price) {
+  try {
+    /* eslint-disable no-useless-escape */
+    return price / 10 ** 12;
   } catch (error) {
     console.log(error);
     return 0;
@@ -764,6 +774,36 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }
 };
+
+export const getDomainToAddress = async (domain, api) => {
+  const option = {
+    chainId: SupportedChainId.AlephZero,
+  };
+
+  if (api) {
+    option.customApi = api;
+  }
+  
+  if (
+    process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
+    process.env.REACT_APP_NETWORK === "alephzero"
+  ) {
+    try {
+      const { address, error } = await resolveDomainToAddress(
+        domain,
+        option
+      );
+      if (error?.name) {
+        return undefined;
+      }
+
+      return address;
+    } catch (error) {
+      console.log("resolveDomain error", error);
+    }
+  }
+  return undefined;
+}
 
 export const resolveDomain = async (address, api) => {
   const option = {

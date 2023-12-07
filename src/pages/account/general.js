@@ -46,22 +46,20 @@ import CommonContainer from "@components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { useDispatch } from "react-redux";
-import { START, CLAIM_REWARDS } from "@constants";
-import { setTxStatus } from "@store/actions/txStatus";
+
+import { CLAIM_REWARDS } from "@constants";
 import useForceUpdate from "@hooks/useForceUpdate";
 
 import { APICall } from "@api/client";
 import { useMemo } from "react";
-import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
 import {
   fetchValidatorProfit,
   getPublicCurrentAccount,
   resolveDomain,
 } from "@utils";
+
+const PAY_DAY = 27;
 
 function GeneralPage() {
   const history = useHistory();
@@ -83,7 +81,6 @@ function GeneralPage() {
 
   const publicCurrentAccount = getPublicCurrentAccount();
 
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
@@ -266,26 +263,7 @@ function GeneralPage() {
     [currentAccount]
   );
 
-  const claimReward = async () => {
-    try {
-      dispatch(setTxStatus({ type: CLAIM_REWARDS, step: START }));
-
-      await staking_calls.claimReward(
-        currentAccount,
-        dispatch,
-        CLAIM_REWARDS,
-        api
-      );
-      await checkRewardStatus();
-    } catch (error) {
-      console.log(error);
-      toast.error("There was an error while claiming the rewards.");
-      dispatch(clearTxStatus());
-    }
-  };
-
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
-  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
     if (apiState !== "READY") return;
@@ -325,27 +303,47 @@ function GeneralPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, apiState, checkRewardStatus, currentAccount, getRewardHistory]);
 
-  const lastDay = useMemo(() => {
-    const now = new Date();
-    let lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const payDay = useMemo(() => {
+    const currentDate = new Date();
 
-    if (lastDayA.getDay() === 0) {
-      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -5);
+    currentDate.setDate(PAY_DAY);
+
+    const dayNum = currentDate.getDay();
+
+    // 0 ~ CN
+    if (dayNum === 0) {
+      currentDate.setDate(PAY_DAY + 1);
     }
 
-    if (lastDayA.getDay() === 6) {
-      lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -4);
+    // 6 ~ T7
+    if (dayNum === 6) {
+      currentDate.setDate(PAY_DAY + 2);
+    }
+
+
+    if (Date.now() > currentDate.getDate()) {
+      const currMonth = currentDate.getMonth();
+
+      currentDate.setMonth(currMonth + 1);
+
+      currentDate.setDate(PAY_DAY);
+
+      const dayNum = currentDate.getDay();
+
+      // 0 ~ CN
+      if (dayNum === 0) {
+        currentDate.setDate(PAY_DAY + 1);
+      }
+
+      // 6 ~ T7
+      if (dayNum === 6) {
+        currentDate.setDate(PAY_DAY + 2);
+      }
     }
 
     return (
       <>
-        {lastDayA.toLocaleString("en-US", {
-          month: "long",
-          day: "numeric",
-        })}{" "}
-        -{" "}
-        {lastDay.toLocaleString("en-US", {
+        {currentDate.toLocaleString("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric",
@@ -614,12 +612,18 @@ function GeneralPage() {
               </Skeleton>
 
               <Stack>
-                <Text fontSize={{ base: "16px", xl: "lg" }}>
-                  Next Payout:{" "}
-                  <Text as="span" color="#7AE7FF" mr="30px">
-                    {lastDay}
+                {isStakingLocked || rewardStarted ? (
+                  <Text fontSize={{ base: "16px", xl: "lg" }}>
+                    Payment in progress
                   </Text>
-                </Text>
+                ) : (
+                  <Text fontSize={{ base: "16px", xl: "lg" }}>
+                    Next Payout:{" "}
+                    <Text as="span" color="#7AE7FF" mr="30px">
+                      {payDay}
+                    </Text>
+                  </Text>
+                )}
               </Stack>
             </Stack>
 
@@ -651,23 +655,6 @@ function GeneralPage() {
               >
                 stake now
               </Button>
-
-              {rewardStarted ? (
-                <CommonButton
-                  {...rest}
-                  w="full"
-                  minW="120px"
-                  mx={["0", "30px"]}
-                  my={["20px", "30px"]}
-                  maxW={["auto", "220px"]}
-                  text={claimed ? "rewards is claimed" : "claim rewards"}
-                  isDisabled={
-                    claimed || !estimatedEarningBaseRewardPool || actionType
-                  }
-                  onClick={() => claimReward()}
-                />
-              ) : null}
-
               <FeeInfoModal platformFee={platformFee} />
             </Skeleton>
           </VStack>

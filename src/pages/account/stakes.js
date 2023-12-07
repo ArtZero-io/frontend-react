@@ -375,6 +375,7 @@ export const fetchPlatformStakingDiscountStep = async (
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
+  console.log('response', response);
 
   if (!response) {
     toast.error("Error when fetch Platform Staking Discount Step");

@@ -18,7 +18,6 @@ import {
   ArtZero_TOS,
   ArtZero_Assets,
 } from "../../constants";
-import * as ROUTES from "@constants/routes";
 
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -96,8 +95,7 @@ export const Footer = () => {
                 zIndex={0}
                 direction={["column", "row"]}
               >
-                <Flex w="full" my={["16px", "0px"]}                 justifyContent="center"
->
+                <Flex w="full" my={["16px", "0px"]} justifyContent="center">
                   <Link
                     mx="20px"
                     textTransform="none"
@@ -108,17 +106,6 @@ export const Footer = () => {
                     href={ArtZero_Assets}
                   >
                     Brand Assets
-                  </Link>{" "}
-                  <Link
-                    mx="20px"
-                    textTransform="none"
-                    _hover={{
-                      textDecoration: "underline",
-                      color: "#7ae7ff",
-                    }}
-                    href={ROUTES.DOCS}
-                  >
-                    Docs
                   </Link>{" "}
                 </Flex>
 

@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 
 import { clearTxStatus } from "@store/actions/txStatus";
 import { useEffect, useState } from "react";
-import { isValidAddress } from "../utils";
+import { isValidAddress, getDomainToAddress } from "../utils";
 
 export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
   const { adapter } = useSubstrate();
@@ -43,12 +43,18 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       toast.error("Receiver address can not be empty!");
       return;
     }
-
+    let receiver = receiverAddress;
     if (!isValidAddress(receiverAddress)) {
-      toast.error("Receiver address is not valid!");
-      return;
+      const address = await getDomainToAddress(receiverAddress, api);
+      console.log('address', address);
+      if (address && isValidAddress(address)) {
+        receiver = address;
+      } else {
+        toast.error("Receiver address is not valid!");
+        return;
+      }
+      
     }
-
     toast(`Bulk transfer...`);
 
     let unsubscribe;
@@ -73,7 +79,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       azeroDomainsNftContract,
       value,
       "psp34::transfer",
-      receiverAddress,
+      receiver,
       { bytes: listInfo[0].info?.azDomainName },
       stringToU8a("")
     );
@@ -82,7 +88,7 @@ export default function useBulkAzeroDomainsTransfer({ listNFTFormatted }) {
       listInfo.map(async ({ info }) => {
         const ret = azeroDomainsNftContract.tx["psp34::transfer"](
           { gasLimit, value },
-          receiverAddress,
+          receiver,
           { bytes: info?.azDomainName },
           stringToU8a(additionalData)
         );
