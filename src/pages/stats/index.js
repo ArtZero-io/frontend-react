@@ -19,6 +19,7 @@ import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
 import TopNftTradesTab from "./Tab/TopNftTradesTab";
+import RecentNftTradesTab from "./Tab/RecentNftTradesTab";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
@@ -297,6 +298,10 @@ function StatsPage() {
     {
       label: "top nft trades",
       content: <TopNftTradesTab />,
+    },
+    {
+      label: "recent nft trades",
+      content: <RecentNftTradesTab />,
     },
     // {
     //   label: "payout history",
