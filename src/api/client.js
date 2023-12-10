@@ -169,6 +169,13 @@ export const APICall = {
   },
 
   // top nft trades API Calls
+  getRecentTrades: async (options) => {
+    return clientWithGetParams("GET", "/getRecentTrades", {
+      filter: { ...options },
+    });
+  },
+
+  // top nft trades API Calls
   getTopNftTrades: async (options) => {
     return clientWithGetParams("GET", "/api/top-nft-trades", {
       filter: { ...options },
