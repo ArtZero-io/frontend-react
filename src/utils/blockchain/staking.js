@@ -1,8 +1,8 @@
 const staking = {
-	CONTRACT_ADDRESS: "5G4dH4zSXnQGay8xo1CeM6kqPtjyZG4aXUUf4vR8B4wvcnBF",
+	CONTRACT_ADDRESS: "5D9wPyetDqaUCsfLURuYwtT2JgP1Pqs8o1tFkw5VMqHbn9P7",
 	CONTRACT_ABI: {
 		"source": {
-		  "hash": "0xa29e8490355d16c8949f4ec678789f98979d973392ce5228c5af13392b413af8",
+		  "hash": "0x9edabe454353666b2f7ffd6ec8c169c397f2dd06d860c844fd62bdf21943aea0",
 		  "language": "ink! 4.0.1",
 		  "compiler": "rustc 1.70.0-nightly",
 		  "build_info": {
@@ -345,7 +345,17 @@ const staking = {
 			  "selector": "0xa625d829"
 			},
 			{
-			  "args": [],
+			  "args": [
+				{
+				  "label": "receiver",
+				  "type": {
+					"displayName": [
+					  "AccountId"
+					],
+					"type": 0
+				  }
+				}
+			  ],
 			  "docs": [
 				" Claim Reward"
 			  ],
@@ -476,6 +486,50 @@ const staking = {
 				  "type": {
 					"displayName": [
 					  "accesscontrol_external",
+					  "RevokeRoleInput1"
+					],
+					"type": 4
+				  }
+				},
+				{
+				  "label": "account",
+				  "type": {
+					"displayName": [
+					  "accesscontrol_external",
+					  "RevokeRoleInput2"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [
+				" Revokes `role` from `account`.",
+				"",
+				" On success a `RoleRevoked` event is emitted.",
+				"",
+				" # Errors",
+				"",
+				" Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+			  ],
+			  "label": "AccessControl::revoke_role",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 20
+			  },
+			  "selector": "0x6e4f0991"
+			},
+			{
+			  "args": [
+				{
+				  "label": "role",
+				  "type": {
+					"displayName": [
+					  "accesscontrol_external",
 					  "HasRoleInput1"
 					],
 					"type": 4
@@ -503,9 +557,82 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 20
+				"type": 22
 			  },
 			  "selector": "0xc1d9ac18"
+			},
+			{
+			  "args": [
+				{
+				  "label": "role",
+				  "type": {
+					"displayName": [
+					  "accesscontrol_external",
+					  "GrantRoleInput1"
+					],
+					"type": 4
+				  }
+				},
+				{
+				  "label": "account",
+				  "type": {
+					"displayName": [
+					  "accesscontrol_external",
+					  "GrantRoleInput2"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [
+				" Grants `role` to `account`.",
+				"",
+				" On success a `RoleGranted` event is emitted.",
+				"",
+				" # Errors",
+				"",
+				" Returns with `MissingRole` error if caller can't grant the role.",
+				" Returns with `RoleRedundant` error `account` has `role`."
+			  ],
+			  "label": "AccessControl::grant_role",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 20
+			  },
+			  "selector": "0x4ac062fd"
+			},
+			{
+			  "args": [
+				{
+				  "label": "role",
+				  "type": {
+					"displayName": [
+					  "accesscontrol_external",
+					  "GetRoleAdminInput1"
+					],
+					"type": 4
+				  }
+				}
+			  ],
+			  "docs": [
+				" Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+			  ],
+			  "label": "AccessControl::get_role_admin",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 23
+			  },
+			  "selector": "0x83da3bb2"
 			},
 			{
 			  "args": [
@@ -551,126 +678,9 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 21
+				"type": 20
 			  },
 			  "selector": "0xeaf1248a"
-			},
-			{
-			  "args": [
-				{
-				  "label": "role",
-				  "type": {
-					"displayName": [
-					  "accesscontrol_external",
-					  "GrantRoleInput1"
-					],
-					"type": 4
-				  }
-				},
-				{
-				  "label": "account",
-				  "type": {
-					"displayName": [
-					  "accesscontrol_external",
-					  "GrantRoleInput2"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [
-				" Grants `role` to `account`.",
-				"",
-				" On success a `RoleGranted` event is emitted.",
-				"",
-				" # Errors",
-				"",
-				" Returns with `MissingRole` error if caller can't grant the role.",
-				" Returns with `RoleRedundant` error `account` has `role`."
-			  ],
-			  "label": "AccessControl::grant_role",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 21
-			  },
-			  "selector": "0x4ac062fd"
-			},
-			{
-			  "args": [
-				{
-				  "label": "role",
-				  "type": {
-					"displayName": [
-					  "accesscontrol_external",
-					  "GetRoleAdminInput1"
-					],
-					"type": 4
-				  }
-				}
-			  ],
-			  "docs": [
-				" Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-			  ],
-			  "label": "AccessControl::get_role_admin",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 23
-			  },
-			  "selector": "0x83da3bb2"
-			},
-			{
-			  "args": [
-				{
-				  "label": "role",
-				  "type": {
-					"displayName": [
-					  "accesscontrol_external",
-					  "RevokeRoleInput1"
-					],
-					"type": 4
-				  }
-				},
-				{
-				  "label": "account",
-				  "type": {
-					"displayName": [
-					  "accesscontrol_external",
-					  "RevokeRoleInput2"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [
-				" Revokes `role` from `account`.",
-				"",
-				" On success a `RoleRevoked` event is emitted.",
-				"",
-				" # Errors",
-				"",
-				" Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
-			  ],
-			  "label": "AccessControl::revoke_role",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 21
-			  },
-			  "selector": "0x6e4f0991"
 			},
 			{
 			  "args": [
@@ -746,23 +756,6 @@ const staking = {
 			{
 			  "args": [],
 			  "docs": [
-				" Returns the address of the current owner."
-			  ],
-			  "label": "Ownable::owner",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 26
-			  },
-			  "selector": "0x4fa43c8c"
-			},
-			{
-			  "args": [],
-			  "docs": [
 				" Leaves the contract without owner. It will not be possible to call",
 				" owner's functions anymore. Can only be called by the current owner.",
 				"",
@@ -783,7 +776,7 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 27
+				"type": 26
 			  },
 			  "selector": "0x5e228753"
 			},
@@ -820,14 +813,16 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 27
+				"type": 26
 			  },
 			  "selector": "0x11f43efd"
 			},
 			{
 			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_claimable_reward",
+			  "docs": [
+				" Returns the address of the current owner."
+			  ],
+			  "label": "Ownable::owner",
 			  "mutates": false,
 			  "payable": false,
 			  "returnType": {
@@ -835,24 +830,9 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 29
+				"type": 28
 			  },
-			  "selector": "0xa8a67305"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_reward_pool",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 29
-			  },
-			  "selector": "0x8bc2a09c"
+			  "selector": "0x4fa43c8c"
 			},
 			{
 			  "args": [
@@ -878,9 +858,379 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 30
+				"type": 29
 			  },
 			  "selector": "0xcc24ad6d"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_reward_started",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 22
+			  },
+			  "selector": "0xa830c978"
+			},
+			{
+			  "args": [
+				{
+				  "label": "index",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "GetStakedAccountsAccountByIndexInput1"
+					],
+					"type": 6
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_staked_accounts_account_by_index",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 24
+			  },
+			  "selector": "0x0d9443e8"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_claimable_reward",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 30
+			  },
+			  "selector": "0xa8a67305"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_is_locked",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 22
+			  },
+			  "selector": "0xec9dc492"
+			},
+			{
+			  "args": [
+				{
+				  "label": "account",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "GetTotalStakedByAccountInput1"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [
+				" This function returns the total PMP NFT Staked by an account"
+			  ],
+			  "label": "ArtZeroStakingTrait::get_total_staked_by_account",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 29
+			  },
+			  "selector": "0x5da4d83d"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_total_staked",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 29
+			  },
+			  "selector": "0xed73d1f3"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_artzero_nft_contract",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 28
+			  },
+			  "selector": "0x8859434b"
+			},
+			{
+			  "args": [
+				{
+				  "label": "account",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "IsClaimedInput1"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::is_claimed",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 22
+			  },
+			  "selector": "0x717c15fb"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_admin_address",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 28
+			  },
+			  "selector": "0x80db25fc"
+			},
+			{
+			  "args": [
+				{
+				  "label": "artzero_nft_contract",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "SetArtzeroNftContractInput1"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::set_artzero_nft_contract",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0xc52f771c"
+			},
+			{
+			  "args": [
+				{
+				  "label": "limit_unstake_time",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "SetLimitUnstakeTimeInput1"
+					],
+					"type": 6
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::set_limit_unstake_time",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0xcd6ac45f"
+			},
+			{
+			  "args": [
+				{
+				  "label": "admin_address",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "UpdateAdminAddressInput1"
+					],
+					"type": 0
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::update_admin_address",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0xc86c525a"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_reward_pool",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 30
+			  },
+			  "selector": "0x8bc2a09c"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::stop_reward_distribution",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0x9a5dfef3"
+			},
+			{
+			  "args": [
+				{
+				  "label": "account",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "GetRequestUnstakeTimeInput1"
+					],
+					"type": 0
+				  }
+				},
+				{
+				  "label": "token_id",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "GetRequestUnstakeTimeInput2"
+					],
+					"type": 6
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_request_unstake_time",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 29
+			  },
+			  "selector": "0xc0fa6c0f"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::get_staked_accounts_last_index",
+			  "mutates": false,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 29
+			  },
+			  "selector": "0x8db49a4e"
+			},
+			{
+			  "args": [
+				{
+				  "label": "is_locked",
+				  "type": {
+					"displayName": [
+					  "artzerostakingtrait_external",
+					  "UpdateIsLockedInput1"
+					],
+					"type": 5
+				  }
+				}
+			  ],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::update_is_locked",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0xaa5ad235"
+			},
+			{
+			  "args": [],
+			  "docs": [],
+			  "label": "ArtZeroStakingTrait::start_reward_distribution",
+			  "mutates": true,
+			  "payable": false,
+			  "returnType": {
+				"displayName": [
+				  "ink",
+				  "MessageResult"
+				],
+				"type": 10
+			  },
+			  "selector": "0x99df8b41"
 			},
 			{
 			  "args": [
@@ -925,182 +1275,6 @@ const staking = {
 				  "type": {
 					"displayName": [
 					  "artzerostakingtrait_external",
-					  "GetRequestUnstakeTimeInput1"
-					],
-					"type": 0
-				  }
-				},
-				{
-				  "label": "token_id",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "GetRequestUnstakeTimeInput2"
-					],
-					"type": 6
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_request_unstake_time",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 30
-			  },
-			  "selector": "0xc0fa6c0f"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_limit_unstake_time",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 30
-			  },
-			  "selector": "0x9ec3eb6d"
-			},
-			{
-			  "args": [
-				{
-				  "label": "is_locked",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "UpdateIsLockedInput1"
-					],
-					"type": 5
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::update_is_locked",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0xaa5ad235"
-			},
-			{
-			  "args": [
-				{
-				  "label": "limit_unstake_time",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "SetLimitUnstakeTimeInput1"
-					],
-					"type": 6
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::set_limit_unstake_time",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0xcd6ac45f"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_total_staked",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 30
-			  },
-			  "selector": "0xed73d1f3"
-			},
-			{
-			  "args": [
-				{
-				  "label": "account",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "GetTotalStakedByAccountInput1"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [
-				" This function returns the total PMP NFT Staked by an account"
-			  ],
-			  "label": "ArtZeroStakingTrait::get_total_staked_by_account",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 30
-			  },
-			  "selector": "0x5da4d83d"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_reward_started",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 20
-			  },
-			  "selector": "0xa830c978"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_admin_address",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 26
-			  },
-			  "selector": "0x80db25fc"
-			},
-			{
-			  "args": [
-				{
-				  "label": "account",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
 					  "GetStakedAccountsIndexByAccountInput1"
 					],
 					"type": 0
@@ -1123,7 +1297,7 @@ const staking = {
 			{
 			  "args": [],
 			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_staked_accounts_last_index",
+			  "label": "ArtZeroStakingTrait::get_limit_unstake_time",
 			  "mutates": false,
 			  "payable": false,
 			  "returnType": {
@@ -1131,102 +1305,9 @@ const staking = {
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 30
+				"type": 29
 			  },
-			  "selector": "0x8db49a4e"
-			},
-			{
-			  "args": [
-				{
-				  "label": "artzero_nft_contract",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "SetArtzeroNftContractInput1"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::set_artzero_nft_contract",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0xc52f771c"
-			},
-			{
-			  "args": [
-				{
-				  "label": "admin_address",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "UpdateAdminAddressInput1"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::update_admin_address",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0xc86c525a"
-			},
-			{
-			  "args": [
-				{
-				  "label": "account",
-				  "type": {
-					"displayName": [
-					  "artzerostakingtrait_external",
-					  "IsClaimedInput1"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::is_claimed",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 20
-			  },
-			  "selector": "0x717c15fb"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_is_locked",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 20
-			  },
-			  "selector": "0xec9dc492"
+			  "selector": "0x9ec3eb6d"
 			},
 			{
 			  "args": [
@@ -1265,75 +1346,42 @@ const staking = {
 			  "selector": "0x3d3a91b5"
 			},
 			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_artzero_nft_contract",
-			  "mutates": false,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 26
-			  },
-			  "selector": "0x8859434b"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::start_reward_distribution",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0x99df8b41"
-			},
-			{
-			  "args": [],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::stop_reward_distribution",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0x9a5dfef3"
-			},
-			{
 			  "args": [
 				{
-				  "label": "index",
+				  "label": "value",
 				  "type": {
 					"displayName": [
-					  "artzerostakingtrait_external",
-					  "GetStakedAccountsAccountByIndexInput1"
+					  "admintrait_external",
+					  "WithdrawFeeInput1"
 					],
-					"type": 6
+					"type": 7
+				  }
+				},
+				{
+				  "label": "receiver",
+				  "type": {
+					"displayName": [
+					  "admintrait_external",
+					  "WithdrawFeeInput2"
+					],
+					"type": 0
 				  }
 				}
 			  ],
-			  "docs": [],
-			  "label": "ArtZeroStakingTrait::get_staked_accounts_account_by_index",
-			  "mutates": false,
+			  "docs": [
+				" This function allows contract owner to withdraw contract balance to his account."
+			  ],
+			  "label": "AdminTrait::withdraw_fee",
+			  "mutates": true,
 			  "payable": false,
 			  "returnType": {
 				"displayName": [
 				  "ink",
 				  "MessageResult"
 				],
-				"type": 24
+				"type": 10
 			  },
-			  "selector": "0x0d9443e8"
+			  "selector": "0x07573e99"
 			},
 			{
 			  "args": [
@@ -1382,44 +1430,6 @@ const staking = {
 				"type": 10
 			  },
 			  "selector": "0xed1e1dfa"
-			},
-			{
-			  "args": [
-				{
-				  "label": "value",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "WithdrawFeeInput1"
-					],
-					"type": 7
-				  }
-				},
-				{
-				  "label": "receiver",
-				  "type": {
-					"displayName": [
-					  "admintrait_external",
-					  "WithdrawFeeInput2"
-					],
-					"type": 0
-				  }
-				}
-			  ],
-			  "docs": [
-				" This function allows contract owner to withdraw contract balance to his account."
-			  ],
-			  "label": "AdminTrait::withdraw_fee",
-			  "mutates": true,
-			  "payable": false,
-			  "returnType": {
-				"displayName": [
-				  "ink",
-				  "MessageResult"
-				],
-				"type": 10
-			  },
-			  "selector": "0x07573e99"
 			},
 			{
 			  "args": [
@@ -2315,42 +2325,46 @@ const staking = {
 					},
 					{
 					  "index": 38,
-					  "name": "NotForSale"
+					  "name": "IsForSale"
 					},
 					{
 					  "index": 39,
-					  "name": "NotInSaleList"
+					  "name": "NotForSale"
 					},
 					{
 					  "index": 40,
-					  "name": "InvalidBidLength"
+					  "name": "NotInSaleList"
 					},
 					{
 					  "index": 41,
-					  "name": "InvalidCollectionOwner"
+					  "name": "InvalidBidLength"
 					},
 					{
 					  "index": 42,
-					  "name": "InvalidTime"
+					  "name": "InvalidCollectionOwner"
 					},
 					{
 					  "index": 43,
-					  "name": "RewardStarted"
+					  "name": "InvalidTime"
 					},
 					{
 					  "index": 44,
-					  "name": "RewardNotStarted"
+					  "name": "RewardStarted"
 					},
 					{
 					  "index": 45,
-					  "name": "RewardNotAdded"
+					  "name": "RewardNotStarted"
 					},
 					{
 					  "index": 46,
-					  "name": "ClaimMustBeFalse"
+					  "name": "RewardNotAdded"
 					},
 					{
 					  "index": 47,
+					  "name": "ClaimMustBeFalse"
+					},
+					{
+					  "index": 48,
 					  "name": "HoldAmountBidderNotExist"
 					},
 					{
@@ -2360,7 +2374,7 @@ const staking = {
 						  "typeName": "OwnableError"
 						}
 					  ],
-					  "index": 48,
+					  "index": 49,
 					  "name": "OwnableError"
 					},
 					{
@@ -2370,7 +2384,7 @@ const staking = {
 						  "typeName": "AccessControlError"
 						}
 					  ],
-					  "index": 49,
+					  "index": 50,
 					  "name": "AccessControlError"
 					},
 					{
@@ -2380,7 +2394,7 @@ const staking = {
 						  "typeName": "PSP22Error"
 						}
 					  ],
-					  "index": 50,
+					  "index": 51,
 					  "name": "PSP22Error"
 					},
 					{
@@ -2390,11 +2404,11 @@ const staking = {
 						  "typeName": "PSP34Error"
 						}
 					  ],
-					  "index": 51,
+					  "index": 52,
 					  "name": "PSP34Error"
 					},
 					{
-					  "index": 52,
+					  "index": 53,
 					  "name": "CheckedOperations"
 					}
 				  ]
@@ -2609,7 +2623,7 @@ const staking = {
 					{
 					  "fields": [
 						{
-						  "type": 5
+						  "type": 21
 						}
 					  ],
 					  "index": 0,
@@ -2630,7 +2644,7 @@ const staking = {
 			  "params": [
 				{
 				  "name": "T",
-				  "type": 5
+				  "type": 21
 				},
 				{
 				  "name": "E",
@@ -2644,48 +2658,6 @@ const staking = {
 		  },
 		  {
 			"id": 21,
-			"type": {
-			  "def": {
-				"variant": {
-				  "variants": [
-					{
-					  "fields": [
-						{
-						  "type": 22
-						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
-					},
-					{
-					  "fields": [
-						{
-						  "type": 9
-						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
-					}
-				  ]
-				}
-			  },
-			  "params": [
-				{
-				  "name": "T",
-				  "type": 22
-				},
-				{
-				  "name": "E",
-				  "type": 9
-				}
-			  ],
-			  "path": [
-				"Result"
-			  ]
-			}
-		  },
-		  {
-			"id": 22,
 			"type": {
 			  "def": {
 				"variant": {
@@ -2719,6 +2691,48 @@ const staking = {
 				{
 				  "name": "E",
 				  "type": 15
+				}
+			  ],
+			  "path": [
+				"Result"
+			  ]
+			}
+		  },
+		  {
+			"id": 22,
+			"type": {
+			  "def": {
+				"variant": {
+				  "variants": [
+					{
+					  "fields": [
+						{
+						  "type": 5
+						}
+					  ],
+					  "index": 0,
+					  "name": "Ok"
+					},
+					{
+					  "fields": [
+						{
+						  "type": 9
+						}
+					  ],
+					  "index": 1,
+					  "name": "Err"
+					}
+				  ]
+				}
+			  },
+			  "params": [
+				{
+				  "name": "T",
+				  "type": 5
+				},
+				{
+				  "name": "E",
+				  "type": 9
 				}
 			  ],
 			  "path": [
@@ -2852,7 +2866,7 @@ const staking = {
 					{
 					  "fields": [
 						{
-						  "type": 0
+						  "type": 27
 						}
 					  ],
 					  "index": 0,
@@ -2873,7 +2887,7 @@ const staking = {
 			  "params": [
 				{
 				  "name": "T",
-				  "type": 0
+				  "type": 27
 				},
 				{
 				  "name": "E",
@@ -2887,48 +2901,6 @@ const staking = {
 		  },
 		  {
 			"id": 27,
-			"type": {
-			  "def": {
-				"variant": {
-				  "variants": [
-					{
-					  "fields": [
-						{
-						  "type": 28
-						}
-					  ],
-					  "index": 0,
-					  "name": "Ok"
-					},
-					{
-					  "fields": [
-						{
-						  "type": 9
-						}
-					  ],
-					  "index": 1,
-					  "name": "Err"
-					}
-				  ]
-				}
-			  },
-			  "params": [
-				{
-				  "name": "T",
-				  "type": 28
-				},
-				{
-				  "name": "E",
-				  "type": 9
-				}
-			  ],
-			  "path": [
-				"Result"
-			  ]
-			}
-		  },
-		  {
-			"id": 28,
 			"type": {
 			  "def": {
 				"variant": {
@@ -2970,7 +2942,7 @@ const staking = {
 			}
 		  },
 		  {
-			"id": 29,
+			"id": 28,
 			"type": {
 			  "def": {
 				"variant": {
@@ -2978,7 +2950,7 @@ const staking = {
 					{
 					  "fields": [
 						{
-						  "type": 7
+						  "type": 0
 						}
 					  ],
 					  "index": 0,
@@ -2999,7 +2971,7 @@ const staking = {
 			  "params": [
 				{
 				  "name": "T",
-				  "type": 7
+				  "type": 0
 				},
 				{
 				  "name": "E",
@@ -3012,7 +2984,7 @@ const staking = {
 			}
 		  },
 		  {
-			"id": 30,
+			"id": 29,
 			"type": {
 			  "def": {
 				"variant": {
@@ -3042,6 +3014,48 @@ const staking = {
 				{
 				  "name": "T",
 				  "type": 6
+				},
+				{
+				  "name": "E",
+				  "type": 9
+				}
+			  ],
+			  "path": [
+				"Result"
+			  ]
+			}
+		  },
+		  {
+			"id": 30,
+			"type": {
+			  "def": {
+				"variant": {
+				  "variants": [
+					{
+					  "fields": [
+						{
+						  "type": 7
+						}
+					  ],
+					  "index": 0,
+					  "name": "Ok"
+					},
+					{
+					  "fields": [
+						{
+						  "type": 9
+						}
+					  ],
+					  "index": 1,
+					  "name": "Err"
+					}
+				  ]
+				}
+			  },
+			  "params": [
+				{
+				  "name": "T",
+				  "type": 7
 				},
 				{
 				  "name": "E",
