@@ -128,8 +128,8 @@ import {
                                   api,
                                   currentAccount,
                                   item['nftContractAddress'],
+                                  item['is_for_sale'] ? item['nft_owner'] : item['owner'],
                                   item['tokenID'],
-                                  item['bidId'],
                                   dispatch
                                 )}
                               />
