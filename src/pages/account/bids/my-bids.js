@@ -221,19 +221,26 @@ import {
       [api, apiState, type]
     );
 
-    const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-      useInfiniteQuery(
-        [`getEvents${type}`, currentAccount?.address, apiState],
-        ({ pageParam = 0, bidder = currentAccount?.address }) => fetchEvents({ pageParam, bidder }),
-        {
-          getNextPageParam: (lastPage) => {
-            if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
-              return undefined;
-            }
-            return lastPage?.nextId || 0;
-          },
-        }
-      );
+    const {
+      data,
+      hasNextPage,
+      isFetchingNextPage,
+      fetchNextPage,
+      isLoading,
+      refetch,
+    } = useInfiniteQuery(
+      [`getEvents${type}`, currentAccount?.address, apiState],
+      ({ pageParam = 0, bidder = currentAccount?.address }) =>
+        fetchEvents({ pageParam, bidder }),
+      {
+        getNextPageParam: (lastPage) => {
+          if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
+            return undefined;
+          }
+          return lastPage?.nextId || 0;
+        },
+      }
+    );
 
     const dataFormatted = useMemo(
       () =>
@@ -254,6 +261,7 @@ import {
             type={type}
             tableHeaders={tableHeaders}
             tableData={dataFormatted}
+            reload={async () => refetch()}
           />
         )}
 

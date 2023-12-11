@@ -36,8 +36,9 @@ import {
   import azero_domains_nft from "@blockchain/azero-domains-nft";
   import toast from "react-hot-toast";
   import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
+import { delay } from "../../utils";
   
-  function BidsTable({ tableHeaders, tableData, collectionOwner, type }) {
+  function BidsTable({ tableHeaders, tableData, collectionOwner, type, reload }) {
     console.log('BidsTable::type', type);
     const dispatch = useDispatch();
     const { currentAccount, api } = useSubstrateState();
@@ -118,7 +119,8 @@ import {
                                   item['is_for_sale'] ? item['nft_owner'] : item['owner'],
                                   item['tokenID'],
                                   item['azDomainName'],
-                                  dispatch
+                                  dispatch,
+                                  reload
                                 )}
                               />
                             </Td>) : ""}
@@ -330,7 +332,8 @@ import {
     ownerAddress,
     tokenID,
     azDomainName,
-    dispatch
+    dispatch,
+    reloadData
   ) => {
     // check wallet connected
     if (!currentAccount) {
@@ -365,6 +368,10 @@ import {
         REMOVE_BID,
         api
       );
+      await delay(1000);
+      await delay(10000).then(() => {
+        reloadData();
+      });
     } else {
       dispatch(
         setTxStatus({
@@ -383,6 +390,10 @@ import {
         REMOVE_BID,
         api
       );
+      await delay(1000);
+      await delay(10000).then(() => {
+        reloadData();
+      });
     }
   
     
