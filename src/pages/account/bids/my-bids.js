@@ -130,8 +130,6 @@ import {
 
     const fetchEvents = useCallback(
       async ({ pageParam, bidder }) => {
-        console.log('pageParam', pageParam);
-        console.log('bidder', bidder);
         if (pageParam === undefined || apiState !== "READY" || bidder === undefined) return;
 
         let eventsList = [];

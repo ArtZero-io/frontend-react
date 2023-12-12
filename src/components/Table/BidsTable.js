@@ -32,18 +32,17 @@ import {
   import { setTxStatus } from "@store/actions/txStatus";
   import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
   import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
-  
+  import useTxStatus from "@hooks/useTxStatus";
   import azero_domains_nft from "@blockchain/azero-domains-nft";
   import toast from "react-hot-toast";
   import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
-import { delay } from "../../utils";
   
-  function BidsTable({ tableHeaders, tableData, collectionOwner, type, reload }) {
+  function BidsTable({ tableHeaders, tableData, collectionOwner, type }) {
     console.log('BidsTable::type', type);
     const dispatch = useDispatch();
     const { currentAccount, api } = useSubstrateState();
     const { apiState } = useSubstrateState();
-    
+    const { tokenIDArray, actionType, ...rest } = useTxStatus();
     return (
       <>
         {apiState !== "READY" || tableData?.length === 0 ? (
@@ -108,10 +107,14 @@ import { delay } from "../../utils";
                           )}
                           {(type === "BUY") ? (<Td>
                               <CommonButton
+                                {...rest}
                                 mx="0"
                                 px="8px"
                                 h="40px"
                                 text="Remove bid"
+                                isLoading={
+                                  rest.isLoading
+                                }
                                 onClick={() => removeBid(
                                   api,
                                   currentAccount,
@@ -119,14 +122,14 @@ import { delay } from "../../utils";
                                   item['is_for_sale'] ? item['nft_owner'] : item['owner'],
                                   item['tokenID'],
                                   item['azDomainName'],
-                                  dispatch,
-                                  reload
+                                  dispatch
                                 )}
                               />
                             </Td>) : ""}
                             {(type === "SELL") ? (
                               <Td>
                                 <CommonButton
+                                    {...rest}
                                     mx="0"
                                     px="8px"
                                     h="40px"
@@ -332,8 +335,7 @@ import { delay } from "../../utils";
     ownerAddress,
     tokenID,
     azDomainName,
-    dispatch,
-    reloadData
+    dispatch
   ) => {
     // check wallet connected
     if (!currentAccount) {
@@ -368,10 +370,6 @@ import { delay } from "../../utils";
         REMOVE_BID,
         api
       );
-      await delay(1000);
-      await delay(10000).then(() => {
-        reloadData();
-      });
     } else {
       dispatch(
         setTxStatus({
@@ -390,10 +388,6 @@ import { delay } from "../../utils";
         REMOVE_BID,
         api
       );
-      await delay(1000);
-      await delay(10000).then(() => {
-        reloadData();
-      });
     }
   
     
