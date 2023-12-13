@@ -92,11 +92,11 @@ async function fetchMyBidList(bidderAddress) {
 }
 
 export function useMyBidList(ownerAddress) {
-  const { data, refetch, isLoading } = useQuery(
+  const { data, refetch, isLoading, isFetching } = useQuery(
     [queryKeys.myBidList, ownerAddress],
     () => fetchMyBidList(ownerAddress),
     { refetchOnWindowFocus: false }
   );
 
-  return { myBidList: data, refetch, isLoading };
+  return { myBidList: data, refetch, isLoading, isFetching };
 }

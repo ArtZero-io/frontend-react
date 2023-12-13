@@ -140,4 +140,9 @@ const tabsList = [
     isDisabled: false,
     route: '/public-account/projects',
   },
+  {
+    label: "Activities",
+    isDisabled: false,
+    route: "/public-account/activities",
+  },
 ];

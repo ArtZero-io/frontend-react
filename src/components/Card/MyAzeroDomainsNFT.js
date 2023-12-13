@@ -40,7 +40,11 @@ import {
   RiFileTransferLine,
 } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import { MAX_ITEM_BULK_LISTING, MAX_ITEM_BULK_TRANSFER } from "../../constants";
+import {
+  MAX_ITEM_BULK_LISTING,
+  MAX_ITEM_BULK_TRANSFER,
+  MAX_BID_COUNT,
+} from "../../constants";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 // Stake Status
@@ -70,6 +74,8 @@ function MyAzeroDomainsNFTCard({
   filterSelected,
   multiDelistData,
   handleSelectMultiDelist,
+  multiDebidData,
+  handleSelectMultiDebidAzeroDomains,
 }) {
   const { currentAccount } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
@@ -145,6 +151,36 @@ function MyAzeroDomainsNFTCard({
   };
 
   //END  BULK DELIST=============================================================
+
+  // BULK REMOVE BID=============================================================
+  const [isMultiDebidCheckbox, setIsMultiDebidCheckbox] = useState(false);
+
+  const handleOnChangeMultiDebidCheckbox = ({target}) => {
+    if (target.checked && multiDebidData?.list?.length >= MAX_BID_COUNT) {
+      !multiDebidData?.list?.includes(azDomainName) &&
+        setIsMultiDebidCheckbox(false);
+
+      return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
+    }
+
+    target.checked ? setIsMultiDebidCheckbox(true) : setIsMultiDebidCheckbox(false);
+
+    if (
+      !multiDebidData?.action ||
+      multiDebidData?.action === "MULTI_REMOVE_BIDS"
+    ) {
+      handleSelectMultiDebidAzeroDomains(
+        azDomainName,
+        "MULTI_REMOVE_BIDS",
+        target.checked
+      );
+      return;
+    }
+
+    return toast.error("Please select same action!");
+  };
+
+  //END BULK REMOVE BID=============================================================
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -416,6 +452,51 @@ function MyAzeroDomainsNFTCard({
             </Square>
           )}
         {/*END Check Box for multi DE-LISTING*/}
+        {/* ++++++++++++++++++++++++++++++++++++++++ */}
+        {/* Check Box for multi REMOVE-BID */}
+        {location?.pathname === "/account/nfts" &&
+          filterSelected === "BIDS" &&
+          is_for_sale && (
+            <Square
+              sx={{
+                maxWidth: "content",
+                maxHeight: "content",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Checkbox
+                display={
+                  !(
+                    bulkTxMode &&
+                    bulkTxMode === "MULTI_REMOVE_BIDS" &&
+                    nftContractAddress === selectedCollectionAddress
+                  ) && "none"
+                }
+                sx={{
+                  ".my-nft-card:hover &": {
+                    display: !bulkTxMode && "inline-flex",
+                  },
+                  "span.chakra-checkbox__control": {
+                    borderRadius: "0",
+                    borderWidth: "0.2px",
+                    borderColor: "brand.blue",
+                    backgroundColor: "brand.semiBlack",
+                  },
+                  "span.chakra-checkbox__control[data-checked] > div": {
+                    color: "brand.blue",
+                  },
+                }}
+                size="lg"
+                top="10px"
+                right="10px"
+                position="absolute"
+                isChecked={isMultiDebidCheckbox}
+                isDisabled={actionType}
+                onChange={(e) => handleOnChangeMultiDebidCheckbox(e)}
+              ></Checkbox>
+            </Square>
+          )}
+        {/*END Check Box for multi REMOVE-BID*/}
         {/* ++++++++++++++++++++++++++++++++++++++++ */}
         {/* Check Box for multi stake */}
         {!is_for_sale && location?.pathname === "/account/stakes" ? (

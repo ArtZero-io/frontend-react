@@ -261,7 +261,7 @@ const SubstrateContextProvider = (props) => {
         loadAccounts(state, dispatch, state?.selectedExtension);
     }
   }, [state, dispatch]);
-  const [adapter, setAdapter] = useState();
+  const [adapter, setAdapter] = useState(null);
 
   async function setCurrentAccount(acct) {
     const walletAdapter = await web3FromSource(acct?.meta?.source);
@@ -283,6 +283,7 @@ const SubstrateContextProvider = (props) => {
       window.localStorage.setItem("currentAccount", JSON.stringify(""));
     });
   }
+
 
   return (
     <SubstrateContext.Provider

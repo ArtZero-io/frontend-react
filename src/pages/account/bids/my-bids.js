@@ -12,9 +12,9 @@ import {
     useMediaQuery,
   } from "@chakra-ui/react";
   import BidsTable from "@components/Table/BidsTable";
-  
+
   import React, { useEffect } from "react";
-  
+
   import { APICall } from "@api/client";
   import CommonContainer from "@components/Container/CommonContainer";
   import DropdownMobile from "@components/Dropdown/DropdownMobile";
@@ -26,13 +26,13 @@ import {
   import { useInView } from "react-intersection-observer";
   import { BeatLoader } from "react-spinners";
   import azero_domains_nft from "@blockchain/azero-domains-nft";
-  
+
   const NUMBER_NFT_PER_PAGE = 5;
-  
+
   function MyBidsPages() {
     const [tabIndex, setTabIndex] = React.useState(0);
     const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-  
+
     const tabData = [
       {
         label: "My Bids",
@@ -43,7 +43,7 @@ import {
         content: <EventTableWrapper type="SELL" tableHeaders={headers.sell} />,
       }
     ];
-  
+
     return (
       <CommonContainer>
         <VStack as="section" w="full">
@@ -51,7 +51,7 @@ import {
             <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>My Bids</Heading>
           </Box>
         </VStack>
-  
+
         <Tabs
           px="0px"
           isLazy
@@ -102,7 +102,7 @@ import {
               ))}
             </TabList>
           )}
-  
+
           <TabPanels h="full" minH="md">
             {tabData.map((tab, index) => (
               <TabPanel p="0px" key={index}>
@@ -114,26 +114,24 @@ import {
       </CommonContainer>
     );
   }
-  
+
   export default MyBidsPages;
-  
+
   const EventTableWrapper = ({ type, tableHeaders }) => {
     const { ref, inView } = useInView();
     const { api, apiState, currentAccount } = useSubstrateState();
-  
+
     useEffect(() => {
       if (inView) {
         fetchNextPage();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inView]);
-  
+
     const fetchEvents = useCallback(
       async ({ pageParam, bidder }) => {
-        console.log('pageParam', pageParam);
-        console.log('bidder', bidder);
         if (pageParam === undefined || apiState !== "READY" || bidder === undefined) return;
-  
+
         let eventsList = [];
         let options = {};
         console.log("type", type);
@@ -156,14 +154,14 @@ import {
           let {ret} = await APICall.getBidsBySellerAddress(options);
           eventsList= ret;
         }
-        
-        
-  
+
+
+
         if (eventsList?.length > 0) {
           eventsList = await Promise.all(
             eventsList?.map(async (event) => {
               const { nftContractAddress, tokenID, azDomainName, seller, bidder, bid_value, bid_date } = event;
-  
+
               const buyerDomain = await resolveDomain(bidder, api);
               const sellerDomain = await resolveDomain(seller, api);
               console.log('nftContractAddress', nftContractAddress);
@@ -196,7 +194,7 @@ import {
                   }
                 }
               }
-              
+
               const eventFormatted = {
                 ...event,
                 ...nftInformationData,
@@ -212,29 +210,36 @@ import {
             })
           );
         }
-  
+
         return {
           eventsList,
           nextId: pageParam + NUMBER_NFT_PER_PAGE,
         };
       },
-      [api, apiState, type, currentAccount?.address]
+      [api, apiState, type]
     );
-  
-    const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-      useInfiniteQuery(
-        [`getEvents${type}`, currentAccount?.address, apiState],
-        ({ pageParam = 0, bidder = currentAccount?.address }) => fetchEvents({ pageParam, bidder }),
-        {
-          getNextPageParam: (lastPage) => {
-            if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
-              return undefined;
-            }
-            return lastPage?.nextId || 0;
-          },
-        }
-      );
-  
+
+    const {
+      data,
+      hasNextPage,
+      isFetchingNextPage,
+      fetchNextPage,
+      isLoading,
+      refetch,
+    } = useInfiniteQuery(
+      [`getEvents${type}`, currentAccount?.address, apiState],
+      ({ pageParam = 0, bidder = currentAccount?.address }) =>
+        fetchEvents({ pageParam, bidder }),
+      {
+        getNextPageParam: (lastPage) => {
+          if (lastPage?.eventsList?.length < NUMBER_NFT_PER_PAGE) {
+            return undefined;
+          }
+          return lastPage?.nextId || 0;
+        },
+      }
+    );
+
     const dataFormatted = useMemo(
       () =>
         data?.pages?.reduce((a, b) => {
@@ -242,7 +247,7 @@ import {
         }, []),
       [data]
     );
-  
+
     return (
       <>
         {isLoading ? (
@@ -254,9 +259,10 @@ import {
             type={type}
             tableHeaders={tableHeaders}
             tableData={dataFormatted}
+            reload={async () => refetch()}
           />
         )}
-  
+
         {dataFormatted?.length ? (
           <HStack pt="80px" pb="20px" justifyContent="center" w="full">
             <Text ref={ref}>
@@ -275,11 +281,11 @@ import {
       </>
     );
   };
-  
+
   const dropDownMobileOptions = {
     BUY: "buy"
   };
-  
+
   const headers = {
     buy: {
       nftName: "nft name",
@@ -300,4 +306,3 @@ import {
       bidder: "bidder"
     },
   };
-  

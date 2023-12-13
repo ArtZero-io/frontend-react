@@ -777,7 +777,7 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 
 export const getDomainToAddress = async (domain, api) => {
   const option = {
-    chainId: SupportedChainId.AlephZero,
+    chainId: (process.env.REACT_APP_NETWORK === "alephzero-testnet") ? SupportedChainId.AlephZeroTestnet : SupportedChainId.AlephZero,
   };
 
   if (api) {
@@ -807,7 +807,7 @@ export const getDomainToAddress = async (domain, api) => {
 
 export const resolveDomain = async (address, api) => {
   const option = {
-    chainId: SupportedChainId.AlephZero,
+    chainId: (process.env.REACT_APP_NETWORK === "alephzero-testnet") ? SupportedChainId.AlephZeroTestnet : SupportedChainId.AlephZero,
   };
 
   if (api) {
@@ -850,11 +850,11 @@ export function hexToAscii(str1) {
 }
 
 export const getTimestamp = async (api, blockNumber) => {
-  const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+  const blockHash = await api?.rpc.chain.getBlockHash(blockNumber);
 
   let ret = null;
 
-  const signedBlock = await api.rpc.chain.getBlock(blockHash);
+  const signedBlock = await api?.rpc.chain.getBlock(blockHash);
 
   signedBlock?.block?.extrinsics?.forEach(
     ({ method: { args, section, method: extrinsicsMethod } }) => {

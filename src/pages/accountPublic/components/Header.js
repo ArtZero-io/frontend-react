@@ -29,23 +29,19 @@ function ProfileHeader({ address }) {
   const { currentAccount, api, apiState } = useSubstrateState();
 
   const [profile, setProfile] = useState(null);
-  const history = useHistory();
 
   const avatarProfileSize = useBreakpointValue([64, 120]);
-
-  useEffect(() => {
-    if (address && address === currentAccount?.address) {
-      history.replace("/account/general");
-    }
-  }, [currentAccount, address, history]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       if (!api || apiState !== "READY" || !contract || !address) return;
 
-      await setProfileContract(api, contractData?.profile);
+      if (!contract) {
+        await setProfileContract(api, contractData?.profile);
+        return;
+      }
 
-      const res = await dispatch(getProfile(address));
+      const res = await dispatch(getProfile({ address }));
 
       if (res?.status === "OK") {
         if (!res.data.username) {
@@ -66,7 +62,8 @@ function ProfileHeader({ address }) {
     if (!profile?.address || profile?.address !== address) {
       fetchProfile();
     }
-  }, [api, apiState, dispatch, profile, address, currentAccount]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, apiState, dispatch, profile, address, currentAccount, contract]);
 
   return (
     <Box

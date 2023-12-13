@@ -1,0 +1,45 @@
+.step_create :global .rc-steps-item-content {
+  display: block;
+}
+.step_create :global .rc-steps-item-icon {
+  width: 40px;
+  height: 40px;
+  background: #e8fdff;
+  /* Border */
+}
+.step_create :global .rc-steps-item-icon span {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #57527e !important;
+  top: 7px;
+}
+.step_create :global .rc-steps-item-active .rc-steps-item-icon {
+  background: #93f0f5;
+}
+.step_create :global .rc-steps-item-title {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 23px;
+  /* identical to box height */
+  /* Primary_02 */
+  color: #7ae7ff;
+}
+.step_create :global .rc-steps-item-title::after {
+  top: -1.75em;
+  left: 50px;
+}
+.step_create :global .rc-steps-item-description {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #fff;
+  max-width: 200px !important;
+}
+.step_block {
+  width: 100%;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e3dff3;
+  margin-bottom: 32px;
+}

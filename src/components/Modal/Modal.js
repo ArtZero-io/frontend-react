@@ -24,6 +24,8 @@ export default function ResponsivelySizedModal({
   onClose,
   isOpen,
   filterSelected = "LISTING",
+  stakeStatus,
+  isStakingContractLocked,
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
@@ -70,7 +72,14 @@ export default function ResponsivelySizedModal({
     tabData = [
       {
         label: "detail",
-        content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
+        content: (
+          <MyNFTTabInfo
+            filterSelected={filterSelected}
+            isStakingContractLocked={isStakingContractLocked}
+            stakeStatus={stakeStatus}
+            {...rest}
+          />
+        ),
         isDisabled: actionType,
       },
       {

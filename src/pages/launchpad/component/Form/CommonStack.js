@@ -19,11 +19,7 @@ function CommonStack({ stackTitle, desc, children }) {
         <Spacer />
       </Flex>
       <Stack w="full" mb="30px">
-        {desc && (
-          <Text fontSize={["xs", "sm"]} color="brand.grayLight">
-            {desc}
-          </Text>
-        )}
+        {desc && <Text color="#FFF">{desc}</Text>}
       </Stack>
       <Divider bg="#7ae7ff" mb={["20px", "30px"]} />
 

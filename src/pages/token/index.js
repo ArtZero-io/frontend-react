@@ -60,6 +60,9 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
 import staking_calls from "@utils/blockchain/staking_calls";
+import staking from "@utils/blockchain/staking";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import { getStakeAction } from "@components/Card/MyNFT";
 
 import NftLayout from "@components/Layout/NftLayout";
 import CommonButton from "@components/Button/CommonButton";
@@ -78,11 +81,16 @@ import {
   LOCK,
   TRANSFER,
   EDIT_NFT,
+  STAKE,
+  UNSTAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { delay } from "@utils";
+import { delay, secondsToTime } from "@utils";
+import useInterval from "use-interval";
 
 import LockNFTModalMobile from "@components/Modal/LockNFTModalMobile";
 import { formMode } from "@constants";
@@ -117,6 +125,15 @@ function TokenPage() {
   const { collection_address, token_id } = useParams();
   const history = useHistory();
   const { state } = useLocation();
+  const { filterSelected, isStakingContractLocked, stakeStatus, tokenID } =
+    state ?? {};
+
+  const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
+  const [countdownTime, setCountdownTime] = useState(0);
+  const [isUnstakeTime, setIsUnstakeTime] = useState(false);
+  const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [token, setToken] = useState(null);
   const [bidPrice, setBidPrice] = useState(1);
@@ -460,6 +477,174 @@ function TokenPage() {
     }
   };
 
+  // STAKE ACTION=======================================================
+  const handleStakeAction = async (action, tokenIDArray) => {
+    if (!currentAccount) {
+      toast.error("Please connect wallet first!");
+      return;
+    }
+
+    try {
+      if (isStakingContractLocked) {
+        return toast.error("Staking contract is locked!");
+      }
+
+      if (action === STAKE) {
+        dispatch(setTxStatus({ type: STAKE, step: START, tokenIDArray }));
+
+        let res;
+        let allowance;
+
+        allowance = await artzero_nft_calls.allowance(
+          currentAccount,
+          currentAccount.address,
+          staking.CONTRACT_ADDRESS,
+          { u64: tokenIDArray[0] }
+        );
+
+        if (!allowance) {
+          toast.success("Step 1: Approving NFT for staking...");
+          res = await artzero_nft_calls.approve(
+            currentAccount,
+            staking.CONTRACT_ADDRESS,
+            { u64: tokenIDArray[0] },
+            true,
+            dispatch
+          );
+        }
+
+        if (res || allowance) {
+          //Token is unstaked, Stake Now
+
+          toast.success(res ? "Step 2: Staking..." : "Staking...");
+
+          await delay(3000).then(async () => {
+            await staking_calls.stake(
+              currentAccount,
+              tokenIDArray,
+              dispatch,
+              STAKE,
+              api
+            );
+          });
+          return;
+        }
+      }
+
+      if (action === REQUEST_UNSTAKE) {
+        dispatch(
+          setTxStatus({ type: REQUEST_UNSTAKE, step: START, tokenIDArray })
+        );
+
+        //Token is staked, Request Unstake Now
+
+        toast.success("Request Unstaking NFT...");
+
+        await staking_calls.requestUnstake(
+          currentAccount,
+          tokenIDArray,
+          dispatch,
+          REQUEST_UNSTAKE,
+          api
+        );
+      }
+
+      if (action === UNSTAKE) {
+        dispatch(setTxStatus({ type: UNSTAKE, step: START, tokenIDArray }));
+
+        toast.success("Unstaking NFT...");
+
+        await staking_calls.unstake(
+          currentAccount,
+          tokenIDArray,
+          dispatch,
+          UNSTAKE,
+          api
+        );
+      }
+
+      if (action === CANCEL_REQUEST_UNSTAKE) {
+        dispatch(
+          setTxStatus({
+            type: CANCEL_REQUEST_UNSTAKE,
+            step: START,
+            tokenIDArray,
+          })
+        );
+
+        toast("Cancel Unstaking Request...");
+
+        await staking_calls.cancelRequestUnstake(
+          currentAccount,
+          tokenIDArray,
+          dispatch,
+          CANCEL_REQUEST_UNSTAKE,
+          api
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
+
+  useInterval(() => {
+    if (unstakeRequestTime) {
+      let now = new Date().getTime() / 1000;
+      let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
+      if (valid_time - now > 0)
+        setCountdownTime(secondsToTime(valid_time - now));
+      else {
+        setIsUnstakeTime(true);
+        setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
+      }
+    }
+  }, 1000);
+
+  useEffect(() => {
+    const getRequestTime = async () => {
+      setIsLoading(true);
+      let time = await staking_calls.getRequestUnstakeTime(
+        currentAccount,
+        currentAccount.address,
+        tokenID
+      );
+      /* eslint-disable no-useless-escape */
+      const unstakeRequestTimeTmp = time.replace(/\,/g, "");
+      setUnstakeRequestTime(unstakeRequestTimeTmp);
+
+      let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(
+        currentAccount
+      );
+      setLimitUnstakeTime(limitUnstakeTimeTmp);
+
+      if (unstakeRequestTimeTmp) {
+        let now = new Date().getTime() / 1000;
+
+        let valid_time =
+          unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+
+        if (valid_time - now > 0)
+          setCountdownTime(secondsToTime(valid_time - now));
+        else {
+          setIsUnstakeTime(true);
+          setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
+        }
+      }
+
+      setIsLoading(false);
+    };
+
+    if (stakeStatus === 3) getRequestTime();
+  }, [currentAccount, stakeStatus, tokenID]);
+
+  useEffect(() => {
+    if (filterSelected) rest.step === "Finalized" && history.goBack();
+  }, [filterSelected, history, rest.step]);
+
+  // END STAKE ACTION=======================================================
+
   // const handleAcceptBidAction = async (bidId) => {
   //   try {
   //     await acceptBid(
@@ -584,6 +769,9 @@ function TokenPage() {
                     display="flex"
                     alignItems="center"
                     onClick={() => {
+                      if (state?.filterSelected === "STAKE_FILTER_SELECTED")
+                        history.goBack();
+
                       if (!state?.pathname) {
                         history.push({
                           state: { selectedItem: state?.selectedItem },
@@ -1001,86 +1189,178 @@ function TokenPage() {
                   )}
                 </Stack>
 
-                <Stack w="full">
-                  {/* 1 Not for sale NOT owner  */}
-                  {!token?.is_for_sale && !isOwner && (
-                    <Stack p="20px" border="1px solid #333">
-                      <Heading size="h6">This item not for sale</Heading>
-                    </Stack>
-                  )}
-
-                  {/* 2 Not for sale & owner  */}
-                  {!token?.is_for_sale && isOwner && (
-                    <>
+                {filterSelected === "STAKE_FILTER_SELECTED" ? (
+                  !token?.is_for_sale && (
+                    <Stack w={"full"}>
                       <Stack p="20px" border="1px solid #333">
-                        <Stack>
-                          <HStack spacing="20px" mb="12px">
-                            <NumberInput
+                        <HStack
+                          justifyContent={
+                            stakeStatus === 3 ? "normal" : "center"
+                          }
+                        >
+                          {stakeStatus === 3 ? (
+                            <Text
                               w="50%"
-                              minW={"85px"}
-                              isDisabled={!collection?.isActive || actionType}
-                              bg="black"
-                              max={999000000}
-                              min={1}
-                              precision={6}
-                              onChange={(v) => setAskPrice(v)}
-                              value={askPrice}
-                              h="40px"
+                              textAlign="center"
+                              color="brand.grayLight"
+                              fontSize={["xs", "md"]}
                             >
-                              <NumberInputField
-                                textAlign="end"
-                                h="40px"
-                                borderRadius={0}
-                                borderWidth={0}
-                                color="#fff"
-                              />
-                              <InputRightElement
-                                bg="transparent"
-                                h={"40px"}
-                                w={8}
-                              >
-                                <AzeroIcon w="14px" h="14px" />
-                              </InputRightElement>
-                            </NumberInput>
-                            <CommonButton
-                              w="50%"
-                              h="40px"
-                              {...rest}
-                              text="push for sale"
-                              onClick={handleListTokenAction}
-                              isDisabled={
-                                !collection?.isActive ||
-                                (actionType && actionType !== LIST_TOKEN)
-                              }
-                            />
-                          </HStack>
-                        </Stack>
-                      </Stack>
+                              Unstake in {countdownTime?.d || 0}d:{" "}
+                              {countdownTime?.h || 0}h : {countdownTime?.m || 0}
+                              m : {countdownTime?.s || 0}s
+                            </Text>
+                          ) : null}
 
-                      <Stack w="full">
-                        {collection?.isActive && (
-                          <FeeCalculatedBar feeCalculated={feeCalculated} />
-                        )}
+                          <CommonButton
+                            w="50%"
+                            h="40px"
+                            mx="0"
+                            {...rest}
+                            isLoading={isLoading || rest.isLoading}
+                            text={
+                              stakeStatus === 1
+                                ? "Stake"
+                                : stakeStatus === 2
+                                ? "Request Unstake"
+                                : !isUnstakeTime
+                                ? "Cancel Unstake"
+                                : "Unstake"
+                            }
+                            onClick={() =>
+                              handleStakeAction(
+                                getStakeAction(stakeStatus, isUnstakeTime),
+                                [tokenID]
+                              )
+                            }
+                          />
+                        </HStack>
                       </Stack>
-                    </>
-                  )}
-
-                  {/* 3 For sale & owner  */}
-                  {token?.is_for_sale && isOwner && (
-                    <>
+                    </Stack>
+                  )
+                ) : (
+                  <Stack w="full">
+                    {/* 1 Not for sale NOT owner  */}
+                    {!token?.is_for_sale && !isOwner && (
                       <Stack p="20px" border="1px solid #333">
-                        <Stack>
-                          <HStack spacing="20px" mb="12px">
+                        <Heading size="h6">This item not for sale</Heading>
+                      </Stack>
+                    )}
+
+                    {/* 2 Not for sale & owner  */}
+                    {!token?.is_for_sale && isOwner && (
+                      <>
+                        <Stack p="20px" border="1px solid #333">
+                          <Stack>
+                            <HStack spacing="20px" mb="12px">
+                              <NumberInput
+                                w="50%"
+                                minW={"85px"}
+                                isDisabled={!collection?.isActive || actionType}
+                                bg="black"
+                                max={999000000}
+                                min={1}
+                                precision={6}
+                                onChange={(v) => setAskPrice(v)}
+                                value={askPrice}
+                                h="40px"
+                              >
+                                <NumberInputField
+                                  textAlign="end"
+                                  h="40px"
+                                  borderRadius={0}
+                                  borderWidth={0}
+                                  color="#fff"
+                                />
+                                <InputRightElement
+                                  bg="transparent"
+                                  h={"40px"}
+                                  w={8}
+                                >
+                                  <AzeroIcon w="14px" h="14px" />
+                                </InputRightElement>
+                              </NumberInput>
+                              <CommonButton
+                                w="50%"
+                                h="40px"
+                                {...rest}
+                                text="push for sale"
+                                onClick={handleListTokenAction}
+                                isDisabled={
+                                  !collection?.isActive ||
+                                  (actionType && actionType !== LIST_TOKEN)
+                                }
+                              />
+                            </HStack>
+                          </Stack>
+                        </Stack>
+
+                        <Stack w="full">
+                          {collection?.isActive && (
+                            <FeeCalculatedBar feeCalculated={feeCalculated} />
+                          )}
+                        </Stack>
+                      </>
+                    )}
+
+                    {/* 3 For sale & owner  */}
+                    {token?.is_for_sale && isOwner && (
+                      <>
+                        <Stack p="20px" border="1px solid #333">
+                          <Stack>
+                            <HStack spacing="20px" mb="12px">
+                              <CommonButton
+                                w="50%"
+                                h="40px"
+                                {...rest}
+                                text="cancel sale"
+                                onClick={handleUnlistTokenAction}
+                                isDisabled={
+                                  actionType && actionType !== UNLIST_TOKEN
+                                }
+                              />{" "}
+                              <Flex
+                                w="50%"
+                                justifyContent={["end"]}
+                                direction={["column", "row"]}
+                                alignItems={["end", "baseline"]}
+                              >
+                                <Text color="#888">Current price</Text>
+
+                                <Tag minH="20px" pr={0} bg="transparent">
+                                  <TagLabel bg="transparent">
+                                    {formatNumDynamicDecimal(
+                                      token?.price / 10 ** 12
+                                    )}
+                                  </TagLabel>
+                                  <TagRightIcon as={AzeroIcon} w="14px" />
+                                </Tag>
+                              </Flex>
+                            </HStack>
+                          </Stack>
+                        </Stack>
+
+                        <Stack w="full">
+                          {collection?.isActive && (
+                            <FeeCalculatedBar feeCalculated={feeCalculated} />
+                          )}
+                        </Stack>
+                      </>
+                    )}
+
+                    {/* 4 For sale & NOT owner  */}
+                    {token?.is_for_sale && !isOwner && (
+                      <>
+                        <Stack p="20px" border="1px solid #333">
+                          <HStack spacing="20px">
                             <CommonButton
+                              {...rest}
                               w="50%"
                               h="40px"
-                              {...rest}
-                              text="cancel sale"
-                              onClick={handleUnlistTokenAction}
-                              isDisabled={
-                                actionType && actionType !== UNLIST_TOKEN
-                              }
-                            />{" "}
+                              text="buy now"
+                              onClick={handleBuyAction}
+                              isDisabled={actionType && actionType !== BUY}
+                            />
+
                             <Flex
                               w="50%"
                               justifyContent={["end"]}
@@ -1100,119 +1380,82 @@ function TokenPage() {
                             </Flex>
                           </HStack>
                         </Stack>
-                      </Stack>
-
-                      <Stack w="full">
-                        {collection?.isActive && (
-                          <FeeCalculatedBar feeCalculated={feeCalculated} />
-                        )}
-                      </Stack>
-                    </>
-                  )}
-
-                  {/* 4 For sale & NOT owner  */}
-                  {token?.is_for_sale && !isOwner && (
-                    <>
-                      <Stack p="20px" border="1px solid #333">
-                        <HStack spacing="20px">
-                          <CommonButton
-                            {...rest}
-                            w="50%"
-                            h="40px"
-                            text="buy now"
-                            onClick={handleBuyAction}
-                            isDisabled={actionType && actionType !== BUY}
-                          />
-
-                          <Flex
-                            w="50%"
-                            justifyContent={["end"]}
-                            direction={["column", "row"]}
-                            alignItems={["end", "baseline"]}
+                        {isAlreadyBid ? (
+                          <HStack
+                            spacing="20px"
+                            p="20px"
+                            border="1px solid #333"
                           >
-                            <Text color="#888">Current price</Text>
-
-                            <Tag minH="20px" pr={0} bg="transparent">
-                              <TagLabel bg="transparent">
-                                {formatNumDynamicDecimal(
-                                  token?.price / 10 ** 12
-                                )}
-                              </TagLabel>
-                              <TagRightIcon as={AzeroIcon} w="14px" />
-                            </Tag>
-                          </Flex>
-                        </HStack>
-                      </Stack>
-                      {isAlreadyBid ? (
-                        <HStack spacing="20px" p="20px" border="1px solid #333">
-                          <Flex justify="center" w={["75%", "50%"]}>
-                            <CommonButton
-                              h="40px"
-                              minW="fit-content"
-                              w="full"
-                              {...rest}
-                              text={isMobile ? "remove bid" : "remove bid"}
-                              onClick={handleRemoveBidAction}
-                              isDisabled={
-                                actionType && actionType !== REMOVE_BID
-                              }
-                            />
-
-                            <MobileEditBidPriceModal {...token} />
-                          </Flex>
-
-                          <VStack w="50%" alignItems="end">
-                            <Text color="#888">Your offer</Text>
-                            <Tag minH="20px" pr={0} bg="transparent">
-                              <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                              <TagRightIcon as={AzeroIcon} w="14px" />
-                            </Tag>
-                          </VStack>
-                        </HStack>
-                      ) : (
-                        <Stack p="20px" border="1px solid #333">
-                          <HStack spacing="20px">
-                            <CommonButton
-                              {...rest}
-                              h="40px"
-                              w="50%"
-                              text="place bid"
-                              onClick={handleBidAction}
-                              isDisabled={actionType && actionType !== BID}
-                            />
-
-                            <NumberInput
-                              w={"50%"}
-                              isDisabled={actionType}
-                              bg="black"
-                              max={999000000}
-                              min={0.01}
-                              precision={6}
-                              onChange={(v) => setBidPrice(v)}
-                              value={bidPrice}
-                              h="40px"
-                            >
-                              <NumberInputField
-                                textAlign="end"
+                            <Flex justify="center" w={["75%", "50%"]}>
+                              <CommonButton
                                 h="40px"
-                                borderRadius={0}
-                                borderWidth={0}
-                                color="#fff"
+                                minW="fit-content"
+                                w="full"
+                                {...rest}
+                                text={isMobile ? "remove bid" : "remove bid"}
+                                onClick={handleRemoveBidAction}
+                                isDisabled={
+                                  actionType && actionType !== REMOVE_BID
+                                }
                               />
-                              <InputRightElement
-                                bg="transparent"
-                                h={"40px"}
-                                w={8}
-                              >
-                                <AzeroIcon w="14px" />
-                              </InputRightElement>
-                            </NumberInput>
+
+                              <MobileEditBidPriceModal {...token} />
+                            </Flex>
+
+                            <VStack w="50%" alignItems="end">
+                              <Text color="#888">Your offer</Text>
+                              <Tag minH="20px" pr={0} bg="transparent">
+                                <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                                <TagRightIcon as={AzeroIcon} w="14px" />
+                              </Tag>
+                            </VStack>
                           </HStack>
-                        </Stack>
-                      )}
-                    </>
-                  )}
-                </Stack>
+                        ) : (
+                          <Stack p="20px" border="1px solid #333">
+                            <HStack spacing="20px">
+                              <CommonButton
+                                {...rest}
+                                h="40px"
+                                w="50%"
+                                text="place bid"
+                                onClick={handleBidAction}
+                                isDisabled={actionType && actionType !== BID}
+                              />
+
+                              <NumberInput
+                                w={"50%"}
+                                isDisabled={actionType}
+                                bg="black"
+                                max={999000000}
+                                min={0.01}
+                                precision={6}
+                                onChange={(v) => setBidPrice(v)}
+                                value={bidPrice}
+                                h="40px"
+                              >
+                                <NumberInputField
+                                  textAlign="end"
+                                  h="40px"
+                                  borderRadius={0}
+                                  borderWidth={0}
+                                  color="#fff"
+                                />
+                                <InputRightElement
+                                  bg="transparent"
+                                  h={"40px"}
+                                  w={8}
+                                >
+                                  <AzeroIcon w="14px" />
+                                </InputRightElement>
+                              </NumberInput>
+                            </HStack>
+                          </Stack>
+                        )}
+                      </>
+                    )}
+                  </Stack>
+                )}
+
                 {/* <Stack
                   w="full"
                   py="15px"

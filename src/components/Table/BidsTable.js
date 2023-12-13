@@ -31,6 +31,9 @@ import {
   import { useDispatch } from "react-redux";
   import { setTxStatus } from "@store/actions/txStatus";
   import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+  import marketplace_azero_domains_contract_calls from "@utils/blockchain/marketplace-azero-domains-calls";
+  import useTxStatus from "@hooks/useTxStatus";
+  import azero_domains_nft from "@blockchain/azero-domains-nft";
   import toast from "react-hot-toast";
   import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
   
@@ -38,9 +41,8 @@ import {
     console.log('BidsTable::type', type);
     const dispatch = useDispatch();
     const { currentAccount, api } = useSubstrateState();
-    //  const { chainToken } = useSubstrateState();
     const { apiState } = useSubstrateState();
-    
+    const { tokenIDArray, actionType, ...rest } = useTxStatus();
     return (
       <>
         {apiState !== "READY" || tableData?.length === 0 ? (
@@ -84,21 +86,6 @@ import {
                             </Th>
                           )
                         )}
-                        {/* <Th
-                        position="sticky"
-                        top={0}
-                        zIndex={1}
-                        textAlign="center"
-                        fontFamily="Evogria"
-                        color="#888"
-                        bg="#171717"
-                        fontSize="15px"
-                        fontWeight="400"
-                        dropShadow="lg"
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
-                      >
-                        Time
-                      </Th> */}
                       </Tr>
                     </Thead>
   
@@ -120,16 +107,21 @@ import {
                           )}
                           {(type === "BUY") ? (<Td>
                               <CommonButton
+                                {...rest}
                                 mx="0"
                                 px="8px"
                                 h="40px"
                                 text="Remove bid"
+                                isLoading={
+                                  rest.isLoading
+                                }
                                 onClick={() => removeBid(
                                   api,
                                   currentAccount,
                                   item['nftContractAddress'],
+                                  item['is_for_sale'] ? item['nft_owner'] : item['owner'],
                                   item['tokenID'],
-                                  item['bidId'],
+                                  item['azDomainName'],
                                   dispatch
                                 )}
                               />
@@ -137,6 +129,7 @@ import {
                             {(type === "SELL") ? (
                               <Td>
                                 <CommonButton
+                                    {...rest}
                                     mx="0"
                                     px="8px"
                                     h="40px"
@@ -147,6 +140,7 @@ import {
                                       item['nftContractAddress'],
                                       item['tokenID'],
                                       item['bidId'],
+                                      item['azDomainName'],
                                       dispatch
                                     )}
                                   />
@@ -286,6 +280,7 @@ import {
     nftContractAddress,
     tokenID,
     bidId,
+    azDomainName,
     dispatch
   ) => {
     // check wallet connected
@@ -293,25 +288,44 @@ import {
       toast.error("Please connect wallet first!");
       return;
     }
-  
-    dispatch(
-      setTxStatus({
-        type: ACCEPT_BID,
-        step: START,
-        tokenIDArray: Array.of(bidId),
-        // array of bidId NOT TokenID
-      })
-    );
-    await marketplace_contract_calls.acceptBid(
-      currentAccount,
-      nftContractAddress,
-      currentAccount.address,
-      { u64: tokenID },
-      bidId,
-      dispatch,
-      ACCEPT_BID,
-      api
-    );
+    if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+      dispatch(
+        setTxStatus({
+          type: ACCEPT_BID,
+          step: START,
+          tokenIDArray: Array.of(azDomainName),
+        })
+      );
+      await marketplace_azero_domains_contract_calls.acceptBid(
+        currentAccount,
+        nftContractAddress,
+        currentAccount.address,
+        { bytes: azDomainName },
+        bidId,
+        dispatch,
+        ACCEPT_BID,
+        api
+      );
+    } else {
+      dispatch(
+        setTxStatus({
+          type: ACCEPT_BID,
+          step: START,
+          tokenIDArray: Array.of(tokenID),
+        })
+      );
+      await marketplace_contract_calls.acceptBid(
+        currentAccount,
+        nftContractAddress,
+        currentAccount.address,
+        { u64: tokenID },
+        bidId,
+        dispatch,
+        ACCEPT_BID,
+        api
+      );
+    }
+    
   };
 
   const removeBid = async (
@@ -320,6 +334,7 @@ import {
     nftContractAddress,
     ownerAddress,
     tokenID,
+    azDomainName,
     dispatch
   ) => {
     // check wallet connected
@@ -335,23 +350,46 @@ import {
       toast.error(`Balance is low!`);
       return;
     }
+
+    if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+
+      dispatch(
+        setTxStatus({
+          type: REMOVE_BID,
+          step: START,
+          tokenIDArray: Array.of(azDomainName),
+        })
+      );
+    
+      await marketplace_azero_domains_contract_calls.removeBid(
+        currentAccount,
+        nftContractAddress,
+        ownerAddress,
+        { bytes: azDomainName },
+        dispatch,
+        REMOVE_BID,
+        api
+      );
+    } else {
+      dispatch(
+        setTxStatus({
+          type: REMOVE_BID,
+          step: START,
+          tokenIDArray: Array.of(tokenID),
+        })
+      );
+    
+      await marketplace_contract_calls.removeBid(
+        currentAccount,
+        nftContractAddress,
+        ownerAddress,
+        { u64: tokenID },
+        dispatch,
+        REMOVE_BID,
+        api
+      );
+    }
   
-    dispatch(
-      setTxStatus({
-        type: REMOVE_BID,
-        step: START,
-        tokenIDArray: Array.of(tokenID),
-      })
-    );
-  
-    await marketplace_contract_calls.removeBid(
-      currentAccount,
-      nftContractAddress,
-      ownerAddress,
-      { u64: tokenID },
-      dispatch,
-      REMOVE_BID,
-      api
-    );
+    
   };
   
