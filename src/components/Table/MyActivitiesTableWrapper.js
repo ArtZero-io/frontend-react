@@ -367,7 +367,6 @@ export default function MyActivitiesTableWrapper({ type, mode }) {
             } else {
               options.token_id = tokenID;
             }
-            if (!tokenID) return { nftContractAddress, tokenID, ...rest };
 
             console.log("options", options);
             const { status, ret } = await APICall.getNFTByID(options);
