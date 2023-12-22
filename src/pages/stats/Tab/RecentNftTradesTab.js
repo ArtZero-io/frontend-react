@@ -26,6 +26,7 @@ function RecentNftTradesTab() {
   const [selectedNft, setSelectedNft] = useState(null);
   const { api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [NFTData, setNFTData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +74,22 @@ function RecentNftTradesTab() {
     };
     fetchData();
   }, [api]);
-
+  const fetchNFTData = async () => {
+    try {
+      if (selectedNft) {
+        const { ret, status } = await APICall.getCollectionByAddress({
+          collection_address: selectedNft?.nftContractAddress,
+        });
+        setNFTData(ret[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchNFTData();
+  }, [selectedNft]);
+console.log(NFTData?.rarityTable);
   return (
     <>
       {!isMobile && (
@@ -81,7 +97,7 @@ function RecentNftTradesTab() {
           // {...rest}
           {...selectedNft}
           // handleNav={handleNav}
-          // rarityTable={rarityTable}
+          rarityTable={NFTData?.rarityTable}
           // totalNftCount={totalNftCount}
           isOpen={isOpen}
           onClose={onClose}
@@ -116,6 +132,7 @@ function RecentNftTradesTab() {
               onClickElement={(data) => {
                 onOpen();
                 setSelectedNft(data);
+                console.log(data);
               }}
               tableHeaders={headers}
               tableData={topNftTradesList}

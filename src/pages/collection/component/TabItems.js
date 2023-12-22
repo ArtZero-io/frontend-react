@@ -195,7 +195,6 @@ const CollectionItems = ({
   const onClearHandler = () => {
     setKeyword("");
   };
-
   return (
     <Flex maxW="1920px" alignItems="stretch">
       <LeftPanel
