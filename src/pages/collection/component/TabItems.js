@@ -549,6 +549,7 @@ const CollectionGridNew = ({
       setSelectedNft(newCurrentItem);
     }
   }
+  console.log(selectedNft);
   return (
     <>
       {!isMobile && (

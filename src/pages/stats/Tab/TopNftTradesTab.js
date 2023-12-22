@@ -26,6 +26,8 @@ function TopNftTradesTab() {
   const { api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
+  const [collectionData, setCollectionData] = useState(null);
+  const [nftData, setNFTdata] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,20 +75,40 @@ function TopNftTradesTab() {
     };
     fetchData();
   }, [api]);
+  const fetchNFTData = async () => {
+    try {
+      if (selectedNft) {
+        const { ret: collection } = await APICall.getCollectionByAddress({
+          collection_address: selectedNft?.nftContractAddress,
+        });
+        if (collection?.length > 0) setCollectionData(collection[0]);
+        const { ret: nfts } = await APICall.getNFTByID({
+          collection_address: selectedNft?.nftContractAddress,
+          token_id: selectedNft?.tokenID,
+        });
+        if (nfts?.length > 0) setNFTdata(nfts[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchNFTData();
+  }, [selectedNft]);
   return (
     <>
       {!isMobile && (
         <NFTDetailModal
-          // {...rest}
+          {...collectionData}
           {...selectedNft}
-          // handleNav={handleNav}
-          // rarityTable={rarityTable}
-          // totalNftCount={totalNftCount}
+          {...nftData}
           isOpen={isOpen}
-          onClose={onClose}
-          name={"name"}
-          collectionOwner={"collectionOwner"}
-          // showOnChainMetadata={showOnChainMetadata}
+          onClose={() => {
+            setSelectedNft(null);
+            setNFTdata(null);
+            setCollectionData(null);
+            onClose();
+          }}
         />
       )}
       <Box as="section" maxW="container.3xl">

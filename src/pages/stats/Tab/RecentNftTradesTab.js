@@ -26,7 +26,8 @@ function RecentNftTradesTab() {
   const [selectedNft, setSelectedNft] = useState(null);
   const { api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [NFTData, setNFTData] = useState(null);
+  const [collectionData, setCollectionData] = useState(null);
+  const [nftData, setNFTdata] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,10 +78,15 @@ function RecentNftTradesTab() {
   const fetchNFTData = async () => {
     try {
       if (selectedNft) {
-        const { ret, status } = await APICall.getCollectionByAddress({
+        const { ret: collection } = await APICall.getCollectionByAddress({
           collection_address: selectedNft?.nftContractAddress,
         });
-        setNFTData(ret[0]);
+        if (collection?.length > 0) setCollectionData(collection[0]);
+        const { ret: nfts } = await APICall.getNFTByID({
+          collection_address: selectedNft?.nftContractAddress,
+          token_id: selectedNft?.tokenID,
+        });
+        if (nfts?.length > 0) setNFTdata(nfts[0]);
       }
     } catch (error) {
       console.log(error);
@@ -89,21 +95,20 @@ function RecentNftTradesTab() {
   useEffect(() => {
     fetchNFTData();
   }, [selectedNft]);
-console.log(NFTData?.rarityTable);
   return (
     <>
       {!isMobile && (
         <NFTDetailModal
-          // {...rest}
+          {...collectionData}
           {...selectedNft}
-          // handleNav={handleNav}
-          rarityTable={NFTData?.rarityTable}
-          // totalNftCount={totalNftCount}
+          {...nftData}
           isOpen={isOpen}
-          onClose={onClose}
-          name={"name"}
-          collectionOwner={"collectionOwner"}
-          // showOnChainMetadata={showOnChainMetadata}
+          onClose={() => {
+            setSelectedNft(null);
+            setNFTdata(null);
+            setCollectionData(null);
+            onClose();
+          }}
         />
       )}
       <Box as="section" maxW="container.3xl">
@@ -132,7 +137,6 @@ console.log(NFTData?.rarityTable);
               onClickElement={(data) => {
                 onOpen();
                 setSelectedNft(data);
-                console.log(data);
               }}
               tableHeaders={headers}
               tableData={topNftTradesList}

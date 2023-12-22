@@ -318,7 +318,7 @@ function CollectionPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection_address, traitsQuery, priceQuery, activeTab, keyword]);
-  
+  console.log("traitsQuery", traitsQuery);
   const tabsData = [
     {
       label: "items",
