@@ -24,7 +24,13 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { truncateStr } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 
-function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
+function EventTable({
+  tableHeaders,
+  tableData,
+  collectionOwner,
+  onClickElement,
+  type,
+}) {
   //  const { chainToken } = useSubstrateState();
   const { apiState } = useSubstrateState();
 
@@ -88,31 +94,35 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
                     </Th> */}
                     </Tr>
                   </Thead>
-
                   <Tbody>
-                    {tableData?.map((item, idx) => (
-                      <Tr key={idx} color="#fff">
-                        {Object.keys(tableHeaders)?.map((i, idx) =>
-                          i === "avatar" ? null : (
-                            <Td
-                              key={idx}
-                              textAlign="left"
-                              py={{ base: "1rem", "2xl": "1.75rem" }}
-                            >
-                              {formatData(item, i, type)}
-                            </Td>
-                          )
-                        )}
-                        {/* <Td
-                        key={idx}
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
-                        textAlign="center"
-                        color="#fff"
-                      >
-                        {new Date(1657304023551).toLocaleString("en-US")}
-                      </Td> */}
-                      </Tr>
-                    ))}
+                    {tableData?.map((item, idx) => {
+                      const nftData = item;
+                      return (
+                        <Tr key={idx} color="#fff">
+                          {Object.keys(tableHeaders)?.map((i, idx) =>
+                            i === "avatar" ? null : (
+                              <Td
+                                key={idx}
+                                textAlign="left"
+                                py={{ base: "1rem", "2xl": "1.75rem" }}
+                              >
+                                {formatData(item, i, type, () => {
+                                  onClickElement(nftData);
+                                })}
+                              </Td>
+                            )
+                          )}
+                          {/* <Td
+                      key={idx}
+                      py={{ base: "1rem", "2xl": "1.75rem" }}
+                      textAlign="center"
+                      color="#fff"
+                    >
+                      {new Date(1657304023551).toLocaleString("en-US")}
+                    </Td> */}
+                        </Tr>
+                      );
+                    })}
                   </Tbody>
                 </Table>
               ) : null}
@@ -126,7 +136,7 @@ function EventTable({ tableHeaders, tableData, collectionOwner, type }) {
 
 export default memo(EventTable);
 
-const formatData = (itemObj, headerValue, type) => {
+const formatData = (itemObj, headerValue, type, onClickElement) => {
   switch (headerValue) {
     case "avatar":
       return null;
@@ -205,7 +215,19 @@ const formatData = (itemObj, headerValue, type) => {
 
     case "nftName":
       return (
-        <HStack justifyContent="start">
+        <HStack
+          justifyContent="start"
+          sx={{
+            cursor: "pointer",
+            color: "#FFF",
+          }}
+          _hover={{
+            color: "#7AE7FF",
+          }}
+          onClick={() => {
+            onClickElement();
+          }}
+        >
           <ImageCloudFlare
             w="50px"
             h="50px"
