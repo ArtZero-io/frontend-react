@@ -287,7 +287,7 @@ function StatsPage() {
 
   const tabData = [
     {
-      label: "top nft collections",
+      label: "top collections",
       content: (
         <TopCollectionsTab
           topCollections={topCollections}
@@ -296,11 +296,11 @@ function StatsPage() {
       ),
     },
     {
-      label: "top nft trades",
+      label: "top trades",
       content: <TopNftTradesTab />,
     },
     {
-      label: "recent nft trades",
+      label: "recent trades",
       content: <RecentNftTradesTab />,
     },
     // {

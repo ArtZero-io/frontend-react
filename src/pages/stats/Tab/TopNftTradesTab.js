@@ -1,7 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
-import { Box, HStack, Heading, Spacer, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Heading,
+  Spacer,
+  Stack,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { APICall } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 // import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -9,12 +16,18 @@ import { useSubstrateState } from "@utils/substrate";
 import EventTable from "@components/Table/EventTable";
 import { getTimestamp, resolveDomain } from "@utils";
 import { BeatLoader } from "react-spinners";
+import { isMobile } from "react-device-detect";
+import NFTDetailModal from "../../collection/component/Modal/NFTDetail";
 
 function TopNftTradesTab() {
   const [loading, setLoading] = useState(false);
   // const [useAzeroUnit, setUseAzeroUnit] = useState(true);
   const [topNftTradesList, setTopNftTradesList] = useState([]);
   const { api } = useSubstrateState();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedNft, setSelectedNft] = useState(null);
+  const [collectionData, setCollectionData] = useState(null);
+  const [nftData, setNFTdata] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,20 +75,59 @@ function TopNftTradesTab() {
     };
     fetchData();
   }, [api]);
+  const fetchNFTData = async () => {
+    try {
+      if (selectedNft) {
+        const { ret: collection } = await APICall.getCollectionByAddress({
+          collection_address: selectedNft?.nftContractAddress,
+        });
+        if (collection?.length > 0) setCollectionData(collection[0]);
+        const { ret: nfts } = await APICall.getNFTByID({
+          collection_address: selectedNft?.nftContractAddress,
+          token_id: selectedNft?.tokenID,
+        });
+        if (nfts?.length > 0) setNFTdata(nfts[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchNFTData();
+  }, [selectedNft]);
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box mx="auto" py={["4", "12", "20"]}>
-        <Stack
-          direction={{ base: "column", xl: "row" }}
-          w="full"
-          alignItems="center"
-          mb="30px"
-        >
-          <Heading mb="10px" minW="400px" fontSize={["3xl-mid", "5xl", "5xl"]}>
-            top nft trades
-          </Heading>{" "}
-          <Spacer />
-          {/* <HStack w="full">
+    <>
+      {!isMobile && (
+        <NFTDetailModal
+          {...collectionData}
+          {...selectedNft}
+          {...nftData}
+          isOpen={isOpen}
+          onClose={() => {
+            setSelectedNft(null);
+            setNFTdata(null);
+            setCollectionData(null);
+            onClose();
+          }}
+        />
+      )}
+      <Box as="section" maxW="container.3xl">
+        <Box mx="auto" py={["4", "12", "20"]}>
+          <Stack
+            direction={{ base: "column", xl: "row" }}
+            w="full"
+            alignItems="center"
+            mb="30px"
+          >
+            <Heading
+              mb="10px"
+              minW="400px"
+              fontSize={["3xl-mid", "5xl", "5xl"]}
+            >
+              top nft trades
+            </Heading>{" "}
+            <Spacer />
+            {/* <HStack w="full">
             <Spacer />
 
             <Text color="brand.grayLight" pr={["5px", "25px"]}>
@@ -131,16 +183,24 @@ function TopNftTradesTab() {
               onClick={() => setUseAzeroUnit(false)}
             />
           </HStack> */}
-        </Stack>
-        {loading ? (
-          <HStack pt="80px" pb="20px" justifyContent="center" w="full">
-            <BeatLoader color="#7ae7ff" size="10px" />
-          </HStack>
-        ) : (
-          <EventTable tableHeaders={headers} tableData={topNftTradesList} />
-        )}
+          </Stack>
+          {loading ? (
+            <HStack pt="80px" pb="20px" justifyContent="center" w="full">
+              <BeatLoader color="#7ae7ff" size="10px" />
+            </HStack>
+          ) : (
+            <EventTable
+              onClickElement={(data) => {
+                onOpen();
+                setSelectedNft(data);
+              }}
+              tableHeaders={headers}
+              tableData={topNftTradesList}
+            />
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 
