@@ -195,7 +195,6 @@ const CollectionItems = ({
   const onClearHandler = () => {
     setKeyword("");
   };
-
   return (
     <Flex maxW="1920px" alignItems="stretch">
       <LeftPanel
@@ -550,6 +549,7 @@ const CollectionGridNew = ({
       setSelectedNft(newCurrentItem);
     }
   }
+  console.log(selectedNft);
   return (
     <>
       {!isMobile && (

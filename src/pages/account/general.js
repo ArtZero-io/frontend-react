@@ -321,7 +321,7 @@ function GeneralPage() {
     }
 
 
-    if (Date.now() > currentDate.getDate()) {
+    if (Date.now() > currentDate.getTime()) {
       const currMonth = currentDate.getMonth();
 
       currentDate.setMonth(currMonth + 1);
