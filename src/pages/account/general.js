@@ -58,6 +58,7 @@ import {
   getPublicCurrentAccount,
   resolveDomain,
 } from "@utils";
+import { getTimestamp } from "../../utils";
 
 const PAY_DAY = 27;
 
@@ -113,7 +114,16 @@ function GeneralPage() {
 
       const stakerDomain = await resolveDomain(currentAccount?.address, api);
 
-      rewards = rewards.map((item) => ({ ...item, stakerDomain }));
+      rewards = await Promise.all(
+        rewards.map(async (item) => {
+          const dateTime = await getTimestamp(api, item?.blockNumber);
+          return {
+            ...item,
+            stakerDomain,
+            dateTime,
+          };
+        })
+      );
 
       if (!isMounted) return;
 
@@ -319,7 +329,6 @@ function GeneralPage() {
     if (dayNum === 6) {
       currentDate.setDate(PAY_DAY + 2);
     }
-
 
     if (Date.now() > currentDate.getTime()) {
       const currMonth = currentDate.getMonth();
@@ -708,7 +717,7 @@ function GeneralPage() {
                         fontWeight="normal"
                         py={7}
                       >
-                        BlockNumber
+                        Time
                       </Th>
                       <Th
                         textAlign="left"
@@ -751,7 +760,7 @@ function GeneralPage() {
                         <Tr key={index} color="#fff">
                           {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
                           <Td textAlign="left" py={7}>
-                            {reward.blockNumber}
+                            {reward.dateTime}
                           </Td>
                           <Td textAlign="left" py={7}>
                             {reward.stakerDomain ?? reward.staker}

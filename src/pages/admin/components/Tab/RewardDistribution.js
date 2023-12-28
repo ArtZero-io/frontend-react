@@ -100,7 +100,7 @@ function RewardDistribution() {
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
-    setIsAdminStakingContract(queryResult1.toHuman().Ok);
+    setIsAdminStakingContract(queryResult1?.toHuman()?.Ok);
     setIsRewardStarted(is_reward_started);
   };
 
