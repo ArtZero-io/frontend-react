@@ -21,7 +21,11 @@ import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 import azero_domains_nft from "./blockchain/azero-domains-nft";
 import artzero_nft from "./blockchain/artzero-nft";
 import { BigInt } from "@polkadot/x-bigint";
-import { SupportedChainId, resolveAddressToDomain, resolveDomainToAddress } from "@azns/resolver-core";
+import {
+  SupportedChainId,
+  resolveAddressToDomain,
+  resolveDomainToAddress,
+} from "@azns/resolver-core";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -777,22 +781,22 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 
 export const getDomainToAddress = async (domain, api) => {
   const option = {
-    chainId: (process.env.REACT_APP_NETWORK === "alephzero-testnet") ? SupportedChainId.AlephZeroTestnet : SupportedChainId.AlephZero,
+    chainId:
+      process.env.REACT_APP_NETWORK === "alephzero-testnet"
+        ? SupportedChainId.AlephZeroTestnet
+        : SupportedChainId.AlephZero,
   };
 
   if (api) {
     option.customApi = api;
   }
-  
+
   if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
     try {
-      const { address, error } = await resolveDomainToAddress(
-        domain,
-        option
-      );
+      const { address, error } = await resolveDomainToAddress(domain, option);
       if (error?.name) {
         return undefined;
       }
@@ -803,11 +807,14 @@ export const getDomainToAddress = async (domain, api) => {
     }
   }
   return undefined;
-}
+};
 
 export const resolveDomain = async (address, api) => {
   const option = {
-    chainId: (process.env.REACT_APP_NETWORK === "alephzero-testnet") ? SupportedChainId.AlephZeroTestnet : SupportedChainId.AlephZero,
+    chainId:
+      process.env.REACT_APP_NETWORK === "alephzero-testnet"
+        ? SupportedChainId.AlephZeroTestnet
+        : SupportedChainId.AlephZero,
   };
 
   if (api) {
@@ -817,7 +824,7 @@ export const resolveDomain = async (address, api) => {
   console.log("address", address);
   console.log("option", option);
 
-    if (
+  if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
   ) {
@@ -850,11 +857,11 @@ export function hexToAscii(str1) {
 }
 
 export const getTimestamp = async (api, blockNumber) => {
-  const blockHash = await api?.rpc.chain.getBlockHash(blockNumber);
+  const blockHash = await api?.rpc?.chain?.getBlockHash(blockNumber);
 
   let ret = null;
 
-  const signedBlock = await api?.rpc.chain.getBlock(blockHash);
+  const signedBlock = await api?.rpc?.chain?.getBlock(blockHash);
 
   signedBlock?.block?.extrinsics?.forEach(
     ({ method: { args, section, method: extrinsicsMethod } }) => {
