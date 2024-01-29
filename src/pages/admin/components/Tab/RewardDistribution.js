@@ -112,35 +112,44 @@ function RewardDistribution() {
     setIsAdminStakingContract(queryResult1?.toHuman()?.Ok);
     setIsRewardStarted(is_reward_started);
   };
+  const [loading, setLoading] = useState(true);
 
   const getStakers = async () => {
-    let staker_count = await staking_calls.getTotalCountOfStakeholders(
-      currentAccount
-    );
-    setStakerCount(staker_count);
+    try {
+      setLoading(true);
 
-    let stakers = [];
-    for (var i = 0; i < staker_count; i++) {
-      let staker = await staking_calls.getStakedAccountsAccountByIndex(
-        currentAccount,
-        i
+      let staker_count = await staking_calls.getTotalCountOfStakeholders(
+        currentAccount
       );
+      setStakerCount(staker_count);
 
-      let staker_info = {
-        address: staker,
-        amount: await staking_calls.getTotalStakedByAccount(
+      let stakers = [];
+      for (var i = 0; i < staker_count; i++) {
+        let staker = await staking_calls.getStakedAccountsAccountByIndex(
           currentAccount,
-          staker
-        ),
-        isClaimed: await staking_calls.isClaimed(currentAccount, staker),
-      };
+          i
+        );
 
-      stakers.push(staker_info);
-      setPercentDoneStakers(
-        ((100 * stakers?.length) / staker_count).toFixed(2)
-      );
+        let staker_info = {
+          address: staker,
+          amount: await staking_calls.getTotalStakedByAccount(
+            currentAccount,
+            staker
+          ),
+          isClaimed: await staking_calls.isClaimed(currentAccount, staker),
+        };
+
+        stakers.push(staker_info);
+        setPercentDoneStakers(
+          ((100 * stakers?.length) / staker_count).toFixed(2)
+        );
+      }
+      setStakers(stakers);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
     }
-    setStakers(stakers);
   };
 
   const onAddReward = async () => {
@@ -187,6 +196,7 @@ function RewardDistribution() {
     else await staking_calls.stopRewardDistribution(currentAccount);
     await delay(3000);
     await onRefresh();
+    await getStakers();
   };
 
   const enableClaim = async (stakerAddress) => {
@@ -759,7 +769,13 @@ function RewardDistribution() {
             </Box>
 
             <ButtonBulkEnableClaim
+              cb={getStakers}
               stakersList={stakers?.filter((item) => item.isClaimed === true)}
+            />
+
+            <ButtonBulkClaim
+              cb={getStakers}
+              stakersList={stakers?.filter((item) => item.isClaimed === false)}
             />
 
             <Box maxW="6xl-mid" fontSize="lg">
@@ -783,105 +799,106 @@ function RewardDistribution() {
                   </Text>
                 </Flex>
               </HStack>
-              <TableContainer
-                maxW="6xl-mid"
-                fontSize="lg"
-                h="full"
-                overflow="auto"
-                sx={{
-                  "&::-webkit-scrollbar": {
-                    width: "4px",
-                    height: "4px",
-                    borderRadius: "0px",
-                    backgroundColor: `transparent`,
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    backgroundColor: `transparent`,
-                  },
-                }}
-              >
-                <Table
-                  variant="striped"
-                  colorScheme="blackAlpha"
+              {loading ? (
+                <Loader m={12} />
+              ) : (
+                <TableContainer
+                  maxW="6xl-mid"
+                  fontSize="lg"
+                  h="full"
                   overflow="auto"
+                  sx={{
+                    "&::-webkit-scrollbar": {
+                      width: "4px",
+                      height: "4px",
+                      borderRadius: "0px",
+                      backgroundColor: `transparent`,
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: `#7ae7ff`,
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      backgroundColor: `#7ae7ff`,
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      backgroundColor: `transparent`,
+                    },
+                  }}
                 >
-                  <Thead>
-                    <Tr>
-                      <Th
-                        fontFamily="Evogria"
-                        fontSize="sm"
-                        fontWeight="normal"
-                        py={7}
-                      >
-                        Staker
-                      </Th>
-                      <Th
-                        fontFamily="Evogria"
-                        fontSize="sm"
-                        fontWeight="normal"
-                        py={7}
-                      >
-                        Amount
-                      </Th>
-                      <Th
-                        fontFamily="Evogria"
-                        fontSize="sm"
-                        fontWeight="normal"
-                        py={7}
-                        // isNumeric
-                      >
-                        Claimed
-                      </Th>
-                      <Th
-                        fontFamily="Evogria"
-                        fontSize="sm"
-                        fontWeight="normal"
-                        py={7}
-                        // isNumeric
-                      >
-                        Action
-                      </Th>
-                    </Tr>
-                  </Thead>
-
-                  <Tbody>
-                    {stakers.length === 0 ? (
-                      <Tr color="#fff">
-                        <Center py={7}>Loading Data...</Center>
+                  <Table
+                    variant="striped"
+                    colorScheme="blackAlpha"
+                    overflow="auto"
+                  >
+                    <Thead>
+                      <Tr>
+                        <Th
+                          fontFamily="Evogria"
+                          fontSize="sm"
+                          fontWeight="normal"
+                          py={7}
+                        >
+                          Staker
+                        </Th>
+                        <Th
+                          fontFamily="Evogria"
+                          fontSize="sm"
+                          fontWeight="normal"
+                          py={7}
+                        >
+                          Amount
+                        </Th>
+                        <Th
+                          fontFamily="Evogria"
+                          fontSize="sm"
+                          fontWeight="normal"
+                          py={7}
+                          // isNumeric
+                        >
+                          Claimed
+                        </Th>
+                        <Th
+                          fontFamily="Evogria"
+                          fontSize="sm"
+                          fontWeight="normal"
+                          py={7}
+                          // isNumeric
+                        >
+                          Action
+                        </Th>
                       </Tr>
-                    ) : (
-                      stakers.map((staker, index) => (
-                        <Tr key={index} color="#fff">
-                          <Td py={7}>
-                            {staker.address /*truncateStr(staker.address, 5)*/}
-                          </Td>
-                          <Td
-                            py={7}
-                            // isNumeric
-                          >
-                            {staker.amount}
-                          </Td>
-                          <Td
-                            py={7}
-                            // isNumeric
-                          >
-                            {" "}
-                            {staker.isClaimed
-                              ? "Claimed"
-                              : "Not Claimed or Not Set"}
-                          </Td>
-                          <Td
-                            py={7}
-                            // isNumeric
-                          >
-                            {" "}
-                            {/* <Button
+                    </Thead>
+
+                    <Tbody>
+                      {stakers.length === 0 ? (
+                        <Tr color="#fff">
+                          <Center py={7}>Loading Data...</Center>
+                        </Tr>
+                      ) : (
+                        stakers.map((staker, index) => (
+                          <Tr key={index} color="#fff">
+                            <Td py={7}>{staker.address}</Td>
+                            <Td
+                              py={7}
+                              // isNumeric
+                            >
+                              {staker.amount}
+                            </Td>
+                            <Td
+                              py={7}
+                              // isNumeric
+                            >
+                              {" "}
+                              {staker.isClaimed
+                                ? "Claimed"
+                                : "Not Claimed or Not Set"}
+                            </Td>
+                            <Td
+                              py={7}
+                              // isNumeric
+                            >
+                              {" "}
+                              {/* <Button
                               hidden
                               isDisabled={!staker.isClaimed}
                               variant="solid"
@@ -891,23 +908,24 @@ function RewardDistribution() {
                             >
                               Enable Claim
                             </Button> */}
-                            <CommonButton
-                              {...rest}
-                              text="enable claim"
-                              onClick={() => enableClaim(staker.address)}
-                              isDisabled={
-                                !staker.isClaimed ||
-                                (actionType &&
-                                  !tokenIDArray?.includes(staker.address))
-                              }
-                            />
-                          </Td>
-                        </Tr>
-                      ))
-                    )}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+                              <CommonButton
+                                {...rest}
+                                text="enable claim"
+                                onClick={() => enableClaim(staker.address)}
+                                isDisabled={
+                                  !staker.isClaimed ||
+                                  (actionType &&
+                                    !tokenIDArray?.includes(staker.address))
+                                }
+                              />
+                            </Td>
+                          </Tr>
+                        ))
+                      )}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
             </Box>
           </Box>
         </>
@@ -918,7 +936,7 @@ function RewardDistribution() {
 
 export default RewardDistribution;
 
-function ButtonBulkEnableClaim({ stakersList }) {
+function ButtonBulkEnableClaim({ stakersList, cb }) {
   const { api, currentAccount } = useSubstrateState();
   const { adapter } = useSubstrate();
   const dispatch = useDispatch();
@@ -933,8 +951,6 @@ function ButtonBulkEnableClaim({ stakersList }) {
   async function handleBulkEnableClaim() {
     console.log("start handleBulkEnableClaim...");
     try {
-      console.log("first", walletAddressList?.length);
-      console.log("first", bulkActionCount);
       if (walletAddressList?.length < bulkActionCount) {
         toast.error(`Max is ${walletAddressList?.length}`);
         return;
@@ -974,7 +990,7 @@ function ButtonBulkEnableClaim({ stakersList }) {
         })
       ).then((res) => (TxALL = res));
 
-      api.tx.utility
+      await api.tx.utility
         .batch(TxALL)
         .signAndSend(
           address,
@@ -1009,7 +1025,7 @@ function ButtonBulkEnableClaim({ stakersList }) {
               status,
               dispatchError,
               dispatch,
-              txType: "MULTI_DELIST",
+              txType: "BULK_SET_CLAIMED_STATUS",
               api,
               currentAccount,
             });
@@ -1017,6 +1033,8 @@ function ButtonBulkEnableClaim({ stakersList }) {
         )
         .then((unsub) => (unsubscribe = unsub))
         .catch((error) => txErrorHandler({ error, dispatch }));
+
+      await delay(2000).then(async () => await cb());
 
       return unsubscribe;
     } catch (error) {
@@ -1036,6 +1054,132 @@ function ButtonBulkEnableClaim({ stakersList }) {
           onClick={handleBulkEnableClaim}
         >
           Bulk Enable {bulkActionCount} users
+        </Button>
+        <Input
+          isDisabled={stakersList?.length === 0}
+          value={bulkActionCount}
+          onChange={({ target }) => setBulkActionCount(target.value)}
+        />
+      </HStack>
+    </>
+  );
+}
+
+function ButtonBulkClaim({ stakersList, cb }) {
+  const { api, currentAccount } = useSubstrateState();
+  const { adapter } = useSubstrate();
+  const dispatch = useDispatch();
+
+  const [bulkActionCount, setBulkActionCount] = useState(5);
+
+  const walletAddressList = useMemo(
+    () => stakersList?.slice(0, bulkActionCount)?.map((item) => item.address),
+    [bulkActionCount, stakersList]
+  );
+
+  async function handleBulkClaim() {
+    console.log("start handleBulkClaim...");
+    try {
+      if (walletAddressList?.length < bulkActionCount) {
+        toast.error(`Max is ${walletAddressList?.length}`);
+        return;
+      }
+
+      let TxALL;
+      let unsubscribe;
+      let gasLimit;
+
+      const address = currentAccount?.address;
+      const value = 0;
+
+      toast("Estimated transaction fee...");
+
+      const stakingContract = new ContractPromise(
+        api,
+        staking.CONTRACT_ABI,
+        staking.CONTRACT_ADDRESS
+      );
+
+      console.log("walletAddressList[0]", walletAddressList[0]);
+      gasLimit = await getEstimatedGasBatchTx(
+        address,
+        stakingContract,
+        value,
+        "claimReward",
+        walletAddressList[0]
+      );
+      console.log("gasLimit per one", gasLimit.toHuman());
+
+      await Promise.all(
+        walletAddressList.map(async (walletAddress) => {
+          return stakingContract.tx.claimReward(
+            { gasLimit, value },
+            walletAddress
+          );
+        })
+      ).then((res) => (TxALL = res));
+
+      await api.tx.utility
+        .batch(TxALL)
+        .signAndSend(
+          address,
+          { signer: adapter.signer },
+          async ({ events, status, dispatchError }) => {
+            if (status?.isFinalized) {
+              let totalSuccessTxCount = null;
+
+              events.forEach(async ({ event, event: { data } }) => {
+                if (api.events.utility?.BatchInterrupted.is(event)) {
+                  totalSuccessTxCount = data[0]?.toString();
+                }
+
+                if (api.events.utility?.BatchCompleted.is(event)) {
+                  toast.success("All address have been Claimed successfully.");
+                }
+              });
+
+              // eslint-disable-next-line no-extra-boolean-cast
+              if (!!totalSuccessTxCount) {
+                toast.error(
+                  `Bulk Claimed are not fully successful!${totalSuccessTxCount} actions completed successfully.`
+                );
+
+                // dispatch(clearTxStatus());
+              }
+            }
+
+            batchTxResponseErrorHandler({
+              status,
+              dispatchError,
+              dispatch,
+              txType: "BULK_CLAIM",
+              api,
+              currentAccount,
+            });
+          }
+        )
+        .then((unsub) => (unsubscribe = unsub))
+        .catch((error) => txErrorHandler({ error, dispatch }));
+
+      return unsubscribe;
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      console.log("first cb ");
+      await delay(2000).then(async () => await cb());
+    }
+  }
+
+  return (
+    <>
+      <Text>Total User CAN Claim: {stakersList?.length} users</Text>
+      <HStack my={4} spacing={4}>
+        <Button
+          isDisabled={stakersList?.length === 0}
+          w="full"
+          onClick={handleBulkClaim}
+        >
+          Bulk Claim {bulkActionCount} users
         </Button>
         <Input
           isDisabled={stakersList?.length === 0}
