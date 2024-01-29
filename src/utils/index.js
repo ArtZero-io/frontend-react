@@ -821,9 +821,6 @@ export const resolveDomain = async (address, api) => {
     option.customApi = api;
   }
 
-  console.log("address", address);
-  console.log("option", option);
-
   if (
     process.env.REACT_APP_NETWORK === "alephzero-testnet" ||
     process.env.REACT_APP_NETWORK === "alephzero"
