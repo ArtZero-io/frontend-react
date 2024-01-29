@@ -13,9 +13,10 @@ import {
   Center,
   Stack,
   TableContainer,
+  Input,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState, useSubstrate } from "@utils/substrate";
 import Loader from "@components/Loader/CommonLoader";
 import staking_calls from "@utils/blockchain/staking_calls";
 
@@ -51,7 +52,14 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { execContractQuery } from "@utils/blockchain/profile_calls";
 import marketplace from "@utils/blockchain/marketplace";
-import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
+import { setStakingContract } from "@utils/blockchain/staking_calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import staking from "@utils/blockchain/staking";
+import { getEstimatedGasBatchTx } from "@utils";
+import {
+  txErrorHandler,
+  batchTxResponseErrorHandler,
+} from "@store/actions/txStatus";
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
@@ -746,6 +754,10 @@ function RewardDistribution() {
               </Flex>
             </Box>
 
+            <ButtonBulkEnableClaim
+              stakersList={stakers?.filter((item) => item.isClaimed === true)}
+            />
+
             <Box maxW="6xl-mid" fontSize="lg">
               <HStack pb={5} borderBottomWidth={1}>
                 <Flex alignItems="start" pr={20}>
@@ -891,3 +903,132 @@ function RewardDistribution() {
 }
 
 export default RewardDistribution;
+
+function ButtonBulkEnableClaim({ stakersList }) {
+  const { api, currentAccount } = useSubstrateState();
+  const { adapter } = useSubstrate();
+  const dispatch = useDispatch();
+
+  const [bulkActionCount, setBulkActionCount] = useState(5);
+
+  const walletAddressList = useMemo(
+    () => stakersList?.slice(0, bulkActionCount)?.map((item) => item.address),
+    [bulkActionCount, stakersList]
+  );
+
+  async function handleBulkEnableClaim() {
+    console.log("start handleBulkEnableClaim...");
+    try {
+      console.log("first", walletAddressList?.length);
+      console.log("first", bulkActionCount);
+      if (walletAddressList?.length < bulkActionCount) {
+        toast.error(`Max is ${walletAddressList?.length}`);
+        return;
+      }
+      let TxALL;
+
+      let unsubscribe;
+      let gasLimit;
+
+      const address = currentAccount?.address;
+
+      const value = 0;
+      toast("Estimated transaction fee...");
+
+      const stakingContract = new ContractPromise(
+        api,
+        staking.CONTRACT_ABI,
+        staking.CONTRACT_ADDRESS
+      );
+
+      console.log("walletAddressList[0]", walletAddressList[0]);
+      gasLimit = await getEstimatedGasBatchTx(
+        address,
+        stakingContract,
+        value,
+        "setClaimedStatus",
+        walletAddressList[0]
+      );
+      console.log("gasLimit per one", gasLimit.toHuman());
+
+      await Promise.all(
+        walletAddressList.map(async (walletAddress) => {
+          return stakingContract.tx.setClaimedStatus(
+            { gasLimit, value },
+            walletAddress
+          );
+        })
+      ).then((res) => (TxALL = res));
+
+      api.tx.utility
+        .batch(TxALL)
+        .signAndSend(
+          address,
+          { signer: adapter.signer },
+          async ({ events, status, dispatchError }) => {
+            if (status?.isFinalized) {
+              let totalSuccessTxCount = null;
+
+              events.forEach(async ({ event, event: { data } }) => {
+                if (api.events.utility?.BatchInterrupted.is(event)) {
+                  totalSuccessTxCount = data[0]?.toString();
+                }
+
+                if (api.events.utility?.BatchCompleted.is(event)) {
+                  toast.success(
+                    "All address have been Set Claimed Status successfully."
+                  );
+                }
+              });
+
+              // eslint-disable-next-line no-extra-boolean-cast
+              if (!!totalSuccessTxCount) {
+                toast.error(
+                  `Bulk Set Claimed Status are not fully successful!${totalSuccessTxCount} actions completed successfully.`
+                );
+
+                // dispatch(clearTxStatus());
+              }
+            }
+
+            batchTxResponseErrorHandler({
+              status,
+              dispatchError,
+              dispatch,
+              txType: "MULTI_DELIST",
+              api,
+              currentAccount,
+            });
+          }
+        )
+        .then((unsub) => (unsubscribe = unsub))
+        .catch((error) => txErrorHandler({ error, dispatch }));
+
+      return unsubscribe;
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  return (
+    <>
+      <Text>
+        Total Count User is Claimed Status: {stakersList?.length} users
+      </Text>
+      <HStack my={4} spacing={4}>
+        <Button
+          isDisabled={stakersList?.length === 0}
+          w="full"
+          onClick={handleBulkEnableClaim}
+        >
+          Bulk Enable {bulkActionCount} users
+        </Button>
+        <Input
+          isDisabled={stakersList?.length === 0}
+          value={bulkActionCount}
+          onChange={({ target }) => setBulkActionCount(target.value)}
+        />
+      </HStack>
+    </>
+  );
+}
