@@ -73,6 +73,7 @@ function RewardDistribution() {
   const [isAdminStakingContract, setIsAdminStakingContract] = useState(false);
   const [stakersCount, setStakerCount] = useState(0);
   const [stakers, setStakers] = useState([]);
+  const [percentDoneStakers, setPercentDoneStakers] = useState(0);
 
   useEffect(() => {
     const setContract = async () => {
@@ -135,6 +136,9 @@ function RewardDistribution() {
       };
 
       stakers.push(staker_info);
+      setPercentDoneStakers(
+        ((100 * stakers?.length) / staker_count).toFixed(2)
+      );
     }
     setStakers(stakers);
   };
@@ -766,6 +770,16 @@ function RewardDistribution() {
                   </Text>
                   <Text color="#fff" ml={2}>
                     {stakersCount}
+                  </Text>
+                </Flex>
+              </HStack>
+              <HStack pb={5} borderBottomWidth={1}>
+                <Flex alignItems="start" pr={20}>
+                  <Text ml={1} color="brand.grayLight">
+                    Total Loading:
+                  </Text>
+                  <Text color="#fff" ml={2}>
+                    {percentDoneStakers} %
                   </Text>
                 </Flex>
               </HStack>
