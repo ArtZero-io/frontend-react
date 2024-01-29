@@ -41,7 +41,6 @@ import {
   WITHDRAW_LAUNCHPAD,
   WITHDRAW_MARKETPLACE,
   START,
-  ENABLE_CLAIM,
 } from "@constants";
 import { withdrawCollectionContract } from "@utils/blockchain/collection-manager-calls";
 
@@ -49,7 +48,7 @@ import { withdrawLaunchpadContract } from "@utils/blockchain/launchpad-contract-
 import { withdrawMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { useCallback } from "react";
 import useForceUpdate from "@hooks/useForceUpdate";
-import { clearTxStatus } from "@store/actions/txStatus";
+
 import { execContractQuery } from "@utils/blockchain/profile_calls";
 import marketplace from "@utils/blockchain/marketplace";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
@@ -196,38 +195,37 @@ function RewardDistribution() {
     else await staking_calls.stopRewardDistribution(currentAccount);
     await delay(3000);
     await onRefresh();
-    await getStakers();
   };
 
-  const enableClaim = async (stakerAddress) => {
-    if (!isAdminStakingContract) {
-      return toast.error("Only Admin allowed");
-    }
+  // const enableClaim = async (stakerAddress) => {
+  //   if (!isAdminStakingContract) {
+  //     return toast.error("Only Admin allowed");
+  //   }
 
-    try {
-      dispatch(
-        setTxStatus({
-          type: ENABLE_CLAIM,
-          step: START,
-          tokenIDArray: Array.of(stakerAddress),
-        })
-      );
+  //   try {
+  //     dispatch(
+  //       setTxStatus({
+  //         type: ENABLE_CLAIM,
+  //         step: START,
+  //         tokenIDArray: Array.of(stakerAddress),
+  //       })
+  //     );
 
-      await staking_calls.setClaimable(
-        currentAccount,
-        stakerAddress,
-        dispatch,
-        ENABLE_CLAIM,
-        api
-      );
+  //     await staking_calls.setClaimable(
+  //       currentAccount,
+  //       stakerAddress,
+  //       dispatch,
+  //       ENABLE_CLAIM,
+  //       api
+  //     );
 
-      getStakers();
-    } catch (error) {
-      console.log(error);
-      toast.error("There was an error while enable Claim the rewards.");
-      dispatch(clearTxStatus());
-    }
-  };
+  //     getStakers();
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("There was an error while enable Claim the rewards.");
+  //     dispatch(clearTxStatus());
+  //   }
+  // };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
@@ -769,13 +767,14 @@ function RewardDistribution() {
             </Box>
 
             <ButtonBulkEnableClaim
-              cb={getStakers}
-              stakersList={stakers?.filter((item) => item.isClaimed === true)}
+              rewardStarted={rewardStarted}
+              stakers={stakers}
+              setStakers={setStakers}
             />
-
             <ButtonBulkClaim
-              cb={getStakers}
-              stakersList={stakers?.filter((item) => item.isClaimed === false)}
+              rewardStarted={rewardStarted}
+              stakers={stakers}
+              setStakers={setStakers}
             />
 
             <Box maxW="6xl-mid" fontSize="lg">
@@ -846,7 +845,7 @@ function RewardDistribution() {
                           fontWeight="normal"
                           py={7}
                         >
-                          Amount
+                          NFT Staked Count
                         </Th>
                         <Th
                           fontFamily="Evogria"
@@ -855,9 +854,9 @@ function RewardDistribution() {
                           py={7}
                           // isNumeric
                         >
-                          Claimed
+                          Claimed Status
                         </Th>
-                        <Th
+                        {/* <Th
                           fontFamily="Evogria"
                           fontSize="sm"
                           fontWeight="normal"
@@ -865,7 +864,7 @@ function RewardDistribution() {
                           // isNumeric
                         >
                           Action
-                        </Th>
+                        </Th> */}
                       </Tr>
                     </Thead>
 
@@ -908,7 +907,7 @@ function RewardDistribution() {
                             >
                               Enable Claim
                             </Button> */}
-                              <CommonButton
+                              {/* <CommonButton
                                 {...rest}
                                 text="enable claim"
                                 onClick={() => enableClaim(staker.address)}
@@ -917,7 +916,7 @@ function RewardDistribution() {
                                   (actionType &&
                                     !tokenIDArray?.includes(staker.address))
                                 }
-                              />
+                              /> */}
                             </Td>
                           </Tr>
                         ))
@@ -936,20 +935,43 @@ function RewardDistribution() {
 
 export default RewardDistribution;
 
-function ButtonBulkEnableClaim({ stakersList, cb }) {
+function ButtonBulkEnableClaim({ stakers, setStakers, rewardStarted }) {
   const { api, currentAccount } = useSubstrateState();
   const { adapter } = useSubstrate();
   const dispatch = useDispatch();
 
   const [bulkActionCount, setBulkActionCount] = useState(5);
 
-  const walletAddressList = useMemo(
-    () => stakersList?.slice(0, bulkActionCount)?.map((item) => item.address),
-    [bulkActionCount, stakersList]
+  const readyToEnableList = useMemo(
+    () => stakers?.filter((item) => item.isClaimed === true),
+    [stakers]
   );
 
+  const walletAddressList = useMemo(
+    () =>
+      readyToEnableList?.slice(0, bulkActionCount)?.map((item) => item.address),
+    [bulkActionCount, readyToEnableList]
+  );
+  const [enableUpdateList, setEnableUpdateList] = useState([]);
+
+  useEffect(() => {
+    if (enableUpdateList?.length > 0) {
+      const listCopy = enableUpdateList;
+      let newStakersList = stakers;
+
+      for (let index = 0; index < listCopy.length; index++) {
+        const address = listCopy[index];
+        newStakersList = newStakersList.map((user) =>
+          user.address === address ? { ...user, isClaimed: false } : user
+        );
+      }
+
+      setStakers(newStakersList);
+      setEnableUpdateList([]);
+    }
+  }, [setStakers, stakers, enableUpdateList]);
+
   async function handleBulkEnableClaim() {
-    console.log("start handleBulkEnableClaim...");
     try {
       if (walletAddressList?.length < bulkActionCount) {
         toast.error(`Max is ${walletAddressList?.length}`);
@@ -971,7 +993,6 @@ function ButtonBulkEnableClaim({ stakersList, cb }) {
         staking.CONTRACT_ADDRESS
       );
 
-      console.log("walletAddressList[0]", walletAddressList[0]);
       gasLimit = await getEstimatedGasBatchTx(
         address,
         stakingContract,
@@ -1034,8 +1055,7 @@ function ButtonBulkEnableClaim({ stakersList, cb }) {
         .then((unsub) => (unsubscribe = unsub))
         .catch((error) => txErrorHandler({ error, dispatch }));
 
-      await delay(2000).then(async () => await cb());
-
+      setEnableUpdateList(walletAddressList);
       return unsubscribe;
     } catch (error) {
       console.log("error", error);
@@ -1045,18 +1065,18 @@ function ButtonBulkEnableClaim({ stakersList, cb }) {
   return (
     <>
       <Text>
-        Total Count User is Claimed Status: {stakersList?.length} users
+        Total Count User is Claimed Status: {readyToEnableList?.length} users
       </Text>
       <HStack my={4} spacing={4}>
         <Button
-          isDisabled={stakersList?.length === 0}
+          isDisabled={readyToEnableList?.length === 0 || rewardStarted}
           w="full"
           onClick={handleBulkEnableClaim}
         >
           Bulk Enable {bulkActionCount} users
         </Button>
         <Input
-          isDisabled={stakersList?.length === 0}
+          isDisabled={readyToEnableList?.length === 0 || rewardStarted}
           value={bulkActionCount}
           onChange={({ target }) => setBulkActionCount(target.value)}
         />
@@ -1065,20 +1085,46 @@ function ButtonBulkEnableClaim({ stakersList, cb }) {
   );
 }
 
-function ButtonBulkClaim({ stakersList, cb }) {
+function ButtonBulkClaim({ stakers, setStakers, rewardStarted }) {
   const { api, currentAccount } = useSubstrateState();
   const { adapter } = useSubstrate();
   const dispatch = useDispatch();
 
   const [bulkActionCount, setBulkActionCount] = useState(5);
 
-  const walletAddressList = useMemo(
-    () => stakersList?.slice(0, bulkActionCount)?.map((item) => item.address),
-    [bulkActionCount, stakersList]
+  const readyToBulkClaimList = useMemo(
+    () => stakers?.filter((item) => item.isClaimed === false),
+    [stakers]
   );
 
+  const walletAddressList = useMemo(
+    () =>
+      readyToBulkClaimList
+        ?.slice(0, bulkActionCount)
+        ?.map((item) => item.address),
+    [bulkActionCount, readyToBulkClaimList]
+  );
+
+  const [updateList, setUpdateList] = useState([]);
+
+  useEffect(() => {
+    if (updateList?.length > 0) {
+      const listCopy = updateList;
+      let newStakersList = stakers;
+
+      for (let index = 0; index < listCopy.length; index++) {
+        const address = listCopy[index];
+        newStakersList = newStakersList.map((user) =>
+          user.address === address ? { ...user, isClaimed: true } : user
+        );
+      }
+
+      setStakers(newStakersList);
+      setUpdateList([]);
+    }
+  }, [setStakers, stakers, updateList]);
+
   async function handleBulkClaim() {
-    console.log("start handleBulkClaim...");
     try {
       if (walletAddressList?.length < bulkActionCount) {
         toast.error(`Max is ${walletAddressList?.length}`);
@@ -1100,7 +1146,6 @@ function ButtonBulkClaim({ stakersList, cb }) {
         staking.CONTRACT_ADDRESS
       );
 
-      console.log("walletAddressList[0]", walletAddressList[0]);
       gasLimit = await getEstimatedGasBatchTx(
         address,
         stakingContract,
@@ -1160,29 +1205,27 @@ function ButtonBulkClaim({ stakersList, cb }) {
         )
         .then((unsub) => (unsubscribe = unsub))
         .catch((error) => txErrorHandler({ error, dispatch }));
+      setUpdateList(walletAddressList);
 
       return unsubscribe;
     } catch (error) {
       console.log("error", error);
-    } finally {
-      console.log("first cb ");
-      await delay(2000).then(async () => await cb());
     }
   }
 
   return (
     <>
-      <Text>Total User CAN Claim: {stakersList?.length} users</Text>
+      <Text>Total User CAN Claim: {readyToBulkClaimList?.length} users</Text>
       <HStack my={4} spacing={4}>
         <Button
-          isDisabled={stakersList?.length === 0}
+          isDisabled={readyToBulkClaimList?.length === 0 || !rewardStarted}
           w="full"
           onClick={handleBulkClaim}
         >
           Bulk Claim {bulkActionCount} users
         </Button>
         <Input
-          isDisabled={stakersList?.length === 0}
+          isDisabled={readyToBulkClaimList?.length === 0 || !rewardStarted}
           value={bulkActionCount}
           onChange={({ target }) => setBulkActionCount(target.value)}
         />
