@@ -1000,7 +1000,7 @@ function ButtonBulkEnableClaim({ stakers, setStakers, rewardStarted }) {
         "setClaimedStatus",
         walletAddressList[0]
       );
-      console.log("gasLimit per one", gasLimit.toHuman());
+      console.log("gasLimit per one", gasLimit?.toHuman());
 
       await Promise.all(
         walletAddressList.map(async (walletAddress) => {
@@ -1071,7 +1071,7 @@ function ButtonBulkEnableClaim({ stakers, setStakers, rewardStarted }) {
         <Button
           isDisabled={readyToEnableList?.length === 0 || rewardStarted}
           w="full"
-          onClick={handleBulkEnableClaim}
+          onClick={() => handleBulkEnableClaim()}
         >
           Bulk Enable {bulkActionCount} users
         </Button>
@@ -1153,7 +1153,7 @@ function ButtonBulkClaim({ stakers, setStakers, rewardStarted }) {
         "claimReward",
         walletAddressList[0]
       );
-      console.log("gasLimit per one", gasLimit.toHuman());
+      console.log("gasLimit per one", gasLimit?.toHuman());
 
       await Promise.all(
         walletAddressList.map(async (walletAddress) => {
@@ -1220,7 +1220,7 @@ function ButtonBulkClaim({ stakers, setStakers, rewardStarted }) {
         <Button
           isDisabled={readyToBulkClaimList?.length === 0 || !rewardStarted}
           w="full"
-          onClick={handleBulkClaim}
+          onClick={() => handleBulkClaim()}
         >
           Bulk Claim {bulkActionCount} users
         </Button>
