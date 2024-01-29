@@ -754,7 +754,7 @@ export const fetchValidatorProfit = async ({
 export const fetchUserBalance = async ({ currentAccount, api, address }) => {
   if (currentAccount && api) {
     const {
-      data: { free, miscFrozen },
+      data: { free, frozen },
     } = await api.query.system.account(address || currentAccount?.address);
 
     const [chainDecimal] = await api.registry.chainDecimals;
@@ -764,8 +764,8 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
       forceUnit: "-",
       chainDecimal,
     });
-    // get miscFrozen
-    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
+    // get Frozen
+    const formattedStrBalFrozen = formatBalance(frozen, {
       withSi: false,
       forceUnit: "-",
       chainDecimal,
@@ -773,7 +773,7 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 
     const formattedNumBal =
       formattedStrBal?.replaceAll(",", "") * 1 -
-      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
+      formattedStrBalFrozen?.replaceAll(",", "") * 1;
 
     return { balance: formattedNumBal / 10 ** chainDecimal };
   }

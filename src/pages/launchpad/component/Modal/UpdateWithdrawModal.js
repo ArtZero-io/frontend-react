@@ -64,10 +64,10 @@ export default function UpdateWithdrawModal({
       );
 
       const balFree = balance.toHuman().free?.replaceAll(",", "") / 10 ** 12;
-      const balMiscFrozen =
-        balance.toHuman().miscFrozen?.replaceAll(",", "") / 10 ** 12;
+      const balFrozen =
+        balance.toHuman().frozen?.replaceAll(",", "") / 10 ** 12;
 
-      const tempBal = balFree - balMiscFrozen;
+      const tempBal = balFree - balFrozen;
 
       const tempBalFloorRound = Math.floor(tempBal);
       if (isUnmounted) return;

@@ -198,7 +198,7 @@ const LaunchpadDetailPage = () => {
         const id = await launchpad_psp34_nft_standard_calls.getCurrentPhase(
           getPublicCurrentAccount()
         );
-        
+
         if (isUnmounted) return;
 
         setActivePhaseId(id);
@@ -463,7 +463,7 @@ const LaunchpadDetailPage = () => {
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
       new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+      new BN(data.frozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
       10 ** 12;
@@ -515,7 +515,7 @@ const LaunchpadDetailPage = () => {
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
       new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+      new BN(data.frozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
     const mintingFee =
       (mintingAmount * currentPhase?.publicMintingFee) / 10 ** 12;

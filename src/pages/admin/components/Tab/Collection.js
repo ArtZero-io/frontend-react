@@ -54,7 +54,7 @@ function CollectionAdmin() {
     );
     setCollectionContractBalance(
       new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-        new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
+        new BN(balance.frozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
           10 ** 6
     );
   }, [api, apiState]);

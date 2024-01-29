@@ -92,9 +92,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       );
 
       const free = convertStringToPrice(balance.toHuman().free);
-      const miscFrozen = convertStringToPrice(balance.toHuman().miscFrozen);
+      const frozen = convertStringToPrice(balance.toHuman().frozen);
 
-      const bal = free - miscFrozen;
+      const bal = free - frozen;
 
       setUserBalance(bal);
     };

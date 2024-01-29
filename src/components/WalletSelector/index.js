@@ -159,12 +159,12 @@ function WalletSelector({ display }) {
         .account(currentAccount.address, (balance) => {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, "le");
-          let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, "le");
+          let frozenBalSZERO = new BN(balance.data.frozen, 10, "le");
 
           if (balSZERO.gt(oneSZERO)) {
             balSZERO =
               balSZERO.div(new BN(10 ** 12)).toNumber() -
-              miscFrozenBalSZERO.div(new BN(10 ** 12)).toNumber();
+              frozenBalSZERO.div(new BN(10 ** 12)).toNumber();
           } else {
             balSZERO = balSZERO.toNumber() / 10 ** 12;
           }
