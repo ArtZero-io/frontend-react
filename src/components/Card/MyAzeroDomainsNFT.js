@@ -28,6 +28,7 @@ import {
   UNSTAKE,
   REQUEST_UNSTAKE,
   CANCEL_REQUEST_UNSTAKE,
+  MAX_ITEM_BULK_DELIST,
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
@@ -128,12 +129,12 @@ function MyAzeroDomainsNFTCard({
 
     const target = !multiDelistData?.list?.includes(azDomainName ?? tokenID);
 
-    if (target && multiDelistData?.list?.length >= MAX_ITEM_BULK_LISTING) {
+    if (target && multiDelistData?.list?.length >= MAX_ITEM_BULK_DELIST) {
       !multiDelistData?.list?.includes(tokenID) &&
         setIsMultiDelistCheckbox(false);
 
       return toast.error(
-        `Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`
+        `Max items allowed limited to ${MAX_ITEM_BULK_DELIST}!`
       );
     }
 

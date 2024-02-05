@@ -31,7 +31,8 @@ import {
   MAX_ITEM_STAKE,
   MAX_ITEM_BULK_LISTING,
   MAX_ITEM_BULK_TRANSFER,
-  MAX_BID_COUNT,
+  MAX_ITEM_BULK_DELIST,
+  MAX_ITEM_BULK_REMOVE_BID,
 } from "@constants";
 import { useHistory } from "react-router-dom";
 import CommonButton from "../Button/CommonButton";
@@ -123,12 +124,12 @@ function MyNFTCard({
     e.cancelBubble = true;
 
     const target = !multiDelistData?.list?.includes(tokenID);
-    if (target && multiDelistData?.list?.length >= MAX_ITEM_BULK_LISTING) {
+    if (target && multiDelistData?.list?.length >= MAX_ITEM_BULK_DELIST) {
       !multiDelistData?.list?.includes(tokenID) &&
         setIsMultiDelistCheckbox(false);
 
       return toast.error(
-        `Max items allowed limited to ${MAX_ITEM_BULK_LISTING}!`
+        `Max items allowed limited to ${MAX_ITEM_BULK_DELIST}!`
       );
     }
 
@@ -151,11 +152,16 @@ function MyNFTCard({
   const [isMultiDebidCheckbox, setIsMultiDebidCheckbox] = useState(false);
 
   const handleOnChangeMultiDebidCheckbox = ({ target }) => {
-    if (target.checked && multiDebidData?.list?.length >= MAX_BID_COUNT) {
+    if (
+      target.checked &&
+      multiDebidData?.list?.length >= MAX_ITEM_BULK_REMOVE_BID
+    ) {
       !multiDebidData?.list?.includes(tokenID) &&
         setIsMultiDebidCheckbox(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_BID_COUNT}!`);
+      return toast.error(
+        `Max items allowed limited to ${MAX_ITEM_BULK_REMOVE_BID}!`
+      );
     }
 
     target.checked
