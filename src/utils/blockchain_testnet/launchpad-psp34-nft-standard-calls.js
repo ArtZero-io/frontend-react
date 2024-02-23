@@ -554,7 +554,14 @@ async function editProjectInformation(
   return unsubscribe;
 }
 
-async function mint(caller_account, mintAmount, dispatch, txType, api) {
+async function mint(
+  caller_account,
+  mintAmount,
+  dispatch,
+  txType,
+  api,
+  collection_address
+) {
   if (!contract || !caller_account) {
     console.log("Contract or caller not valid!");
     toast.error(`Contract or caller not valid!`);
@@ -588,6 +595,27 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
         api,
         caller_account,
       });
+      if (status.isFinalized) {
+        contract.query["psp34Traits::getLastTokenId"](address, {
+          value: 0,
+          gasLimit,
+        }).then(async ({ result, output }) => {
+          if (result.isOk) {
+            const lastTokenId = formatOutput(output);
+
+            for (
+              let token_id = lastTokenId - mintAmount + 1;
+              token_id <= lastTokenId;
+              token_id++
+            ) {
+              await APICall.askBeUpdateNftData({
+                collection_address,
+                token_id,
+              });
+            }
+          }
+        });
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));

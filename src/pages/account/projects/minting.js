@@ -94,7 +94,8 @@ function MyMintingProjectPage(props) {
         mintAmount,
         dispatch,
         OWNER_MINT,
-        api
+        api,
+        selectedProjectAddress
       );
     } catch (error) {
       toast.error(error.message);
