@@ -25,6 +25,15 @@ export default async function getGasLimit(
   options = {},
   args = []
 ) {
+  const { data: balance } = await api.query.system.account(userAddress);
+
+  console.table({
+    "Single Balance START":
+      balance.free.toHuman().slice(0, -16) +
+      "." +
+      balance.free.toHuman().slice(-15, -8),
+  });
+
   const abiMessage = toContractAbiMessage(contract, message);
 
   if (!abiMessage.ok) return abiMessage;
@@ -72,6 +81,15 @@ export async function getGasLimitBulkAction(
   options = {},
   args = []
 ) {
+  const { data: balance } = await api.query.system.account(userAddress);
+
+  console.table({
+    "Bulk Balance START":
+      balance.free.toHuman().slice(0, -16) +
+      "." +
+      balance.free.toHuman().slice(-15, -8),
+  });
+
   const abiMessage = toContractAbiMessage(contract, message);
 
   if (!abiMessage.ok) return abiMessage;
@@ -86,7 +104,6 @@ export async function getGasLimitBulkAction(
     storageDepositLimit ?? null,
     abiMessage.value.toU8a(args)
   );
-
 
   return { ok: true, value: gasRequired };
 }

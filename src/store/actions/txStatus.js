@@ -184,7 +184,6 @@ export const txResponseErrorHandler = async ({
         );
       }
 
-
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {
         const apiAt = await api.at(statusToHuman[0][1]);
@@ -267,16 +266,16 @@ export const txResponseErrorHandler = async ({
           }
         });
 
-        // const { data: balance } = await api.query.system.account(
-        //   caller_account?.address
-        // );
+        const { data: balance } = await api.query.system.account(
+          caller_account?.address
+        );
 
-        // console.table({
-        //   "Balance END":
-        //     balance.free.toHuman().slice(0, -16) +
-        //     "." +
-        //     balance.free.toHuman().slice(-15, -8),
-        // });
+        console.table({
+          "Balance END":
+            balance.free.toHuman().slice(0, -16) +
+            "." +
+            balance.free.toHuman().slice(-15, -8),
+        });
 
         data.TxHash = statusToHuman[0][1];
 
@@ -300,7 +299,7 @@ export const batchTxResponseErrorHandler = async ({
   txType,
   type,
   api,
-  caller_account,
+  currentAccount,
   isApprovalTx = false,
 }) => {
   const url = `https://test.azero.dev/#/explorer/query/`;
@@ -379,7 +378,7 @@ export const batchTxResponseErrorHandler = async ({
         });
 
         // const { data: balance } = await api.query.system.account(
-        //   caller_account?.address
+        //   currentAccount?.address
         // );
 
         // console.table({
@@ -438,7 +437,6 @@ export const batchTxResponseErrorHandler = async ({
           })
         );
       }
-
 
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {
@@ -522,16 +520,16 @@ export const batchTxResponseErrorHandler = async ({
           }
         });
 
-        // const { data: balance } = await api.query.system.account(
-        //   caller_account?.address
-        // );
+        const { data: balance } = await api.query.system.account(
+          currentAccount?.address
+        );
 
-        // console.table({
-        //   "Balance END":
-        //     balance.free.toHuman().slice(0, -16) +
-        //     "." +
-        //     balance.free.toHuman().slice(-15, -8),
-        // });
+        console.table({
+          "Balance END":
+            balance.free.toHuman().slice(0, -16) +
+            "." +
+            balance.free.toHuman().slice(-15, -8),
+        });
 
         data.TxHash = statusToHuman[0][1];
 
