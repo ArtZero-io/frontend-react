@@ -52,27 +52,27 @@ function WalletNotConnected({ onCloseMenu, display }) {
         mb={{ base: "20px", md: "auto" }}
       >
         <Flex align="center" justify="end" height="100%">
-          <motion.div
-            initial="initial"
-            whileHover="hover"
-            variants={buttonVariants}
-            transition={{
-              curve: [0.17, 0.67, 0.83, 0.67],
-            }}
+          <Flex
+            display={display}
+            maxH="55px"
+            height="full"
+            w={["full", "auto"]}
+            align="center"
+            justify="space-between"
+            pl={{ base: "10px", md: "auto" }}
+            mb={{ base: "20px", md: "auto" }}
+            ml={{ base: "10px", md: "auto" }}
+            flexDirection={{ md: "colum" }}
           >
-            <Flex
-              display={display}
-              maxH="55px"
-              height="full"
-              w={["full", "auto"]}
-              align="center"
-              justify="space-between"
-              pl={{ base: "10px", md: "auto" }}
-              mb={{ base: "20px", md: "auto" }}
-              ml={{ base: "10px", md: "auto" }}
-              flexDirection={{ md: "colum" }}
-            >
-              <Menu autoSelect={false} placement="bottom-end" offset={[0, 25]}>
+            <Menu autoSelect={false} placement="bottom-end" offset={[0, 25]}>
+              <motion.div
+                initial="initial"
+                whileHover="hover"
+                variants={buttonVariants}
+                transition={{
+                  curve: [0.17, 0.67, 0.83, 0.67],
+                }}
+              >
                 <MenuButton
                   ring={0}
                   h="50px"
@@ -84,147 +84,147 @@ function WalletNotConnected({ onCloseMenu, display }) {
                   color="blackAlpha.900"
                 >
                   connect wallet
-                </MenuButton>
-                <MenuList
-                  minW="260px"
-                  display="flex"
-                  flexDirection="column"
-                  borderRadius="0"
-                  borderWidth="2px"
-                  borderColor="brand.blue"
-                  bg="#222"
+                </MenuButton>{" "}
+              </motion.div>
+              <MenuList
+                minW="260px"
+                display="flex"
+                flexDirection="column"
+                borderRadius="0"
+                borderWidth="2px"
+                borderColor="brand.blue"
+                bg="#222"
+              >
+                <Flex
+                  _hover={{ bg: "#000" }}
+                  cursor="pointer"
+                  p="20px"
+                  pt="12px"
+                  pb="18px"
                 >
-                  <Flex
-                    _hover={{ bg: "#000" }}
-                    cursor="pointer"
-                    p="20px"
-                    pt="12px"
-                    pb="18px"
-                  >
-                    <Flex alignItems="center" w="full">
+                  <Flex alignItems="center" w="full">
+                    <Flex
+                      w="full"
+                      alignItems="center"
+                      flexDirection="column"
+                      justifyContent="start"
+                    >
                       <Flex
-                        w="full"
                         alignItems="center"
-                        flexDirection="column"
-                        justifyContent="start"
+                        justifyContent="space-between"
+                        variant="grayBg"
+                        height="full"
+                        minW="fit-content"
+                        bg="transparent"
+                        w="full"
                       >
-                        <Flex
-                          alignItems="center"
-                          justifyContent="space-between"
-                          variant="grayBg"
-                          height="full"
-                          minW="fit-content"
-                          bg="transparent"
+                        <TagLabel
                           w="full"
+                          display="flex"
+                          alignItems="center"
+                          color="#7ae7ff"
+                          fontSize="18px"
+                          onClick={() => {
+                            window?.fire
+                              ? handleConnect("5IRE_WALLET")
+                              : toast.error(
+                                  "Please install 5ire Wallet extension!"
+                                );
+                          }}
                         >
-                          <TagLabel
-                            w="full"
-                            display="flex"
+                          <Flex
+                            width="32px"
+                            height="32px"
                             alignItems="center"
-                            color="#7ae7ff"
-                            fontSize="18px"
-                            onClick={() => {
-                              window?.fire
-                                ? handleConnect("5IRE_WALLET")
-                                : toast.error(
-                                    "Please install 5ire Wallet extension!"
-                                  );
-                            }}
+                            justifyContent="center"
+                            mr="12px"
                           >
-                            <Flex
-                              width="32px"
-                              height="32px"
-                              alignItems="center"
-                              justifyContent="center"
-                              mr="12px"
-                            >
-                              <Image
-                                src={FireWalletIcon}
-                                alt={"currentAccount"}
-                              />
-                            </Flex>
-                            <Text
-                              isTruncated
-                              maxW="120px"
-                              color="#fff"
-                              fontSize="15px"
-                              textAlign="left"
-                              lineHeight="20px"
-                              textTransform="lowercase"
-                              fontFamily="Evogria,sans-serif"
-                            >
-                              5IRE WALLET
-                            </Text>{" "}
-                          </TagLabel>
-                          <Link
-                            isDisable
-                            href="https://chromewebstore.google.com/detail/5ire-wallet/keenhcnmdmjjhincpilijphpiohdppno"
-                            isExternal
+                            <Image
+                              src={FireWalletIcon}
+                              alt={"currentAccount"}
+                            />
+                          </Flex>
+                          <Text
+                            isTruncated
+                            maxW="120px"
+                            color="#fff"
+                            fontSize="15px"
+                            textAlign="left"
+                            lineHeight="20px"
+                            textTransform="lowercase"
+                            fontFamily="Evogria,sans-serif"
                           >
-                            <ExternalLinkIcon mx="2px" />
-                          </Link>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    onClick={() => handleConnect("NIGHTLY_WALLET")}
-                    _hover={{ bg: "#000" }}
-                    cursor="pointer"
-                    p="20px"
-                    pt="12px"
-                    pb="18px"
-                  >
-                    <Flex alignItems="center" w="full">
-                      <Flex
-                        w="full"
-                        alignItems="center"
-                        flexDirection="column"
-                        justifyContent="start"
-                      >
-                        <Flex
-                          alignItems="center"
-                          justifyContent="space-between"
-                          variant="grayBg"
-                          height="full"
-                          minW="fit-content"
-                          bg="transparent"
-                          w="full"
+                            5IRE WALLET
+                          </Text>{" "}
+                        </TagLabel>
+                        <Link
+                          isDisable
+                          href="https://chromewebstore.google.com/detail/5ire-wallet/keenhcnmdmjjhincpilijphpiohdppno"
+                          isExternal
                         >
-                          <TagLabel display="flex" alignItems="center" w="full">
-                            <Flex
-                              width="32px"
-                              height="32px"
-                              alignItems="center"
-                              justifyContent="center"
-                              mr="12px"
-                            >
-                              <Image
-                                src="https://registry.nightly.app/wallets/nightly/default.png"
-                                alt={"currentAccount"}
-                              />
-                            </Flex>
-                            <Text
-                              isTruncated
-                              maxW="120px"
-                              color="#fff"
-                              fontSize="15px"
-                              textAlign="left"
-                              lineHeight="20px"
-                              textTransform="lowercase"
-                              fontFamily="Evogria,sans-serif"
-                            >
-                              NIGHTLY
-                            </Text>{" "}
-                          </TagLabel>
-                        </Flex>
+                          <ExternalLinkIcon mx="2px" />
+                        </Link>
                       </Flex>
                     </Flex>
                   </Flex>
-                </MenuList>
-              </Menu>
-            </Flex>
-          </motion.div>
+                </Flex>
+                <Flex
+                  onClick={() => handleConnect("NIGHTLY_WALLET")}
+                  _hover={{ bg: "#000" }}
+                  cursor="pointer"
+                  p="20px"
+                  pt="12px"
+                  pb="18px"
+                >
+                  <Flex alignItems="center" w="full">
+                    <Flex
+                      w="full"
+                      alignItems="center"
+                      flexDirection="column"
+                      justifyContent="start"
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="space-between"
+                        variant="grayBg"
+                        height="full"
+                        minW="fit-content"
+                        bg="transparent"
+                        w="full"
+                      >
+                        <TagLabel display="flex" alignItems="center" w="full">
+                          <Flex
+                            width="32px"
+                            height="32px"
+                            alignItems="center"
+                            justifyContent="center"
+                            mr="12px"
+                          >
+                            <Image
+                              src="https://registry.nightly.app/wallets/nightly/default.png"
+                              alt={"currentAccount"}
+                            />
+                          </Flex>
+                          <Text
+                            isTruncated
+                            maxW="120px"
+                            color="#fff"
+                            fontSize="15px"
+                            textAlign="left"
+                            lineHeight="20px"
+                            textTransform="lowercase"
+                            fontFamily="Evogria,sans-serif"
+                          >
+                            NIGHTLY
+                          </Text>{" "}
+                        </TagLabel>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Flex>
       </Box>
     </>
