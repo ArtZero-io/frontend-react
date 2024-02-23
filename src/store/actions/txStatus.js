@@ -33,7 +33,9 @@ export const txErrorHandler = ({ error, dispatch }) => {
     return toast.error(message);
   }
 
-  message = `Transaction is ${error.message.toLowerCase()} by user.`;
+  message = error?.message
+    ? `Transaction is ${error?.message?.toLowerCase()} by user.`
+    : errStr;
 
   toast.error(message);
 };
@@ -183,7 +185,6 @@ export const txResponseErrorHandler = async ({
           })
         );
       }
-
 
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {
@@ -438,7 +439,6 @@ export const batchTxResponseErrorHandler = async ({
           })
         );
       }
-
 
       // Use for 2-steps process create new project
       if (statusToHuman[0][0] === FINALIZED) {

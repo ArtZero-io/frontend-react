@@ -184,19 +184,47 @@ function setContractsSigner(adapter) {
   setSignerStaking(adapter);
 }
 
-export const loadAccounts = async (state, dispatch) => {
+export const loadAccounts = async (state, dispatch, walletAdapterType) => {
   const { api } = state;
 
   dispatch({ type: "LOAD_KEYRING" });
   const asyncLoadAccounts = async () => {
     try {
-      await adapter.connect();
+      let allAccounts;
 
-      let allAccounts = await adapter.accounts.get();
+      if (walletAdapterType === "5IRE_WALLET") {
+        const addressList = await window?.fire?.connect();
 
-      setContractsSigner(adapter);
+        allAccounts = [
+          {
+            address: addressList?.nativeAddress,
+            name: "default",
+            adapter: "5IRE_WALLET",
+          },
+        ];
 
-      allAccounts = allAccounts.map(({ address, ...rest }) => ({
+        window.localStorage.setItem(
+          "selectedExtension",
+          JSON.stringify("5IRE_WALLET")
+        );
+
+        setContractsSigner({ signer: window.fire });
+      }
+
+      if (walletAdapterType === "NIGHTLY_WALLET") {
+        await adapter.connect();
+
+        allAccounts = await adapter.accounts.get();
+
+        window.localStorage.setItem(
+          "selectedExtension",
+          JSON.stringify("NIGHTLY_WALLET")
+        );
+
+        setContractsSigner(adapter);
+      }
+
+      allAccounts = allAccounts?.map(({ address, ...rest }) => ({
         address,
         meta: { ...rest },
       }));
@@ -208,21 +236,21 @@ export const loadAccounts = async (state, dispatch) => {
           } ...`
         );
 
-        console.log("allAccounts", allAccounts);
-        allAccounts = await Promise.all(
-          allAccounts.map(async (item) => {
-            console.log("resolveDomain api", api);
-            const addressDomain = await resolveDomain(item.address, api);
-            console.log("addressDomain", addressDomain);
-            return {
-              ...item,
-              meta: {
-                ...item.meta,
-                addressDomain,
-              },
-            };
-          })
-        );
+        // console.log("allAccounts", allAccounts);
+        // allAccounts = await Promise.all(
+        //   allAccounts?.map(async (item) => {
+        //     console.log("resolveDomain api", api);
+        //     const addressDomain = await resolveDomain(item.address, api);
+        //     console.log("addressDomain", addressDomain);
+        //     return {
+        //       ...item,
+        //       meta: {
+        //         ...item.meta,
+        //         addressDomain,
+        //       },
+        //     };
+        //   })
+        // );
       } catch (error) {
         console.log("resolveDomain error", error);
       }
@@ -269,6 +297,27 @@ const SubstrateContextProvider = (props) => {
   connect(state, dispatch);
 
   useEffect(() => {
+    async function handleAccountsChanged(accounts) {
+      window.localStorage.setItem(
+        "activeAddress",
+        JSON.stringify(accounts?.nativeAddress)
+      );
+
+      setCurrentAccount({
+        address: accounts?.nativeAddress,
+        key: accounts?.nativeAddress,
+        meta: { name: "default", adapter: "5IRE_WALLET" },
+      });
+    }
+
+    window?.fire?.on("accountChanged", handleAccountsChanged);
+
+    return () => {
+      window?.fire?.removeListener("accountChanged", handleAccountsChanged);
+    };
+  }, [state]);
+
+  useEffect(() => {
     const { apiState, keyringState } = state;
 
     if (apiState === "READY" && !keyringState && !keyringLoadAll) {
@@ -291,7 +340,7 @@ const SubstrateContextProvider = (props) => {
     const accArr = Keyring.getAccounts();
 
     await Promise.all(
-      accArr.map((item) => Keyring.forgetAccount(item.address))
+      accArr?.map((item) => Keyring.forgetAccount(item.address))
     ).then((result) => {
       dispatch({ type: "LOG_OUT" });
 

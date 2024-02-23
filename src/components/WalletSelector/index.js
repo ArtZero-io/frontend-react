@@ -66,6 +66,7 @@ import MenuDisconnectIcon from "@theme/assets/icon/MenuDisconnect.js";
 import MenuSwitchIcon from "@theme/assets/icon/MenuSwitch.js";
 import ChainDropdown from "../Dropdown/ChainDropdown";
 import { SCROLLBAR } from "@constants";
+import FireWalletIcon from "@utils/wallets/FireWallet.png";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();
@@ -259,7 +260,11 @@ function WalletSelector({ display }) {
                 mr="12px"
               >
                 <Image
-                  src="https://registry.nightly.app/wallets/nightly/default.png"
+                  src={
+                    currentAccount?.meta?.adapter === "5IRE_WALLET"
+                      ? FireWalletIcon
+                      : "https://registry.nightly.app/wallets/nightly/default.png"
+                  }
                   alt={currentAccount?.meta?.source}
                 />
               </Flex>
@@ -438,7 +443,7 @@ function WalletSubmenu({ keyringOptions, selectAccountHandler }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const modalSize = useBreakpointValue(["xs", "md"]);
 
-  return (
+  return currentAccount?.meta?.adapter === "5IRE_WALLET" ? null : (
     <>
       <Flex
         alignItems="center"
@@ -696,7 +701,11 @@ function WalletSubDrawer({
                     mr="12px"
                   >
                     <Image
-                      src="https://registry.nightly.app/wallets/nightly/default.png"
+                      src={
+                        currentAccount?.meta?.adapter === "5IRE_WALLET"
+                          ? FireWalletIcon
+                          : "https://registry.nightly.app/wallets/nightly/default.png"
+                      }
                       alt={currentAccount?.meta?.source}
                     />
                   </Flex>
