@@ -373,9 +373,9 @@ const LaunchpadDetailPage = () => {
                 ...data,
                 whitelistAmount: strToNumber(data?.whitelistAmount),
                 claimedAmount: strToNumber(data?.claimedAmount),
-                remainAmount: strToNumber(
-                  data?.whitelistAmount - data?.claimedAmount
-                ),
+                remainAmount:
+                  strToNumber(data?.whitelistAmount) -
+                  strToNumber(data?.claimedAmount),
                 mintingFee: strToNumber(data?.mintingFee),
               };
             }
