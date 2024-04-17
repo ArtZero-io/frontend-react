@@ -24,6 +24,8 @@ import RecentNftTradesTab from "./Tab/RecentNftTradesTab";
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
+const VALIDATOR_SHARE_RATE = 1; // 0.5
+const PLATFORM_PROFIT_SHARE_RATE = 0.3;
 
 function StatsPage() {
   const { api, apiState } = useSubstrateState();
@@ -151,32 +153,41 @@ function StatsPage() {
       const totalPlatformProfit =
         marketplaceProfit + launchpadProfit + collectionProfit;
 
-      const totalNextPayout = totalPlatformProfit * 0.3 + validatorProfit * 0.5;
+      const totalNextPayout =
+        totalPlatformProfit * PLATFORM_PROFIT_SHARE_RATE +
+        validatorProfit * VALIDATOR_SHARE_RATE;
 
       process.env.NODE_ENV === "development" &&
         console.table({
           Marketplace: {
             "Total Profit": marketplaceProfit,
-            "30% Share": marketplaceProfit * 0.3,
+            [`${PLATFORM_PROFIT_SHARE_RATE * 100}% Share`]:
+              marketplaceProfit * 0.3,
           },
           Launchpad: {
             "Total Profit": launchpadProfit,
-            "30% Share": launchpadProfit * 0.3,
+            [`${PLATFORM_PROFIT_SHARE_RATE * 100}% Share`]:
+              launchpadProfit * 0.3,
           },
           Collection: {
             "Total Profit": collectionProfit,
-            "30% Share": collectionProfit * 0.3,
+            [`${PLATFORM_PROFIT_SHARE_RATE * 100}% Share`]:
+              collectionProfit * 0.3,
           },
           Validator: {
             "Total Profit": validatorProfit,
-            "50% Share": validatorProfit * 0.5,
+            [`${VALIDATOR_SHARE_RATE * 100}% Share`]:
+              validatorProfit * VALIDATOR_SHARE_RATE,
           },
           Sum: {
             "Total Profit": totalPlatformProfit + validatorProfit,
-            "30% Share": totalPlatformProfit * 0.3,
-            "50% Share": validatorProfit * 0.5,
+            [`${PLATFORM_PROFIT_SHARE_RATE * 100}% Share`]:
+              totalPlatformProfit * PLATFORM_PROFIT_SHARE_RATE,
+            [`${VALIDATOR_SHARE_RATE * 100}% Share`]:
+              validatorProfit * VALIDATOR_SHARE_RATE,
             "Total Next Payout":
-              totalPlatformProfit * 0.3 + validatorProfit * 0.5,
+              totalPlatformProfit * PLATFORM_PROFIT_SHARE_RATE +
+              validatorProfit * VALIDATOR_SHARE_RATE,
           },
         });
 
@@ -209,7 +220,8 @@ function StatsPage() {
       );
 
       setIsLoading(false);
-
+      console.log("totalNextPayout", totalNextPayout);
+      console.log("remainRewardPool", remainRewardPool);
       let ret = {
         platformStatistics: [
           {
