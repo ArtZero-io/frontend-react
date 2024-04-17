@@ -206,7 +206,7 @@ function WalletSelector({ display }) {
           p="0"
           w="160px"
           h="40px"
-          bg="black"
+          bg="#0000"
           as={Button}
           borderRadius="0"
           color="brand.blue"

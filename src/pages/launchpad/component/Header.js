@@ -347,7 +347,6 @@ function LaunchpadDetailHeader({
                 <HStack
                   pb={["20px", "30px"]}
                   justifyContent="center"
-                  minW={["auto", "870px"]}
                   w="full"
                   borderBottom="#282828 solid"
                   borderBottomWidth={["0px", "1px"]}
@@ -359,7 +358,7 @@ function LaunchpadDetailHeader({
                   color="#888"
                   pt={["2px", "22px"]}
                   pb={["30px", "30px"]}
-                  w={["340px", "full"]}
+                  minW={["full"]}
                   textAlign="center"
                   justifyContent="center"
                   fontSize={["16px", "18px"]}
@@ -377,7 +376,7 @@ function LaunchpadDetailHeader({
                     <Text mx={["25px", "42px"]}>
                       Price:{" "}
                       <Skeleton
-                        w="150px"
+                        w={["auto", "150px", "150px"]}
                         as="span"
                         isLoaded={!loadingPhaseInfo}
                       >
@@ -406,11 +405,14 @@ function LaunchpadDetailHeader({
                   {currentAccount?.address &&
                     (!userWLInfo[currentPhase?.id - 1] ||
                       userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
-                      <Text mx={["25px", "42px"]} w="150px">
+                      <Text
+                        mx={["25px", "42px"]}
+                        w={["auto", "150px", "150px"]}
+                      >
                         Price:{" "}
                         <Skeleton as="span" isLoaded={!loadingUserWLInfo}>
                           <Skeleton
-                            w="150px"
+                            w={["auto", "150px", "150px"]}
                             as="span"
                             isLoaded={!loadingPhaseInfo}
                           >
@@ -439,7 +441,10 @@ function LaunchpadDetailHeader({
 
                   {currentAccount?.address &&
                     userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
-                      <Text mx={["25px", "42px"]} w="150px">
+                      <Text
+                        mx={["25px", "42px"]}
+                        w={["auto", "150px", "150px"]}
+                      >
                         Price:{" "}
                         <Text
                           as="span"
