@@ -1,25 +1,52 @@
-import React from "react";
-import { useClipboard, Flex, Tooltip, IconButton } from "@chakra-ui/react";
-import { truncateStr, resolveDomain } from "@utils";
-import toast from "react-hot-toast";
 import { CopyIcon, LinkIcon } from "@chakra-ui/icons";
-import { SUB_DOMAIN } from "../../constants";
-import { useEffect, useState } from "react";
+import {
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Tooltip,
+  useClipboard,
+} from "@chakra-ui/react";
+import { resolveDomain, truncateStr } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { SUB_DOMAIN } from "../../constants";
+
+function Copier({ address, hasIcon, truncateStrNum }) {
+  const { onCopy } = useClipboard(address?.value);
+
+  const handleCopy = () => {
+    toast.success(`${address?.type} copied!`);
+    onCopy();
+  };
+
+  return (
+    <Flex
+      _hover={{
+        color: "#7ae7ff",
+      }}
+      cursor="pointer"
+      alignItems="center"
+      onClick={handleCopy}
+    >
+      {address?.type === "Address"
+        ? truncateStr(address?.value, truncateStrNum)
+        : address?.value}
+      {hasIcon && <CopyIcon ml="8px" />}
+    </Flex>
+  );
+}
 
 export default function AddressCopier({
   address,
   truncateStrNum = 5,
   hasIcon = false,
 }) {
-  const { onCopy } = useClipboard(address);
-  const { api, apiState } = useSubstrateState();
-  const handleCopy = () => {
-    toast.success("Address copied!");
-    onCopy();
-  };
-
   const [domains, setDomains] = useState();
+  const { api, apiState } = useSubstrateState();
 
   useEffect(() => {
     if (apiState !== "READY") return;
@@ -35,22 +62,73 @@ export default function AddressCopier({
     } catch (error) {
       console.log("error", error);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, api, apiState]);
 
+  if (!domains) {
+    return (
+      <Copier hasIcon={hasIcon} address={{ type: "Address", value: address }} />
+    );
+  }
+
   return (
-    <>
-      <Flex
-        cursor="pointer"
-        _hover={{ color: "#7ae7ff" }}
-        onClick={handleCopy}
-        alignItems="center"
-      >
-        {" "}
-        {domains ?? truncateStr(address, truncateStrNum)}{" "}
-        {address && hasIcon && <CopyIcon ml="8px" />}
-      </Flex>
-    </>
+    <Menu>
+      {({ isOpen }) => (
+        <>
+          <MenuButton
+            _hover={{
+              color: "#7ae7ff",
+            }}
+            isActive={isOpen}
+            id="address-copier-button"
+          >
+            <Flex>
+              {domains ?? truncateStr(address, truncateStrNum)}{" "}
+              <CopyIcon ml="8px" />
+            </Flex>
+          </MenuButton>
+          <MenuList
+            p="12px"
+            bg="#222"
+            minW="235px"
+            display="flex"
+            flexDirection="column"
+            borderRadius="0"
+            borderWidth="2px"
+            borderColor="brand.blue"
+            zIndex={11}
+          >
+            <MenuItem
+              w="205px"
+              h="45px"
+              p="0"
+              pl="10px"
+              lineHeight="20px"
+              textTransform="none"
+              _hover={{ bg: "#000" }}
+            >
+              <Copier
+                hasIcon={hasIcon}
+                address={{ type: "Address", value: address }}
+              />
+            </MenuItem>
+            <MenuItem
+              w="205px"
+              h="45px"
+              p="0"
+              pl="10px"
+              lineHeight="20px"
+              textTransform="none"
+              _hover={{ bg: "#000" }}
+            >
+              <Copier
+                hasIcon={hasIcon}
+                address={{ type: "Domain", value: domains }}
+              />
+            </MenuItem>
+          </MenuList>
+        </>
+      )}
+    </Menu>
   );
 }
 
