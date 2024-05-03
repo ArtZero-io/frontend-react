@@ -80,9 +80,9 @@ export const NUMBER_NFT_PER_PAGE = 12;
 // OTHERS
 export const NUMBER_PER_PAGE = 6;
 
-export const MAX_ITEM_STAKE = 5;
-export const MAX_ITEM_BULK_LISTING = 3;
-export const MAX_ITEM_BULK_TRANSFER = 20; // max 22
+export const MAX_ITEM_STAKE = 10; //11
+export const MAX_ITEM_BULK_LISTING = 5; // 7
+export const MAX_ITEM_BULK_TRANSFER = 10; // max 22
 export const MAX_ITEM_BULK_DELIST = 5; // max 9
 export const MAX_ITEM_BULK_REMOVE_BID = 3; // 12??
 
