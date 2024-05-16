@@ -83,7 +83,7 @@ export const NUMBER_PER_PAGE = 6;
 export const MAX_ITEM_STAKE = 10; //11
 export const MAX_ITEM_BULK_LISTING = 10; // 7
 export const MAX_ITEM_BULK_TRANSFER = 10; // max 22
-export const MAX_ITEM_BULK_DELIST = 5; // max 9
+export const MAX_ITEM_BULK_DELIST = 10; // max 9
 export const MAX_ITEM_BULK_REMOVE_BID = 3; // 12??
 
 export const MAX_BID_COUNT = 30;
