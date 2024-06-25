@@ -196,6 +196,7 @@ function WalletSelector({ display }) {
       mb={{ base: "20px", md: "auto" }}
       ml={{ base: "10px", md: "auto" }}
       flexDirection={{ md: "colum" }}
+      zIndex={2}
     >
       <Menu autoSelect={false} placement="bottom-end" offset={[0, 25]}>
         <MenuButton
