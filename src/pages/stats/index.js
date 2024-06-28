@@ -24,7 +24,7 @@ import RecentNftTradesTab from "./Tab/RecentNftTradesTab";
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 const INW_RATE = 120;
 const isAleph = process.env.REACT_APP_NETWORK === "alephzero";
-const VALIDATOR_SHARE_RATE = 1; // 0.5
+const VALIDATOR_SHARE_RATE = 0.5; // 0.5 || 1
 const PLATFORM_PROFIT_SHARE_RATE = 0.3;
 
 function StatsPage() {
