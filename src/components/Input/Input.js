@@ -49,3 +49,25 @@ export default function SimpleModeInput({
     </FormControl>
   );
 }
+
+export const SimpleInput = ({
+  label,
+  height,
+  width,
+  mx = "4px",
+  isRequired = false,
+  ...props
+}) => {
+  return (
+    <Input
+      _placeholder={{
+        fontSize: "md",
+      }}
+      ml={0}
+      pl={2}
+      bg="black"
+      autoComplete="off"
+      {...props}
+    />
+  );
+}
