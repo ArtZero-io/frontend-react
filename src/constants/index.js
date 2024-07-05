@@ -183,3 +183,5 @@ export const MESSAGE_SIGN = "Sign message to report";
 export const AZERO_DOMAINS_COLLECTION = "azeroDomains";
 export const ARTZERO_COLLECTION = "artzero";
 export const OTHER_COLLECTION = "other";
+
+export const NFT_PAGINATION_AMOUNT = 20;

@@ -359,7 +359,7 @@ function ProjectAdmin() {
                       </Text>
                     </Td>
                     <Td fontSize="16px">
-                      {collection.whiteList.map((item) => {
+                      {collection?.whiteList?.map((item) => {
                         return (
                           <Flex>
                             <Text mb="4px">

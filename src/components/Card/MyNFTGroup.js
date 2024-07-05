@@ -1,9 +1,11 @@
 import {
   Box,
+  Button,
   Flex,
   Grid,
   GridItem,
   Heading,
+  IconButton,
   Input,
   InputGroup,
   Slide,
@@ -52,6 +54,10 @@ import { isMobile } from "react-device-detect";
 import useBulkDelist from "../../hooks/useBulkDelist";
 import useBulkRemoveBids from "../../hooks/useBulkRemoveBids";
 import { formatNumDynamicDecimal } from "../../utils";
+import { getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import { NFT_PAGINATION_AMOUNT } from "../../constants";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { SimpleInput } from "../Input/Input";
 
 function MyNFTGroupCard({
   name,
@@ -72,7 +78,7 @@ function MyNFTGroupCard({
   const [selectedNFT, setSelectedNFT] = useState(null);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-
+  const [pageIndex, setPageIndex] = useState(1);
   const history = useHistory();
   const location = useLocation();
 
@@ -105,7 +111,17 @@ function MyNFTGroupCard({
   }
   // const { doBulkRemoveBids } = useBulkRemoveBids({ listNFTFormatted: listNFT });
   // const { actionType, tokenIDArray, ...restStatus } = useTxStatus();
-
+  const table = useReactTable({
+    data: listNFT,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+  useEffect(() => {
+    if (table) table.setPageSize(NFT_PAGINATION_AMOUNT);
+  }, [table]);
+  useEffect(() => {
+    setPageIndex(table.getState().pagination.pageIndex)
+  }, [table.getState().pagination.pageIndex])
   return (
     <Box my={10} position="relative">
       <ResponsivelySizedModal
@@ -207,12 +223,82 @@ function MyNFTGroupCard({
           <GridNftA
             {...rest}
             isStakingContractLocked={isStakingContractLocked}
-            listNFTFormatted={listNFT}
+            listNFTFormatted={table
+              .getRowModel()
+              .rows.map((row, idx) => row.original)}
             onClickHandler={onClickHandler}
             collectionName={name}
             nftContractAddress={nftContractAddress}
             filterSelected={filterSelected}
           />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "right",
+              px: "10px",
+            }}
+          >
+            <IconButton
+              aria-label="previousPage"
+              width={"40px"}
+              height={"40px"}
+              variant={"solid"}
+              bg={"#93F0F5"}
+              borderRadius={"42px"}
+              icon={
+                <ChevronLeftIcon
+                  size={"100px"}
+                  color={!table.getCanPreviousPage() ? "#FFF" : "#000"}
+                />
+              }
+              onClick={() => table.previousPage()}
+              isDisabled={!table.getCanPreviousPage()}
+            />
+            <IconButton
+              ml={"4px"}
+              aria-label="previousPage"
+              width={"40px"}
+              height={"40px"}
+              variant={"solid"}
+              bg={"#93F0F5"}
+              borderRadius={"42px"}
+              icon={
+                <ChevronRightIcon
+                  size={"100px"}
+                  color={!table.getCanNextPage() ? "#FFF" : "#000"}
+                />
+              }
+              onClick={() => table.nextPage()}
+              isDisabled={!table.getCanNextPage()}
+            />
+            <Box sx={{ width: "64px", ml: "8px" }}>
+              <SimpleInput
+                type="number"
+                value={pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  setPageIndex(page);
+                }}
+                isDisabled={table.getPageCount() <= 1}
+              />
+            </Box>{" "}
+            <Text sx={{ mr: "20px", ml: "8px" }}>
+              of {table.getPageCount()}
+            </Text>
+            <Button
+              isDisabled={pageIndex == table.getState().pagination.pageIndex}
+              onClick={() => {
+                table.setPageIndex(
+                  pageIndex >= 1 && pageIndex <= table.getPageCount()
+                    ? pageIndex
+                    : 0
+                );
+              }}
+            >
+              Go
+            </Button>
+          </Box>
         </Box>
       )}
     </Box>
@@ -847,7 +933,7 @@ function GridNftA({
           marginTop: "2.5rem",
           gridAutoFlow: "dense",
           justifyItems: "center",
-          marginBottom: "2.5rem",
+          // marginBottom: "1rem",
           // gridGap: "1.875rem",
           // borderBottom: "0.125rem",
           // gridAutoRows: "20.625rem",
