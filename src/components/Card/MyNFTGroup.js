@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -10,6 +11,7 @@ import {
   InputGroup,
   Slide,
   Square,
+  Switch,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -58,6 +60,7 @@ import { getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack
 import { NFT_PAGINATION_AMOUNT } from "../../constants";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { SimpleInput } from "../Input/Input";
+import { css } from "@emotion/react";
 
 function MyNFTGroupCard({
   name,
@@ -332,6 +335,8 @@ function GridNftA({
     action: null,
     list: [],
   });
+  const [isMultiTransfer, setIsMultiTransfer] = useState(false)
+  const [multipleTransferAddress, setMultipleTransferAddress] = useState({})
 
   const cardSize = useBreakpointValue([156, 224]);
 
@@ -531,6 +536,8 @@ function GridNftA({
     // handleInputChangeMultiTransfer,
     handleInputChangeReceiverAddress,
     handleCloseButtonForMultiTransfer,
+    addMultipleTransferAddress,
+    doBulkTransferMultiAddress
   } = useBulkTransfer({
     listNFTFormatted,
   });
@@ -826,31 +833,189 @@ function GridNftA({
             borderRadius="0"
             onClick={handleCloseButtonForMultiTransfer}
           />
-          <Grid
+          <Box w="100%" h="100%" display="flex">
+            <Box flex={1} display="flex" flexDirection="column">
+              <Box
+                display="flex"
+                justifyContent="start"
+                pb="8px"
+                alignItems="center"
+              >
+                <Switch
+                  value={isMultiTransfer}
+                  onChange={(event) => setIsMultiTransfer(!isMultiTransfer)}
+                  size="md"
+                />
+                <Text ml="8px">Multiple address transfer</Text>
+              </Box>
+              <Box
+                flex={1}
+                overflow="auto"
+                css={css`
+                  &::-webkit-scrollbar {
+                    width: 8px;
+                  }
+                  &::-webkit-scrollbar-track {
+                    background: transparent;
+                  }
+                  &::-webkit-scrollbar-thumb {
+                    background: #888;
+                    border-radius: 4px;
+                  }
+                  &::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                  }
+                `}
+              >
+                <GridItem colSpan={isMobile ? 5 : 9}>
+                  {isMultiTransfer ? (
+                    multiTransferData?.list?.map((item, idx) => {
+                      return (
+                        <Flex
+                          key={`${item}${idx}`}
+                          mb={idx < multiTransferData?.list?.length ? 2 : 0}
+                        >
+                          {formatSelectedNFT(
+                            collectionName,
+                            listNFTFormatted,
+                            item,
+                            multiTransferActionMode,
+                            multiTransferData?.infoList,
+                            idx,
+                            actionType
+                          )}
+                          {console.log(multiTransferData)}
+                          <Box w="50%" bg="#171717">
+                            <Input
+                              // h={["25px", "40px"]}
+                              bg="transparent"
+                              w="full"
+                              borderRadius={0}
+                              type="text"
+                              fontSize="14px"
+                              size="md"
+                              px="5px"
+                              value={multiTransferData?.listTransferAddress?.[item]}
+                              isDisabled={actionType}
+                              placeholder="5ABCD ..."
+                              _placeholder={{ fontSize: "14px" }}
+                              onChange={({ target }) => {
+                                addMultipleTransferAddress(item, target.value)
+                                // setMultipleTransferAddress({
+                                //   ...multipleTransferAddress,
+                                //   [item]: target.value,
+                                // });
+                                // console.log(multipleTransferAddress);
+                              }}
+                            />
+                          </Box>
+                        </Flex>
+                      );
+                    })
+                  ) : (
+                    <Grid
+                      templateColumns={
+                        isMultiTransfer ? "repeat(1, 1fr)" : "repeat(3, 1fr)"
+                      }
+                      gap={2}
+                    >
+                      {multiTransferData?.list?.map((item, idx) => {
+                        return (
+                          <Flex key={`${item}${idx}`}>
+                            {formatSelectedNFT(
+                              collectionName,
+                              listNFTFormatted,
+                              item,
+                              multiTransferActionMode,
+                              multiTransferData?.infoList,
+                              idx,
+                              actionType
+                            )}
+                          </Flex>
+                        );
+                      })}
+                    </Grid>
+                  )}
+                </GridItem>
+              </Box>
+            </Box>
+            <GridItem colSpan={isMobile ? 5 : 3}>
+              <Box
+                fontSize={["14px", "16px"]}
+                height="100%"
+                p={isMobile ? "10px" : "20px"}
+                px="10px"
+                color="white"
+                bg="teal.900"
+                rounded="none"
+                shadow="md"
+              >
+                <Heading size="h6" fontSize="14px">
+                  {multiTransferData?.listInfo?.length === 1
+                    ? "Transfer"
+                    : "Bulk Transfer"}
+                </Heading>
+
+                <Flex textAlign="left" my={isMobile ? "10px" : "20px"}>
+                  {`Your are transfer ${
+                    multiTransferData?.listInfo?.length
+                  } NFT${
+                    multiTransferData?.listInfo?.length > 1 ? "s" : ""
+                  } ${collectionName}`}{" "}
+                  to address:
+                </Flex>
+
+                <Flex alignItems="center">
+                  {isMultiTransfer || (
+                    <Input
+                      h={["25px", "40px"]}
+                      w="full"
+                      borderRadius={0}
+                      type="text"
+                      fontSize="14px"
+                      size="md"
+                      px="5px"
+                      value={multiTransferData?.receiverAddress}
+                      isDisabled={actionType}
+                      placeholder="5ABCD ..."
+                      _placeholder={{ fontSize: "14px" }}
+                      onChange={({ target }) => {
+                        handleInputChangeReceiverAddress(target.value);
+                      }}
+                    />
+                  )}
+
+                  {isMobile && (
+                    <CommonButton
+                      h={["25px"]}
+                      {...rest}
+                      size="sm"
+                      text="Transfer now"
+                      onClick={doBulkTransfer}
+                    />
+                  )}
+                </Flex>
+
+                {!isMobile && (
+                  <Flex pt="10px" w="full" justifyContent="center">
+                    <CommonButton
+                      {...rest}
+                      size="sm"
+                      text="Transfer now"
+                      onClick={isMultiTransfer ? doBulkTransferMultiAddress : doBulkTransfer}
+                    />
+                  </Flex>
+                )}
+              </Box>
+            </GridItem>
+          </Box>
+          {/* <Grid
             h="200px"
             templateColumns={templateColumnsListing}
             templateRows={templateRowsListing}
             gap={2}
           >
-            <GridItem colSpan={isMobile ? 5 : 9}>
-              <Grid templateColumns="repeat(3, 1fr)" gap={2}>
-                {multiTransferData?.list?.map((item, idx) => {
-                  return (
-                    <Flex key={`${item}${idx}`}>
-                      {formatSelectedNFT(
-                        collectionName,
-                        listNFTFormatted,
-                        item,
-                        multiTransferActionMode,
-                        multiTransferData?.infoList,
-                        idx,
-                        actionType
-                      )}
-                    </Flex>
-                  );
-                })}
-              </Grid>
-            </GridItem>
+            
 
             <GridItem colSpan={isMobile ? 5 : 3}>
               <Box
@@ -918,7 +1083,7 @@ function GridNftA({
                 )}
               </Box>
             </GridItem>
-          </Grid>
+          </Grid> */}
         </Box>
       </Slide>
       {/*END MULTI TRANSFER */}

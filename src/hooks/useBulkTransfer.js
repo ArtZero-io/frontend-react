@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ContractPromise } from "@polkadot/api-contract";
 
 import { getEstimatedGasBatchTx, getDomainToAddress } from "@utils";
@@ -25,6 +26,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
   const [multiTransferData, setMultiTransferData] = useState({
     action: null,
     list: [],
+    listTransferAddress: {},
     listInfo: [],
     selectedCollectionAddress: "",
     receiverAddress: "",
@@ -159,6 +161,129 @@ export default function useBulkTransfer({ listNFTFormatted }) {
 
     return unsubscribe;
   };
+  const doBulkTransferMultiAddress = async () => {
+    console.log("Transfering")
+    return
+    // if (!receiverAddress) {
+    //   toast.error("Receiver address can not be empty!");
+    //   return;
+    // }
+    // let receiver = receiverAddress;
+    // if (!isValidAddress(receiverAddress)) {
+    //   const address = await getDomainToAddress(receiverAddress, api);
+    //   console.log('address', address);
+    //   if (address && isValidAddress(address)) {
+    //     receiver = address;
+    //   } else {
+    //     toast.error("Receiver address is not valid!");
+    //     return;
+    //   }
+      
+    // }
+
+    // toast(`Bulk transfer...`);
+
+    // let unsubscribe;
+    // let transferTxALL;
+
+    // const address = currentAccount?.address;
+
+    // toast("Estimated transaction fee...");
+
+    // // Change to get gasEst for every single tx to 1 for all
+    // const value = 0;
+    // let gasLimit;
+
+    // const nftPsp34Contract = new ContractPromise(
+    //   api,
+    //   nft721_psp34_standard.CONTRACT_ABI,
+    //   listInfo[0].info?.nftContractAddress
+    // );
+
+    // gasLimit = await getEstimatedGasBatchTx(
+    //   address,
+    //   nftPsp34Contract,
+    //   value,
+    //   "psp34::transfer",
+    //   receiver,
+    //   { u64: listInfo[0].info?.tokenID },
+    //   stringToU8a("")
+    // );
+
+    // await Promise.all(
+    //   listInfo.map(async ({ info }) => {
+    //     const ret = nftPsp34Contract.tx["psp34::transfer"](
+    //       { gasLimit, value },
+    //       receiver,
+    //       { u64: info?.tokenID },
+    //       stringToU8a("")
+    //     );
+
+    //     return ret;
+    //   })
+    // ).then((res) => (transferTxALL = res));
+    // console.log('receiver',receiver);
+    // dispatch(
+    //   setTxStatus({
+    //     type: "MULTI_TRANSFER",
+    //     step: START,
+    //     tokenIDArray: list,
+    //   })
+    // );
+
+    // api.tx.utility
+    //   .batch(transferTxALL)
+    //   .signAndSend(
+    //     address,
+    //     { signer: adapter.signer },
+    //     async ({ events, status, dispatchError }) => {
+    //       if (status?.isFinalized) {
+    //         let totalSuccessTxCount = null;
+
+    //         events.forEach(
+    //           async ({ event, event: { data, method, section, ...rest } }) => {
+    //             if (api.events.utility?.BatchInterrupted.is(event)) {
+    //               totalSuccessTxCount = data[0]?.toString();
+    //             }
+
+    //             if (api.events.utility?.BatchCompleted.is(event)) {
+    //               toast.success("All NFTs have been transferred successfully");
+    //             }
+    //           }
+    //         );
+
+    //         await listInfo.map(
+    //           async ({ info }) =>
+    //             await APICall.askBeUpdateNftData({
+    //               collection_address: info?.nftContractAddress,
+    //               token_id: info?.tokenID,
+    //             })
+    //         );
+    //         // eslint-disable-next-line no-extra-boolean-cast
+    //         if (!!totalSuccessTxCount) {
+    //           toast.error(
+    //             `Bulk transfer are not fully successful! ${totalSuccessTxCount} transfers completed successfully.`
+    //           );
+
+    //           dispatch(clearTxStatus());
+    //         }
+    //       }
+
+    //       batchTxResponseErrorHandler({
+    //         status,
+    //         dispatchError,
+    //         dispatch,
+    //         txType: "MULTI_TRANSFER",
+    //         api,
+    //         currentAccount,
+    //       });
+    //     }
+    //   )
+    //   .then((unsub) => (unsubscribe = unsub))
+    //   .catch((error) => txErrorHandler({ error, dispatch }));
+
+    // return unsubscribe;
+  };
 
   const [showSlideMultiTransfer, setShowSlideMultiTransfer] = useState(false);
 
@@ -187,7 +312,12 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     multiTransferData?.action,
     selectedCollectionAddress,
   ]);
-
+  function addMultipleTransferAddress(tokenID, value) {
+    setMultiTransferData({
+      ...multiTransferData,
+      listTransferAddress: {...multiTransferData?.listTransferAddress, [tokenID]: value},
+    });
+  }
   function handleSelectMultiTransfer(tokenID, action, isChecked) {
     let newData = { ...multiTransferData };
 
@@ -334,9 +464,11 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     showSlideMultiTransfer,
     multiTransferActionMode,
     doBulkTransfer,
+    doBulkTransferMultiAddress,
     handleSelectMultiTransfer,
     handleInputChangeReceiverAddress,
     handleCloseButtonForMultiTransfer,
     handleSelectAzeroDomainsMultiTransfer,
+    addMultipleTransferAddress
   };
 }
