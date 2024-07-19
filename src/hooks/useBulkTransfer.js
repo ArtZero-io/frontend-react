@@ -162,8 +162,7 @@ export default function useBulkTransfer({ listNFTFormatted }) {
     return unsubscribe;
   };
   const doBulkTransferMultiAddress = async () => {
-    console.log("Transfering")
-    return
+
     // if (!receiverAddress) {
     //   toast.error("Receiver address can not be empty!");
     //   return;
@@ -181,108 +180,109 @@ export default function useBulkTransfer({ listNFTFormatted }) {
       
     // }
 
-    // toast(`Bulk transfer...`);
+    toast(`Bulk transfer...`);
 
-    // let unsubscribe;
-    // let transferTxALL;
+    let unsubscribe;
+    let transferTxALL;
 
-    // const address = currentAccount?.address;
+    const address = currentAccount?.address;
 
-    // toast("Estimated transaction fee...");
+    toast("Estimated transaction fee...");
 
-    // // Change to get gasEst for every single tx to 1 for all
-    // const value = 0;
-    // let gasLimit;
+    // Change to get gasEst for every single tx to 1 for all
+    const value = 0;
+    let gasLimit;
 
-    // const nftPsp34Contract = new ContractPromise(
-    //   api,
-    //   nft721_psp34_standard.CONTRACT_ABI,
-    //   listInfo[0].info?.nftContractAddress
-    // );
+    const nftPsp34Contract = new ContractPromise(
+      api,
+      nft721_psp34_standard.CONTRACT_ABI,
+      listInfo[0].info?.nftContractAddress
+    );
+    const addressList = Object.values(multiTransferData?.listTransferAddress)
 
-    // gasLimit = await getEstimatedGasBatchTx(
-    //   address,
-    //   nftPsp34Contract,
-    //   value,
-    //   "psp34::transfer",
-    //   receiver,
-    //   { u64: listInfo[0].info?.tokenID },
-    //   stringToU8a("")
-    // );
+    gasLimit = await getEstimatedGasBatchTx(
+      address,
+      nftPsp34Contract,
+      value,
+      "psp34::transfer",
+      addressList[0],
+      { u64: listInfo[0].info?.tokenID },
+      stringToU8a("")
+    );
 
-    // await Promise.all(
-    //   listInfo.map(async ({ info }) => {
-    //     const ret = nftPsp34Contract.tx["psp34::transfer"](
-    //       { gasLimit, value },
-    //       receiver,
-    //       { u64: info?.tokenID },
-    //       stringToU8a("")
-    //     );
+    await Promise.all(
+      listInfo.map(async ({ info }) => {
+        const ret = nftPsp34Contract.tx["psp34::transfer"](
+          { gasLimit, value },
+          multiTransferData?.listTransferAddress[info?.tokenID],
+          { u64: info?.tokenID },
+          stringToU8a("")
+        );
 
-    //     return ret;
-    //   })
-    // ).then((res) => (transferTxALL = res));
+        return ret;
+      })
+    ).then((res) => (transferTxALL = res));
     // console.log('receiver',receiver);
-    // dispatch(
-    //   setTxStatus({
-    //     type: "MULTI_TRANSFER",
-    //     step: START,
-    //     tokenIDArray: list,
-    //   })
-    // );
+    dispatch(
+      setTxStatus({
+        type: "MULTI_TRANSFER",
+        step: START,
+        tokenIDArray: list,
+      })
+    );
 
-    // api.tx.utility
-    //   .batch(transferTxALL)
-    //   .signAndSend(
-    //     address,
-    //     { signer: adapter.signer },
-    //     async ({ events, status, dispatchError }) => {
-    //       if (status?.isFinalized) {
-    //         let totalSuccessTxCount = null;
+    api.tx.utility
+      .batch(transferTxALL)
+      .signAndSend(
+        address,
+        { signer: adapter.signer },
+        async ({ events, status, dispatchError }) => {
+          if (status?.isFinalized) {
+            let totalSuccessTxCount = null;
 
-    //         events.forEach(
-    //           async ({ event, event: { data, method, section, ...rest } }) => {
-    //             if (api.events.utility?.BatchInterrupted.is(event)) {
-    //               totalSuccessTxCount = data[0]?.toString();
-    //             }
+            events.forEach(
+              async ({ event, event: { data, method, section, ...rest } }) => {
+                if (api.events.utility?.BatchInterrupted.is(event)) {
+                  totalSuccessTxCount = data[0]?.toString();
+                }
 
-    //             if (api.events.utility?.BatchCompleted.is(event)) {
-    //               toast.success("All NFTs have been transferred successfully");
-    //             }
-    //           }
-    //         );
+                if (api.events.utility?.BatchCompleted.is(event)) {
+                  toast.success("All NFTs have been transferred successfully");
+                }
+              }
+            );
 
-    //         await listInfo.map(
-    //           async ({ info }) =>
-    //             await APICall.askBeUpdateNftData({
-    //               collection_address: info?.nftContractAddress,
-    //               token_id: info?.tokenID,
-    //             })
-    //         );
-    //         // eslint-disable-next-line no-extra-boolean-cast
-    //         if (!!totalSuccessTxCount) {
-    //           toast.error(
-    //             `Bulk transfer are not fully successful! ${totalSuccessTxCount} transfers completed successfully.`
-    //           );
+            await listInfo.map(
+              async ({ info }) =>
+                await APICall.askBeUpdateNftData({
+                  collection_address: info?.nftContractAddress,
+                  token_id: info?.tokenID,
+                })
+            );
+            // eslint-disable-next-line no-extra-boolean-cast
+            if (!!totalSuccessTxCount) {
+              toast.error(
+                `Bulk transfer are not fully successful! ${totalSuccessTxCount} transfers completed successfully.`
+              );
 
-    //           dispatch(clearTxStatus());
-    //         }
-    //       }
+              dispatch(clearTxStatus());
+            }
+          }
 
-    //       batchTxResponseErrorHandler({
-    //         status,
-    //         dispatchError,
-    //         dispatch,
-    //         txType: "MULTI_TRANSFER",
-    //         api,
-    //         currentAccount,
-    //       });
-    //     }
-    //   )
-    //   .then((unsub) => (unsubscribe = unsub))
-    //   .catch((error) => txErrorHandler({ error, dispatch }));
+          batchTxResponseErrorHandler({
+            status,
+            dispatchError,
+            dispatch,
+            txType: "MULTI_TRANSFER",
+            api,
+            currentAccount,
+          });
+        }
+      )
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((error) => txErrorHandler({ error, dispatch }));
 
-    // return unsubscribe;
+    return unsubscribe;
   };
 
   const [showSlideMultiTransfer, setShowSlideMultiTransfer] = useState(false);
