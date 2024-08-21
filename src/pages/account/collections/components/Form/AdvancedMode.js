@@ -284,7 +284,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             collectionName: Yup.string()
               .trim()
               .min(3, "Must be at least 3 characters")
-              .max(30, "Must be at most 30 characters")
+              .max(50, "Must be at most 50 characters")
               .required("This field is required"),
             collectionDescription: Yup.string()
               .trim()

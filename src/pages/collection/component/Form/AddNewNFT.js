@@ -114,7 +114,7 @@ const AddNewNFTForm = ({
             NFTName: Yup.string()
               .trim()
               .min(3, "Must be at least 3 characters")
-              .max(30, "Must be at most 30 characters")
+              .max(50, "Must be at most 50 characters")
               .required("This field is required"),
             description: Yup.string()
               .trim()
@@ -156,7 +156,7 @@ const AddNewNFTForm = ({
                           )
                           .required("Must have type value.")
                           .min(3, "Must be at least 3 characters")
-                          .max(30, "Must be at most 30 characters"),
+                          .max(50, "Must be at most 50 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                     name: Yup.string()
@@ -166,7 +166,7 @@ const AddNewNFTForm = ({
                         then: Yup.string()
                           .required("Must have name value.")
                           .min(3, "Must be at least 3 characters")
-                          .max(30, "Must be at most 30 characters"),
+                          .max(50, "Must be at most 50 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                   },
@@ -208,7 +208,7 @@ const AddNewNFTForm = ({
                         )
                         .required("Must have level name.")
                         .min(3, "Must be at least 3 characters")
-                        .max(30, "Must be at most 30 characters"),
+                        .max(30, "Must be at most 50 characters"),
                       otherwise: Yup.string().notRequired(),
                     }),
                   level: Yup.number().when("name", {
