@@ -46,7 +46,7 @@ const ProfileForm = ({ profile }) => {
           username: Yup.string()
             .trim()
             .min(3, "Must be at least 3 characters")
-            .max(30, "Must be at most 30 characters")
+            .max(50, "Must be at most 50 characters")
             .required("This field is required"),
 
           bio: Yup.string()
