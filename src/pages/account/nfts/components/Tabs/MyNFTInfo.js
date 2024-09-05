@@ -79,6 +79,7 @@ import { fetchUserBalance } from "@utils";
 
 function MyNFTTabInfo(props) {
   const {
+    expiration_timestamp,
     avatar,
     nftName,
     description,
@@ -518,6 +519,11 @@ function MyNFTTabInfo(props) {
     doUpdateBidPrice();
   };
 
+  //****doimain is about to expire ******/
+  const timeDifference = Math.abs(expiration_timestamp - Date.now());
+  const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
+  const twoMonthsInMilliseconds = 2 * 30 * 24 * 60 * 60 * 1000;
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
   return (
     <>
       <HStack alignItems="stretch" spacing={{ base: "20px", xl: "45px" }}>
@@ -677,6 +683,9 @@ function MyNFTTabInfo(props) {
                 {ownerName ?? truncateStr(ownerAddress)}
               </Link>
             </Text>
+            {timeDifference < threeMonthsInMilliseconds && (
+              <Text color={"red"}>This domain will expire in {days} days.</Text>
+            )}
           </Stack>
 
           <Stack w="full" flexGrow="1">
@@ -746,6 +755,9 @@ function MyNFTTabInfo(props) {
                 pt={2}
                 alignItems="center"
                 justifyContent="space-between"
+                display={
+                  timeDifference < twoMonthsInMilliseconds ? "none" : "flex"
+                }
               >
                 <Spacer />
 

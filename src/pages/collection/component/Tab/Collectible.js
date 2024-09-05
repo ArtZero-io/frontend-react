@@ -86,6 +86,7 @@ import { resolveDomain, truncateStr } from "@utils";
 
 const NFTTabCollectible = (props) => {
   const {
+    expiration_timestamp,
     nftContractAddress,
     description,
     nftName,
@@ -359,6 +360,10 @@ const NFTTabCollectible = (props) => {
     setFeeCalculated(info);
   }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
 
+  //****doimain is about to expire ******/
+  const timeDifference = Math.abs(expiration_timestamp - Date.now());
+  const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
   return (
     <>
       <Stack
@@ -517,7 +522,6 @@ const NFTTabCollectible = (props) => {
               </Tooltip>
             </HStack>
           </HStack>
-
           <Stack>
             <Tooltip
               cursor="pointer"
@@ -538,7 +542,6 @@ const NFTTabCollectible = (props) => {
               </Text>
             </Tooltip>
           </Stack>
-
           <Stack w="full">
             <Skeleton isLoaded={!loading}>
               <Text color="#fff" maxW="max-content">
@@ -555,6 +558,9 @@ const NFTTabCollectible = (props) => {
               </Text>
             </Skeleton>
           </Stack>
+          {timeDifference < threeMonthsInMilliseconds && (
+            <Text color={"red"}>This domain will expire in {days} days.</Text>
+          )}
 
           <Skeleton h="full" w="full" isLoaded={!loading}>
             <Stack

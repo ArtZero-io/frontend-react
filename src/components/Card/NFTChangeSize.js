@@ -16,9 +16,11 @@ import { getCloudFlareImage } from "@utils/index";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
 import { useEffect, useState, useMemo } from "react";
-
+import azero_domains_nft from "../../utils/blockchain_mainnet/azero-domains-nft";
 export const CommonCard = (props) => {
   const {
+    expiration_timestamp,
+    nftContractAddress,
     is_for_sale,
     price,
     avatar,
@@ -60,6 +62,10 @@ export const CommonCard = (props) => {
     base: cardWidth - 18,
     md: cardWidth - 4,
   });
+  //****doimain is about to expire ******/
+  const timeDifference = Math.abs(expiration_timestamp - Date.now());
+  const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
   return (
     <motion.div
@@ -161,6 +167,12 @@ export const CommonCard = (props) => {
                   </Text>
                 )}
               </Flex>
+              {nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS &&
+                timeDifference - threeMonthsInMilliseconds && (
+                  <Text textAlign={"center"} color={"red"}>
+                    Expire in {days} days
+                  </Text>
+                )}
             </>
           ) : (
             <Tag minH={["30px", "40px"]}>

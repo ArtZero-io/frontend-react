@@ -50,6 +50,7 @@ import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 // 2 staked ,  3 pending unstake
 
 function MyNFTCard({
+  expiration_timestamp,
   nftContractAddress,
   is_for_sale,
   is_locked,
@@ -304,6 +305,11 @@ function MyNFTCard({
     (s) => s?.account?.bulkTxStatus
   );
 
+  //****doimain is about to expire ******/
+  const timeDifference = Math.abs(expiration_timestamp - Date.now());
+  const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
+
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
   return (
     <Flex className="my-nft-card-wrapper">
       <motion.div
@@ -550,7 +556,9 @@ function MyNFTCard({
             <Heading mb={3} fontSize={["xs", "md"]} textAlign="left">
               {nftName}
             </Heading>
-
+            {timeDifference < threeMonthsInMilliseconds && (
+              <Text color={"red"}>Expire in {days} days</Text>
+            )}
             {stakeStatus === 3 ? (
               <Flex align="center" justify="start" w="full" mb={3}>
                 <Text
