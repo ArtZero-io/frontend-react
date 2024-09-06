@@ -558,10 +558,11 @@ const NFTTabCollectible = (props) => {
               </Text>
             </Skeleton>
           </Stack>
+          {console.log("Before This domain will expire in")}
           {timeDifference < threeMonthsInMilliseconds && (
             <Text color={"red"}>This domain will expire in {days} days.</Text>
           )}
-
+          {console.log("After This domain will expire in")}
           <Skeleton h="full" w="full" isLoaded={!loading}>
             <Stack
               mt={isOwner ? "4px" : "20px"}
