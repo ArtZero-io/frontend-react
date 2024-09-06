@@ -10,7 +10,6 @@ import {
   Stack,
   useBreakpointValue,
   Skeleton,
-  Box,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { getCloudFlareImage } from "@utils/index";
@@ -66,137 +65,138 @@ export const CommonCard = (props) => {
   //****doimain is about to expire ******/
   const timeDifference = Math.abs(expiration_timestamp - Date.now());
   const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  // const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
   return (
-    <Flex alignItems={"stretch"} height={"100%"}>
-      <motion.div
-        h={"100%"}
-        whileHover={{
-          borderColor: "#7ae7ff",
-        }}
-        style={{
-          border: "solid 2px #7ae7ff00",
-          transition: "all 0.15s cubic-bezier(.17,.67,.83,.67)",
-        }}
-      >
+    <motion.div
+      whileHover={{
+        borderColor: "#7ae7ff",
+      }}
+      style={{
+        border: "solid 2px #7ae7ff00",
+        transition: "all 0.15s cubic-bezier(.17,.67,.83,.67)",
+      }}
+    >
+      <Stack borderColor="#fff0" bg="#222" spacing={stackSpacing}>
+        <Flex direction="column" align="center" textAlign="left">
+          {isMp4 ? (
+            <Flex minH={cardWidthRes}>
+              <video
+                loop
+                autoPlay
+                controls={false}
+                playsInline={true}
+                width="100%"
+                height="100%"
+                style={{
+                  objectFit: "contain",
+                  borderRadius: "initial",
+                }}
+              >
+                <source src={projImage} type="video/mp4" />
+              </video>
+            </Flex>
+          ) : (
+            <Image
+              alt={nftName}
+              objectFit="contain"
+              objectPosition="center"
+              width={cardWidth}
+              height={cardWidth}
+              fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
+              src={projImage}
+            />
+          )}
+        </Flex>
+
         <Stack
-          borderColor="#fff0"
-          bg="#222"
-          spacing={stackSpacing}
-          height="100%"
+          textAlign="left"
+          p={{
+            base: "10px",
+            md: !bigCardNew ? "12px" : "20px",
+            "2xl": "20px",
+          }}
+          pt={["2px", "12px"]}
+          spacing={["5px", "10px"]}
         >
-          <Flex direction="column" align="center" textAlign="left">
-            {isMp4 ? (
-              <Flex minH={cardWidthRes}>
-                <video
-                  loop
-                  autoPlay
-                  controls={false}
-                  playsInline={true}
-                  width="100%"
-                  height="100%"
-                  style={{
-                    objectFit: "contain",
-                    borderRadius: "initial",
-                  }}
-                >
-                  <source src={projImage} type="video/mp4" />
-                </video>
-              </Flex>
-            ) : (
-              <Image
-                alt={nftName}
-                objectFit="contain"
-                objectPosition="center"
-                width={cardWidth}
-                height={cardWidth}
-                fallback={
-                  <Skeleton width={cardWidthRes} height={cardWidthRes} />
-                }
-                src={projImage}
-              />
-            )}
-          </Flex>
-
-          <Stack
-            h={"100%"}
-            textAlign="left"
-            p={{
-              base: "10px",
-              md: !bigCardNew ? "12px" : "20px",
-              "2xl": "20px",
-            }}
-            pt={["2px", "12px"]}
-            spacing={["5px", "10px"]}
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Heading fontSize={fontSizeHeading}>{nftName}</Heading>
-              {is_for_sale ? (
-                <>
-                  <Flex w="full">
-                    <Tag minH={["30px", "40px"]}>
-                      <TagLabel fontSize={["14px", "16px", "16px"]}>
-                        {formatNumDynamicDecimal(price / 10 ** 12)}
-                      </TagLabel>
-                      <TagRightIcon
-                        h={["12px", "16px", "16px"]}
-                        w={["12px", "16px", "16px"]}
-                        as={AzeroIcon}
-                      />
-                    </Tag>
-
-                    <Spacer />
-                  </Flex>
-                  <Flex
-                    w="full"
-                    align="center"
-                    textAlign="right"
-                    color="brand.grayLight"
-                    m="0"
-                    py="0"
-                  >
-                    <Spacer />
-                    {highest_bid ? (
-                      <>
-                        <Text
-                          fontSize={["14px", "16px"]}
-                          bg="transparent"
-                          color="#fff"
-                        >
-                          Best Offer{" "}
-                          {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
-                        </Text>
-                        <TagRightIcon
-                          h={["12px", "16px", "16px"]}
-                          w={["12px", "16px", "16px"]}
-                          as={AzeroIcon}
-                        />
-                      </>
-                    ) : (
-                      <Text fontSize={["14px", "16px"]} bg="transparent">
-                        No offer yet
-                      </Text>
-                    )}
-                  </Flex>
-                </>
-              ) : (
+          <Heading fontSize={fontSizeHeading}>{nftName}</Heading>
+          {is_for_sale ? (
+            <>
+              <Flex
+                w="full"
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                gap={"3px"}
+              >
                 <Tag minH={["30px", "40px"]}>
-                  <TagLabel fontSize={["14px", "16px"]}>Not for sale</TagLabel>
+                  <TagLabel fontSize={["14px", "16px", "16px"]}>
+                    {formatNumDynamicDecimal(price / 10 ** 12)}
+                  </TagLabel>
+                  <TagRightIcon
+                    h={["12px", "16px", "16px"]}
+                    w={["12px", "16px", "16px"]}
+                    as={AzeroIcon}
+                  />
                 </Tag>
-              )}
-            </Box>
-            {nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS &&
-              timeDifference < threeMonthsInMilliseconds && (
-                <Text textAlign={"center"} color={"red"}>
-                  Expire in {days} days
-                </Text>
-              )}
-          </Stack>
+                <Spacer />
+              </Flex>
+              <Flex
+                w="full"
+                align="center"
+                textAlign="right"
+                color="brand.grayLight"
+                m="0"
+                py="0"
+              >
+                <Spacer />
+                {highest_bid ? (
+                  <>
+                    <Text
+                      fontSize={["14px", "16px"]}
+                      bg="transparent"
+                      color="#fff"
+                    >
+                      Best Offer{" "}
+                      {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
+                    </Text>
+                    <TagRightIcon
+                      h={["12px", "16px", "16px"]}
+                      w={["12px", "16px", "16px"]}
+                      as={AzeroIcon}
+                    />
+                  </>
+                ) : (
+                  <Text fontSize={["14px", "16px"]} bg="transparent">
+                    No offer yet
+                  </Text>
+                )}
+              </Flex>
+            </>
+          ) : (
+            <Flex
+              gap={"5px"}
+              alignItems={{ "2xl": "center" }}
+              flexDirection={{ base: "column", "2xl": "row" }}
+            >
+              <Tag minH={["30px", "40px"]}>
+                <TagLabel fontSize={["14px", "16px"]}>Not for sale</TagLabel>
+              </Tag>
+              {nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS &&
+                timeDifference < threeMonthsInMilliseconds && (
+                  <Tag minH={["30px", "40px"]}>
+                    <TagLabel
+                      textAlign={"center"}
+                      color={"red"}
+                      fontSize={["14px", "16px"]}
+                    >
+                      Expire
+                    </TagLabel>
+                  </Tag>
+                )}
+            </Flex>
+          )}
         </Stack>
-      </motion.div>
-    </Flex>
+      </Stack>
+    </motion.div>
   );
 };
