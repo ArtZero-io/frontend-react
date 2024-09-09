@@ -16,7 +16,7 @@ import { getCloudFlareImage } from "@utils/index";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
 import { useEffect, useState, useMemo } from "react";
-import azero_domains_nft from "../../utils/blockchain_mainnet/azero-domains-nft";
+import azero_domains_nft from "../../utils/blockchain/azero-domains-nft";
 export const CommonCard = (props) => {
   const {
     expiration_timestamp,
