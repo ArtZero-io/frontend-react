@@ -73,7 +73,7 @@ import SocialShare from "@components/SocialShare/SocialShare";
 import { MAX_BID_COUNT } from "@constants";
 import NFTReportModal from "../Modal/NFTReport";
 import marketplace from "@utils/blockchain/marketplace";
-
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
@@ -558,11 +558,9 @@ const NFTTabCollectible = (props) => {
               </Text>
             </Skeleton>
           </Stack>
-          {console.log("Before This domain will expire in")}
-          {timeDifference < threeMonthsInMilliseconds && (
+          {nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS && timeDifference < threeMonthsInMilliseconds && (
             <Text color={"red"}>This domain will expire in {days} days.</Text>
           )}
-          {console.log("After This domain will expire in")}
           <Skeleton h="full" w="full" isLoaded={!loading}>
             <Stack
               mt={isOwner ? "4px" : "20px"}

@@ -32,7 +32,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { BsFlag } from "react-icons/bs";
-
+import azero_domains_nft from "@utils/blockchain/azero-domains-nft";
 import {
   convertStringToPrice,
   getPublicCurrentAccount,
@@ -84,6 +84,7 @@ import { truncateStr } from "../../../../../utils";
 const AzeroDomainsNFTTabCollectible = (props) => {
   const {
     nftContractAddress,
+    expiration_timestamp,
     description,
     nftName,
     owner,
@@ -101,6 +102,7 @@ const AzeroDomainsNFTTabCollectible = (props) => {
     royaltyFee,
     azDomainName,
   } = props;
+  console.log('props----', props)
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -109,7 +111,6 @@ const AzeroDomainsNFTTabCollectible = (props) => {
     xl: `10rem`,
     "2xl": `11rem`,
   });
-
   const [doOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(1);
 
@@ -360,6 +361,10 @@ const AzeroDomainsNFTTabCollectible = (props) => {
     setFeeCalculated(info);
   }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
 
+  const timeDifference = Math.abs(expiration_timestamp - Date.now());
+  const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  console.log(timeDifference, threeMonthsInMilliseconds)
   return (
     <>
       <Stack
@@ -546,7 +551,9 @@ const AzeroDomainsNFTTabCollectible = (props) => {
               </Text>
             </Skeleton>
           </Stack>
-
+          {nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS && timeDifference < threeMonthsInMilliseconds && (
+            <Text color={"red"}>This domain will expire in {days} days.</Text>
+          )}
           <Skeleton h="full" w="full" isLoaded={!loading}>
             <Stack
               mt={isOwner ? "4px" : "20px"}
