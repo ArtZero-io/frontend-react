@@ -309,7 +309,7 @@ function MyNFTCard({
   const timeDifference = Math.abs(expiration_timestamp - Date.now());
   const threeMonthsInMilliseconds = 3 * 30 * 24 * 60 * 60 * 1000;
 
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  // const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
   return (
     <Flex className="my-nft-card-wrapper">
       <motion.div
@@ -557,7 +557,15 @@ function MyNFTCard({
               {nftName}
             </Heading>
             {timeDifference < threeMonthsInMilliseconds && (
-              <Text color={"red"}>Expire in {days} days</Text>
+              <Tag minH={["30px", "40px"]}>
+                <TagLabel
+                  textAlign={"center"}
+                  color={"red"}
+                  fontSize={["14px", "16px"]}
+                >
+                  Expired for sale
+                </TagLabel>
+              </Tag>
             )}
             {stakeStatus === 3 ? (
               <Flex align="center" justify="start" w="full" mb={3}>

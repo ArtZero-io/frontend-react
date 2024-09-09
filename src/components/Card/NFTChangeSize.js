@@ -178,11 +178,8 @@ export const CommonCard = (props) => {
               alignItems={{ "2xl": "center" }}
               flexDirection={{ base: "column", "2xl": "row" }}
             >
-              {/* <Tag minH={["30px", "40px"]}>
-                <TagLabel fontSize={["14px", "16px"]}>Not for sale</TagLabel>
-              </Tag> */}
-              {nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS &&
-                timeDifference < threeMonthsInMilliseconds && (
+              {nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS ? (
+                timeDifference < threeMonthsInMilliseconds ? (
                   <Tag minH={["30px", "40px"]}>
                     <TagLabel
                       textAlign={"center"}
@@ -192,7 +189,18 @@ export const CommonCard = (props) => {
                       Expired for sale
                     </TagLabel>
                   </Tag>
-                )}
+                ) : (
+                  <Tag minH={["30px", "40px"]}>
+                    <TagLabel fontSize={["14px", "16px"]}>
+                      Not for sale
+                    </TagLabel>
+                  </Tag>
+                )
+              ) : (
+                <Tag minH={["30px", "40px"]}>
+                  <TagLabel fontSize={["14px", "16px"]}>Not for sale</TagLabel>
+                </Tag>
+              )}
             </Flex>
           )}
         </Stack>
