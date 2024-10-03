@@ -328,8 +328,15 @@ export default function SortTableWrapper({ collection_address, type }) {
             }
 
             if (status === "OK") {
-              eventFormatted.nftName = ret[0]?.nftName;
-              eventFormatted.avatar = ret[0]?.avatar;
+              if (nftContractAddress === azero_domains_nft.CONTRACT_ADDRESS) {
+                eventFormatted.nftName = (ret[0]?.nftName) ? ret[0]?.nftName : rest?.azDomainName + process.env.REACT_APP_AZERO_DOMAIN_SUFFIX;
+                eventFormatted.avatar = (ret[0]?.avatar) ? ret[0]?.avatar : process.env.REACT_APP_AZERO_DOMAIN_PLACE_HOLDER_IMAGE;
+              } else {
+                eventFormatted.nftName = ret[0]?.nftName;
+                eventFormatted.avatar = ret[0]?.avatar;
+              }
+              
+              
             }
             return eventFormatted;
           })
